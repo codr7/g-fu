@@ -4,9 +4,12 @@
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
-* extract eval_fun/eval_let from Expr
+* switch to passing Call args without eval
+** change BasicType.Call to Forms(args).Eval() 
 * add g.Bool/T/F
 ** add Type.AsBool() Val
+* add GFun/type
+** add + fun
 * add if
 * recursive fib
 ** let fun
