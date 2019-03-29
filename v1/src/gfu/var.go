@@ -2,7 +2,7 @@ package gfu
 
 type Var struct {
   key *Sym
-  val Val
+  Val Val
 }
 
 func (v *Var) Init(key *Sym) *Var {

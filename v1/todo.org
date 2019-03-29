@@ -1,17 +1,18 @@
 * add Form.Dump
+** use instead of String()
 ** move String() to BasicForm
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
+* extract eval_fun/eval_let from Expr
 * add g.Bool/T/F
-* add let-macro
-* add if-macro
-* add let bindings
+** add Type.AsBool() Val
+* add if
 * recursive fib
 ** let fun
-* add recall
-** goto in Expr.Eval
 * repl script
 * add basic tests
-* add Sym.is_special
+* add ;/, support
+* add g.Sym type
 * add List/Vect types
+* add Sym.is_special

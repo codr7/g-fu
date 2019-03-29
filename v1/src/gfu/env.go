@@ -19,9 +19,9 @@ func (e *Env) Merge(keys []*Sym, vals []Val) {
     v := vals[i]
     
     if j, found := e.Find(k); found == nil {
-      e.Insert(j, k).val = v
+      e.Insert(j, k).Val = v
     } else {
-      found.val = v
+      found.Val = v
     }
   }
 }

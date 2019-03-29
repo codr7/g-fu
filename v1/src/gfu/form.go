@@ -100,6 +100,51 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
         var fv Val
         fv.Init(g.Fun, NewFun(as, b[2:], env))
         return fv, nil
+      case g.Sym("let"):
+        bsf := b[1]
+
+        if bsf.FormType() != &FORM_EXPR {
+          return g.NIL, g.NewError(g.Pos, "Invalid let bindings: %v", bsf)
+        }
+
+        bs := bsf.(*ExprForm).body
+        var le Env
+        env.Clone(&le)
+
+        for i := 0; i < len(bs); i += 2 {
+          kf, vf := bs[i], bs[i+1]
+
+          if kf.FormType() != &FORM_ID {
+            return g.NIL, g.NewError(g.Pos, "Invalid let key: %v", kf)
+          }
+
+          k := kf.(*IdForm).id
+          v, e := vf.Eval(g, env)
+
+          if e != nil {
+            return g.NIL, e
+          }
+
+          i, found := le.Find(k)
+
+          if found == nil {
+            le.Insert(i, k).Val =  v
+          } else {
+            found.Val = v
+          }
+        }
+
+        if len(b) > 1 {
+          rv, e := Forms(b[2:]).Eval(g, &le)
+          
+          if e != nil {
+            return g.NIL, e
+          }
+
+          return rv, nil
+        }
+
+        return g.NIL, nil
       default:
         break
       }
@@ -164,7 +209,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
     return g.NIL, g.NewError(g.Pos, "Unknown: %v", id)
   }
   
-  return v.val, nil
+  return v.Val, nil
 }
 
 func (f *IdForm) String() string {
@@ -206,4 +251,21 @@ func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
 
 func (f *LitForm) String() string {
   return f.val.String()
+}
+
+type Forms []Form
+
+func (fs Forms) Eval(g *G, env *Env) (Val, Error) {
+  out := g.NIL
+  
+  for _, f := range fs {
+    var e Error
+    
+    if out, e = f.Eval(g, env); e != nil {
+      return g.NIL, e
+    }
+  }
+
+  return out, nil
+
 }
