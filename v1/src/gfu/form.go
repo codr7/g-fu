@@ -156,6 +156,17 @@ func (f *IdForm) Init(id *Sym) *IdForm {
   return f
 }
 
+func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
+  id := f.id
+  _, v := env.Find(id)
+
+  if v == nil {
+    return g.NIL, g.NewError(&g.Pos, "Unknown: %v", id)
+  }
+  
+  return v.val, nil
+}
+
 func (f *IdForm) String() string {
   return f.id.name
 }

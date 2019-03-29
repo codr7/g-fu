@@ -20,7 +20,7 @@ func main() {
 
   g.Pos = gfu.MIN_POS
   var f gfu.Form
-  f, e = g.Read(strings.NewReader("((fun () 42))"), 0)
+  f, e = g.Read(strings.NewReader("((fun (x) x) 42)"), 0)
 
   if e != nil {
     log.Fatal(e)

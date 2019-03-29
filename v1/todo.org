@@ -1,8 +1,6 @@
-* add Id eval
-** env lookup
 * switch *Val to Val where possible
 * switch *Pos to Pos where possible
-* add fun arg to example
+** make fields public
 * add let bindings
 * add g.Bool/T/F
 * add if-macro
@@ -17,3 +15,5 @@
 ** form.go
 * repl script
 * add basic tests
+* add Sym.is_special
+* add List/Vect types

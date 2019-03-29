@@ -1,5 +1,9 @@
 package gfu
 
+import (
+  //"log"
+)
+
 type Env struct {
   vars []Var
 }
@@ -44,9 +48,13 @@ func (e *Env) Find(key *Sym) (int, *Var) {
 }
 
 func (e *Env) Insert(i int, key *Sym) *Var {
-  vs := e.vars
   var v Var
-  e.vars = append(vs, v)
-  copy(vs[i+1:], vs[i:])
+  vs := append(e.vars, v)
+  e.vars = vs
+
+  if i < len(vs)-1 {
+    copy(vs[i+1:], vs[i:])
+  }
+  
   return vs[i].Init(key)
 }
