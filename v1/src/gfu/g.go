@@ -10,7 +10,8 @@ type G struct {
   sym_tag Tag
   syms Syms
 
-  Fun, Int Type
+  Fun, Int, Nil Type
+  NIL Val
 }
 
 func NewG() (*G, Error) {
@@ -22,5 +23,7 @@ func (g *G) Init() (*G, Error) {
   g.Pos.Init("n/a", -1, -1)
   g.Fun = new(FunType).Init(g.Sym("Fun"))
   g.Int = new(IntType).Init(g.Sym("Int"))
+  g.Nil = new(NilType).Init(g.Sym("Nil"))
+  g.NIL.Init(g.Nil, nil)
   return g, nil
 }

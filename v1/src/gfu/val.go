@@ -19,11 +19,15 @@ func (v *Val) Init(val_type Type, imp interface{}) *Val {
   return v
 }
 
-func (v *Val) Dump(out *strings.Builder) {
-  v.val_type.Dump(v.imp, out)
+func (v Val) Call(g *G, args []Val, env *Env) (Val, Error) {
+  return v.val_type.Call(g, v, args, env)
 }
 
-func (v *Val) String() string {
+func (v Val) Dump(out *strings.Builder) {
+  v.val_type.Dump(v, out)
+}
+
+func (v Val) String() string {
   var out strings.Builder
   v.Dump(&out)
   return out.String()

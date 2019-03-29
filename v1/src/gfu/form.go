@@ -2,14 +2,13 @@ package gfu
 
 import (
   "fmt"
-  "log"
   "strings"
 )
 
 type Form interface {
   fmt.Stringer
   Body() []Form
-  Eval(g *G, env *Env) (*Val, Error)
+  Eval(g *G, env *Env) (Val, Error)
   FormType() *FormType
 }
 
@@ -43,8 +42,8 @@ func (f *BasicForm) Body() []Form {
   return []Form{f}
 }
 
-func (f *BasicForm) Eval(g *G, env *Env) (*Val, Error) {
-  return nil, nil
+func (f *BasicForm) Eval(g *G, env *Env) (Val, Error) {
+  return g.NIL, nil
 }
 
 func (f *BasicForm) FormType() *FormType {
@@ -73,7 +72,7 @@ func (f *ExprForm) Body() []Form {
   return f.body
 }
 
-func (f *ExprForm) Eval(g *G, env *Env) (*Val, Error) {
+func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   b := f.body
   
   if len(b) > 0 {
@@ -85,27 +84,49 @@ func (f *ExprForm) Eval(g *G, env *Env) (*Val, Error) {
         asf := b[1]
 
         if asf.FormType() != &FORM_EXPR {
-          return nil, g.NewError(&g.Pos, "Invalid fun args: %v", asf)
+          return g.NIL, g.NewError(&g.Pos, "Invalid fun args: %v", asf)
         }
 
         var as []*Sym
         
         for _, af := range asf.(*ExprForm).body {
           if af.FormType() != &FORM_ID {
-            return nil, g.NewError(&g.Pos, "Invalid fun arg: %v", af)
+            return g.NIL, g.NewError(&g.Pos, "Invalid fun arg: %v", af)
           }
 
           as = append(as, af.(*IdForm).id)
         }
-        
-        return NewVal(g.Fun, NewFun(as, b[2:], env)), nil
+
+        var fv Val
+        fv.Init(g.Fun, NewFun(as, b[2:], env))
+        return fv, nil
       default:
-        log.Printf("call %v", bid)
+        break
       }
     }
+
+    fv, e := bf.Eval(g, env)
+    
+    if e != nil {
+      return g.NIL, g.NewError(&g.Pos, "Fun eval failed: %v", e)
+    }
+    
+    args, e := ListForm(b[1:]).Eval(g, env)
+    
+    if e != nil {
+          return g.NIL, g.NewError(&g.Pos, "Args eval failed: %v", e)
+    }
+    
+    rv, e := fv.Call(g, args, env)
+    
+    if e != nil {
+      return g.NIL, g.NewError(&g.Pos, "Call failed: %v", e)
+    }
+    
+    return rv, nil
   }
 
-  return nil, nil
+  return g.NIL, nil
 }
 
 func (f *ExprForm) String() string {
@@ -137,6 +158,24 @@ func (f *IdForm) Init(id *Sym) *IdForm {
 
 func (f *IdForm) String() string {
   return f.id.name
+}
+
+type ListForm []Form
+
+func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
+  var out []Val
+  
+  for _, bf := range f {
+    v, e := bf.Eval(g, env)
+
+    if e != nil {
+      return nil, g.NewError(&g.Pos, "Arg eval failed: %v", e)
+    }
+    
+    out = append(out, v)
+  }
+
+  return out, nil
 }
 
 type LitForm struct {

@@ -6,8 +6,9 @@ import (
 )
 
 type Type interface {
-  Dump(x interface{}, out *strings.Builder)
-  Eq(x, y interface{}) bool
+  Call(g *G, val Val, args []Val, env *Env) (Val, Error)
+  Dump(x Val, out *strings.Builder)
+  Eq(x, y Val) bool
 }
 
 type BasicType struct {
@@ -19,10 +20,14 @@ func (t *BasicType) Init(id *Sym) *BasicType {
   return t
 }
 
-func (t *BasicType) Dump(x interface{}, out *strings.Builder) {
-  fmt.Fprintf(out, "%v", x)
+func (t *BasicType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
+  return val, nil
 }
 
-func (t *BasicType) Eq(x, y interface{}) bool {
-  return x == y
+func (t *BasicType) Dump(x Val, out *strings.Builder) {
+  fmt.Fprintf(out, "%v", x.imp)
+}
+
+func (t *BasicType) Eq(x, y Val) bool {
+  return x.imp == y.imp
 }

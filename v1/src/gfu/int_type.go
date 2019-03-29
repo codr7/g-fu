@@ -11,6 +11,6 @@ func (t *IntType) Init(id *Sym) *IntType {
   return t
 }
 
-func (v *Val) Int() Int {
+func (v Val) AsInt() Int {
   return v.imp.(Int)
 }

@@ -31,7 +31,7 @@ func main() {
   }
   
   fmt.Printf("%v\n", f)
-  var result *gfu.Val
+  var result gfu.Val
   
   result, e = f.Eval(g, &g.RootEnv)
 
