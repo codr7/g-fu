@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-  fmt.Printf("g-fu v1\n")
+  fmt.Printf("g-fu v1\n\n")
   g, e := gfu.NewG()
 
   if e != nil {
@@ -39,5 +39,5 @@ func main() {
     log.Fatal(e)
   }
 
-  fmt.Printf("Result: %v\n", result)
+  fmt.Printf("%v\n", result)
 }

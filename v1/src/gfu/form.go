@@ -189,6 +189,9 @@ func (f *LitForm) Init(val *Val) *LitForm {
   return f
 }
 
+func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
+  return f.val, nil
+}
 
 func (f *LitForm) String() string {
   return f.val.String()

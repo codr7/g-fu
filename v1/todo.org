@@ -1,8 +1,8 @@
-* add Lit eval
-** add Type.Eval(*G, Form, *Env)
 * add Id eval
 ** env lookup
 * switch *Val to Val where possible
+* switch *Pos to Pos where possible
+* add fun arg to example
 * add let bindings
 * add g.Bool/T/F
 * add if-macro
