@@ -194,9 +194,9 @@ type LitForm struct {
   val Val
 }
 
-func (f *LitForm) Init(val *Val) *LitForm {
+func (f *LitForm) Init(val Val) *LitForm {
   f.BasicForm.Init(&FORM_LIT)
-  f.val = *val
+  f.val = val
   return f
 }
 

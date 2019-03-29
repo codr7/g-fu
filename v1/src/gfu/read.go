@@ -158,5 +158,5 @@ func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
 
   var v Val
   v.Init(g.Int, Int(n))
-  return new(LitForm).Init(&v), nil
+  return new(LitForm).Init(v), nil
 }
