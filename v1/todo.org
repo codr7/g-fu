@@ -1,0 +1,16 @@
+* call fun in expr eval
+** add type.Call method
+*** implement for Fun
+* add Lit eval
+** add Type.Eval(*G, Form, *Env)
+* add Id eval
+* add let bindings
+* add if-macro
+* recursive fib
+** let fun
+* add Form.Dump
+** move String() to BasicForm
+* add Basic/Form.pos
+** add to Init()
+* repl script
+* add basic tests
