@@ -21,20 +21,10 @@ func (t *FunType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
     return g.NIL, g.NewError(g.Pos, "Arg mismatch: %v", args)
   }
   
-  out := g.NIL
   var be Env
   f.env.Clone(&be)
   be.Merge(f.args, args)
-  
-  for _, bf := range f.body {
-    var e Error
-    
-    if out, e = bf.Eval(g, &be); e != nil {
-      return g.NIL, g.NewError(g.Pos, "Call failed: %v", e)
-    }
-  }
-
-  return out, nil
+  return Forms(f.body).Eval(g, &be)
 }
 
 func (t *FunType) Dump(val Val, out *strings.Builder) {
