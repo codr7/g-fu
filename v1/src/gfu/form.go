@@ -10,6 +10,7 @@ type Form interface {
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
   FormType() *FormType
+  Pos() Pos
 }
 
 type FormType struct {
@@ -31,10 +32,12 @@ func (t *FormType) Init(id string) *FormType {
 
 type BasicForm struct {
   form_type *FormType
+  pos Pos
 }
 
-func (f *BasicForm) Init(form_type *FormType) *BasicForm {
+func (f *BasicForm) Init(form_type *FormType, pos Pos) *BasicForm {
   f.form_type = form_type
+  f.pos = pos
   return f
 }
 
@@ -50,6 +53,10 @@ func (f *BasicForm) FormType() *FormType {
   return f.form_type
 }
 
+func (f *BasicForm) Pos() Pos {
+  return f.pos
+}
+
 func (f *BasicForm) String() string {
   return f.form_type.id
 }
@@ -59,8 +66,8 @@ type ExprForm struct {
   body []Form
 }
 
-func (f *ExprForm) Init() *ExprForm {
-  f.BasicForm.Init(&FORM_EXPR)
+func (f *ExprForm) Init(pos Pos) *ExprForm {
+  f.BasicForm.Init(&FORM_EXPR, pos)
   return f
 }
 
@@ -84,14 +91,14 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
         asf := b[1]
 
         if asf.FormType() != &FORM_EXPR {
-          return g.NIL, g.NewError(g.Pos, "Invalid fun args: %v", asf)
+          return g.NIL, g.NewError(bf.Pos(), "Invalid fun args: %v", asf)
         }
 
         var as []*Sym
         
         for _, af := range asf.(*ExprForm).body {
           if af.FormType() != &FORM_ID {
-            return g.NIL, g.NewError(g.Pos, "Invalid fun arg: %v", af)
+            return g.NIL, g.NewError(af.Pos(), "Invalid fun arg: %v", af)
           }
 
           as = append(as, af.(*IdForm).id)
@@ -104,7 +111,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
         bsf := b[1]
 
         if bsf.FormType() != &FORM_EXPR {
-          return g.NIL, g.NewError(g.Pos, "Invalid let bindings: %v", bsf)
+          return g.NIL, g.NewError(bsf.Pos(), "Invalid let bindings: %v", bsf)
         }
 
         bs := bsf.(*ExprForm).body
@@ -115,7 +122,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
           kf, vf := bs[i], bs[i+1]
 
           if kf.FormType() != &FORM_ID {
-            return g.NIL, g.NewError(g.Pos, "Invalid let key: %v", kf)
+            return g.NIL, g.NewError(kf.Pos(), "Invalid let key: %v", kf)
           }
 
           k := kf.(*IdForm).id
@@ -153,19 +160,19 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
     fv, e := bf.Eval(g, env)
     
     if e != nil {
-      return g.NIL, g.NewError(g.Pos, "Fun eval failed: %v", e)
+      return g.NIL, g.NewError(bf.Pos(), "Fun eval failed: %v", e)
     }
     
     args, e := ListForm(b[1:]).Eval(g, env)
     
     if e != nil {
-          return g.NIL, g.NewError(g.Pos, "Args eval failed: %v", e)
+      return g.NIL, g.NewError(bf.Pos(), "Args eval failed: %v", e)
     }
     
     rv, e := fv.Call(g, args, env)
     
     if e != nil {
-      return g.NIL, g.NewError(g.Pos, "Call failed: %v", e)
+      return g.NIL, g.NewError(bf.Pos(), "Call failed: %v", e)
     }
     
     return rv, nil
@@ -195,8 +202,8 @@ type IdForm struct {
   id *Sym
 }
 
-func (f *IdForm) Init(id *Sym) *IdForm {
-  f.BasicForm.Init(&FORM_ID)
+func (f *IdForm) Init(pos Pos, id *Sym) *IdForm {
+  f.BasicForm.Init(&FORM_ID, pos)
   f.id = id
   return f
 }
@@ -206,7 +213,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   _, v := env.Find(id)
 
   if v == nil {
-    return g.NIL, g.NewError(g.Pos, "Unknown: %v", id)
+    return g.NIL, g.NewError(f.pos, "Unknown: %v", id)
   }
   
   return v.Val, nil
@@ -225,7 +232,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     v, e := bf.Eval(g, env)
 
     if e != nil {
-      return nil, g.NewError(g.Pos, "Arg eval failed: %v", e)
+      return nil, g.NewError(bf.Pos(), "Arg eval failed: %v", e)
     }
     
     out = append(out, v)
@@ -239,8 +246,8 @@ type LitForm struct {
   val Val
 }
 
-func (f *LitForm) Init(val Val) *LitForm {
-  f.BasicForm.Init(&FORM_LIT)
+func (f *LitForm) Init(pos Pos, val Val) *LitForm {
+  f.BasicForm.Init(&FORM_LIT, pos)
   f.val = val
   return f
 }

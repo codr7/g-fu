@@ -1,6 +1,3 @@
-* add Basic/Form.pos
-** add to Init()
-** form.go
 * signal error in NewType.Call
 * switch to passing Call args without eval
 * add (do ...)

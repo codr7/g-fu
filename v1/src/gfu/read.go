@@ -69,8 +69,8 @@ func (g *G) Read(in *strings.Reader, end rune) (Form, Error) {
 }
 
 func (g *G) ReadExpr(in *strings.Reader) (Form, Error) {
+  ef := new(ExprForm).Init(g.Pos)
   g.Pos.Col++
-  ef := new(ExprForm).Init()
 
   for {
     f, e := g.Read(in, ')')
@@ -90,6 +90,7 @@ func (g *G) ReadExpr(in *strings.Reader) (Form, Error) {
 }
 
 func (g *G) ReadId(in *strings.Reader) (Form, Error) {
+  pos := g.Pos
   var buf strings.Builder
   
   for {
@@ -118,10 +119,11 @@ func (g *G) ReadId(in *strings.Reader) (Form, Error) {
     g.Pos.Col++
   }
 
-  return new(IdForm).Init(g.Sym(buf.String())), nil
+  return new(IdForm).Init(pos, g.Sym(buf.String())), nil
 }
 
 func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
+  pos := g.Pos
   var buf strings.Builder
   
   for {
@@ -158,5 +160,5 @@ func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
 
   var v Val
   v.Init(g.Int, Int(n))
-  return new(LitForm).Init(v), nil
+  return new(LitForm).Init(pos, v), nil
 }
