@@ -84,14 +84,14 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
         asf := b[1]
 
         if asf.FormType() != &FORM_EXPR {
-          return g.NIL, g.NewError(&g.Pos, "Invalid fun args: %v", asf)
+          return g.NIL, g.NewError(g.Pos, "Invalid fun args: %v", asf)
         }
 
         var as []*Sym
         
         for _, af := range asf.(*ExprForm).body {
           if af.FormType() != &FORM_ID {
-            return g.NIL, g.NewError(&g.Pos, "Invalid fun arg: %v", af)
+            return g.NIL, g.NewError(g.Pos, "Invalid fun arg: %v", af)
           }
 
           as = append(as, af.(*IdForm).id)
@@ -108,19 +108,19 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
     fv, e := bf.Eval(g, env)
     
     if e != nil {
-      return g.NIL, g.NewError(&g.Pos, "Fun eval failed: %v", e)
+      return g.NIL, g.NewError(g.Pos, "Fun eval failed: %v", e)
     }
     
     args, e := ListForm(b[1:]).Eval(g, env)
     
     if e != nil {
-          return g.NIL, g.NewError(&g.Pos, "Args eval failed: %v", e)
+          return g.NIL, g.NewError(g.Pos, "Args eval failed: %v", e)
     }
     
     rv, e := fv.Call(g, args, env)
     
     if e != nil {
-      return g.NIL, g.NewError(&g.Pos, "Call failed: %v", e)
+      return g.NIL, g.NewError(g.Pos, "Call failed: %v", e)
     }
     
     return rv, nil
@@ -161,7 +161,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   _, v := env.Find(id)
 
   if v == nil {
-    return g.NIL, g.NewError(&g.Pos, "Unknown: %v", id)
+    return g.NIL, g.NewError(g.Pos, "Unknown: %v", id)
   }
   
   return v.val, nil
@@ -180,7 +180,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     v, e := bf.Eval(g, env)
 
     if e != nil {
-      return nil, g.NewError(&g.Pos, "Arg eval failed: %v", e)
+      return nil, g.NewError(g.Pos, "Arg eval failed: %v", e)
     }
     
     out = append(out, v)

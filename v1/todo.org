@@ -1,18 +1,18 @@
 * switch *Val to Val where possible
-* switch *Pos to Pos where possible
-** make fields public
-* add let bindings
-* add g.Bool/T/F
-* add if-macro
-* recursive fib
-** let fun
-* add recall
-** goto in Expr.Eval
 * add Form.Dump
 ** move String() to BasicForm
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
+
+* add g.Bool/T/F
+* add let-macro
+* add if-macro
+* add let bindings
+* recursive fib
+** let fun
+* add recall
+** goto in Expr.Eval
 * repl script
 * add basic tests
 * add Sym.is_special

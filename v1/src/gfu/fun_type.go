@@ -18,7 +18,7 @@ func (t *FunType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
   f := val.AsFun()
   
   if len(args) != len(f.args) {
-    return g.NIL, g.NewError(&g.Pos, "Arg mismatch: %v", args)
+    return g.NIL, g.NewError(g.Pos, "Arg mismatch: %v", args)
   }
   
   out := g.NIL
@@ -30,7 +30,7 @@ func (t *FunType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
     var e Error
     
     if out, e = bf.Eval(g, &be); e != nil {
-      return g.NIL, g.NewError(&g.Pos, "Call failed: %v", e)
+      return g.NIL, g.NewError(g.Pos, "Call failed: %v", e)
     }
   }
 

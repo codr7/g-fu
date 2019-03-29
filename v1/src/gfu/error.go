@@ -13,7 +13,7 @@ type BasicError struct {
   msg string
 }
 
-func (g *G) NewError(pos *Pos, msg string, args...interface{}) *BasicError {
+func (g *G) NewError(pos Pos, msg string, args...interface{}) *BasicError {
   msg = fmt.Sprintf(msg, args...)
 
   if g.Debug {
@@ -23,8 +23,8 @@ func (g *G) NewError(pos *Pos, msg string, args...interface{}) *BasicError {
   return new(BasicError).Init(pos, msg)
 }
 
-func (e *BasicError) Init(pos *Pos, msg string) *BasicError {
-  e.pos = *pos
+func (e *BasicError) Init(pos Pos, msg string) *BasicError {
+  e.pos = pos
   e.msg = msg
   return e
 }
@@ -34,5 +34,5 @@ func (e *BasicError) String() string {
   
   return fmt.Sprintf(
     "Error in '%s' on row %v, col %v:\n%v",
-    p.src, p.row, p.col, e.msg)
+    p.src, p.Row, p.Col, e.msg)
 }

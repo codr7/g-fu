@@ -2,7 +2,7 @@ package gfu
 
 type Pos struct {
   src string
-  row, col int
+  Row, Col int
 }
 
 var MIN_POS Pos
@@ -13,7 +13,7 @@ func init() {
 
 func (p *Pos) Init(src string, row, col int) *Pos {
   p.src = src
-  p.row = row
-  p.col = col
+  p.Row = row
+  p.Col = col
   return p
 }
