@@ -1,21 +1,29 @@
-* add Form.Dump
-** use instead of String()
-** move String() to BasicForm
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
 * switch to passing Call args without eval
-** change BasicType.Call to Forms(args).Eval() 
+** change BasicType.Call to Forms(args).Eval()
+** use _ for progn
+*** (_ 1 2 3)
 * add g.Bool/T/F
 ** add Type.AsBool() Val
 * add GFun/type
 ** add + fun
-* add if
+* add and/or
+** use instead of if
+* add def like let
+** set in g.RootEnv
+** add Sym.is_def
+*** change var lookup
+*** change let
+**** backup/restore g.RootEnv 
 * recursive fib
-** let fun
 * repl script
 * add basic tests
+* switch Int type to big.Int
 * add ;/, support
 * add g.Sym type
 * add List/Vect types
 * add Sym.is_special
+* add Rat type
+** use big.Rat
