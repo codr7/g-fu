@@ -1,5 +1,4 @@
-* signal error in NewType.Call
-* switch to passing Call args without eval
+* pass Call args without eval
 * add (do ...)
 ** call Forms().Eval()
 * add g.Bool/T/F

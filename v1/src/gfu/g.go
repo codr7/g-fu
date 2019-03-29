@@ -25,5 +25,6 @@ func (g *G) Init() (*G, Error) {
   g.Int = new(IntType).Init(g.Sym("Int"))
   g.Nil = new(NilType).Init(g.Sym("Nil"))
   g.NIL.Init(g.Nil, nil)
+  g.RootEnv.Put(g.Sym("_"), g.Nil, g.NIL)
   return g, nil
 }

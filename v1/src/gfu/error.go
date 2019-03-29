@@ -14,13 +14,14 @@ type BasicError struct {
 }
 
 func (g *G) NewError(pos Pos, msg string, args...interface{}) *BasicError {
-  msg = fmt.Sprintf(msg, args...)
+  msg = fmt.Sprintf(msg, args...)  
+  e := new(BasicError).Init(pos, msg)
 
   if g.Debug {
-    panic(msg)
+    panic(e.String())
   }
-  
-  return new(BasicError).Init(pos, msg)
+
+  return e
 }
 
 func (e *BasicError) Init(pos Pos, msg string) *BasicError {

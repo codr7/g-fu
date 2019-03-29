@@ -168,7 +168,8 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
     if e != nil {
       return g.NIL, g.NewError(bf.Pos(), "Args eval failed: %v", e)
     }
-    
+
+    g.Pos = bf.Pos()
     rv, e := fv.Call(g, args, env)
     
     if e != nil {
