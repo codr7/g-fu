@@ -3,7 +3,6 @@
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
-
 * add g.Bool/T/F
 * add let-macro
 * add if-macro
