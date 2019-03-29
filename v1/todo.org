@@ -1,22 +1,16 @@
 * add Basic/Form.pos
 ** add to Init()
 ** form.go
+* signal error in NewType.Call
 * switch to passing Call args without eval
-** change BasicType.Call to Forms(args).Eval()
-** use _ for progn
-*** (_ 1 2 3)
+* add (do ...)
+** call Forms().Eval()
 * add g.Bool/T/F
 ** add Type.AsBool() Val
 * add GFun/type
 ** add + fun
 * add and/or
 ** use instead of if
-* add def like let
-** set in g.RootEnv
-** add Sym.is_def
-*** change var lookup
-*** change let
-**** backup/restore g.RootEnv 
 * recursive fib
 * repl script
 * add basic tests
@@ -24,6 +18,11 @@
 * add ;/, support
 * add g.Sym type
 * add List/Vect types
-* add Sym.is_special
+* add def like let
+** set in g.RootEnv
+** add Sym.is_def
+*** change var lookup
+*** change let
+**** backup/restore g.RootEnv 
 * add Rat type
 ** use big.Rat
