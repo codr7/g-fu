@@ -14,18 +14,6 @@ func (e *Env) Clone(dst *Env) {
   copy(dst.vars, src)
 }
 
-func (e *Env) Merge(keys []*Sym, vals []Val) {
-  for i, k := range keys {
-    v := vals[i]
-    
-    if j, found := e.Find(k); found == nil {
-      e.Insert(j, k).Val = v
-    } else {
-      found.Val = v
-    }
-  }
-}
-
 func (e *Env) Find(key *Sym) (int, *Var) {
   vs := e.vars
   min, max := 0, len(vs)

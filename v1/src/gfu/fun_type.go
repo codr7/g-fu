@@ -16,8 +16,10 @@ func (t *FunType) Init(id *Sym) *FunType {
 
 func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   f := val.AsFun()
+  nargs := len(args)
   
-  if len(args) != len(f.args) {
+  if (f.min_args != -1 && nargs < f.min_args) ||
+    (f.max_args != -1 && nargs > f.max_args) {
     return g.NIL, g.NewError(pos, "Arg mismatch")
   }
 
@@ -29,7 +31,23 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
 
   var be Env
   f.env.Clone(&be)
-  be.Merge(f.args, avs)
+  
+  for i, a := range f.args {
+    id := a.name
+    
+    if strings.HasSuffix(id, "..") {
+      v := new(Vec)
+      v.items = make([]Val, nargs-i)
+      copy(v.items, avs[i:])
+      var vv Val
+      vv.Init(g.Vec, v)
+      be.Put(g.Sym(id[:len(id)-2]), vv)
+      break
+    }
+    
+    be.Put(a, avs[i])
+  }
+
   return Forms(f.body).Eval(g, &be)
 }
 

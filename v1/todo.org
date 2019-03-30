@@ -1,13 +1,12 @@
 * add vararg support
-** replace Prim.nargs with min/max_args
-** add Fun.min/max_args
-*** use instead of len(args)
+** add splat support with ..
 * add do prim
 ** (do ...)
 ** call Forms().Eval()
 * extract fun/let prims
-** remove explicit progn
-* switch + to vararg
+** add type.New method
+*** call with args when type is called
+**** (Vec 1 2 3)
 * add and/or-prims
 ** instead of if
 ** vararg
@@ -17,7 +16,6 @@
 * switch Int type to big.Int
 * add ;/, support
 * add g.Sym type
-* add List/Vect types
 * add def like let
 ** set in g.RootEnv
 ** add Sym.is_def
@@ -26,5 +24,3 @@
 **** backup/restore g.RootEnv 
 * add Rat type
 ** use big.Rat
-
-(let (x 35) (+ x 7) (+ x 7))

@@ -54,6 +54,7 @@ func (e *Env) InitAbc(g *G) {
   g.Int = new(IntType).Init(g.Sym("Int"))
   g.Nil = new(NilType).Init(g.Sym("Nil"))
   g.Prim = new(PrimType).Init(g.Sym("Prim"))
+  g.Vec = new(VecType).Init(g.Sym("Vec"))
   
   e.AddVal(g, g.Sym("_"), g.Nil, nil, &g.NIL)
   e.AddVal(g, g.Sym("T"), g.Bool, true, &g.T)
