@@ -1,14 +1,18 @@
+* add g.Bool/T/F
+** add Type.AsBool() Val
+* add vararg support
+** replace Prim.nargs with min/max_args
+** add Fun.min/max_args
+*** use instead of len(args)
+** prefix arg with '*'
+
 * extract fun/let prims
 * add do prim
 ** (do ...)
 ** call Forms().Eval()
-* add g.Bool/T/F
-** add Type.AsBool() Val
-* add vararg support
-** prefix arg with '*'
-** Prim.nargs = -1
 * add and/or-prims
-** use instead of if
+** instead of if
+** vararg
 * recursive fib
 * repl script
 * add basic tests

@@ -16,6 +16,7 @@ func main() {
     log.Fatal(e)
   }
   
+  g.InitPrims()
   g.Debug = true
 
   var f gfu.Form
