@@ -1,5 +1,5 @@
 * extract fun/let prims
-* add do-prim
+* add do prim
 ** (do ...)
 ** call Forms().Eval()
 * add g.Bool/T/F
