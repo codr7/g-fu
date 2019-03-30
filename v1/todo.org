@@ -1,8 +1,8 @@
+* remove g.Pos
+** pass to Call/Read instead
 * pass Call args without eval
 * add (do ...)
 ** call Forms().Eval()
-* remove g.Pos
-** pass to Call() instead
 * add g.Bool/T/F
 ** add Type.AsBool() Val
 * add GFun/type
