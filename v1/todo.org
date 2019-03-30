@@ -1,5 +1,3 @@
-* remove g.Pos
-** pass to Call/Read instead
 * pass Call args without eval
 * add (do ...)
 ** call Forms().Eval()

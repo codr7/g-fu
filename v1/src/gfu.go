@@ -18,10 +18,10 @@ func main() {
   
   g.Debug = true
 
-  g.Pos = gfu.MIN_POS
   var f gfu.Form
-  f, e = g.Read(strings.NewReader("(let (x 35) ((fun (y) x) 7)"), 0)
-  //f, e = g.Read(strings.NewReader("(_)"), 0)
+  pos := gfu.MIN_POS
+  f, e = g.Read(strings.NewReader("(let (x 35) ((fun (y) x) 7)"), &pos, 0)
+  //f, e = g.Read(strings.NewReader("(_)"), &pos, 0)
 
   if e != nil {
     log.Fatal(e)

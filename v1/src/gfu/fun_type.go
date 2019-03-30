@@ -14,11 +14,11 @@ func (t *FunType) Init(id *Sym) *FunType {
   return t
 }
 
-func (t *FunType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
+func (t *FunType) Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error) {
   f := val.AsFun()
   
   if len(args) != len(f.args) {
-    return g.NIL, g.NewError(g.Pos, "Arg mismatch: %v", args)
+    return g.NIL, g.NewError(pos, "Arg mismatch: %v", args)
   }
   
   var be Env

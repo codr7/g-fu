@@ -8,15 +8,15 @@ import (
   "unicode"
 )
 
-func unread(g *G, in *strings.Reader) Error {
+func (g *G) Unread(in *strings.Reader, pos Pos) Error {
   if e := in.UnreadRune(); e != nil {
-    return g.NewError(g.Pos, "Error unreading char")
+    return g.NewError(pos, "Error unreading char")
   }
 
   return nil
 }
 
-func (g *G) Read(in *strings.Reader, end rune) (Form, Error) {
+func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
   var c rune
   var e Error
 
@@ -29,7 +29,7 @@ func (g *G) Read(in *strings.Reader, end rune) (Form, Error) {
     }
     
     if re != nil {
-      return nil, g.NewError(g.Pos, "Error reading char: %v", re)
+      return nil, g.NewError(*pos, "Error reading char: %v", re)
     }
     
     if c == end {
@@ -38,42 +38,42 @@ func (g *G) Read(in *strings.Reader, end rune) (Form, Error) {
     
     switch c {
     case ' ':
-      g.Pos.Col++
+      pos.Col++
       continue
     case '\n':
-      g.Pos.Col = MIN_POS.Col
-      g.Pos.Row++
+      pos.Col = MIN_POS.Col
+      pos.Row++
       continue
     case '(':
-      return g.ReadExpr(in)
+      return g.ReadExpr(in, pos)
     default:
       if unicode.IsDigit(c) {
-        if e = unread(g, in); e != nil {
+        if e = g.Unread(in, *pos); e != nil {
           return nil, e
         }
         
-        return g.ReadNum(in)
+        return g.ReadNum(in, pos)
       } else if unicode.IsGraphic(c) {
-        if e = unread(g, in); e != nil {
+        if e = g.Unread(in, *pos); e != nil {
           return nil, e
         }
 
-        return g.ReadId(in)
+        return g.ReadId(in, pos)
       }
     }
 
     break
   }
 
-  return nil, g.NewError(g.Pos, "Unexpected input: %v", c)
+  return nil, g.NewError(*pos, "Unexpected input: %v", c)
 }
 
-func (g *G) ReadExpr(in *strings.Reader) (Form, Error) {
-  ef := new(ExprForm).Init(g.Pos)
-  g.Pos.Col++
+func (g *G) ReadExpr(in *strings.Reader, pos *Pos) (Form, Error) {
+  ef := new(ExprForm).Init(*pos)
+  pos.Col++
 
   for {
-    f, e := g.Read(in, ')')
+    f, e := g.Read(in, pos, ')')
 
     if e != nil {
       return nil, e
@@ -89,8 +89,8 @@ func (g *G) ReadExpr(in *strings.Reader) (Form, Error) {
   return ef, nil
 }
 
-func (g *G) ReadId(in *strings.Reader) (Form, Error) {
-  pos := g.Pos
+func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
+  fpos := *pos
   var buf strings.Builder
   
   for {
@@ -101,11 +101,11 @@ func (g *G) ReadId(in *strings.Reader) (Form, Error) {
         break
       }
       
-      return nil, g.NewError(g.Pos, "Failed readig char: %v", re)
+      return nil, g.NewError(*pos, "Failed readig char: %v", re)
     }
     
     if unicode.IsSpace(c) || c == '%' || c == '(' || c == ')' {
-      if e := unread(g, in); e != nil {
+      if e := g.Unread(in, *pos); e != nil {
         return nil, e
       }
 
@@ -113,17 +113,17 @@ func (g *G) ReadId(in *strings.Reader) (Form, Error) {
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.NewError(g.Pos, "Failed writing char: %v", we)
+      return nil, g.NewError(*pos, "Failed writing char: %v", we)
     }
 
-    g.Pos.Col++
+    pos.Col++
   }
 
-  return new(IdForm).Init(pos, g.Sym(buf.String())), nil
+  return new(IdForm).Init(fpos, g.Sym(buf.String())), nil
 }
 
-func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
-  pos := g.Pos
+func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
+  fpos := *pos
   var buf strings.Builder
   
   for {
@@ -134,11 +134,11 @@ func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
         break
       }
       
-      return nil, g.NewError(g.Pos, "Error reading char: %v", re)
+      return nil, g.NewError(*pos, "Error reading char: %v", re)
     }
     
     if !unicode.IsDigit(c) {
-      if e := unread(g, in); e != nil {
+      if e := g.Unread(in, *pos); e != nil {
         return nil, e
       }
 
@@ -146,19 +146,19 @@ func (g *G) ReadNum(in *strings.Reader) (Form, Error) {
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.NewError(g.Pos, "Error writing char: %v", we)
+      return nil, g.NewError(*pos, "Error writing char: %v", we)
     }
 
-    g.Pos.Col++
+    pos.Col++
   }
 
   n, e := strconv.ParseInt(buf.String(), 10, 64)
 
   if e != nil {
-    return nil, g.NewError(g.Pos, "Invalid num: %v", buf.String()) 
+    return nil, g.NewError(*pos, "Invalid num: %v", buf.String()) 
   }
 
   var v Val
   v.Init(g.Int, Int(n))
-  return new(LitForm).Init(pos, v), nil
+  return new(LitForm).Init(fpos, v), nil
 }

@@ -14,8 +14,8 @@ func (t *NilType) Init(id *Sym) *NilType {
   return t
 }
 
-func (t *NilType) Call(g *G, val Val, args []Val, env *Env) (Val, Error) {
-  return g.NIL, g.NewError(g.Pos, "Nil call")
+func (t *NilType) Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error) {
+  return g.NIL, g.NewError(pos, "Nil call")
 }
   
 func (t *NilType) Dump(_ Val, out *strings.Builder) {
