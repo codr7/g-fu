@@ -64,7 +64,7 @@ func (f *BasicForm) Pos() Pos {
 }
 
 func (f *BasicForm) String() string {
-  return String(f)
+  return DumpString(f)
 }
 
 type ExprForm struct {
@@ -196,7 +196,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
 }
 
 func (f *ExprForm) String() string {
-  return String(f)
+  return DumpString(f)
 }
 
 type IdForm struct {
@@ -226,7 +226,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
 }
 
 func (f *IdForm) String() string {
-  return String(f)
+  return DumpString(f)
 }
 
 type ListForm []Form
@@ -267,7 +267,7 @@ func (f *LitForm) Dump(out *strings.Builder) {
 }
 
 func (f *LitForm) String() string {
-  return String(f)
+  return DumpString(f)
 }
 
 type Forms []Form
