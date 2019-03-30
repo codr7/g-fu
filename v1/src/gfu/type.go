@@ -21,6 +21,10 @@ func (t *BasicType) Init(id *Sym) *BasicType {
 }
 
 func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
+  if len(args) > 0 {
+    return g.NIL, g.NewError(pos, "Too many args")
+  }
+  
   return val, nil
 }
 

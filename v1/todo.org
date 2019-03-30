@@ -1,9 +1,10 @@
+* add GFun/type
+** debug hang
+** add + fun
 * add (do ...)
 ** call Forms().Eval()
 * add g.Bool/T/F
 ** add Type.AsBool() Val
-* add GFun/type
-** add + fun
 * add and/or
 ** use instead of if
 * recursive fib
