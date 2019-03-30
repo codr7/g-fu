@@ -18,7 +18,7 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
   f := val.AsFun()
   
   if len(args) != len(f.args) {
-    return g.NIL, g.NewError(pos, "Arg mismatch: %v", args)
+    return g.NIL, g.NewError(pos, "Arg mismatch")
   }
 
   avs, e := args.Eval(g, env)
