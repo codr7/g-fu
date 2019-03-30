@@ -31,7 +31,7 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   min, max := 0, len(vs)
 
   for min < max {
-    i := (max-min)/2
+    i := (max+min)/2
     v := &vs[i]
     
     switch key.tag.Cmp(v.key.tag) {
