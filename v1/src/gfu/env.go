@@ -59,12 +59,12 @@ func (e *Env) Insert(i int, key *Sym) *Var {
   return vs[i].Init(key)
 }
 
-func (e *Env) Put(key *Sym, val_type Type, val interface{}) {
+func (e *Env) Put(key *Sym, val Val) {
   i, found := e.Find(key)
   
   if found == nil {
-    e.Insert(i, key).Val.Init(val_type, val)
+    e.Insert(i, key).Val = val
   } else {
-    found.Val.Init(val_type, val)
+    found.Val = val
   }
 }

@@ -30,3 +30,8 @@ func (v Val) Dump(out *strings.Builder) {
 func (v Val) String() string {
   return DumpString(v)
 }
+
+func (env *Env) AddVal(g *G, id *Sym, val_type Type, val interface{}, out *Val) {
+  out.Init(val_type, val)
+  env.Put(id, *out)
+}

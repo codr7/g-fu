@@ -11,6 +11,10 @@ func (t *IntType) Init(id *Sym) *IntType {
   return t
 }
 
+func (t *IntType) AsBool(g *G, val Val) bool {
+  return val.AsInt() > 0
+}
+
 func (v Val) AsInt() Int {
   return v.imp.(Int)
 }

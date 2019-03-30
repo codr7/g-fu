@@ -6,6 +6,7 @@ import (
 )
 
 type Type interface {
+  AsBool(g *G, val Val) bool
   Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
   Dump(x Val, out *strings.Builder)
   Eq(x, y Val) bool
@@ -18,6 +19,10 @@ type BasicType struct {
 func (t *BasicType) Init(id *Sym) *BasicType {
   t.id = id
   return t
+}
+
+func (t *BasicType) AsBool(g *G, val Val) bool {
+  return true
 }
 
 func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {

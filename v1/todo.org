@@ -1,11 +1,8 @@
-* add g.Bool/T/F
-** add Type.AsBool() Val
 * add vararg support
 ** replace Prim.nargs with min/max_args
 ** add Fun.min/max_args
 *** use instead of len(args)
 ** prefix arg with '*'
-
 * extract fun/let prims
 * add do prim
 ** (do ...)
