@@ -19,7 +19,7 @@ func (v *Val) Init(val_type Type, imp interface{}) *Val {
   return v
 }
 
-func (v Val) Call(g *G, args []Val, env *Env, pos Pos) (Val, Error) {
+func (v Val) Call(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return v.val_type.Call(g, v, args, env, pos)
 }
 

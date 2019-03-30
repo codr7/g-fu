@@ -14,16 +14,22 @@ func (t *FunType) Init(id *Sym) *FunType {
   return t
 }
 
-func (t *FunType) Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error) {
+func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   f := val.AsFun()
   
   if len(args) != len(f.args) {
     return g.NIL, g.NewError(pos, "Arg mismatch: %v", args)
   }
-  
+
+  avs, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, g.NewError(pos, "Args eval failed: %v", e)
+  }
+
   var be Env
   f.env.Clone(&be)
-  be.Merge(f.args, args)
+  be.Merge(f.args, avs)
   return Forms(f.body).Eval(g, &be)
 }
 

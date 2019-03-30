@@ -14,7 +14,7 @@ func (t *NilType) Init(id *Sym) *NilType {
   return t
 }
 
-func (t *NilType) Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error) {
+func (t *NilType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   return g.NIL, g.NewError(pos, "Nil call")
 }
   

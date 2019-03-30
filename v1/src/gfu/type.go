@@ -6,7 +6,7 @@ import (
 )
 
 type Type interface {
-  Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error)
+  Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
   Dump(x Val, out *strings.Builder)
   Eq(x, y Val) bool
 }
@@ -20,7 +20,7 @@ func (t *BasicType) Init(id *Sym) *BasicType {
   return t
 }
 
-func (t *BasicType) Call(g *G, val Val, args []Val, env *Env, pos Pos) (Val, Error) {
+func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   return val, nil
 }
 

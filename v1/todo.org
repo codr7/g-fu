@@ -1,4 +1,3 @@
-* pass Call args without eval
 * add (do ...)
 ** call Forms().Eval()
 * add g.Bool/T/F

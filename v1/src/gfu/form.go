@@ -163,13 +163,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
       return g.NIL, g.NewError(bf.Pos(), "Fun eval failed: %v", e)
     }
     
-    args, e := ListForm(b[1:]).Eval(g, env)
-    
-    if e != nil {
-      return g.NIL, g.NewError(bf.Pos(), "Args eval failed: %v", e)
-    }
-
-    rv, e := fv.Call(g, args, env, bf.Pos())
+    rv, e := fv.Call(g, b[1:], env, bf.Pos())
     
     if e != nil {
       return g.NIL, g.NewError(bf.Pos(), "Call failed: %v", e)
