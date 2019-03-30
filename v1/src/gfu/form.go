@@ -7,6 +7,8 @@ import (
 
 type Form interface {
   fmt.Stringer
+  Dumper
+  
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
   FormType() *FormType
@@ -45,6 +47,10 @@ func (f *BasicForm) Body() []Form {
   return []Form{f}
 }
 
+func (f *BasicForm) Dump(out *strings.Builder) {
+  out.WriteString(f.form_type.id)
+}
+
 func (f *BasicForm) Eval(g *G, env *Env) (Val, Error) {
   return g.NIL, nil
 }
@@ -58,7 +64,7 @@ func (f *BasicForm) Pos() Pos {
 }
 
 func (f *BasicForm) String() string {
-  return f.form_type.id
+  return String(f)
 }
 
 type ExprForm struct {
@@ -77,6 +83,20 @@ func (f *ExprForm) Append(forms...Form) {
 
 func (f *ExprForm) Body() []Form {
   return f.body
+}
+
+func (f *ExprForm) Dump(out *strings.Builder) {
+  out.WriteRune('(')
+
+  for i, bf := range f.body {
+    if i > 0 {
+      out.WriteRune(' ')
+    }
+
+    bf.Dump(out)
+  }
+  
+  out.WriteRune(')')
 }
 
 func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
@@ -176,19 +196,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
 }
 
 func (f *ExprForm) String() string {
-  var buf strings.Builder
-  buf.WriteRune('(')
-
-  for i, bf := range f.body {
-    if i > 0 {
-      buf.WriteRune(' ')
-    }
-    
-    buf.WriteString(bf.String())
-  }
-  
-  buf.WriteRune(')')
-  return buf.String()
+  return String(f)
 }
 
 type IdForm struct {
@@ -200,6 +208,10 @@ func (f *IdForm) Init(pos Pos, id *Sym) *IdForm {
   f.BasicForm.Init(&FORM_ID, pos)
   f.id = id
   return f
+}
+
+func (f *IdForm) Dump(out *strings.Builder) {
+  out.WriteString(f.id.name)
 }
 
 func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
@@ -214,7 +226,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
 }
 
 func (f *IdForm) String() string {
-  return f.id.name
+  return String(f)
 }
 
 type ListForm []Form
@@ -250,8 +262,12 @@ func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
   return f.val, nil
 }
 
+func (f *LitForm) Dump(out *strings.Builder) {
+  f.val.Dump(out)
+}
+
 func (f *LitForm) String() string {
-  return f.val.String()
+  return String(f)
 }
 
 type Forms []Form

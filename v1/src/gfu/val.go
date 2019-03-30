@@ -28,7 +28,5 @@ func (v Val) Dump(out *strings.Builder) {
 }
 
 func (v Val) String() string {
-  var out strings.Builder
-  v.Dump(&out)
-  return out.String()
+  return String(v)
 }
