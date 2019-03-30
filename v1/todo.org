@@ -4,6 +4,9 @@
 ** call Forms().Eval()
 * add g.Bool/T/F
 ** add Type.AsBool() Val
+* add vararg support
+** prefix arg with '*'
+** Prim.nargs = -1
 * add and/or-prims
 ** use instead of if
 * recursive fib
