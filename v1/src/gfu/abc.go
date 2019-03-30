@@ -13,14 +13,38 @@ func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 }
 
 func int_add_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  avs, e := args.Eval(g, env)
+  in, e := args.Eval(g, env)
 
   if e != nil {
     return g.NIL, e
   }
 
   var out Val
-  out.Init(g.Int, avs[0].AsInt() + avs[1].AsInt())
+  var v Int
+  
+  for _, iv := range in {
+    v += iv.AsInt()
+  }
+  
+  out.Init(g.Int, v)
+  return out, nil
+}
+
+func int_sub_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var out Val
+  v := in[0].AsInt()
+  
+  for _, iv := range in[1:] {
+    v -= iv.AsInt()
+  }
+  
+  out.Init(g.Int, v)
   return out, nil
 }
 
@@ -35,6 +59,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, g.Sym("T"), g.Bool, true, &g.T)
   e.AddVal(g, g.Sym("F"), g.Bool, false, &g.F)
   
-  e.AddPrim(g, g.Sym("bool"), 1, bool_imp)
-  e.AddPrim(g, g.Sym("+"), 2, int_add_imp)
+  e.AddPrim(g, g.Sym("bool"), 1, 1, bool_imp)
+  e.AddPrim(g, g.Sym("+"), 0, -1, int_add_imp)
+  e.AddPrim(g, g.Sym("-"), 1, -1, int_sub_imp)
 }

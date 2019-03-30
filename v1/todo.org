@@ -2,11 +2,12 @@
 ** replace Prim.nargs with min/max_args
 ** add Fun.min/max_args
 *** use instead of len(args)
-** prefix arg with '*'
-* extract fun/let prims
 * add do prim
 ** (do ...)
 ** call Forms().Eval()
+* extract fun/let prims
+** remove explicit progn
+* switch + to vararg
 * add and/or-prims
 ** instead of if
 ** vararg
@@ -25,3 +26,5 @@
 **** backup/restore g.RootEnv 
 * add Rat type
 ** use big.Rat
+
+(let (x 35) (+ x 7) (+ x 7))
