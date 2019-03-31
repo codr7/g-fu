@@ -1,5 +1,4 @@
 * recursive fib
-** add dump prim
 ** add if prim
 *** opt else
 * prevent dup splat

@@ -36,6 +36,7 @@ func (g *G) Load(fname string, env *Env, pos Pos) (Val, Error) {
 
   in := strings.NewReader(string(s))
   var fs Forms
+  pos.Init(fname)
   
   for {
     f, e := g.Read(in, &pos, 0)

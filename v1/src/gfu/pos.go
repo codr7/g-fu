@@ -8,12 +8,12 @@ type Pos struct {
 var MIN_POS Pos
 
 func init() {
-  MIN_POS.Init("n/a", 1, 0)
+  MIN_POS.Init("n/a")
 }
 
-func (p *Pos) Init(src string, row, col int) *Pos {
+func (p *Pos) Init(src string) *Pos {
   p.src = src
-  p.Row = row
-  p.Col = col
+  p.Row = 1
+  p.Col = 0
   return p
 }

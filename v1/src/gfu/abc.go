@@ -2,6 +2,8 @@ package gfu
 
 import (
   //"log"
+  "os"
+  "strings"
 )
 
 func do_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
@@ -69,6 +71,23 @@ func let_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   }
   
   return rv, nil
+}
+
+func dump_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  var out strings.Builder
+  
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+
+    v.Dump(&out)
+  }
+
+  os.Stderr.WriteString(out.String())
+  return g.NIL, nil
 }
 
 func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
@@ -178,6 +197,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
   e.AddPrim(g, g.S("let"), 1, -1, let_imp)
 
+  e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)
   e.AddPrim(g, g.S("and"), 1, -1, and_imp)
