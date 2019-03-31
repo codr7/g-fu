@@ -216,13 +216,26 @@ func (f *IdForm) Dump(out *strings.Builder) {
 
 func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   id := f.id
-  _, v := env.Find(id)
-
-  if v == nil {
-    return g.NIL, g.NewError(f.pos, "Unknown: %v", id)
+  splat := false
+  
+  if strings.HasSuffix(id.name, "..") {
+    id = g.Sym(id.name[:len(id.name)-2])
+    splat = true
   }
   
-  return v.Val, nil
+  _, found := env.Find(id)
+
+  if found == nil {
+    return g.NIL, g.NewError(f.pos, "Unknown: %v", id)
+  }
+
+  v := found.Val
+  
+  if splat {
+    v.Init(g.Splat, v)
+  }
+  
+  return v, nil
 }
 
 func (f *IdForm) String() string {
@@ -240,8 +253,12 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     if e != nil {
       return nil, g.NewError(bf.Pos(), "Arg eval failed: %v", e)
     }
-    
-    out = append(out, v)
+
+    if v.val_type == g.Splat {
+      out = v.AsSplat().Splat(out)
+    } else {
+      out = append(out, v)
+    }
   }
 
   return out, nil

@@ -32,6 +32,10 @@ func (t *VecType) Dump(val Val, out *strings.Builder) {
   out.WriteRune(')')
 }
 
+func (t *VecType) Splat(val Val, out []Val) []Val {
+  return append(out, val.AsVec().items...)
+}
+
 func (v Val) AsVec() *Vec {
   return v.imp.(*Vec)
 }

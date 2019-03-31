@@ -14,7 +14,7 @@ func (t *NilType) Init(id *Sym) *NilType {
   return t
 }
 
-func (t *NilType) AsBool(g *G, _ Val) bool {
+func (t *NilType) AsBool(g *G, val Val) bool {
   return false
 }
 

@@ -16,14 +16,13 @@ func (t *FunType) Init(id *Sym) *FunType {
 
 func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   f := val.AsFun()
-  nargs := len(args)
+  avs, e := args.Eval(g, env)
+  nargs := len(avs)
   
   if (f.min_args != -1 && nargs < f.min_args) ||
     (f.max_args != -1 && nargs > f.max_args) {
     return g.NIL, g.NewError(pos, "Arg mismatch")
   }
-
-  avs, e := args.Eval(g, env)
 
   if e != nil {
     return g.NIL, g.NewError(pos, "Args eval failed: %v", e)

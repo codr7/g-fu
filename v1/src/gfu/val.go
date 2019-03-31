@@ -27,6 +27,10 @@ func (v Val) Dump(out *strings.Builder) {
   v.val_type.Dump(v, out)
 }
 
+func (v Val) Splat(out []Val) []Val {
+  return v.val_type.Splat(v, out)
+}
+
 func (v Val) String() string {
   return DumpString(v)
 }

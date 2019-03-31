@@ -1,12 +1,11 @@
-* add vararg support
-** add splat support with ..
+* add Lit splat support
+* extract fun/let prims
 * add do prim
 ** (do ...)
 ** call Forms().Eval()
-* extract fun/let prims
-** add type.New method
-*** call with args when type is called
-**** (Vec 1 2 3)
+* add type.New method
+** call with args when type is called
+** (Vec 1 2 3)
 * add and/or-prims
 ** instead of if
 ** vararg
