@@ -1,3 +1,7 @@
+* add Meta type
+** add types to env
+*** g.AddType
+**** use in Abc
 * add type.New method
 ** call with args when type is called
 ** throw error from BasicType

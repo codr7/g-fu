@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-  fmt.Printf("g-fu v1.1\n\n")
+  fmt.Printf("g-fu v1.2\n\n")
   g, e := gfu.NewG()
 
   if e != nil {
@@ -21,7 +21,8 @@ func main() {
   var f gfu.Form
   pos := gfu.MIN_POS
   
-  f, e = g.ReadString("(do 1 2 3)", &pos)
+  f, e = g.ReadString("Vec", &pos)
+  //f, e = g.ReadString("(do 1 2 3)", &pos)
   //f, e = g.ReadString("(+ 42 _..)", &pos)
   //f, e = g.ReadString("(+ 7..)", &pos)
   //f, e = g.ReadString("(- 42 1 2 3)", &pos)
