@@ -73,33 +73,22 @@ func let_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return rv, nil
 }
 
-func dump_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  var out strings.Builder
-  
-  for _, in := range args {
-    v, e := in.Eval(g, env)
-
-    if e != nil {
-      return g.NIL, e
-    }
-
-    v.Dump(&out)
-  }
-
-  os.Stderr.WriteString(out.String())
-  return g.NIL, nil
-}
-
-func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  in, e := args[0].Eval(g, env)
+func if_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  c, e := args[0].Eval(g, env)
 
   if e != nil {
     return g.NIL, e
   }
 
-  var out Val
-  out.Init(g.Bool, in.AsBool(g))
-  return out, nil
+  if c.AsBool(g) {
+    return args[1].Eval(g, env)
+  }
+
+  if len(args) > 2 {
+    return args[2].Eval(g, env)
+  }
+
+  return g.NIL, nil
 }
 
 func or_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
@@ -135,6 +124,57 @@ func and_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   }
 
   return v, nil
+}
+
+func dump_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  var out strings.Builder
+  
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+
+    v.Dump(&out)
+    out.WriteRune('\n')
+  }
+
+  os.Stderr.WriteString(out.String())
+  return g.NIL, nil
+}
+
+func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var out Val
+  out.Init(g.Bool, in.AsBool(g))
+  return out, nil
+}
+
+func int_lt_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var out Val
+  v := in[0].AsInt()
+  
+  for _, iv := range in[1:] {
+    if iv.AsInt() <= v {
+      out.Init(g.Bool, false)
+      return out, nil
+    }
+  }
+  
+  out.Init(g.Bool, true)
+  return out, nil
 }
 
 func int_add_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
@@ -196,11 +236,13 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("do"), 0, -1, do_imp)
   e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
   e.AddPrim(g, g.S("let"), 1, -1, let_imp)
+  e.AddPrim(g, g.S("if"), 2, 3, if_imp)
+  e.AddPrim(g, g.S("or"), 1, -1, or_imp)
+  e.AddPrim(g, g.S("and"), 1, -1, and_imp)
 
   e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
-  e.AddPrim(g, g.S("or"), 1, -1, or_imp)
-  e.AddPrim(g, g.S("and"), 1, -1, and_imp)
-  e.AddPrim(g, g.S("+"), 1, -1, int_add_imp)
+  e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
+  e.AddPrim(g, g.S("+"), 2, -1, int_add_imp)
   e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)
 }
