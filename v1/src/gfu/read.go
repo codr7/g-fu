@@ -119,7 +119,7 @@ func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
     pos.Col++
   }
 
-  return new(IdForm).Init(fpos, g.Sym(buf.String())), nil
+  return new(IdForm).Init(fpos, g.S(buf.String())), nil
 }
 
 func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {

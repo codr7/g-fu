@@ -5,6 +5,6 @@
 ** add Form.Compile
 * switch Fun body to Ops
 * add g.stack
-** keep var/index map during compilation
+** keep track of stack size when compiling
 ** push/pop in LetOp
-** access stack by index in GetOp
+** access by index from end in GetOp

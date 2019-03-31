@@ -1,10 +1,10 @@
 * add and/or-prims
-** instead of if
 ** vararg
+** replaces if
+* rename g.NewError to g.E
 * recursive fib
 * repl script
 * add basic tests
-* switch Int type to big.Int
 * add ;/, support
 * add g.Sym type
 * add def like let
@@ -13,5 +13,6 @@
 *** change var lookup
 *** change let
 **** backup/restore g.RootEnv 
+* switch Int type to big.Int
 * add Rat type
 ** use big.Rat

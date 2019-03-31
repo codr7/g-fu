@@ -40,7 +40,7 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
       copy(v.items, avs[i:])
       var vv Val
       vv.Init(g.Vec, v)
-      be.Put(g.Sym(id[:len(id)-2]), vv)
+      be.Put(g.S(id[:len(id)-2]), vv)
       break
     }
     

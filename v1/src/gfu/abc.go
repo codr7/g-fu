@@ -128,24 +128,24 @@ func int_sub_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.Bool = e.AddType(g, new(BoolType).Init(g.Sym("Bool")))
-  g.Fun = e.AddType(g, new(FunType).Init(g.Sym("Fun")))
-  g.Int = e.AddType(g, new(IntType).Init(g.Sym("Int")))
-  g.Meta = e.AddType(g, new(MetaType).Init(g.Sym("Meta")))
-  g.Nil = e.AddType(g, new(NilType).Init(g.Sym("Nil")))
-  g.Prim = e.AddType(g, new(PrimType).Init(g.Sym("Prim")))
-  g.Splat = e.AddType(g, new(SplatType).Init(g.Sym("Splat")))
-  g.Vec = e.AddType(g, new(VecType).Init(g.Sym("Vec")))
+  g.Bool = e.AddType(g, new(BoolType).Init(g.S("Bool")))
+  g.Fun = e.AddType(g, new(FunType).Init(g.S("Fun")))
+  g.Int = e.AddType(g, new(IntType).Init(g.S("Int")))
+  g.Meta = e.AddType(g, new(MetaType).Init(g.S("Meta")))
+  g.Nil = e.AddType(g, new(NilType).Init(g.S("Nil")))
+  g.Prim = e.AddType(g, new(PrimType).Init(g.S("Prim")))
+  g.Splat = e.AddType(g, new(SplatType).Init(g.S("Splat")))
+  g.Vec = e.AddType(g, new(VecType).Init(g.S("Vec")))
   
-  e.AddVal(g, g.Sym("_"), g.Nil, nil, &g.NIL)
-  e.AddVal(g, g.Sym("T"), g.Bool, true, &g.T)
-  e.AddVal(g, g.Sym("F"), g.Bool, false, &g.F)
+  e.AddVal(g, g.S("_"), g.Nil, nil, &g.NIL)
+  e.AddVal(g, g.S("T"), g.Bool, true, &g.T)
+  e.AddVal(g, g.S("F"), g.Bool, false, &g.F)
   
-  e.AddPrim(g, g.Sym("do"), 0, -1, do_imp)
-  e.AddPrim(g, g.Sym("fun"), 1, -1, fun_imp)
-  e.AddPrim(g, g.Sym("let"), 1, -1, let)
+  e.AddPrim(g, g.S("do"), 0, -1, do_imp)
+  e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
+  e.AddPrim(g, g.S("let"), 1, -1, let)
 
-  e.AddPrim(g, g.Sym("bool"), 1, 1, bool_imp)
-  e.AddPrim(g, g.Sym("+"), 0, -1, int_add_imp)
-  e.AddPrim(g, g.Sym("-"), 1, -1, int_sub_imp)
+  e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
+  e.AddPrim(g, g.S("+"), 0, -1, int_add_imp)
+  e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)
 }

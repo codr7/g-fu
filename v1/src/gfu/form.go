@@ -146,7 +146,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   splat := false
   
   if strings.HasSuffix(id.name, "..") {
-    id = g.Sym(id.name[:len(id.name)-2])
+    id = g.S(id.name[:len(id.name)-2])
     splat = true
   }
   

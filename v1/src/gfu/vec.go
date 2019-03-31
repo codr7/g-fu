@@ -4,10 +4,6 @@ type Vec struct {
   items []Val
 }
 
-func NewVec() *Vec {
-  return new(Vec)
-}
-
 func (v *Vec) Push(item Val) {
   v.items = append(v.items, item)
 }
