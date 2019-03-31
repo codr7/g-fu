@@ -1,0 +1,10 @@
+* add Op/BasicOp types
+* add Ops alias
+* add compile phase Form->Ops
+** move Eval to Op
+** add Form.Compile
+* switch Fun body to Ops
+* add g.stack
+** keep var/index map during compilation
+** push/pop in LetOp
+** access stack by index in GetOp
