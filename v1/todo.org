@@ -1,10 +1,8 @@
-* profile fib_rec.gfu
 * prevent dup splat
 ** return self
 * only allow single assign
 ** tag vars with env
 ** check in Put
-** add prof gfu flag
 * basic tests
 * ;/, support
 * repl
