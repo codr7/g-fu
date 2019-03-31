@@ -1,0 +1,10 @@
+* g.Sym type
+* def-prim like let
+** set in g.RootEnv
+** add Sym.is_def
+*** change var lookup
+*** change let
+**** backup/restore g.RootEnv 
+* switch Int to big.Int
+* add Rat type
+** use big.Rat

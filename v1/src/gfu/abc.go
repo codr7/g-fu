@@ -170,7 +170,7 @@ func bench_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   }
 
   var v Val
-  v.Init(g.Int, time.Now().Sub(t).Nanoseconds() / 1000) 
+  v.Init(g.Int, time.Now().Sub(t).Nanoseconds() / 1000000) 
   return v, nil
 }
 

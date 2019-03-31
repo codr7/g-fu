@@ -1,15 +1,10 @@
+* profile fib_rec.gfu
 * prevent dup splat
 ** return self
+* only allow single assign
+** tag vars with env
+** check in Put
+** add prof gfu flag
 * basic tests
 * ;/, support
 * repl
-* g.Sym type
-* def-prim like let
-** set in g.RootEnv
-** add Sym.is_def
-*** change var lookup
-*** change let
-**** backup/restore g.RootEnv 
-* switch Int type to big.Int
-* add Rat type
-** use big.Rat
