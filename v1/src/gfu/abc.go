@@ -8,14 +8,14 @@ func fun_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   asf := args[0]
   
   if asf.FormType() != &FORM_EXPR {
-    return g.NIL, g.NewError(asf.Pos(), "Invalid fun args: %v", asf)
+    return g.NIL, g.E(asf.Pos(), "Invalid fun args: %v", asf)
   }
   
   var as []*Sym
   
   for _, af := range asf.(*ExprForm).body {
     if af.FormType() != &FORM_ID {
-      return g.NIL, g.NewError(af.Pos(), "Invalid fun arg: %v", af)
+      return g.NIL, g.E(af.Pos(), "Invalid fun arg: %v", af)
     }
     
     as = append(as, af.(*IdForm).id)
@@ -30,7 +30,7 @@ func let(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   bsf := args[0]
 
   if bsf.FormType() != &FORM_EXPR {
-    return g.NIL, g.NewError(bsf.Pos(), "Invalid let bindings: %v", bsf)
+    return g.NIL, g.E(bsf.Pos(), "Invalid let bindings: %v", bsf)
   }
 
   bs := bsf.(*ExprForm).body
@@ -41,7 +41,7 @@ func let(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
     kf, vf := bs[i], bs[i+1]
 
     if kf.FormType() != &FORM_ID {
-      return g.NIL, g.NewError(kf.Pos(), "Invalid let key: %v", kf)
+      return g.NIL, g.E(kf.Pos(), "Invalid let key: %v", kf)
     }
 
     k := kf.(*IdForm).id

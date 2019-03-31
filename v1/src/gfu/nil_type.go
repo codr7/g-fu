@@ -19,7 +19,7 @@ func (t *NilType) AsBool(g *G, val Val) bool {
 }
 
 func (t *NilType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
-  return g.NIL, g.NewError(pos, "Nil call")
+  return g.NIL, g.E(pos, "Nil call")
 }
   
 func (t *NilType) Dump(val Val, out *strings.Builder) {

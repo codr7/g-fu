@@ -116,7 +116,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   rv, e := fv.Call(g, b[1:], env, bf.Pos())
   
   if e != nil {
-    return g.NIL, g.NewError(bf.Pos(), "Call failed: %v", e)
+    return g.NIL, g.E(bf.Pos(), "Call failed: %v", e)
   }
   
   return rv, nil
@@ -153,7 +153,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   _, found := env.Find(id)
 
   if found == nil {
-    return g.NIL, g.NewError(f.pos, "Unknown: %v", id)
+    return g.NIL, g.E(f.pos, "Unknown: %v", id)
   }
 
   v := found.Val
@@ -178,7 +178,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     v, e := bf.Eval(g, env)
 
     if e != nil {
-      return nil, g.NewError(bf.Pos(), "Arg eval failed: %v", e)
+      return nil, g.E(bf.Pos(), "Arg eval failed: %v", e)
     }
 
     if v.val_type == g.Splat {

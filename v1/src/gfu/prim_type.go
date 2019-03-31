@@ -21,7 +21,7 @@ func (t *PrimType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, E
   
   if (p.min_args != -1 && nargs < p.min_args) ||
     (p.max_args != -1 && nargs > p.max_args) {
-    return g.NIL, g.NewError(pos, "Arg mismatch")
+    return g.NIL, g.E(pos, "Arg mismatch")
   }
 
   return p.imp(g, args, env, pos)

@@ -30,7 +30,7 @@ func (t *BasicType) AsBool(g *G, val Val) bool {
 
 func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   if len(args) > 0 {
-    return g.NIL, g.NewError(pos, "Too many args")
+    return g.NIL, g.E(pos, "Too many args")
   }
   
   return val, nil
@@ -49,7 +49,7 @@ func (t *BasicType) Id() *Sym {
 }
 
 func (t *BasicType) New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)  {
-  return g.NIL, g.NewError(pos, "Missing constructor: %v", t.Id())
+  return g.NIL, g.E(pos, "Missing constructor: %v", t.Id())
 }
 
 func (t *BasicType) Splat(g *G, val Val, out []Val) []Val {

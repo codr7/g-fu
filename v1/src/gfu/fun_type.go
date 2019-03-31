@@ -21,11 +21,11 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
   
   if (f.min_args != -1 && nargs < f.min_args) ||
     (f.max_args != -1 && nargs > f.max_args) {
-    return g.NIL, g.NewError(pos, "Arg mismatch")
+    return g.NIL, g.E(pos, "Arg mismatch")
   }
 
   if e != nil {
-    return g.NIL, g.NewError(pos, "Args eval failed: %v", e)
+    return g.NIL, g.E(pos, "Args eval failed: %v", e)
   }
 
   var be Env

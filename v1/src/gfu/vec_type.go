@@ -36,7 +36,7 @@ func (t *VecType) New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Err
   is, e := args.Eval(g, env)
 
   if e != nil {
-    return g.NIL, g.NewError(pos, "Constructor arg eval failed: %v", e)
+    return g.NIL, g.E(pos, "Constructor arg eval failed: %v", e)
   }
 
   var out Val
