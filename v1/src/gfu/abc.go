@@ -1,5 +1,9 @@
 package gfu
 
+import (
+  //"log"
+)
+
 func do_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return Forms(args).Eval(g, env)
 }
@@ -26,7 +30,7 @@ func fun_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return fv, nil
 }
 
-func let(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+func let_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   bsf := args[0]
 
   if bsf.FormType() != &FORM_EXPR {
@@ -36,7 +40,7 @@ func let(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   bs := bsf.(*ExprForm).body
   var le Env
   env.Clone(&le)
-
+  
   for i := 0; i < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
@@ -45,19 +49,13 @@ func let(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
     }
 
     k := kf.(*IdForm).id
-    v, e := vf.Eval(g, env)
+    v, e := vf.Eval(g, &le)
 
     if e != nil {
       return g.NIL, e
     }
 
-    i, found := le.Find(k)
-
-    if found == nil {
-      le.Insert(i, k).Val =  v
-    } else {
-      found.Val = v
-    }
+    le.Put(k, v)
   }
 
   if len(args) == 1 {
@@ -178,7 +176,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddPrim(g, g.S("do"), 0, -1, do_imp)
   e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
-  e.AddPrim(g, g.S("let"), 1, -1, let)
+  e.AddPrim(g, g.S("let"), 1, -1, let_imp)
 
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)

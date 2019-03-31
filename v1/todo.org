@@ -1,9 +1,12 @@
 * recursive fib
-* repl script
-* add basic tests
-* add ;/, support
-* add g.Sym type
-* add def like let
+** copy snigl
+** add support for scripts
+** add if
+* repl
+* basic tests
+* ;/, support
+* g.Sym type
+* def-prim like let
 ** set in g.RootEnv
 ** add Sym.is_def
 *** change var lookup

@@ -21,7 +21,8 @@ func main() {
   var f gfu.Form
   pos := gfu.MIN_POS
 
-  f, e = g.ReadString("(and T 42)", &pos)
+  f, e = g.ReadString("(let (fib (fun (n) (or (and n (+ (fib (- n 1)) 1)) 1))) (fib 7))", &pos)
+  //f, e = g.ReadString("(and T 42)", &pos)
   //f, e = g.ReadString("(or 42 T _)", &pos)
   //f, e = g.ReadString("(do 1 2 3)", &pos)
   //f, e = g.ReadString("(+ 42 _..)", &pos)
