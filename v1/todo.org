@@ -1,7 +1,7 @@
-* extract fun/let prims
 * add do prim
 ** (do ...)
 ** call Forms().Eval()
+* change Nil splat to nothing
 * add type.New method
 ** call with args when type is called
 ** throw error from BasicType

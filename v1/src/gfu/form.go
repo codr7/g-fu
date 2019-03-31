@@ -102,97 +102,24 @@ func (f *ExprForm) Dump(out *strings.Builder) {
 func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   b := f.body
   
-  if len(b) > 0 {
-    bf := b[0]
-    
-    if (bf.FormType() == &FORM_ID) {
-      switch bid := bf.(*IdForm).id; bid {
-      case g.Sym("fun"):
-        asf := b[1]
-
-        if asf.FormType() != &FORM_EXPR {
-          return g.NIL, g.NewError(bf.Pos(), "Invalid fun args: %v", asf)
-        }
-
-        var as []*Sym
-        
-        for _, af := range asf.(*ExprForm).body {
-          if af.FormType() != &FORM_ID {
-            return g.NIL, g.NewError(af.Pos(), "Invalid fun arg: %v", af)
-          }
-
-          as = append(as, af.(*IdForm).id)
-        }
-
-        var fv Val
-        fv.Init(g.Fun, NewFun(as, b[2:], env))
-        return fv, nil
-      case g.Sym("let"):
-        bsf := b[1]
-
-        if bsf.FormType() != &FORM_EXPR {
-          return g.NIL, g.NewError(bsf.Pos(), "Invalid let bindings: %v", bsf)
-        }
-
-        bs := bsf.(*ExprForm).body
-        var le Env
-        env.Clone(&le)
-
-        for i := 0; i < len(bs); i += 2 {
-          kf, vf := bs[i], bs[i+1]
-
-          if kf.FormType() != &FORM_ID {
-            return g.NIL, g.NewError(kf.Pos(), "Invalid let key: %v", kf)
-          }
-
-          k := kf.(*IdForm).id
-          v, e := vf.Eval(g, env)
-
-          if e != nil {
-            return g.NIL, e
-          }
-
-          i, found := le.Find(k)
-
-          if found == nil {
-            le.Insert(i, k).Val =  v
-          } else {
-            found.Val = v
-          }
-        }
-
-        if len(b) > 1 {
-          rv, e := Forms(b[2:]).Eval(g, &le)
-          
-          if e != nil {
-            return g.NIL, e
-          }
-
-          return rv, nil
-        }
-
-        return g.NIL, nil
-      default:
-        break
-      }
-    }
-
-    fv, e := bf.Eval(g, env)
-    
-    if e != nil {
-      return g.NIL, g.NewError(bf.Pos(), "Fun eval failed: %v", e)
-    }
-    
-    rv, e := fv.Call(g, b[1:], env, bf.Pos())
-    
-    if e != nil {
-      return g.NIL, g.NewError(bf.Pos(), "Call failed: %v", e)
-    }
-    
-    return rv, nil
+  if b == nil {
+    return g.NIL, nil
   }
-
-  return g.NIL, nil
+  
+  bf := b[0]
+  fv, e := bf.Eval(g, env)
+  
+  if e != nil {
+    return g.NIL, e
+  }
+  
+  rv, e := fv.Call(g, b[1:], env, bf.Pos())
+  
+  if e != nil {
+    return g.NIL, g.NewError(bf.Pos(), "Call failed: %v", e)
+  }
+  
+  return rv, nil
 }
 
 func (f *ExprForm) String() string {
