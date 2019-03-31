@@ -21,13 +21,14 @@ func main() {
   var f gfu.Form
   pos := gfu.MIN_POS
   
+  f, e = g.ReadString("(+ 42 _..)", &pos)
   //f, e = g.ReadString("(+ 7..)", &pos)
   //f, e = g.ReadString("(- 42 1 2 3)", &pos)
   //f, e = g.ReadString("((fun (xs..) xs) 1 2 3)", &pos)
   //f, e = g.ReadString("((fun (xs..) (+ xs..)) 1 2 3)", &pos)
   //f, e = g.ReadString("(let (x 35) ((fun (y) y) 42))", &pos)
   //f, e = g.ReadString("((fun (x) (+ x 7)) 35)", &pos)
-  f, e = g.ReadString("(let (x 35) ((fun (y) (+ x y)) 7))", &pos)
+  //f, e = g.ReadString("(let (x 35) ((fun (y) (+ x y)) 7))", &pos)
   //f, e = g.ReadString("(_)", &pos)
   //f, e = g.ReadString("(bool 42)", &pos)
   //f, e = g.ReadString("(42 7)", &pos)

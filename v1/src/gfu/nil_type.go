@@ -25,3 +25,8 @@ func (t *NilType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
 func (t *NilType) Dump(val Val, out *strings.Builder) {
   out.WriteRune('_')
 }
+
+func (t *NilType) Splat(g *G, val Val, out []Val) []Val {
+  return out
+}
+
