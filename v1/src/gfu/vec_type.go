@@ -32,6 +32,20 @@ func (t *VecType) Dump(val Val, out *strings.Builder) {
   out.WriteRune(')')
 }
 
+func (t *VecType) New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)  {
+  is, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, g.NewError(pos, "Constructor arg eval failed: %v", e)
+  }
+
+  var out Val
+  v := new(Vec)
+  v.items = is
+  out.Init(g.Vec, v)
+  return out, nil
+}
+
 func (t *VecType) Splat(g *G, val Val, out []Val) []Val {
   return append(out, val.AsVec().items...)
 }

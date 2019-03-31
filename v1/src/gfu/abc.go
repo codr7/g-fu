@@ -128,13 +128,14 @@ func int_sub_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.Bool = new(BoolType).Init(g.Sym("Bool"))
-  g.Fun = new(FunType).Init(g.Sym("Fun"))
-  g.Int = new(IntType).Init(g.Sym("Int"))
-  g.Nil = new(NilType).Init(g.Sym("Nil"))
-  g.Prim = new(PrimType).Init(g.Sym("Prim"))
-  g.Splat = new(SplatType).Init(g.Sym("Splat"))
-  g.Vec = new(VecType).Init(g.Sym("Vec"))
+  g.Bool = e.AddType(g, new(BoolType).Init(g.Sym("Bool")))
+  g.Fun = e.AddType(g, new(FunType).Init(g.Sym("Fun")))
+  g.Int = e.AddType(g, new(IntType).Init(g.Sym("Int")))
+  g.Meta = e.AddType(g, new(MetaType).Init(g.Sym("Meta")))
+  g.Nil = e.AddType(g, new(NilType).Init(g.Sym("Nil")))
+  g.Prim = e.AddType(g, new(PrimType).Init(g.Sym("Prim")))
+  g.Splat = e.AddType(g, new(SplatType).Init(g.Sym("Splat")))
+  g.Vec = e.AddType(g, new(VecType).Init(g.Sym("Vec")))
   
   e.AddVal(g, g.Sym("_"), g.Nil, nil, &g.NIL)
   e.AddVal(g, g.Sym("T"), g.Bool, true, &g.T)

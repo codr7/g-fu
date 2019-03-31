@@ -9,7 +9,7 @@ type G struct {
   sym_tag Tag
   syms Syms
 
-  Bool, Fun, Int, Nil, Prim, Splat, Vec Type
+  Bool, Fun, Int, Meta, Nil, Prim, Splat, Vec Type
   NIL, T, F Val
 }
 
