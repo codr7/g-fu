@@ -38,13 +38,19 @@ func int_sub_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   }
 
   var out Val
-  v := in[0].AsInt()
+
+  if len(in) == 1 {
+    out.Init(g.Int, -in[0].AsInt())
+  } else {
+    v := in[0].AsInt()
+    
+    for _, iv := range in[1:] {
+      v -= iv.AsInt()
+    }
   
-  for _, iv := range in[1:] {
-    v -= iv.AsInt()
+    out.Init(g.Int, v)
   }
   
-  out.Init(g.Int, v)
   return out, nil
 }
 

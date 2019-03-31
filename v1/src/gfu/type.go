@@ -10,7 +10,7 @@ type Type interface {
   Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
   Dump(x Val, out *strings.Builder)
   Eq(x, y Val) bool
-  Splat(val Val, out []Val) []Val
+  Splat(g *G, val Val, out []Val) []Val
 }
 
 type BasicType struct {
@@ -42,6 +42,6 @@ func (t *BasicType) Eq(x, y Val) bool {
   return x.imp == y.imp
 }
 
-func (t *BasicType) Splat(val Val, out []Val) []Val {
+func (t *BasicType) Splat(g *G, val Val, out []Val) []Val {
   return append(out, val)
 }

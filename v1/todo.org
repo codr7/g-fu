@@ -1,4 +1,3 @@
-* add Lit splat support
 * extract fun/let prims
 * add do prim
 ** (do ...)

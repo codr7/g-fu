@@ -22,9 +22,10 @@ func main() {
   var f gfu.Form
   pos := gfu.MIN_POS
   
+  f, e = g.Read(strings.NewReader("(+ 7..)"), &pos, 0)
   //f, e = g.Read(strings.NewReader("(- 42 1 2 3)"), &pos, 0)
   //f, e = g.Read(strings.NewReader("((fun (xs..) xs) 1 2 3)"), &pos, 0)
-  f, e = g.Read(strings.NewReader("((fun (xs..) (+ xs..)) 1 2 3)"), &pos, 0)
+  //f, e = g.Read(strings.NewReader("((fun (xs..) (+ xs..)) 1 2 3)"), &pos, 0)
   //f, e = g.Read(strings.NewReader("(let (x 35) ((fun (y) y) 42))"), &pos, 0)
   //f, e = g.Read(strings.NewReader("((fun (x) (+ x 7)) 35)"), &pos, 0)
   //f, e = g.Read(strings.NewReader("(let (x 35) ((fun (y) (+ x y)) 7))"), &pos, 0)

@@ -137,7 +137,7 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
       return nil, g.NewError(*pos, "Error reading char: %v", re)
     }
     
-    if !unicode.IsDigit(c) {
+    if !unicode.IsDigit(c) && c != '.' {
       if e := g.Unread(in, *pos); e != nil {
         return nil, e
       }
@@ -152,13 +152,26 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
     pos.Col++
   }
 
-  n, e := strconv.ParseInt(buf.String(), 10, 64)
+  s := buf.String()
+  splat := false
+  
+  if strings.HasSuffix(s, "..") {
+    s = s[:len(s)-2]
+    splat = true
+  }
+  
+  n, e := strconv.ParseInt(s, 10, 64)
 
   if e != nil {
-    return nil, g.NewError(*pos, "Invalid num: %v", buf.String()) 
+    return nil, g.NewError(*pos, "Invalid num: %v", s) 
   }
 
   var v Val
   v.Init(g.Int, Int(n))
+
+  if splat {
+    v.Init(g.Splat, v)
+  }
+  
   return new(LitForm).Init(fpos, v), nil
 }
