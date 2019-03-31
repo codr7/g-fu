@@ -4,6 +4,7 @@ import (
   //"log"
   "os"
   "strings"
+  "time"
 )
 
 func do_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
@@ -91,22 +92,6 @@ func if_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return g.NIL, nil
 }
 
-func or_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  for _, in := range args {
-    v, e := in.Eval(g, env)
-
-    if e != nil {
-      return g.NIL, e
-    }
-    
-    if v.AsBool(g) {
-      return v, nil
-    }
-  }
-
-  return g.F, nil
-}
-
 func and_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   var e Error
   var v Val
@@ -123,6 +108,69 @@ func and_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
     }
   }
 
+  return v, nil
+}
+
+func or_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+    
+    if v.AsBool(g) {
+      return v, nil
+    }
+  }
+
+  return g.F, nil
+}
+
+func for_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  nv, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  n := nv.AsInt()
+  b := Forms(args[1:])
+  v := g.NIL
+  
+  for i := Int(0); i < n; i++ {
+    if v, e = b.Eval(g, env); e != nil {
+      return g.NIL, e
+    }
+  }
+  
+  return v, nil
+}
+
+func bench_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  nv, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  n := nv.AsInt()
+  b := Forms(args[1:])
+
+  for i := Int(0); i < n; i++ {
+    b.Eval(g, env)
+  }
+
+  t := time.Now()
+  
+  for i := Int(0); i < n; i++ {
+    if _, e = b.Eval(g, env); e != nil {
+      return g.NIL, e
+    }
+  }
+
+  var v Val
+  v.Init(g.Int, time.Now().Sub(t).Nanoseconds() / 1000) 
   return v, nil
 }
 
@@ -239,6 +287,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("if"), 2, 3, if_imp)
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)
   e.AddPrim(g, g.S("and"), 1, -1, and_imp)
+  e.AddPrim(g, g.S("for"), 1, -1, for_imp)
+  e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
 
   e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)

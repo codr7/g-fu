@@ -1,6 +1,3 @@
-* recursive fib
-** add if prim
-*** opt else
 * prevent dup splat
 ** return self
 * basic tests
