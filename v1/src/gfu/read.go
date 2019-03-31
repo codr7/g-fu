@@ -175,3 +175,7 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
   
   return new(LitForm).Init(fpos, v), nil
 }
+
+func (g *G) ReadString(in string, pos *Pos) (Form, Error) {
+  return g.Read(strings.NewReader(in), pos, 0)
+}
