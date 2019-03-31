@@ -1,5 +1,9 @@
 package gfu
 
+func do_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  return Forms(args).Eval(g, env)
+}
+
 func fun_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   asf := args[0]
   
@@ -136,6 +140,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, g.Sym("T"), g.Bool, true, &g.T)
   e.AddVal(g, g.Sym("F"), g.Bool, false, &g.F)
   
+  e.AddPrim(g, g.Sym("do"), 0, -1, do_imp)
   e.AddPrim(g, g.Sym("fun"), 1, -1, fun_imp)
   e.AddPrim(g, g.Sym("let"), 1, -1, let)
 
