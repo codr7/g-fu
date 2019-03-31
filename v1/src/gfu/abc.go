@@ -85,6 +85,41 @@ func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return out, nil
 }
 
+func or_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+    
+    if v.AsBool(g) {
+      return v, nil
+    }
+  }
+
+  return g.F, nil
+}
+
+func and_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  var e Error
+  var v Val
+  
+  for _, in := range args {
+    v, e = in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+    
+    if !v.AsBool(g) {
+      return g.F, nil
+    }
+  }
+
+  return v, nil
+}
+
 func int_add_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   in, e := args.Eval(g, env)
 
@@ -146,6 +181,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("let"), 1, -1, let)
 
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
-  e.AddPrim(g, g.S("+"), 0, -1, int_add_imp)
+  e.AddPrim(g, g.S("or"), 1, -1, or_imp)
+  e.AddPrim(g, g.S("and"), 1, -1, and_imp)
+  e.AddPrim(g, g.S("+"), 1, -1, int_add_imp)
   e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)
 }

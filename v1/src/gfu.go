@@ -20,8 +20,9 @@ func main() {
 
   var f gfu.Form
   pos := gfu.MIN_POS
-  
-  f, e = g.ReadString("(Vec 1 2 3)", &pos)
+
+  f, e = g.ReadString("(and T 42)", &pos)
+  //f, e = g.ReadString("(or 42 T _)", &pos)
   //f, e = g.ReadString("(do 1 2 3)", &pos)
   //f, e = g.ReadString("(+ 42 _..)", &pos)
   //f, e = g.ReadString("(+ 7..)", &pos)

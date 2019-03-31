@@ -1,7 +1,3 @@
-* add and/or-prims
-** vararg
-** replaces if
-* rename g.NewError to g.E
 * recursive fib
 * repl script
 * add basic tests
