@@ -1,12 +1,16 @@
 package main
 
 import (
+  "flag"
   "fmt"
   "log"
   "os"
+  "runtime/pprof"
   
   "./gfu"
 )
+
+var prof = flag.String("prof", "", "Write CPU profile to specified file")
 
 func main() {
   fmt.Printf("g-fu v1.2\n\n")
@@ -19,11 +23,21 @@ func main() {
   g.RootEnv.InitAbc(g)
   g.Debug = true
   pos := gfu.MIN_POS
+  flag.Parse()
+  
+  if *prof != "" {
+    f, e := os.Create(*prof)
 
-  if len(os.Args) > 1 {
-    args := os.Args[1:]
+    if e != nil {
+      log.Fatal(e)
+    }
+    
+    pprof.StartCPUProfile(f)
+    defer pprof.StopCPUProfile()    
+  }
 
-    if _, e := g.Load(args[0], &g.RootEnv, pos); e != nil {
+  for _, a := range flag.Args() {
+    if _, e := g.Load(a, &g.RootEnv, pos); e != nil {
       log.Fatal(e);
     }
   }  
