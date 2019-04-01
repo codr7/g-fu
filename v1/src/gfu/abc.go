@@ -147,6 +147,39 @@ func for_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return v, nil
 }
 
+func recall_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  if g.recall {
+    return g.NIL, g.E(pos, "Recall already in progress")
+  }
+  
+  var e Error
+  
+  if g.recall_args, e = args.Eval(g, env); e != nil {
+    return g.NIL, g.E(pos, "Recall failed: %v", e)
+  }
+  
+  g.recall = true
+  return g.NIL, nil
+}
+
+func dump_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  var out strings.Builder
+  
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+
+    v.Dump(&out)
+    out.WriteRune('\n')
+  }
+
+  os.Stderr.WriteString(out.String())
+  return g.NIL, nil
+}
+
 func bench_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   nv, e := args[0].Eval(g, env)
 
@@ -174,24 +207,6 @@ func bench_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return v, nil
 }
 
-func dump_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  var out strings.Builder
-  
-  for _, in := range args {
-    v, e := in.Eval(g, env)
-
-    if e != nil {
-      return g.NIL, e
-    }
-
-    v.Dump(&out)
-    out.WriteRune('\n')
-  }
-
-  os.Stderr.WriteString(out.String())
-  return g.NIL, nil
-}
-
 func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   in, e := args[0].Eval(g, env)
 
@@ -201,6 +216,30 @@ func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 
   var out Val
   out.Init(g.Bool, in.AsBool(g))
+  return out, nil
+}
+
+func z_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var out Val
+  out.Init(g.Bool, in.AsInt() == 0)
+  return out, nil
+}
+
+func one_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var out Val
+  out.Init(g.Bool, in.AsInt() == 1)
   return out, nil
 }
 
@@ -288,10 +327,14 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)
   e.AddPrim(g, g.S("and"), 1, -1, and_imp)
   e.AddPrim(g, g.S("for"), 1, -1, for_imp)
+  e.AddPrim(g, g.S("recall"), 0, -1, recall_imp)
+  e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
 
-  e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
+  e.AddPrim(g, g.S("z?"), 1, 1, z_imp)
+  e.AddPrim(g, g.S("one?"), 1, 1, one_imp)
+
   e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
   e.AddPrim(g, g.S("+"), 2, -1, int_add_imp)
   e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)

@@ -30,7 +30,7 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
 
   var be Env
   f.env.Clone(&be)
-  
+recall:
   for i, a := range f.args {
     id := a.name
     
@@ -47,7 +47,20 @@ func (t *FunType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Er
     be.Put(a, avs[i])
   }
 
-  return Forms(f.body).Eval(g, &be)
+  var v Val
+  
+  if v, e = Forms(f.body).Eval(g, &be); e != nil {
+    g.recall = false
+    return g.NIL, e
+  }
+
+  if g.recall {
+    avs = g.recall_args
+    g.recall = false
+    goto recall
+  }
+  
+  return v, nil
 }
 
 func (t *FunType) Dump(val Val, out *strings.Builder) {

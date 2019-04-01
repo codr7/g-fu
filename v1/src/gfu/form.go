@@ -181,6 +181,10 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
       return nil, g.E(bf.Pos(), "Arg eval failed: %v", e)
     }
 
+    if g.recall {
+      break
+    }
+    
     if v.val_type == g.Splat {
       out = v.AsSplat().Splat(g, out)
     } else {
@@ -224,6 +228,10 @@ func (fs Forms) Eval(g *G, env *Env) (Val, Error) {
     
     if out, e = f.Eval(g, env); e != nil {
       return g.NIL, e
+    }
+
+    if g.recall {
+      break
     }
   }
 

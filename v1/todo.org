@@ -1,11 +1,4 @@
-* add recall support
-** add g.recall_fun/recall_args
-*** set on recall
-*** exit Forms/List Eval if set
-*** check in Fun call
-**** goto start if set
-** fib_rec.gfu
-* add fib_rec.go
+* add fib_rec/tail.go
 * prevent dup splat
 ** return self
 * only allow single assign
