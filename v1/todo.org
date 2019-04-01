@@ -1,4 +1,2 @@
-* add fib_rec/tail.go
-* ;/, support
 * fix tests
 * repl
