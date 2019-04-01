@@ -219,27 +219,24 @@ func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   return out, nil
 }
 
-func z_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  in, e := args[0].Eval(g, env)
+func int_eq_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
+  in, e := args.Eval(g, env)
 
   if e != nil {
     return g.NIL, e
   }
 
   var out Val
-  out.Init(g.Bool, in.AsInt() == 0)
-  return out, nil
-}
-
-func one_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  in, e := args[0].Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
+  v := in[0].AsInt()
+  
+  for _, iv := range in[1:] {
+    if iv.AsInt() != v {
+      out.Init(g.Bool, false)
+      return out, nil
+    }
   }
-
-  var out Val
-  out.Init(g.Bool, in.AsInt() == 1)
+  
+  out.Init(g.Bool, true)
   return out, nil
 }
 
@@ -330,11 +327,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("recall"), 0, -1, recall_imp)
   e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
-
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
-  e.AddPrim(g, g.S("z?"), 1, 1, z_imp)
-  e.AddPrim(g, g.S("one?"), 1, 1, one_imp)
-
+  
+  e.AddPrim(g, g.S("="), 2, -1, int_eq_imp)
   e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
   e.AddPrim(g, g.S("+"), 2, -1, int_add_imp)
   e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)

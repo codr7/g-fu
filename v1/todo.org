@@ -4,6 +4,6 @@
 * only allow single assign
 ** tag vars with env
 ** check in Put
-* basic tests
 * ;/, support
+* fix tests
 * repl

@@ -9,7 +9,6 @@ type Type interface {
   AsBool(g *G, val Val) bool
   Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
   Dump(x Val, out *strings.Builder)
-  Eq(x, y Val) bool
   Id() *Sym
   New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
   Splat(g *G, val Val, out []Val) []Val
@@ -38,10 +37,6 @@ func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, 
 
 func (t *BasicType) Dump(x Val, out *strings.Builder) {
   fmt.Fprintf(out, "%v", x.imp)
-}
-
-func (t *BasicType) Eq(x, y Val) bool {
-  return x.imp == y.imp
 }
 
 func (t *BasicType) Id() *Sym {

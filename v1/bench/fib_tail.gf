@@ -1,7 +1,7 @@
 (let (fib (fun (n a b)
-            (if (z? n)
-              a
-              (if (one? n)
+            (if n 
+              (if (= n 1)
                 b
-                (recall (- n 1) b (+ a b))))))
+                (recall (- n 1) b (+ a b)))
+              a)))
   (dump (bench 10 (for 10000 (fib 20 0 1)))))
