@@ -14,14 +14,14 @@ func do_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
 func fun_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   asf := args[0]
   
-  if asf.FormType() != &FORM_EXPR {
+  if _, ok := asf.(*ExprForm); !ok {
     return g.NIL, g.E(asf.Pos(), "Invalid fun args: %v", asf)
   }
   
   var as []*Sym
   
   for _, af := range asf.(*ExprForm).body {
-    if af.FormType() != &FORM_ID {
+    if _, ok := af.(*IdForm); !ok {
       return g.NIL, g.E(af.Pos(), "Invalid fun arg: %v", af)
     }
     
@@ -36,7 +36,7 @@ func fun_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
 func let_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   bsf := args[0]
 
-  if bsf.FormType() != &FORM_EXPR {
+  if _, ok := bsf.(*ExprForm); !ok {
     return g.NIL, g.E(bsf.Pos(), "Invalid let bindings: %v", bsf)
   }
 
@@ -47,7 +47,7 @@ func let_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   for i := 0; i < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
-    if kf.FormType() != &FORM_ID {
+    if _, ok := kf.(*IdForm); !ok {
       return g.NIL, g.E(kf.Pos(), "Invalid let key: %v", kf)
     }
 

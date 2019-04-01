@@ -11,35 +11,14 @@ type Form interface {
   
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
-  FormType() *FormType
   Pos() Pos
 }
 
-type FormType struct {
-  id string
-}
-
-var FORM_EXPR, FORM_ID, FORM_LIT, FORM_SPLAT FormType
-
-func init() {
-  FORM_EXPR.Init("Expr")
-  FORM_ID.Init("Id")
-  FORM_LIT.Init("Lit")
-  FORM_SPLAT.Init("Splat")
-}
-
-func (t *FormType) Init(id string) *FormType {
-  t.id = id
-  return t
-}
-
 type BasicForm struct {
-  form_type *FormType
   pos Pos
 }
 
-func (f *BasicForm) Init(form_type *FormType, pos Pos) *BasicForm {
-  f.form_type = form_type
+func (f *BasicForm) Init(pos Pos) *BasicForm {
   f.pos = pos
   return f
 }
@@ -49,15 +28,11 @@ func (f *BasicForm) Body() []Form {
 }
 
 func (f *BasicForm) Dump(out *strings.Builder) {
-  out.WriteString(f.form_type.id)
+  out.WriteRune('?')
 }
 
 func (f *BasicForm) Eval(g *G, env *Env) (Val, Error) {
   return g.NIL, nil
-}
-
-func (f *BasicForm) FormType() *FormType {
-  return f.form_type
 }
 
 func (f *BasicForm) Pos() Pos {
@@ -74,7 +49,7 @@ type ExprForm struct {
 }
 
 func (f *ExprForm) Init(pos Pos) *ExprForm {
-  f.BasicForm.Init(&FORM_EXPR, pos)
+  f.BasicForm.Init(pos)
   return f
 }
 
@@ -133,7 +108,7 @@ type IdForm struct {
 }
 
 func (f *IdForm) Init(pos Pos, id *Sym) *IdForm {
-  f.BasicForm.Init(&FORM_ID, pos)
+  f.BasicForm.Init(pos)
   f.id = id
   return f
 }
@@ -176,7 +151,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
   var out []Val
   
   for _, bf := range f {
-    if bf.FormType() == &FORM_SPLAT {
+    if _, ok := bf.(*SplatForm); ok {
       if out == nil {
         return nil, g.E(bf.Pos(), "Nothing to splat")
       }
@@ -214,7 +189,7 @@ type LitForm struct {
 }
 
 func (f *LitForm) Init(pos Pos, val Val) *LitForm {
-  f.BasicForm.Init(&FORM_LIT, pos)
+  f.BasicForm.Init(pos)
   f.val = val
   return f
 }
@@ -236,7 +211,7 @@ type SplatForm struct {
 }
 
 func (f *SplatForm) Init(pos Pos) *SplatForm {
-  f.BasicForm.Init(&FORM_SPLAT, pos)
+  f.BasicForm.Init(pos)
   return f
 }
 
