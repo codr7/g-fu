@@ -148,7 +148,7 @@ func for_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 }
 
 func recall_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
-  if g.recall {
+  if g.recall_args != nil {
     return g.NIL, g.E(pos, "Recall already in progress")
   }
   
@@ -158,7 +158,6 @@ func recall_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
     return g.NIL, g.E(pos, "Recall failed: %v", e)
   }
   
-  g.recall = true
   return g.NIL, nil
 }
 

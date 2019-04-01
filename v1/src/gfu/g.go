@@ -14,7 +14,6 @@ type G struct {
   sym_tag Tag
   syms Syms
 
-  recall bool
   recall_args []Val
   
   Bool, Fun, Int, Meta, Nil, Prim, Splat, Vec Type

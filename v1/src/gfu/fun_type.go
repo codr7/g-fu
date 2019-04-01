@@ -50,13 +50,13 @@ recall:
   var v Val
   
   if v, e = Forms(f.body).Eval(g, &be); e != nil {
-    g.recall = false
+    g.recall_args = nil
     return g.NIL, e
   }
 
-  if g.recall {
+  if g.recall_args != nil {
     avs = g.recall_args
-    g.recall = false
+    g.recall_args = nil
     goto recall
   }
   
