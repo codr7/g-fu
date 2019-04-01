@@ -119,6 +119,12 @@ func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
     pos.Col++
   }
 
+  s := buf.String()
+
+  if s == ".." {
+    return new(SplatForm).Init(fpos), nil
+  }
+  
   return new(IdForm).Init(fpos, g.S(buf.String())), nil
 }
 

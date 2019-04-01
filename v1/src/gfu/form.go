@@ -19,12 +19,13 @@ type FormType struct {
   id string
 }
 
-var FORM_EXPR, FORM_ID, FORM_LIT FormType
+var FORM_EXPR, FORM_ID, FORM_LIT, FORM_SPLAT FormType
 
 func init() {
   FORM_EXPR.Init("Expr")
   FORM_ID.Init("Id")
   FORM_LIT.Init("Lit")
+  FORM_SPLAT.Init("Splat")
 }
 
 func (t *FormType) Init(id string) *FormType {
@@ -175,6 +176,18 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
   var out []Val
   
   for _, bf := range f {
+    if bf.FormType() == &FORM_SPLAT {
+      if out == nil {
+        return nil, g.E(bf.Pos(), "Nothing to splat")
+      }
+
+      n := len(out)
+      var v Val
+      v, out = out[n-1], out[:n-1]
+      out = v.Splat(g, out)
+      continue
+    }
+    
     v, e := bf.Eval(g, env)
 
     if e != nil {
@@ -184,7 +197,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     if g.recall_args != nil {
       break
     }
-    
+
     if v.val_type == g.Splat {
       out = v.AsSplat().Splat(g, out)
     } else {
@@ -215,6 +228,27 @@ func (f *LitForm) Dump(out *strings.Builder) {
 }
 
 func (f *LitForm) String() string {
+  return DumpString(f)
+}
+
+type SplatForm struct {
+  BasicForm
+}
+
+func (f *SplatForm) Init(pos Pos) *SplatForm {
+  f.BasicForm.Init(&FORM_SPLAT, pos)
+  return f
+}
+
+func (f *SplatForm) Eval(g *G, env *Env) (Val, Error) {
+  return g.NIL, g.E(f.pos, "Splat eval")
+}
+
+func (f *SplatForm) Dump(out *strings.Builder) {
+  out.WriteString("..")
+}
+
+func (f *SplatForm) String() string {
   return DumpString(f)
 }
 
