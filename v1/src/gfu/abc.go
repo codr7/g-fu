@@ -220,11 +220,15 @@ func bool_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
 
 func int_eq_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   in, e := args.Eval(g, env)
-
+  
   if e != nil {
     return g.NIL, e
   }
 
+  if e = g.prim.CheckArgs(g, pos, in); e != nil {
+    return g.NIL, e
+  }
+    
   var out Val
   v := in[0].AsInt()
   
@@ -243,6 +247,10 @@ func int_lt_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   in, e := args.Eval(g, env)
 
   if e != nil {
+    return g.NIL, e
+  }
+
+  if e = g.prim.CheckArgs(g, pos, in); e != nil {
     return g.NIL, e
   }
 
@@ -267,6 +275,10 @@ func int_add_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
     return g.NIL, e
   }
 
+  if e = g.prim.CheckArgs(g, pos, in); e != nil {
+    return g.NIL, e
+  }
+
   var out Val
   var v Int
   
@@ -282,6 +294,10 @@ func int_sub_imp(g *G, args ListForm, env *Env, pos Pos) (Val, Error) {
   in, e := args.Eval(g, env)
 
   if e != nil {
+    return g.NIL, e
+  }
+
+  if e = g.prim.CheckArgs(g, pos, in); e != nil {
     return g.NIL, e
   }
 

@@ -16,7 +16,9 @@ func (t *PrimType) Init(id *Sym) *PrimType {
 }
 
 func (t *PrimType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
-  return val.AsPrim().imp(g, args, env, pos)
+  p := val.AsPrim()
+  g.prim = p
+  return p.imp(g, args, env, pos)
 }
 
 func (t *PrimType) Dump(val Val, out *strings.Builder) {
