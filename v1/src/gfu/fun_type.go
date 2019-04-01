@@ -55,8 +55,7 @@ recall:
   }
 
   if g.recall_args != nil {
-    avs = g.recall_args
-    g.recall_args = nil
+    avs, g.recall_args = g.recall_args, nil
     goto recall
   }
   
