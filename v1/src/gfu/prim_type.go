@@ -15,10 +15,10 @@ func (t *PrimType) Init(id *Sym) *PrimType {
   return t
 }
 
-func (t *PrimType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
+func (t *PrimType) Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error) {
   p := val.AsPrim()
   g.prim = p
-  return p.imp(g, args, env, pos)
+  return p.imp(g, pos, args, env)
 }
 
 func (t *PrimType) Dump(val Val, out *strings.Builder) {

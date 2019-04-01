@@ -32,7 +32,7 @@ func (t *VecType) Dump(val Val, out *strings.Builder) {
   out.WriteRune(')')
 }
 
-func (t *VecType) New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)  {
+func (t *VecType) New(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)  {
   is, e := args.Eval(g, env)
 
   if e != nil {

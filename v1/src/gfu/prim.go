@@ -1,6 +1,6 @@
 package gfu
 
-type PrimImp func (*G, ListForm, *Env, Pos) (Val, Error)
+type PrimImp func (*G, Pos, ListForm, *Env) (Val, Error)
 
 type Prim struct {
   id *Sym

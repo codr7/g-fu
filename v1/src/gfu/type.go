@@ -7,10 +7,10 @@ import (
 
 type Type interface {
   AsBool(g *G, val Val) bool
-  Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
+  Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)
   Dump(x Val, out *strings.Builder)
   Id() *Sym
-  New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)
+  New(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)
   Splat(g *G, val Val, out []Val) []Val
 }
 
@@ -27,7 +27,7 @@ func (t *BasicType) AsBool(g *G, val Val) bool {
   return true
 }
 
-func (t *BasicType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
+func (t *BasicType) Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error) {
   if len(args) > 0 {
     return g.NIL, g.E(pos, "Too many args")
   }
@@ -43,7 +43,7 @@ func (t *BasicType) Id() *Sym {
   return t.id
 }
 
-func (t *BasicType) New(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error)  {
+func (t *BasicType) New(g *G, pos Pos, al Val, args ListForm, env *Env) (Val, Error)  {
   return g.NIL, g.E(pos, "Missing constructor: %v", t.Id())
 }
 

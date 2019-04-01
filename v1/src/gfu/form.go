@@ -114,7 +114,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
     return g.NIL, e
   }
   
-  rv, e := fv.Call(g, b[1:], env, bf.Pos())
+  rv, e := fv.Call(g, bf.Pos(), b[1:], env)
   
   if e != nil {
     return g.NIL, g.E(bf.Pos(), "Call failed: %v", e)

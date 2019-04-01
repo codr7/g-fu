@@ -8,7 +8,7 @@ import (
   "unicode"
 )
 
-func (g *G) Unread(in *strings.Reader, pos Pos) Error {
+func (g *G) Unread(pos Pos, in *strings.Reader) Error {
   if e := in.UnreadRune(); e != nil {
     return g.E(pos, "Error unreading char")
   }
@@ -48,13 +48,13 @@ func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
       return g.ReadExpr(in, pos)
     default:
       if unicode.IsDigit(c) {
-        if e = g.Unread(in, *pos); e != nil {
+        if e = g.Unread(*pos, in); e != nil {
           return nil, e
         }
         
         return g.ReadNum(in, pos)
       } else if unicode.IsGraphic(c) {
-        if e = g.Unread(in, *pos); e != nil {
+        if e = g.Unread(*pos, in); e != nil {
           return nil, e
         }
 
@@ -105,7 +105,7 @@ func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
     }
     
     if unicode.IsSpace(c) || c == '%' || c == '(' || c == ')' {
-      if e := g.Unread(in, *pos); e != nil {
+      if e := g.Unread(*pos, in); e != nil {
         return nil, e
       }
 
@@ -144,7 +144,7 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
     }
     
     if !unicode.IsDigit(c) && c != '.' {
-      if e := g.Unread(in, *pos); e != nil {
+      if e := g.Unread(*pos, in); e != nil {
         return nil, e
       }
 
