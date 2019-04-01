@@ -199,7 +199,7 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
     }
 
     if v.val_type == g.Splat {
-      out = v.AsSplat().Splat(g, out)
+      out = v.Splat(g, out)
     } else {
       out = append(out, v)
     }

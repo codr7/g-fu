@@ -28,6 +28,10 @@ func (v Val) Dump(out *strings.Builder) {
 }
 
 func (v Val) Splat(g *G, out []Val) []Val {
+  if v.val_type == g.Splat {
+    v = v.imp.(Val)
+  }
+  
   return v.val_type.Splat(g, v, out)
 }
 

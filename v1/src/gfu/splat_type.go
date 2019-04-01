@@ -15,15 +15,11 @@ func (t *SplatType) Init(id *Sym) *SplatType {
 }
 
 func (t *SplatType) AsBool(g *G, val Val) bool {
-  return val.AsSplat().AsBool(g)
+  return val.imp.(Val).AsBool(g)
 }
 
 func (t *SplatType) Dump(val Val, out *strings.Builder) {
-  v := val.AsSplat()
+  v := val.imp.(Val);
   v.Dump(out)
   out.WriteString("..")
-}
-
-func (v Val) AsSplat() Val {
-  return v.imp.(Val)
 }
