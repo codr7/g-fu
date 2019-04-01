@@ -17,13 +17,6 @@ func (t *PrimType) Init(id *Sym) *PrimType {
 
 func (t *PrimType) Call(g *G, val Val, args ListForm, env *Env, pos Pos) (Val, Error) {
   p := val.AsPrim()
-  nargs := len(args)
-  
-  if (p.min_args != -1 && nargs < p.min_args) ||
-    (p.max_args != -1 && nargs > p.max_args) {
-    return g.NIL, g.E(pos, "Arg mismatch")
-  }
-
   return p.imp(g, args, env, pos)
 }
 
