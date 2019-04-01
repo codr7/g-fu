@@ -16,4 +16,4 @@ g-fu is a Lisp developed and embedded in Go. The first [release](https://github.
 ```
 
 ### License
-AGPL
+LGPL3
