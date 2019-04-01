@@ -1,6 +1,6 @@
-* add fib_rec/tail.go
 * prevent dup splat
 ** return self
+* add fib_rec/tail.go
 * only allow single assign
 ** tag vars with env
 ** check in Put
