@@ -1,2 +1,10 @@
+* add Prim.CheckArgs() error
+** copy from github
+** call manually after arg eval in Abc
 * fix tests
+** add Test.Eq/Is
+*** implement for all types
+*** change =
+*** add ==
+** add check, check= && check==
 * repl
