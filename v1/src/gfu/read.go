@@ -16,7 +16,7 @@ func (g *G) Unread(pos Pos, in *strings.Reader) Error {
   return nil
 }
 
-func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
+func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
   var c rune
   var e Error
 
@@ -29,7 +29,7 @@ func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
     }
     
     if re != nil {
-      return nil, g.E(*pos, "Error reading char: %v", re)
+      return nil, g.E(*pos, "Failed reading char: %v", re)
     }
     
     if c == end {
@@ -45,20 +45,39 @@ func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
       pos.Row++
       continue
     case '(':
-      return g.ReadExpr(in, pos)
+      return g.ReadExpr(pos, in)
     default:
       if unicode.IsDigit(c) {
         if e = g.Unread(*pos, in); e != nil {
           return nil, e
         }
         
-        return g.ReadNum(in, pos)
+        return g.ReadNum(pos, in, false)
+      } else if c == '-' {
+        pos.Col++
+        nc, _, re := in.ReadRune()
+        
+        if re != nil {
+          return nil, g.E(*pos, "Failed reading char: %v", re)
+        }
+
+        is_num := unicode.IsDigit(nc);
+        
+        if e = g.Unread(*pos, in); e != nil {
+          return nil, e
+        }
+          
+        if is_num {
+          return g.ReadNum(pos, in, true)
+        }
+
+        return g.ReadId(pos, in, "-")        
       } else if unicode.IsGraphic(c) {
         if e = g.Unread(*pos, in); e != nil {
           return nil, e
         }
 
-        return g.ReadId(in, pos)
+        return g.ReadId(pos, in, "")
       }
     }
 
@@ -68,12 +87,12 @@ func (g *G) Read(in *strings.Reader, pos *Pos, end rune) (Form, Error) {
   return nil, g.E(*pos, "Unexpected input: %v", c)
 }
 
-func (g *G) ReadExpr(in *strings.Reader, pos *Pos) (Form, Error) {
+func (g *G) ReadExpr(pos *Pos, in *strings.Reader) (Form, Error) {
   ef := new(ExprForm).Init(*pos)
   pos.Col++
 
   for {
-    f, e := g.Read(in, pos, ')')
+    f, e := g.Read(pos, in, ')')
 
     if e != nil {
       return nil, e
@@ -89,9 +108,10 @@ func (g *G) ReadExpr(in *strings.Reader, pos *Pos) (Form, Error) {
   return ef, nil
 }
 
-func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
+func (g *G) ReadId(pos *Pos, in *strings.Reader, prefix string) (Form, Error) {
   fpos := *pos
   var buf strings.Builder
+  buf.WriteString(prefix)
   
   for {
     c, _, re := in.ReadRune()
@@ -128,7 +148,7 @@ func (g *G) ReadId(in *strings.Reader, pos *Pos) (Form, Error) {
   return new(IdForm).Init(fpos, g.S(buf.String())), nil
 }
 
-func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, is_neg bool) (Form, Error) {
   fpos := *pos
   var buf strings.Builder
   
@@ -173,6 +193,11 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
   }
 
   var v Val
+
+  if is_neg {
+    n = -n
+  }
+  
   v.Init(g.Int, Int(n))
 
   if splat {
@@ -182,6 +207,6 @@ func (g *G) ReadNum(in *strings.Reader, pos *Pos) (Form, Error) {
   return new(LitForm).Init(fpos, v), nil
 }
 
-func (g *G) ReadString(in string, pos *Pos) (Form, Error) {
-  return g.Read(strings.NewReader(in), pos, 0)
+func (g *G) ReadString(pos *Pos, in string) (Form, Error) {
+  return g.Read(pos, strings.NewReader(in), 0)
 }

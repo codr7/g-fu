@@ -1,3 +1,4 @@
+* add ReadChar
 * add Env.Extend?
 ** grep Clone
 * add support for negative ints

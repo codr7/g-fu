@@ -42,7 +42,7 @@ func (g *G) Load(fname string, env *Env, pos Pos) (Val, Error) {
   pos.Init(fname)
   
   for {
-    f, e := g.Read(in, &pos, 0)
+    f, e := g.Read(&pos, in, 0)
 
     if e != nil {
       return g.NIL, e
