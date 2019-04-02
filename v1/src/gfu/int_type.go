@@ -6,6 +6,14 @@ type IntType struct {
 
 type Int int64
 
+func (i Int) Abs() Int {
+  if i < 0 {
+    return -i
+  }
+
+  return i
+}
+
 func (t *IntType) Init(id *Sym) *IntType {
   t.BasicType.Init(id)
   return t

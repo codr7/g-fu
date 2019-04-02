@@ -331,9 +331,15 @@ func int_add_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
     return g.NIL, e
   }
 
+  if len(in) == 1 {
+    v := in[0]
+    v.imp = v.AsInt().Abs()
+    return v, nil
+  }
+  
   var out Val
   var v Int
-  
+
   for _, iv := range in {
     v += iv.AsInt()
   }
