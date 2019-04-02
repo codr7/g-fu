@@ -1,2 +1,7 @@
+* add Env.Extend?
+** grep Clone
+* add support for negative ints
+** update test
 * change single arg + to abs
+** add test
 * Go repl
