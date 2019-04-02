@@ -1,12 +1,18 @@
-(and T 42)
-(or 42 T _)
-(do 1 2 3)
-((fun (xs..) xs) 1 2 3)
-((fun (xs..) (+ xs..)) 1 2 3)
-(+ (Vec 1 2 3)..)
-(- 42 1 2 3)
-(let (x 35) ((fun (y) y) 42))
-((fun (x) (+ x 7)) 35)
-(let (x 35) ((fun (y) (+ x y)) 7))
-(bool 42)
-(= (Vec 1 2 3) (Vec 1 2 3))
+(test (as-bool 42))
+(test (not (as-bool 0)))
+
+(test (= (and T 42) 42))
+(test (= (or 42 T _) 42))
+
+(test (= (- 42) (- 0 42)))
+(test (= (- 10 1 2 3) 4))
+
+(test (= (Vec 1 2 3) (Vec 1 2 3)))
+(test (not (== (Vec 1 2 3) (Vec 1 2 3))))
+(test (= (+ (Vec 1 2 3)..) 6))
+
+(test (= (do 1 2 3) 3))
+
+(test (= ((fun (xs..) xs) 1 2 3) (Vec 1 2 3)))
+(test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
+(test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))

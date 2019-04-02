@@ -1,4 +1,2 @@
-* fix tests
-** add check prim
 * change single arg + to abs
 * Go repl

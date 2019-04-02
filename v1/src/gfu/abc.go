@@ -127,6 +127,17 @@ func or_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.F, nil
 }
 
+func not_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+  v, e := args[0].Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  v.Init(g.Bool, !v.AsBool(g))
+  return v, nil
+}
+
 func for_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   nv, e := args[0].Eval(g, env)
 
@@ -179,6 +190,22 @@ func dump_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.NIL, nil
 }
 
+func test_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+  for _, in := range args {
+    v, e := in.Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+
+    if !v.AsBool(g) {
+      return g.NIL, g.E(pos, "Test failed")
+    }
+  }
+
+  return g.NIL, nil
+}
+
 func bench_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   nv, e := args[0].Eval(g, env)
 
@@ -206,7 +233,7 @@ func bench_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return v, nil
 }
 
-func bool_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func as_bool_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   in, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -363,11 +390,14 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("if"), 2, 3, if_imp)
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)
   e.AddPrim(g, g.S("and"), 1, -1, and_imp)
+  e.AddPrim(g, g.S("not"), 1, 1, not_imp)
   e.AddPrim(g, g.S("for"), 1, -1, for_imp)
   e.AddPrim(g, g.S("recall"), 0, -1, recall_imp)
   e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
+  e.AddPrim(g, g.S("test"), 1, -1, test_imp)
   e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
-  e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
+
+  e.AddPrim(g, g.S("as-bool"), 1, 1, as_bool_imp)
   
   e.AddPrim(g, g.S("="), 2, -1, eq_imp)
   e.AddPrim(g, g.S("=="), 2, -1, is_imp)
