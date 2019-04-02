@@ -245,5 +245,4 @@ func (fs Forms) Eval(g *G, env *Env) (Val, Error) {
   }
 
   return out, nil
-
 }

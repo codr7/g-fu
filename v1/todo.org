@@ -1,8 +1,4 @@
 * fix tests
-** add Test.Eq/Is
-*** implement for all types
-*** change =
-*** add ==
-** add check
+** add check prim
 * change single arg + to abs
 * Go repl

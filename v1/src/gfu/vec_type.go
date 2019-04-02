@@ -32,6 +32,24 @@ func (t *VecType) Dump(val Val, out *strings.Builder) {
   out.WriteRune(')')
 }
 
+func (t *VecType) Eq(g *G, x Val, y Val) bool {
+  xv, yv := x.AsVec().items, y.AsVec().items
+
+  if len(xv) != len(yv) {
+    return false
+  }
+
+  for i, xi := range xv {
+    yi := yv[i]
+    
+    if !xi.Eq(g, yi) {
+      return false
+    }
+  }
+
+  return true
+}
+
 func (t *VecType) New(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)  {
   is, e := args.Eval(g, env)
 

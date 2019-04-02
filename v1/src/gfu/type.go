@@ -6,12 +6,14 @@ import (
 )
 
 type Type interface {
-  AsBool(g *G, val Val) bool
-  Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)
-  Dump(x Val, out *strings.Builder)
+  AsBool(*G, Val) bool
+  Call(*G, Pos, Val, ListForm, *Env) (Val, Error)
+  Dump(Val, *strings.Builder)
+  Eq(*G, Val, Val) bool
   Id() *Sym
-  New(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)
-  Splat(g *G, val Val, out []Val) []Val
+  Is(*G, Val, Val) bool
+  New(*G, Pos, Val, ListForm, *Env) (Val, Error)
+  Splat(*G, Val, []Val) []Val
 }
 
 type BasicType struct {
@@ -39,8 +41,16 @@ func (t *BasicType) Dump(x Val, out *strings.Builder) {
   fmt.Fprintf(out, "%v", x.imp)
 }
 
+func (t *BasicType) Eq(g *G, x Val, y Val) bool {
+  return t.Is(g, x, y)
+}
+
 func (t *BasicType) Id() *Sym {
   return t.id
+}
+
+func (t *BasicType) Is(g *G, x Val, y Val) bool {
+  return x == y
 }
 
 func (t *BasicType) New(g *G, pos Pos, al Val, args ListForm, env *Env) (Val, Error)  {

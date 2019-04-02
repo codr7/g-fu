@@ -218,7 +218,7 @@ func bool_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func int_eq_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func eq_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
   
   if e != nil {
@@ -230,10 +230,35 @@ func int_eq_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   }
     
   var out Val
-  v := in[0].AsInt()
+  v := in[0]
   
   for _, iv := range in[1:] {
-    if iv.AsInt() != v {
+    if !iv.Eq(g, v) {
+      out.Init(g.Bool, false)
+      return out, nil
+    }
+  }
+  
+  out.Init(g.Bool, true)
+  return out, nil
+}
+
+func is_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+  in, e := args.Eval(g, env)
+  
+  if e != nil {
+    return g.NIL, e
+  }
+
+  if e = g.prim.CheckArgs(g, pos, in); e != nil {
+    return g.NIL, e
+  }
+    
+  var out Val
+  v := in[0]
+  
+  for _, iv := range in[1:] {
+    if !iv.Is(g, v) {
       out.Init(g.Bool, false)
       return out, nil
     }
@@ -344,8 +369,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
   e.AddPrim(g, g.S("bool"), 1, 1, bool_imp)
   
-  e.AddPrim(g, g.S("="), 2, -1, int_eq_imp)
+  e.AddPrim(g, g.S("="), 2, -1, eq_imp)
+  e.AddPrim(g, g.S("=="), 2, -1, is_imp)
+
   e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
-  e.AddPrim(g, g.S("+"), 2, -1, int_add_imp)
+  e.AddPrim(g, g.S("+"), 1, -1, int_add_imp)
   e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)
 }
