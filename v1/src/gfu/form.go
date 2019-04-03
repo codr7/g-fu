@@ -108,14 +108,7 @@ func (f *ExprForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
   var out Vec
   
   for _, bf := range f.body {
-    var v Val
-    var e Error
-    
-    if *depth == 0 {
-      v, e = bf.Eval(g, env)
-    } else {
-      v, e = bf.Quote(g, env, depth)
-    }
+    v, e := bf.Quote(g, env, depth)
 
     if e != nil {
       return g.NIL, e

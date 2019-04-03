@@ -1,3 +1,5 @@
+* rename Error to E
+** rename file
 * split Prim into Fun & Macro
 ** add Fun.imp
 *** adapt type.Call/Dump
@@ -5,6 +7,3 @@
 ** convert Abc funs
 ** rename Prim to Macro
 *** ditch CheckArgs
-* rename Error to E
-** rename file
-
