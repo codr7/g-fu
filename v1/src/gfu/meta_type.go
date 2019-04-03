@@ -18,7 +18,7 @@ func (t *MetaType) AsBool(g *G, val Val) bool {
   return false
 }
 
-func (t *MetaType) Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error) {
+func (t *MetaType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Error) {
   return val.AsMeta().New(g, pos, val, args, env)
 }
   

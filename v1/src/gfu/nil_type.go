@@ -18,7 +18,7 @@ func (t *NilType) AsBool(g *G, val Val) bool {
   return false
 }
 
-func (t *NilType) Call(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error) {
+func (t *NilType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Error) {
   return g.NIL, g.E(pos, "Nil call")
 }
   

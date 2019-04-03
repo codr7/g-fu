@@ -11,6 +11,7 @@ type Form interface {
   
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
+  Quote(g *G) Val
   Pos() Pos
 }
 
@@ -37,6 +38,10 @@ func (f *BasicForm) Eval(g *G, env *Env) (Val, Error) {
 
 func (f *BasicForm) Pos() Pos {
   return f.pos
+}
+
+func (f *BasicForm) Quote(g *G) Val {
+  panic("Not implemented")
 }
 
 func (f *BasicForm) String() string {
@@ -98,6 +103,18 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   return rv, nil
 }
 
+func (f *ExprForm) Quote(g *G) Val {
+  var out Vec
+  
+  for _, bf := range f.body {
+    out.Push(bf.Quote(g))
+  }
+
+  var v Val
+  v.Init(g.Vec, &out)
+  return v
+}
+
 func (f *ExprForm) String() string {
   return DumpString(f)
 }
@@ -141,13 +158,91 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   return v, nil
 }
 
+func (f *IdForm) Quote(g *G) Val {
+  var v Val
+  v.Init(g.Sym, f.id)
+  return v
+}
+
 func (f *IdForm) String() string {
   return DumpString(f)
 }
 
-type ListForm []Form
+type LitForm struct {
+  BasicForm
+  val Val
+}
 
-func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
+func (f *LitForm) Init(pos Pos, val Val) *LitForm {
+  f.BasicForm.Init(pos)
+  f.val = val
+  return f
+}
+
+func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
+  return f.val, nil
+}
+
+func (f *LitForm) Dump(out *strings.Builder) {
+  f.val.Dump(out)
+}
+
+func (f *LitForm) Quote(g *G) Val {
+  return f.val
+}
+
+func (f *LitForm) String() string {
+  return DumpString(f)
+}
+
+type QuoteForm struct {
+  BasicForm
+  form Form
+}
+
+func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
+  f.BasicForm.Init(pos)
+  f.form = form
+  return f
+}
+
+func (f *QuoteForm) Eval(g *G, env *Env) (Val, Error) {
+  return f.form.Quote(g), nil
+}
+
+func (f *QuoteForm) Dump(out *strings.Builder) {
+  out.WriteRune('\'')
+  f.form.Dump(out)
+}
+
+func (f *QuoteForm) String() string {
+  return DumpString(f)
+}
+
+type SplatForm struct {
+  BasicForm
+}
+
+func (f *SplatForm) Init(pos Pos) *SplatForm {
+  f.BasicForm.Init(pos)
+  return f
+}
+
+func (f *SplatForm) Eval(g *G, env *Env) (Val, Error) {
+  return g.NIL, g.E(f.pos, "Splat eval")
+}
+
+func (f *SplatForm) Dump(out *strings.Builder) {
+  out.WriteString("..")
+}
+
+func (f *SplatForm) String() string {
+  return DumpString(f)
+}
+
+type VecForm []Form
+
+func (f VecForm) Eval(g *G, env *Env) ([]Val, Error) {
   var out []Val
   
   for _, bf := range f {
@@ -181,50 +276,6 @@ func (f ListForm) Eval(g *G, env *Env) ([]Val, Error) {
   }
 
   return out, nil
-}
-
-type LitForm struct {
-  BasicForm
-  val Val
-}
-
-func (f *LitForm) Init(pos Pos, val Val) *LitForm {
-  f.BasicForm.Init(pos)
-  f.val = val
-  return f
-}
-
-func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
-  return f.val, nil
-}
-
-func (f *LitForm) Dump(out *strings.Builder) {
-  f.val.Dump(out)
-}
-
-func (f *LitForm) String() string {
-  return DumpString(f)
-}
-
-type SplatForm struct {
-  BasicForm
-}
-
-func (f *SplatForm) Init(pos Pos) *SplatForm {
-  f.BasicForm.Init(pos)
-  return f
-}
-
-func (f *SplatForm) Eval(g *G, env *Env) (Val, Error) {
-  return g.NIL, g.E(f.pos, "Splat eval")
-}
-
-func (f *SplatForm) Dump(out *strings.Builder) {
-  out.WriteString("..")
-}
-
-func (f *SplatForm) String() string {
-  return DumpString(f)
 }
 
 type Forms []Form

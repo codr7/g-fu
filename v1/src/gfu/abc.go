@@ -7,11 +7,11 @@ import (
   "time"
 )
 
-func do_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func do_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   return Forms(args).Eval(g, env)
 }
 
-func fun_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func fun_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   asf := args[0]
   
   if _, ok := asf.(*ExprForm); !ok {
@@ -33,7 +33,7 @@ func fun_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return fv, nil
 }
 
-func let_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func let_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   bsf := args[0]
 
   if _, ok := bsf.(*ExprForm); !ok {
@@ -74,7 +74,7 @@ func let_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return rv, nil
 }
 
-func if_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func if_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   c, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -92,7 +92,7 @@ func if_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.NIL, nil
 }
 
-func and_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func and_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   var e Error
   var v Val
   
@@ -111,7 +111,7 @@ func and_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return v, nil
 }
 
-func or_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func or_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   for _, in := range args {
     v, e := in.Eval(g, env)
 
@@ -127,7 +127,7 @@ func or_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.F, nil
 }
 
-func not_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func not_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   v, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -138,7 +138,7 @@ func not_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return v, nil
 }
 
-func for_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func for_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   nv, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -158,7 +158,7 @@ func for_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return v, nil
 }
 
-func recall_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func recall_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   if g.recall_args != nil {
     return g.NIL, g.E(pos, "Recall already in progress")
   }
@@ -172,7 +172,7 @@ func recall_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.NIL, nil
 }
 
-func dump_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func dump_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   var out strings.Builder
   
   for _, in := range args {
@@ -190,7 +190,7 @@ func dump_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.NIL, nil
 }
 
-func test_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func test_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   for _, in := range args {
     v, e := in.Eval(g, env)
 
@@ -206,7 +206,7 @@ func test_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return g.NIL, nil
 }
 
-func bench_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func bench_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   nv, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -233,7 +233,7 @@ func bench_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return v, nil
 }
 
-func as_bool_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func as_bool_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args[0].Eval(g, env)
 
   if e != nil {
@@ -245,7 +245,7 @@ func as_bool_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func eq_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func eq_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
   
   if e != nil {
@@ -270,7 +270,7 @@ func eq_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func is_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func is_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
   
   if e != nil {
@@ -295,7 +295,7 @@ func is_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func int_lt_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func int_lt_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
 
   if e != nil {
@@ -320,7 +320,7 @@ func int_lt_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func int_add_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func int_add_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
 
   if e != nil {
@@ -348,7 +348,7 @@ func int_add_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
   return out, nil
 }
 
-func int_sub_imp(g *G, pos Pos, args ListForm, env *Env) (Val, Error) {
+func int_sub_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   in, e := args.Eval(g, env)
 
   if e != nil {
@@ -384,6 +384,7 @@ func (e *Env) InitAbc(g *G) {
   g.Nil = e.AddType(g, new(NilType).Init(g.S("Nil")))
   g.Prim = e.AddType(g, new(PrimType).Init(g.S("Prim")))
   g.Splat = e.AddType(g, new(SplatType).Init(g.S("Splat")))
+  g.Sym = e.AddType(g, new(SymType).Init(g.S("Sym")))
   g.Vec = e.AddType(g, new(VecType).Init(g.S("Vec")))
   
   e.AddVal(g, g.S("_"), g.Nil, nil, &g.NIL)

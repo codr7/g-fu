@@ -59,6 +59,8 @@ func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
       break
     case '(':
       return g.ReadExpr(pos, in)
+    case '\'':
+      return g.ReadQuote(pos, in, end)
     default:
       if unicode.IsDigit(c) {
         if e = g.Unread(pos, in, c); e != nil {
@@ -211,6 +213,17 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, is_neg bool) (Form, Error) {
   }
   
   return new(LitForm).Init(fpos, v), nil
+}
+
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
+  fpos := *pos
+  f, e := g.Read(pos, in, end)
+
+  if e != nil {
+    return nil, e
+  }
+
+  return new(QuoteForm).Init(fpos, f), nil
 }
 
 func (g *G) ReadString(pos *Pos, in string) (Form, Error) {

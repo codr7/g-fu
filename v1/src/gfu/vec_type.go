@@ -50,7 +50,7 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
   return true
 }
 
-func (t *VecType) New(g *G, pos Pos, val Val, args ListForm, env *Env) (Val, Error)  {
+func (t *VecType) New(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Error)  {
   is, e := args.Eval(g, env)
 
   if e != nil {
