@@ -20,7 +20,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, Error) {
   }
 
   if c == '\n' {
-    pos.Col = MIN_POS.Col
+    pos.Col = INIT_POS.Col
     pos.Row++
   } else {
     pos.Col++
