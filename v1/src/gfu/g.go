@@ -2,6 +2,7 @@ package gfu
 
 import (
   "io/ioutil"
+  //"log"
   "strings"
 )
 
@@ -32,23 +33,23 @@ func (g *G) Init() (*G, Error) {
 
 func (g *G) EvalString(pos Pos, s string, env *Env) (Val, Error) {
   in := strings.NewReader(s)
-  var fs Forms
+  var out Forms
   
   for {
-    f, e := g.Read(&pos, in, 0)
+    fs, e := g.Read(&pos, in, out, 0)
     
     if e != nil {
       return g.NIL, e
     }
     
-    if f == nil {
+    if fs == nil {
       break
     }
-    
-    fs = append(fs, f)
+
+    out = fs
   }
-  
-  return fs.Eval(g, env)  
+
+  return out.Eval(g, env)  
 }
 
 func (g *G) Load(pos Pos, fname string, env *Env) (Val, Error) {

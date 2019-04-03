@@ -2,6 +2,7 @@ package gfu
 
 import (
   "fmt"
+  //"log"
   "strings"
 )
 
@@ -11,7 +12,7 @@ type Form interface {
   
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
-  Quote(g *G) Val
+  Quote(g *G, env *Env, depth *int) (Val, Error)
   Pos() Pos
 }
 
@@ -40,8 +41,8 @@ func (f *BasicForm) Pos() Pos {
   return f.pos
 }
 
-func (f *BasicForm) Quote(g *G) Val {
-  panic("Not implemented")
+func (f *BasicForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+  return g.NIL, g.E(f.pos, "Not quote implemented")
 }
 
 func (f *BasicForm) String() string {
@@ -83,7 +84,7 @@ func (f *ExprForm) Dump(out *strings.Builder) {
 func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   b := f.body
   
-  if b == nil {
+  if len(b) == 0 {
     return g.NIL, nil
   }
   
@@ -103,16 +104,33 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   return rv, nil
 }
 
-func (f *ExprForm) Quote(g *G) Val {
+func (f *ExprForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
   var out Vec
   
   for _, bf := range f.body {
-    out.Push(bf.Quote(g))
+    var v Val
+    var e Error
+    
+    if *depth == 0 {
+      v, e = bf.Eval(g, env)
+    } else {
+      v, e = bf.Quote(g, env, depth)
+    }
+
+    if e != nil {
+      return g.NIL, e
+    }
+    
+    if v.val_type == g.Splat {
+      out.items = v.Splat(g, out.items)
+    } else {
+      out.Push(v)
+    }
   }
 
   var v Val
   v.Init(g.Vec, &out)
-  return v
+  return v, nil
 }
 
 func (f *ExprForm) String() string {
@@ -158,10 +176,10 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   return v, nil
 }
 
-func (f *IdForm) Quote(g *G) Val {
+func (f *IdForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
   var v Val
   v.Init(g.Sym, f.id)
-  return v
+  return v, nil
 }
 
 func (f *IdForm) String() string {
@@ -187,8 +205,8 @@ func (f *LitForm) Dump(out *strings.Builder) {
   f.val.Dump(out)
 }
 
-func (f *LitForm) Quote(g *G) Val {
-  return f.val
+func (f *LitForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+  return f.val, nil
 }
 
 func (f *LitForm) String() string {
@@ -207,12 +225,20 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
 }
 
 func (f *QuoteForm) Eval(g *G, env *Env) (Val, Error) {
-  return f.form.Quote(g), nil
+  depth := 1
+  return f.form.Quote(g, env, &depth)
 }
 
 func (f *QuoteForm) Dump(out *strings.Builder) {
   out.WriteRune('\'')
   f.form.Dump(out)
+}
+
+func (f *QuoteForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+  *depth++
+  v, e := f.form.Quote(g, env, depth)
+  *depth--
+  return v, e
 }
 
 func (f *QuoteForm) String() string {
@@ -221,19 +247,40 @@ func (f *QuoteForm) String() string {
 
 type SplatForm struct {
   BasicForm
+  form Form
 }
 
-func (f *SplatForm) Init(pos Pos) *SplatForm {
+func (f *SplatForm) Init(pos Pos, form Form) *SplatForm {
   f.BasicForm.Init(pos)
+  f.form = form
   return f
 }
 
 func (f *SplatForm) Eval(g *G, env *Env) (Val, Error) {
-  return g.NIL, g.E(f.pos, "Splat eval")
+  sv, e := f.form.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  var v Val
+  v.Init(g.Splat, sv)
+  return v, nil
 }
 
 func (f *SplatForm) Dump(out *strings.Builder) {
   out.WriteString("..")
+}
+
+func (f *SplatForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+  v, e := f.form.Quote(g, env, depth)
+
+  if e != nil {
+    return g.NIL, e
+  }
+  
+  v.Init(g.Splat, v)
+  return v, nil
 }
 
 func (f *SplatForm) String() string {
@@ -246,18 +293,6 @@ func (f VecForm) Eval(g *G, env *Env) ([]Val, Error) {
   var out []Val
   
   for _, bf := range f {
-    if _, ok := bf.(*SplatForm); ok {
-      if out == nil {
-        return nil, g.E(bf.Pos(), "Nothing to splat")
-      }
-
-      n := len(out)
-      var v Val
-      v, out = out[n-1], out[:n-1]
-      out = v.Splat(g, out)
-      continue
-    }
-    
     v, e := bf.Eval(g, env)
 
     if e != nil {
@@ -267,7 +302,7 @@ func (f VecForm) Eval(g *G, env *Env) ([]Val, Error) {
     if g.recall_args != nil {
       break
     }
-
+    
     if v.val_type == g.Splat {
       out = v.Splat(g, out)
     } else {
@@ -276,6 +311,45 @@ func (f VecForm) Eval(g *G, env *Env) ([]Val, Error) {
   }
 
   return out, nil
+}
+
+type UnquoteForm struct {
+  BasicForm
+  form Form
+}
+
+func (f *UnquoteForm) Init(pos Pos, form Form) *UnquoteForm {
+  f.BasicForm.Init(pos)
+  f.form = form
+  return f
+}
+
+func (f *UnquoteForm) Eval(g *G, env *Env) (Val, Error) {
+  return g.NIL, g.E(f.pos, "Nothing to unquote")
+}
+
+func (f *UnquoteForm) Dump(out *strings.Builder) {
+  out.WriteRune('%')
+  f.form.Dump(out)
+}
+
+func (f *UnquoteForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+  var v Val
+  var e Error
+  *depth--
+  
+  if *depth == 0 {
+    v, e = f.form.Eval(g, env)
+  } else {
+    v, e = f.form.Quote(g, env, depth)
+  }
+  
+  *depth++
+  return v, e
+}
+
+func (f *UnquoteForm) String() string {
+  return DumpString(f)
 }
 
 type Forms []Form

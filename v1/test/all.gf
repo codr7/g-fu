@@ -11,10 +11,12 @@
 (test (= (+ 35 7) 42))
 
 (test (== 'foo 'foo))
-(test (= '(1 2 3) (Vec 1 2 3)))
 
+(test (= '(1 2 3) (Vec 1 2 3)))
+(test (= '(1 %(+ 2 3) 4) (Vec 1 5 4)))
 (test (= (Vec 1 2 3) (Vec 1 2 3)))
 (test (not (== (Vec 1 2 3) (Vec 1 2 3))))
+(test (= '(1 %(Vec 2 3)..) (Vec 1 2 3)))
 (test (= (+ (Vec 1 2 3)..) 6))
 
 (test (= (do 1 2 3) 3))

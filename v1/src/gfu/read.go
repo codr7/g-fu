@@ -43,13 +43,13 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) Error {
   return nil
 }
 
-func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
+func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
   var c rune
   var e Error
 
   for {
     c, e = g.ReadChar(pos, in)
-    
+
     if e != nil || c == 0 || c == end {
       return nil, e
     }
@@ -58,16 +58,18 @@ func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
     case ' ', '\n':
       break
     case '(':
-      return g.ReadExpr(pos, in)
+      return g.ReadExpr(pos, in, out)
     case '\'':
-      return g.ReadQuote(pos, in, end)
+      return g.ReadQuote(pos, in, out, end)
+    case '%':
+      return g.ReadUnquote(pos, in, out, end)
     default:
       if unicode.IsDigit(c) {
         if e = g.Unread(pos, in, c); e != nil {
           return nil, e
         }
         
-        return g.ReadNum(pos, in, false)
+        return g.ReadNum(pos, in, out, false)
       } else if c == '-' {
         var nc rune
         nc, e = g.ReadChar(pos, in)
@@ -83,16 +85,16 @@ func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
         }
           
         if is_num {
-          return g.ReadNum(pos, in, true)
+          return g.ReadNum(pos, in, out, true)
         }
 
-        return g.ReadId(pos, in, "-")        
+        return g.ReadId(pos, in, out, "-")        
       } else if unicode.IsGraphic(c) {
         if e = g.Unread(pos, in, c); e != nil {
           return nil, e
         }
 
-        return g.ReadId(pos, in, "")
+        return g.ReadId(pos, in, out, "")
       }
 
       return nil, g.E(*pos, "Unexpected input: %v", c)
@@ -100,27 +102,27 @@ func (g *G) Read(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
   }
 }
 
-func (g *G) ReadExpr(pos *Pos, in *strings.Reader) (Form, Error) {
+func (g *G) ReadExpr(pos *Pos, in *strings.Reader, out []Form) ([]Form, Error) {
   ef := new(ExprForm).Init(*pos)
 
   for {
-    f, e := g.Read(pos, in, ')')
+    fs, e := g.Read(pos, in, ef.body, ')')
 
     if e != nil {
       return nil, e
     }
 
-    if f == nil {
+    if fs == nil {
       break
     }
 
-    ef.Append(f)
+    ef.body = fs
   }
 
-  return ef, nil
+  return append(out, ef), nil
 }
 
-func (g *G) ReadId(pos *Pos, in *strings.Reader, prefix string) (Form, Error) {
+func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]Form, Error) {
   fpos := *pos
   var buf strings.Builder
   buf.WriteString(prefix)
@@ -150,15 +152,21 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, prefix string) (Form, Error) {
   }
 
   s := buf.String()
-
+  
   if s == ".." {
-    return new(SplatForm).Init(fpos), nil
+    out_len := len(out)
+
+    if out_len == 0 {
+      return nil, g.E(*pos, "Nothing to splat")
+    }
+
+    return append(out[:out_len-1], new(SplatForm).Init(fpos, out[out_len-1])), nil
   }
   
-  return new(IdForm).Init(fpos, g.S(buf.String())), nil
+  return append(out, new(IdForm).Init(fpos, g.S(s))), nil
 }
 
-func (g *G) ReadNum(pos *Pos, in *strings.Reader, is_neg bool) (Form, Error) {
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Form, Error) {
   fpos := *pos
   var buf strings.Builder
   
@@ -200,32 +208,63 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, is_neg bool) (Form, Error) {
     return nil, g.E(*pos, "Invalid num: %v", s) 
   }
 
-  var v Val
-
   if is_neg {
     n = -n
   }
   
+  var v Val
   v.Init(g.Int, Int(n))
-
-  if splat {
-    v.Init(g.Splat, v)
-  }
+  f := new(LitForm).Init(fpos, v)
   
-  return new(LitForm).Init(fpos, v), nil
+  if splat {
+    out = append(out, new(SplatForm).Init(fpos, f))
+  } else {
+    out = append(out, f)
+  }
+
+  return out, nil
 }
 
-func (g *G) ReadQuote(pos *Pos, in *strings.Reader, end rune) (Form, Error) {
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
   fpos := *pos
-  f, e := g.Read(pos, in, end)
+  var fs []Form
+  fs, e := g.Read(pos, in, fs, end)
 
   if e != nil {
     return nil, e
   }
 
-  return new(QuoteForm).Init(fpos, f), nil
+  if len(fs) == 0 {
+    return nil, g.E(*pos, "Nothing to quote")
+  }
+
+  for _, f := range fs {
+    out = append(out, new(QuoteForm).Init(fpos, f))
+  }
+
+  return out, nil
 }
 
-func (g *G) ReadString(pos *Pos, in string) (Form, Error) {
-  return g.Read(pos, strings.NewReader(in), 0)
+func (g *G) ReadString(pos *Pos, in string) ([]Form, Error) {
+  var out []Form
+  return g.Read(pos, strings.NewReader(in), out, 0)
+}
+
+func (g *G) ReadUnquote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
+  var fs []Form
+  fs, e := g.Read(pos, in, fs, end)
+
+  if e != nil {
+    return nil, e
+  }
+
+  if len(fs) == 0 {
+    return nil, g.E(*pos, "Nothing to unquote")
+  }
+
+  for _, f := range fs {
+    out = append(out, new(UnquoteForm).Init(f.Pos(), f))
+  }
+
+  return out, nil
 }

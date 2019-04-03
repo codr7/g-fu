@@ -22,7 +22,7 @@ func (t *PrimType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Er
 }
 
 func (t *PrimType) Dump(val Val, out *strings.Builder) {
-  fmt.Fprintf(out, "(prim %v)", val.AsPrim().id)
+  fmt.Fprintf(out, "(Prim %v)", val.AsPrim().id)
 }
 
 func (v Val) AsPrim() *Prim {

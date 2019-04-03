@@ -174,14 +174,13 @@ func recall_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
 
 func dump_imp(g *G, pos Pos, args VecForm, env *Env) (Val, Error) {
   var out strings.Builder
+  in, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
   
-  for _, in := range args {
-    v, e := in.Eval(g, env)
-
-    if e != nil {
-      return g.NIL, e
-    }
-
+  for _, v := range in {
     v.Dump(&out)
     out.WriteRune('\n')
   }
