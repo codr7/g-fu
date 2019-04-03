@@ -1,7 +1,7 @@
 ![Logo](logo.png)
 
 ### Intro
-g-fu is a Lisp developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) weighs in at 1 kloc and implements a simple, extensible tree-walking interpreter to the point where it's capable of calculating the Fibonacci sequence.
+g-fu is a Lisp developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) weighs in at 1 kloc and implements a basic, extensible, tree-walking interpreter.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
