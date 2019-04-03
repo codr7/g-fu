@@ -1,11 +1,13 @@
 package main
 
 import (
+  "bufio"
   "flag"
   "fmt"
   "log"
   "os"
   "runtime/pprof"
+  "strings"
   
   "./gfu"
 )
@@ -13,7 +15,6 @@ import (
 var prof = flag.String("prof", "", "Write CPU profile to specified file")
 
 func main() {
-  fmt.Printf("g-fu v1.2\n\n")
   g, e := gfu.NewG()
 
   if e != nil {
@@ -22,7 +23,6 @@ func main() {
   
   g.RootEnv.InitAbc(g)
   g.Debug = true
-  pos := gfu.MIN_POS
   flag.Parse()
   
   if *prof != "" {
@@ -36,9 +36,40 @@ func main() {
     defer pprof.StopCPUProfile()    
   }
 
-  for _, a := range flag.Args() {
-    if _, e := g.Load(a, &g.RootEnv, pos); e != nil {
-      log.Fatal(e);
+  args := flag.Args()
+  
+  if len(args) == 0 {
+    fmt.Printf("g-fu v1.3\n\nPress Return twice to evaluate.\n\n  ")
+    in := bufio.NewScanner(os.Stdin)
+    var buf strings.Builder
+    
+    for in.Scan() {
+      line := in.Text()
+
+      if len(line) == 0 {
+        v, e := g.EvalString(gfu.MIN_POS, buf.String(), &g.RootEnv)
+        buf.Reset()
+
+        if e == nil {
+          fmt.Printf("\r%v\n", v)
+        } else {
+          fmt.Printf("\r%v\n", e)
+        }
+      } else {
+        buf.WriteString(line)
+      }
+
+      fmt.Printf("  ")
     }
-  }  
+
+    if e := in.Err(); e != nil {
+      log.Fatal(e)
+    }
+  } else {
+    for _, a := range args {
+      if _, e := g.Load(gfu.MIN_POS, a, &g.RootEnv); e != nil {
+        log.Fatal(e);
+      }
+    }
+  }
 }

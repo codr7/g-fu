@@ -1,4 +1,3 @@
-* Go repl
 * split Prim into Fun & Macro
 ** add Fun.imp
 *** adapt type.Call/Dump

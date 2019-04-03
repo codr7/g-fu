@@ -30,30 +30,35 @@ func (g *G) Init() (*G, Error) {
   return g, nil
 }
 
-func (g *G) Load(fname string, env *Env, pos Pos) (Val, Error) {
-  s, e := ioutil.ReadFile(fname)
-  
-  if e != nil {
-    return g.NIL, g.E(pos, "Error loading file: %v\n%v", fname, e)
-  }
-
-  in := strings.NewReader(string(s))
+func (g *G) EvalString(pos Pos, s string, env *Env) (Val, Error) {
+  in := strings.NewReader(s)
   var fs Forms
-  pos.Init(fname)
   
   for {
     f, e := g.Read(&pos, in, 0)
-
+    
     if e != nil {
       return g.NIL, e
     }
-
+    
     if f == nil {
       break
     }
     
     fs = append(fs, f)
   }
+  
+  return fs.Eval(g, env)  
+}
 
-  return fs.Eval(g, env)
+func (g *G) Load(pos Pos, fname string, env *Env) (Val, Error) {
+  s, e := ioutil.ReadFile(fname)
+  
+  if e != nil {
+    return g.NIL, g.E(pos, "Error loading file: %v\n%v", fname, e)
+  }
+
+  var fpos Pos
+  fpos.Init(fname)
+  return g.EvalString(fpos, string(s), env)
 }
