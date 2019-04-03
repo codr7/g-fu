@@ -10,6 +10,9 @@
 (test (= (+ -42) 42))
 (test (= (+ 35 7) 42))
 
+(test (== 'foo 'foo))
+(test (= '(1 2 3) (Vec 1 2 3)))
+
 (test (= (Vec 1 2 3) (Vec 1 2 3)))
 (test (not (== (Vec 1 2 3) (Vec 1 2 3))))
 (test (= (+ (Vec 1 2 3)..) 6))
