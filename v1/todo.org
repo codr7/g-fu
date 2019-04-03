@@ -1,4 +1,3 @@
-* move Pos update into ReadChar/Unread
 * Go repl
 * split Prim into Fun & Macro
 ** add Fun.imp
