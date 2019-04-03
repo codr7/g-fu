@@ -21,8 +21,8 @@ func main() {
     log.Fatal(e)
   }
   
-  g.RootEnv.InitAbc(g)
   g.Debug = true
+  g.RootEnv.InitAbc(g)
   flag.Parse()
   
   if *prof != "" {
@@ -47,16 +47,20 @@ func main() {
       line := in.Text()
 
       if len(line) == 0 {
-        v, e := g.EvalString(gfu.MIN_POS, buf.String(), &g.RootEnv)
-        buf.Reset()
-
-        if e == nil {
-          fmt.Printf("\r%v\n", v)
-        } else {
-          fmt.Printf("\r%v\n", e)
+        if buf.Len() > 0 {
+          v, e := g.EvalString(gfu.MIN_POS, buf.String(), &g.RootEnv)
+          
+          if e == nil {
+            fmt.Printf("\r%v\n", v)
+          } else {
+            fmt.Printf("\r%v\n", e)
+          }
         }
+
+        buf.Reset()
       } else {
         buf.WriteString(line)
+        buf.WriteRune('\n')
       }
 
       fmt.Printf("  ")
