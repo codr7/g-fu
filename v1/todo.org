@@ -1,1 +1,10 @@
+* move Pos update into ReadChar/Unread
 * Go repl
+* split Prim into Fun & Macro
+** add Fun.imp
+*** adapt type.Call/Dump
+** add e.AddFun()
+** convert Abc funs
+** rename Prim to Macro
+*** ditch CheckArgs
+* readme
