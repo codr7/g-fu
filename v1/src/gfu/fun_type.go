@@ -27,31 +27,38 @@ func (t *FunType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) 
   if e != nil {
     return g.NIL, g.E(pos, "Args eval failed: %v", e)
   }
-
-  var be Env
-  f.env.Clone(&be)
 recall:
-  for i, a := range f.args {
-    id := a.name
+  var v Val
+
+  if f.imp == nil {
+    var be Env
+    f.env.Clone(&be)
     
-    if strings.HasSuffix(id, "..") {
-      v := new(Vec)
-      v.items = make([]Val, nargs-i)
-      copy(v.items, avs[i:])
-      var vv Val
-      vv.Init(g.Vec, v)
-      be.Put(g.S(id[:len(id)-2]), vv)
-      break
+    for i, a := range f.args {
+      id := a.name
+      
+      if strings.HasSuffix(id, "..") {
+        v := new(Vec)
+        v.items = make([]Val, nargs-i)
+        copy(v.items, avs[i:])
+        var vv Val
+        vv.Init(g.Vec, v)
+        be.Put(g.S(id[:len(id)-2]), vv)
+        break
+      }
+      
+      be.Put(a, avs[i])
     }
     
-    be.Put(a, avs[i])
-  }
-
-  var v Val
-  
-  if v, e = Forms(f.body).Eval(g, &be); e != nil {
-    g.recall_args = nil
-    return g.NIL, e
+    if v, e = Forms(f.body).Eval(g, &be); e != nil {
+      g.recall_args = nil
+      return g.NIL, e
+    }
+  } else {
+    if v, e = f.imp(g, pos, avs); e != nil {
+      g.recall_args = nil
+      return g.NIL, e
+    }
   }
 
   if g.recall_args != nil {

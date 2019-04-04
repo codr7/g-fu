@@ -1,7 +1,5 @@
 * split Prim into Fun & Macro
-** add Fun.imp
-*** adapt type.Call/Dump
-** add e.AddFun()
-** convert Abc funs
+** convert rest of Abc funs
+** adapt fun Dump
 ** rename Prim to Macro
 *** ditch CheckArgs

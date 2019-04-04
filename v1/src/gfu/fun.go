@@ -4,20 +4,22 @@ import (
   "strings"
 )
 
+type FunImp func(*G, Pos, []Val) (Val, E)
+
 type Fun struct {
   min_args, max_args int
   args []*Sym
   body []Form
   env *Env
+  imp FunImp
 }
 
-func NewFun(args []*Sym, body []Form, env *Env) *Fun {
-  return new(Fun).Init(args, body, env)
+func NewFun(env *Env, args []*Sym) *Fun {
+  return new(Fun).Init(env, args)
 }
 
-func (f *Fun) Init(args []*Sym, body []Form, env *Env) *Fun {
+func (f *Fun) Init(env *Env, args []*Sym) *Fun {
   f.args = args
-  f.body = body
   f.env = env
   
   nargs := len(args)
@@ -33,4 +35,19 @@ func (f *Fun) Init(args []*Sym, body []Form, env *Env) *Fun {
   }
   
   return f
+}
+
+func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
+  as := make([]*Sym, len(args))
+
+  for i, a := range args {
+    as[i] = g.S(a)
+  }
+  
+  f := NewFun(e, as)
+  f.imp = imp
+  
+  var v Val
+  v.Init(g.Fun, f)
+  e.Put(g.S(id), v)
 }

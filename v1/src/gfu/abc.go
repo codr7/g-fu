@@ -44,10 +44,13 @@ func fun_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
     
     as = append(as, af.(*IdForm).id)
   }
+
+  f := NewFun(env, as)
+  f.body = args[1:]
   
-  var fv Val
-  fv.Init(g.Fun, NewFun(as, args[1:], env))
-  return fv, nil
+  var v Val
+  v.Init(g.Fun, f)
+  return v, nil
 }
 
 func let_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
@@ -261,54 +264,32 @@ func as_bool_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   return out, nil
 }
 
-func eq_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args.Eval(g, env)
+func eq_imp(g *G, pos Pos, args []Val) (Val, E) {
+  v := args[0]
   
-  if e != nil {
-    return g.NIL, e
-  }
-
-  if e = g.prim.CheckArgs(g, pos, in); e != nil {
-    return g.NIL, e
-  }
-
-  var out Val
-  v := in[0]
-  
-  for _, iv := range in[1:] {
+  for _, iv := range args[1:] {
     if !iv.Eq(g, v) {
-      out.Init(g.Bool, false)
-      return out, nil
+      v.Init(g.Bool, false)
+      return v, nil
     }
   }
   
-  out.Init(g.Bool, true)
-  return out, nil
+  v.Init(g.Bool, true)
+  return v, nil
 }
 
-func is_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args.Eval(g, env)
+func is_imp(g *G, pos Pos, args []Val) (Val, E) {
+  v := args[0]
   
-  if e != nil {
-    return g.NIL, e
-  }
-
-  if e = g.prim.CheckArgs(g, pos, in); e != nil {
-    return g.NIL, e
-  }
-    
-  var out Val
-  v := in[0]
-  
-  for _, iv := range in[1:] {
+  for _, iv := range args[1:] {
     if !iv.Is(g, v) {
-      out.Init(g.Bool, false)
-      return out, nil
+      v.Init(g.Bool, false)
+      return v, nil
     }
   }
   
-  out.Init(g.Bool, true)
-  return out, nil
+  v.Init(g.Bool, true)
+  return v, nil
 }
 
 func int_lt_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
@@ -423,8 +404,8 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddPrim(g, g.S("as-bool"), 1, 1, as_bool_imp)
   
-  e.AddPrim(g, g.S("="), 2, -1, eq_imp)
-  e.AddPrim(g, g.S("=="), 2, -1, is_imp)
+  e.AddFun(g, "=", eq_imp, "x", "y")
+  e.AddFun(g, "==", is_imp, "x", "y")
 
   e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
   e.AddPrim(g, g.S("+"), 1, -1, int_add_imp)
