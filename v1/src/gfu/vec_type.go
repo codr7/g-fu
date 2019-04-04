@@ -8,11 +8,6 @@ type VecType struct {
   BasicType
 }
 
-func (t *VecType) Init(id *Sym) *VecType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *VecType) AsBool(g *G, val Val) bool {
   return val.AsVec().items != nil
 }

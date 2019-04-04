@@ -9,11 +9,6 @@ type SplatType struct {
   BasicType
 }
 
-func (t *SplatType) Init(id *Sym) *SplatType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *SplatType) AsBool(g *G, val Val) bool {
   return val.AsSplat().AsBool(g)
 }

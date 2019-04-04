@@ -374,15 +374,15 @@ func int_sub_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.Bool = e.AddType(g, new(BoolType).Init(g.S("Bool")))
-  g.Fun = e.AddType(g, new(FunType).Init(g.S("Fun")))
-  g.Int = e.AddType(g, new(IntType).Init(g.S("Int")))
-  g.Meta = e.AddType(g, new(MetaType).Init(g.S("Meta")))
-  g.Nil = e.AddType(g, new(NilType).Init(g.S("Nil")))
-  g.Prim = e.AddType(g, new(PrimType).Init(g.S("Prim")))
-  g.Splat = e.AddType(g, new(SplatType).Init(g.S("Splat")))
-  g.Sym = e.AddType(g, new(SymType).Init(g.S("Sym")))
-  g.Vec = e.AddType(g, new(VecType).Init(g.S("Vec")))
+  g.Bool = e.AddType(g, new(BoolType), "Bool")
+  g.Fun = e.AddType(g, new(FunType), "Fun")
+  g.Int = e.AddType(g, new(IntType), "Int")
+  g.Meta = e.AddType(g, new(MetaType), "Meta")
+  g.Nil = e.AddType(g, new(NilType), "Nil")
+  g.Prim = e.AddType(g, new(PrimType), "Prim")
+  g.Splat = e.AddType(g, new(SplatType), "Splat")
+  g.Sym = e.AddType(g, new(SymType), "Sym")
+  g.Vec = e.AddType(g, new(VecType), "Vec")
   
   e.AddVal(g, g.S("_"), g.Nil, nil, &g.NIL)
   e.AddVal(g, g.S("T"), g.Bool, true, &g.T)

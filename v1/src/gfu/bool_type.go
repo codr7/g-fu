@@ -4,11 +4,6 @@ type BoolType struct {
   BasicType
 }
 
-func (t *BoolType) Init(id *Sym) *BoolType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *BoolType) AsBool(g *G, val Val) bool {
   return val.imp.(bool)
 }

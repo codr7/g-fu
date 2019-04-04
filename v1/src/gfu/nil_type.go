@@ -9,11 +9,6 @@ type NilType struct {
   BasicType
 }
 
-func (t *NilType) Init(id *Sym) *NilType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *NilType) AsBool(g *G, val Val) bool {
   return false
 }

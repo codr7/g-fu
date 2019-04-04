@@ -14,11 +14,6 @@ func (i Int) Abs() Int {
   return i
 }
 
-func (t *IntType) Init(id *Sym) *IntType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *IntType) AsBool(g *G, val Val) bool {
   return val.AsInt() > 0
 }

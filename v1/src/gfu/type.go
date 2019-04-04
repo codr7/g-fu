@@ -11,6 +11,7 @@ type Type interface {
   Dump(Val, *strings.Builder)
   Eq(*G, Val, Val) bool
   Id() *Sym
+  Init(*Sym)
   Is(*G, Val, Val) bool
   New(*G, Pos, Val, VecForm, *Env) (Val, E)
   Splat(*G, Val, []Val) []Val
@@ -21,9 +22,8 @@ type BasicType struct {
   id *Sym
 }
 
-func (t *BasicType) Init(id *Sym) *BasicType {
+func (t *BasicType) Init(id *Sym) {
   t.id = id
-  return t
 }
 
 func (t *BasicType) AsBool(g *G, val Val) bool {
@@ -66,7 +66,8 @@ func (t *BasicType) Unquote(g *G, pos Pos, val Val) (Form, E) {
   return new(LitForm).Init(pos, val), nil
 }
 
-func (e *Env) AddType(g *G, t Type) Type {
+func (e *Env) AddType(g *G, t Type, id string) Type {
+  t.Init(g.S(id))
   var v Val
   v.Init(g.Meta, t)
   e.Put(t.Id(), v)

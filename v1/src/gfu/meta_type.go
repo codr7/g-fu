@@ -9,11 +9,6 @@ type MetaType struct {
   BasicType
 }
 
-func (t *MetaType) Init(id *Sym) *MetaType {
-  t.BasicType.Init(id)
-  return t
-}
-
 func (t *MetaType) AsBool(g *G, val Val) bool {
   return false
 }
