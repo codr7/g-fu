@@ -374,19 +374,19 @@ func int_sub_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.Bool = e.AddType(g, new(BoolType), "Bool")
-  g.Fun = e.AddType(g, new(FunType), "Fun")
-  g.Int = e.AddType(g, new(IntType), "Int")
-  g.Meta = e.AddType(g, new(MetaType), "Meta")
-  g.Nil = e.AddType(g, new(NilType), "Nil")
-  g.Prim = e.AddType(g, new(PrimType), "Prim")
-  g.Splat = e.AddType(g, new(SplatType), "Splat")
-  g.Sym = e.AddType(g, new(SymType), "Sym")
-  g.Vec = e.AddType(g, new(VecType), "Vec")
+  g.Bool = e.AddType(g, "Bool", new(BoolType))
+  g.Fun = e.AddType(g, "Fun", new(FunType))
+  g.Int = e.AddType(g, "Int", new(IntType))
+  g.Meta = e.AddType(g, "Meta", new(MetaType))
+  g.Nil = e.AddType(g, "Nil", new(NilType))
+  g.Prim = e.AddType(g, "Prim", new(PrimType))
+  g.Splat = e.AddType(g, "Splat", new(SplatType))
+  g.Sym = e.AddType(g, "Sym", new(SymType))
+  g.Vec = e.AddType(g, "Vec", new(VecType))
   
-  e.AddVal(g, g.S("_"), g.Nil, nil, &g.NIL)
-  e.AddVal(g, g.S("T"), g.Bool, true, &g.T)
-  e.AddVal(g, g.S("F"), g.Bool, false, &g.F)
+  e.AddVal(g, "_", g.Nil, nil, &g.NIL)
+  e.AddVal(g, "T", g.Bool, true, &g.T)
+  e.AddVal(g, "F", g.Bool, false, &g.F)
   
   e.AddPrim(g, g.S("eval"), 1, 1, eval_imp)
   e.AddPrim(g, g.S("do"), 0, -1, do_imp)

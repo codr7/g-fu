@@ -66,7 +66,7 @@ func (t *BasicType) Unquote(g *G, pos Pos, val Val) (Form, E) {
   return new(LitForm).Init(pos, val), nil
 }
 
-func (e *Env) AddType(g *G, t Type, id string) Type {
+func (e *Env) AddType(g *G, id string, t Type) Type {
   t.Init(g.S(id))
   var v Val
   v.Init(g.Meta, t)

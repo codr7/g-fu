@@ -51,7 +51,7 @@ func (v Val) Unquote(g *G, pos Pos) (Form, E) {
   return v.val_type.Unquote(g, pos, v) 
 }
 
-func (env *Env) AddVal(g *G, id *Sym, val_type Type, val interface{}, out *Val) {
+func (env *Env) AddVal(g *G, id string, val_type Type, val interface{}, out *Val) {
   out.Init(val_type, val)
-  env.Put(id, *out)
+  env.Put(g.S(id), *out)
 }
