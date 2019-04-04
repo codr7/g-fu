@@ -8,7 +8,7 @@ import (
   "unicode"
 )
 
-func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, Error) {
+func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
   c, _, e := in.ReadRune()
 
   if e == io.EOF {
@@ -29,9 +29,9 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, Error) {
   return c, nil
 }
 
-func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) Error {
+func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   if e := in.UnreadRune(); e != nil {
-    return g.E(*pos, "Error unreading char")
+    return g.E(*pos, "Failed unreading char")
   }
 
   if c == '\n' {
@@ -43,9 +43,9 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) Error {
   return nil
 }
 
-func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
+func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
   var c rune
-  var e Error
+  var e E
 
   for {
     c, e = g.ReadChar(pos, in)
@@ -102,7 +102,7 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Er
   }
 }
 
-func (g *G) ReadExpr(pos *Pos, in *strings.Reader, out []Form) ([]Form, Error) {
+func (g *G) ReadExpr(pos *Pos, in *strings.Reader, out []Form) ([]Form, E) {
   ef := new(ExprForm).Init(*pos)
 
   for {
@@ -122,7 +122,7 @@ func (g *G) ReadExpr(pos *Pos, in *strings.Reader, out []Form) ([]Form, Error) {
   return append(out, ef), nil
 }
 
-func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]Form, Error) {
+func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]Form, E) {
   fpos := *pos
   var buf strings.Builder
   buf.WriteString(prefix)
@@ -166,7 +166,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]F
   return append(out, new(IdForm).Init(fpos, g.S(s))), nil
 }
 
-func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Form, Error) {
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Form, E) {
   fpos := *pos
   var buf strings.Builder
   
@@ -190,7 +190,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Fo
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.E(*pos, "Error writing char: %v", we)
+      return nil, g.E(*pos, "Failed writing char: %v", we)
     }
   }
 
@@ -225,7 +225,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Fo
   return out, nil
 }
 
-func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
   fpos := *pos
   var fs []Form
   fs, e := g.Read(pos, in, fs, end)
@@ -245,12 +245,12 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]For
   return out, nil
 }
 
-func (g *G) ReadString(pos *Pos, in string) ([]Form, Error) {
+func (g *G) ReadString(pos *Pos, in string) ([]Form, E) {
   var out []Form
   return g.Read(pos, strings.NewReader(in), out, 0)
 }
 
-func (g *G) ReadUnquote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, Error) {
+func (g *G) ReadUnquote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
   var fs []Form
   fs, e := g.Read(pos, in, fs, end)
 

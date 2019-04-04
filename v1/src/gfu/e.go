@@ -4,22 +4,22 @@ import (
   "fmt"
 )
 
-type Error interface {
+type E interface {
   String() string
 }
 
-type BasicError struct {
+type BasicE struct {
   pos Pos
   msg string
 }
 
-func (e *BasicError) Init(pos Pos, msg string) *BasicError {
+func (e *BasicE) Init(pos Pos, msg string) *BasicE {
   e.pos = pos
   e.msg = msg
   return e
 }
 
-func (e *BasicError) String() string {
+func (e *BasicE) String() string {
   p := &e.pos
   
   return fmt.Sprintf(
@@ -27,9 +27,9 @@ func (e *BasicError) String() string {
     p.src, p.Row, p.Col, e.msg)
 }
 
-func (g *G) E(pos Pos, msg string, args...interface{}) *BasicError {
+func (g *G) E(pos Pos, msg string, args...interface{}) *BasicE {
   msg = fmt.Sprintf(msg, args...)  
-  e := new(BasicError).Init(pos, msg)
+  e := new(BasicE).Init(pos, msg)
 
   if g.Debug {
     panic(e.String())

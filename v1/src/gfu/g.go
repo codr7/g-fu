@@ -22,16 +22,16 @@ type G struct {
   NIL, T, F Val
 }
 
-func NewG() (*G, Error) {
+func NewG() (*G, E) {
   return new(G).Init()
 }
 
-func (g *G) Init() (*G, Error) {
+func (g *G) Init() (*G, E) {
   g.syms = make(Syms)
   return g, nil
 }
 
-func (g *G) EvalString(pos Pos, s string, env *Env) (Val, Error) {
+func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
   in := strings.NewReader(s)
   var out Forms
   
@@ -52,11 +52,11 @@ func (g *G) EvalString(pos Pos, s string, env *Env) (Val, Error) {
   return out.Eval(g, env)  
 }
 
-func (g *G) Load(pos Pos, fname string, env *Env) (Val, Error) {
+func (g *G) Load(pos Pos, fname string, env *Env) (Val, E) {
   s, e := ioutil.ReadFile(fname)
   
   if e != nil {
-    return g.NIL, g.E(pos, "Error loading file: %v\n%v", fname, e)
+    return g.NIL, g.E(pos, "Failed loading file: %v\n%v", fname, e)
   }
 
   var fpos Pos

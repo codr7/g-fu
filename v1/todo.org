@@ -1,6 +1,4 @@
-* rename Error to E
-* how to go from Vec back to Forms?
-** quote by default?
+* add Val.Unqote(g, pos) (Form, Error)
 * split Prim into Fun & Macro
 ** add Fun.imp
 *** adapt type.Call/Dump

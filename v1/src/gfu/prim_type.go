@@ -15,7 +15,7 @@ func (t *PrimType) Init(id *Sym) *PrimType {
   return t
 }
 
-func (t *PrimType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Error) {
+func (t *PrimType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
   p := val.AsPrim()
   g.prim = p
   return p.imp(g, pos, args, env)

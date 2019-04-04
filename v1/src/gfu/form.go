@@ -11,8 +11,8 @@ type Form interface {
   Dumper
   
   Body() []Form
-  Eval(g *G, env *Env) (Val, Error)
-  Quote(g *G, env *Env, depth int) (Val, Error)
+  Eval(g *G, env *Env) (Val, E)
+  Quote(g *G, env *Env, depth int) (Val, E)
   Pos() Pos
 }
 
@@ -33,7 +33,7 @@ func (f *BasicForm) Dump(out *strings.Builder) {
   out.WriteRune('?')
 }
 
-func (f *BasicForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *BasicForm) Eval(g *G, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
@@ -41,7 +41,7 @@ func (f *BasicForm) Pos() Pos {
   return f.pos
 }
 
-func (f *BasicForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *BasicForm) Quote(g *G, env *Env, depth int) (Val, E) {
   return g.NIL, g.E(f.pos, "Not quote implemented")
 }
 
@@ -81,7 +81,7 @@ func (f *ExprForm) Dump(out *strings.Builder) {
   out.WriteRune(')')
 }
 
-func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *ExprForm) Eval(g *G, env *Env) (Val, E) {
   b := f.body
   
   if len(b) == 0 {
@@ -104,7 +104,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   return rv, nil
 }
 
-func (f *ExprForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *ExprForm) Quote(g *G, env *Env, depth int) (Val, E) {
   var out Vec
   
   for _, bf := range f.body {
@@ -145,7 +145,7 @@ func (f *IdForm) Dump(out *strings.Builder) {
   out.WriteString(f.id.name)
 }
 
-func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *IdForm) Eval(g *G, env *Env) (Val, E) {
   id := f.id
   splat := false
   
@@ -169,7 +169,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   return v, nil
 }
 
-func (f *IdForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *IdForm) Quote(g *G, env *Env, depth int) (Val, E) {
   var v Val
   v.Init(g.Sym, f.id)
   return v, nil
@@ -190,7 +190,7 @@ func (f *LitForm) Init(pos Pos, val Val) *LitForm {
   return f
 }
 
-func (f *LitForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *LitForm) Eval(g *G, env *Env) (Val, E) {
   return f.val, nil
 }
 
@@ -198,7 +198,7 @@ func (f *LitForm) Dump(out *strings.Builder) {
   f.val.Dump(out)
 }
 
-func (f *LitForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *LitForm) Quote(g *G, env *Env, depth int) (Val, E) {
   return f.val, nil
 }
 
@@ -217,7 +217,7 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
   return f
 }
 
-func (f *QuoteForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *QuoteForm) Eval(g *G, env *Env) (Val, E) {
   return f.form.Quote(g, env, 1)
 }
 
@@ -226,7 +226,7 @@ func (f *QuoteForm) Dump(out *strings.Builder) {
   f.form.Dump(out)
 }
 
-func (f *QuoteForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *QuoteForm) Quote(g *G, env *Env, depth int) (Val, E) {
   depth++
   v, e := f.form.Quote(g, env, depth)
   depth--
@@ -248,7 +248,7 @@ func (f *SplatForm) Init(pos Pos, form Form) *SplatForm {
   return f
 }
 
-func (f *SplatForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *SplatForm) Eval(g *G, env *Env) (Val, E) {
   sv, e := f.form.Eval(g, env)
 
   if e != nil {
@@ -264,7 +264,7 @@ func (f *SplatForm) Dump(out *strings.Builder) {
   out.WriteString("..")
 }
 
-func (f *SplatForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *SplatForm) Quote(g *G, env *Env, depth int) (Val, E) {
   v, e := f.form.Quote(g, env, depth)
 
   if e != nil {
@@ -281,7 +281,7 @@ func (f *SplatForm) String() string {
 
 type VecForm []Form
 
-func (f VecForm) Eval(g *G, env *Env) ([]Val, Error) {
+func (f VecForm) Eval(g *G, env *Env) ([]Val, E) {
   var out []Val
   
   for _, bf := range f {
@@ -316,7 +316,7 @@ func (f *UnquoteForm) Init(pos Pos, form Form) *UnquoteForm {
   return f
 }
 
-func (f *UnquoteForm) Eval(g *G, env *Env) (Val, Error) {
+func (f *UnquoteForm) Eval(g *G, env *Env) (Val, E) {
   return g.NIL, g.E(f.pos, "Nothing to unquote")
 }
 
@@ -325,9 +325,9 @@ func (f *UnquoteForm) Dump(out *strings.Builder) {
   f.form.Dump(out)
 }
 
-func (f *UnquoteForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+func (f *UnquoteForm) Quote(g *G, env *Env, depth int) (Val, E) {
   var v Val
-  var e Error
+  var e E
   depth--
   
   if depth == 0 {
@@ -346,11 +346,11 @@ func (f *UnquoteForm) String() string {
 
 type Forms []Form
 
-func (fs Forms) Eval(g *G, env *Env) (Val, Error) {
+func (fs Forms) Eval(g *G, env *Env) (Val, E) {
   out := g.NIL
   
   for _, f := range fs {
-    var e Error
+    var e E
     
     if out, e = f.Eval(g, env); e != nil {
       return g.NIL, e

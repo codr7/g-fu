@@ -14,7 +14,7 @@ func (t *FunType) Init(id *Sym) *FunType {
   return t
 }
 
-func (t *FunType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, Error) {
+func (t *FunType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
   f := val.AsFun()
   avs, e := args.Eval(g, env)
   nargs := len(avs)
