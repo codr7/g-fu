@@ -213,7 +213,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Fo
   }
   
   var v Val
-  v.Init(g.Int, Int(n))
+  v.Init(g.Int, int(n))
   f := new(LitForm).Init(fpos, v)
   
   if splat {

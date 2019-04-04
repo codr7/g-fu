@@ -169,7 +169,7 @@ func for_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   b := Forms(args[1:])
   v := g.NIL
   
-  for i := Int(0); i < n; i++ {
+  for i := 0; i < n; i++ {
     if v, e = b.Eval(g, env); e != nil {
       return g.NIL, e
     }
@@ -235,13 +235,13 @@ func bench_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   n := nv.AsInt()
   b := Forms(args[1:])
 
-  for i := Int(0); i < n; i++ {
+  for i := 0; i < n; i++ {
     b.Eval(g, env)
   }
 
   t := time.Now()
   
-  for i := Int(0); i < n; i++ {
+  for i := 0; i < n; i++ {
     if _, e = b.Eval(g, env); e != nil {
       return g.NIL, e
     }
@@ -330,12 +330,12 @@ func int_add_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
 
   if len(in) == 1 {
     v := in[0]
-    v.imp = v.AsInt().Abs()
+    v.imp = Abs(v.AsInt())
     return v, nil
   }
   
   var out Val
-  var v Int
+  var v int
 
   for _, iv := range in {
     v += iv.AsInt()

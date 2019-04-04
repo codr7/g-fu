@@ -49,16 +49,16 @@ recall:
       g.recall_args = nil
       return g.NIL, e
     }
+
+    if g.recall_args != nil {
+      avs, g.recall_args = g.recall_args, nil
+      goto recall
+    }
   } else {
     if v, e = f.imp(g, pos, avs); e != nil {
       g.recall_args = nil
       return g.NIL, e
     }
-  }
-
-  if g.recall_args != nil {
-    avs, g.recall_args = g.recall_args, nil
-    goto recall
   }
   
   return v, nil

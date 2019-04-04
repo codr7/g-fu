@@ -4,14 +4,12 @@ type IntType struct {
   BasicType
 }
 
-type Int int64
-
-func (i Int) Abs() Int {
-  if i < 0 {
-    return -i
+func Abs(x int) int {
+  if x < 0 {
+    return -x
   }
 
-  return i
+  return x
 }
 
 func (t *IntType) AsBool(g *G, val Val) bool {
@@ -19,7 +17,7 @@ func (t *IntType) AsBool(g *G, val Val) bool {
 }
 
 func (t *IntType) Splat(g *G, val Val, out []Val) []Val {
-  for i := Int(0); i < val.AsInt(); i++ {
+  for i := 0; i < val.AsInt(); i++ {
     var iv Val
     iv.Init(t, i)
     out = append(out, iv)
@@ -28,6 +26,6 @@ func (t *IntType) Splat(g *G, val Val, out []Val) []Val {
   return out
 }
 
-func (v Val) AsInt() Int {
-  return v.imp.(Int)
+func (v Val) AsInt() int {
+  return v.imp.(int)
 }
