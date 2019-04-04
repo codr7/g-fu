@@ -1,5 +1,5 @@
-(test (as-bool 42))
-(test (not (as-bool 0)))
+(test (? 42))
+(test (not (? 0)))
 
 (test (= (and T 42) 42))
 (test (= (or 42 T _) 42))

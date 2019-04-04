@@ -7,23 +7,6 @@ import (
   "time"
 )
 
-func eval_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in := args[0]
-  v, e := in.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-    
-  f, e := v.Unquote(g, pos)
-
-  if e != nil {
-    return g.NIL, e
-  }
-
-  return f.Eval(g, env)
-}
-
 func do_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   return Forms(args).Eval(g, env)
 }
@@ -147,17 +130,6 @@ func or_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   return g.F, nil
 }
 
-func not_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  v, e := args[0].Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-
-  v.Init(g.Bool, !v.AsBool(g))
-  return v, nil
-}
-
 func for_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   nv, e := args[0].Eval(g, env)
 
@@ -176,37 +148,6 @@ func for_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   }
   
   return v, nil
-}
-
-func recall_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  if g.recall_args != nil {
-    return g.NIL, g.E(pos, "Recall already in progress")
-  }
-  
-  var e E
-  
-  if g.recall_args, e = args.Eval(g, env); e != nil {
-    return g.NIL, g.E(pos, "Recall failed: %v", e)
-  }
-  
-  return g.NIL, nil
-}
-
-func dump_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  var out strings.Builder
-  in, e := args.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-  
-  for _, v := range in {
-    v.Dump(&out)
-    out.WriteRune('\n')
-  }
-
-  os.Stderr.WriteString(out.String())
-  return g.NIL, nil
 }
 
 func test_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
@@ -252,19 +193,50 @@ func bench_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   return v, nil
 }
 
-func as_bool_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args[0].Eval(g, env)
+func dump_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  var out strings.Builder
+  
+  for _, v := range args {
+    v.Dump(&out)
+    out.WriteRune('\n')
+  }
+
+  os.Stderr.WriteString(out.String())
+  return g.NIL, nil
+}
+
+func eval_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  f, e := args[0].Unquote(g, pos)
 
   if e != nil {
     return g.NIL, e
   }
 
-  var out Val
-  out.Init(g.Bool, in.AsBool(g))
-  return out, nil
+  return f.Eval(g, env)
 }
 
-func eq_imp(g *G, pos Pos, args []Val) (Val, E) {
+func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  if g.recall_args != nil {
+    return g.NIL, g.E(pos, "Recall already in progress")
+  }
+  
+  g.recall_args = args
+  return g.NIL, nil
+}
+
+func as_bool_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  v := args[0]
+  v.Init(g.Bool, v.AsBool(g))
+  return v, nil
+}
+
+func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  v := args[0]
+  v.Init(g.Bool, !v.AsBool(g))
+  return v, nil
+}
+
+func eq_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
   
   for _, iv := range args[1:] {
@@ -278,7 +250,7 @@ func eq_imp(g *G, pos Pos, args []Val) (Val, E) {
   return v, nil
 }
 
-func is_imp(g *G, pos Pos, args []Val) (Val, E) {
+func is_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
   
   for _, iv := range args[1:] {
@@ -292,78 +264,47 @@ func is_imp(g *G, pos Pos, args []Val) (Val, E) {
   return v, nil
 }
 
-func int_lt_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-
-  if e = g.prim.CheckArgs(g, pos, in); e != nil {
-    return g.NIL, e
-  }
-
-  var out Val
-  v := in[0].AsInt()
+func int_lt_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  v := args[0]
+  a0 := v.AsInt()
   
-  for _, iv := range in[1:] {
-    if iv.AsInt() <= v {
-      out.Init(g.Bool, false)
-      return out, nil
+  for _, a := range args[1:] {
+    if a.AsInt() <= a0 {
+      v.Init(g.Bool, false)
+      return v, nil
     }
   }
   
-  out.Init(g.Bool, true)
-  return out, nil
+  v.Init(g.Bool, true)
+  return v, nil
 }
 
-func int_add_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-
-  if e = g.prim.CheckArgs(g, pos, in); e != nil {
-    return g.NIL, e
-  }
-
-  if len(in) == 1 {
-    v := in[0]
+func int_add_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  if len(args) == 1 {
+    v := args[0]
     v.imp = Abs(v.AsInt())
     return v, nil
   }
   
-  var out Val
   var v int
 
-  for _, iv := range in {
+  for _, iv := range args {
     v += iv.AsInt()
   }
   
+  var out Val
   out.Init(g.Int, v)
   return out, nil
 }
 
-func int_sub_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
-  in, e := args.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, e
-  }
-
-  if e = g.prim.CheckArgs(g, pos, in); e != nil {
-    return g.NIL, e
-  }
-
+func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   var out Val
+  v := args[0].AsInt()
 
-  if len(in) == 1 {
-    out.Init(g.Int, -in[0].AsInt())
-  } else {
-    v := in[0].AsInt()
-    
-    for _, iv := range in[1:] {
+  if len(args) == 1 {
+    out.Init(g.Int, -v)
+  } else {    
+    for _, iv := range args[1:] {
       v -= iv.AsInt()
     }
     
@@ -388,26 +329,27 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, "T", g.Bool, true, &g.T)
   e.AddVal(g, "F", g.Bool, false, &g.F)
   
-  e.AddPrim(g, g.S("eval"), 1, 1, eval_imp)
   e.AddPrim(g, g.S("do"), 0, -1, do_imp)
   e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
   e.AddPrim(g, g.S("let"), 1, -1, let_imp)
   e.AddPrim(g, g.S("if"), 2, 3, if_imp)
   e.AddPrim(g, g.S("or"), 1, -1, or_imp)
   e.AddPrim(g, g.S("and"), 1, -1, and_imp)
-  e.AddPrim(g, g.S("not"), 1, 1, not_imp)
   e.AddPrim(g, g.S("for"), 1, -1, for_imp)
-  e.AddPrim(g, g.S("recall"), 0, -1, recall_imp)
-  e.AddPrim(g, g.S("dump"), 1, -1, dump_imp)
   e.AddPrim(g, g.S("test"), 1, -1, test_imp)
   e.AddPrim(g, g.S("bench"), 1, -1, bench_imp)
 
-  e.AddPrim(g, g.S("as-bool"), 1, 1, as_bool_imp)
-  
-  e.AddFun(g, "=", eq_imp, "x", "y")
-  e.AddFun(g, "==", is_imp, "x", "y")
+  e.AddFun(g, "dump", dump_imp, "vals..")
+  e.AddFun(g, "eval", eval_imp, "form")
+  e.AddFun(g, "recall", recall_imp, "args..")
 
-  e.AddPrim(g, g.S("<"), 2, -1, int_lt_imp)
-  e.AddPrim(g, g.S("+"), 1, -1, int_add_imp)
-  e.AddPrim(g, g.S("-"), 1, -1, int_sub_imp)
+  e.AddFun(g, "?", as_bool_imp, "x")
+  e.AddFun(g, "not", not_imp, "x")
+  
+  e.AddFun(g, "=", eq_imp, "vals..")
+  e.AddFun(g, "==", is_imp, "vals..")
+  
+  e.AddFun(g, "<", int_lt_imp, "vals..")
+  e.AddFun(g, "+", int_add_imp, "vals..")
+  e.AddFun(g, "-", int_sub_imp, "vals..")
 }

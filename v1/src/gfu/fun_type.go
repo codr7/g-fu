@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   //"log"
   "strings"
 )
@@ -55,7 +56,7 @@ recall:
       goto recall
     }
   } else {
-    if v, e = f.imp(g, pos, avs); e != nil {
+    if v, e = f.imp(g, pos, avs, env); e != nil {
       g.recall_args = nil
       return g.NIL, e
     }
@@ -76,17 +77,21 @@ func (t *FunType) Dump(val Val, out *strings.Builder) {
     out.WriteString(a.name)
   }
 
-  out.WriteString(") ")
-
-  for i, bf := range f.body {
-    if i > 0 {
-      out.WriteRune(' ')
+  if f.imp == nil {
+    fmt.Fprintf(out, ") %v)", f.imp)
+  } else {
+    out.WriteString(") ")
+    
+    for i, bf := range f.body {
+      if i > 0 {
+        out.WriteRune(' ')
+      }
+      
+      out.WriteString(bf.String())   
     }
-
-    out.WriteString(bf.String())   
-  }
   
-  out.WriteRune(')')
+    out.WriteRune(')')
+  }
 }
 
 func (v Val) AsFun() *Fun {

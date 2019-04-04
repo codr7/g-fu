@@ -1,6 +1,6 @@
 * split Prim into Fun & Macro
-** convert rest of Abc funs
 ** adapt fun Dump
 ** rename Prim to Macro
 *** ditch CheckArgs
 * fib_tail perf
+** []Val copy?

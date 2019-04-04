@@ -4,7 +4,7 @@ import (
   "strings"
 )
 
-type FunImp func(*G, Pos, []Val) (Val, E)
+type FunImp func(*G, Pos, []Val, *Env) (Val, E)
 
 type Fun struct {
   min_args, max_args int
