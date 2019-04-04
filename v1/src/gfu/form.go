@@ -12,7 +12,7 @@ type Form interface {
   
   Body() []Form
   Eval(g *G, env *Env) (Val, Error)
-  Quote(g *G, env *Env, depth *int) (Val, Error)
+  Quote(g *G, env *Env, depth int) (Val, Error)
   Pos() Pos
 }
 
@@ -41,7 +41,7 @@ func (f *BasicForm) Pos() Pos {
   return f.pos
 }
 
-func (f *BasicForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *BasicForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   return g.NIL, g.E(f.pos, "Not quote implemented")
 }
 
@@ -104,7 +104,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, Error) {
   return rv, nil
 }
 
-func (f *ExprForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *ExprForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   var out Vec
   
   for _, bf := range f.body {
@@ -169,7 +169,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, Error) {
   return v, nil
 }
 
-func (f *IdForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *IdForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   var v Val
   v.Init(g.Sym, f.id)
   return v, nil
@@ -198,7 +198,7 @@ func (f *LitForm) Dump(out *strings.Builder) {
   f.val.Dump(out)
 }
 
-func (f *LitForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *LitForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   return f.val, nil
 }
 
@@ -218,8 +218,7 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
 }
 
 func (f *QuoteForm) Eval(g *G, env *Env) (Val, Error) {
-  depth := 1
-  return f.form.Quote(g, env, &depth)
+  return f.form.Quote(g, env, 1)
 }
 
 func (f *QuoteForm) Dump(out *strings.Builder) {
@@ -227,10 +226,10 @@ func (f *QuoteForm) Dump(out *strings.Builder) {
   f.form.Dump(out)
 }
 
-func (f *QuoteForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
-  *depth++
+func (f *QuoteForm) Quote(g *G, env *Env, depth int) (Val, Error) {
+  depth++
   v, e := f.form.Quote(g, env, depth)
-  *depth--
+  depth--
   return v, e
 }
 
@@ -265,7 +264,7 @@ func (f *SplatForm) Dump(out *strings.Builder) {
   out.WriteString("..")
 }
 
-func (f *SplatForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *SplatForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   v, e := f.form.Quote(g, env, depth)
 
   if e != nil {
@@ -326,18 +325,18 @@ func (f *UnquoteForm) Dump(out *strings.Builder) {
   f.form.Dump(out)
 }
 
-func (f *UnquoteForm) Quote(g *G, env *Env, depth *int) (Val, Error) {
+func (f *UnquoteForm) Quote(g *G, env *Env, depth int) (Val, Error) {
   var v Val
   var e Error
-  *depth--
+  depth--
   
-  if *depth == 0 {
+  if depth == 0 {
     v, e = f.form.Eval(g, env)
   } else {
     v, e = f.form.Quote(g, env, depth)
   }
   
-  *depth++
+  depth++
   return v, e
 }
 

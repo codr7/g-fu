@@ -1,5 +1,7 @@
 * rename Error to E
 ** rename file
+* figure out how to go from Vec back to Forms
+** quote by default?
 * split Prim into Fun & Macro
 ** add Fun.imp
 *** adapt type.Call/Dump
