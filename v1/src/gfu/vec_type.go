@@ -68,6 +68,22 @@ func (t *VecType) Splat(g *G, val Val, out []Val) []Val {
   return append(out, val.AsVec().items...)
 }
 
+func (t *VecType) Unquote(g *G, pos Pos, val Val) (Form, E) {
+  f := new(ExprForm).Init(pos)
+
+  for _, v := range val.AsVec().items {
+    vf, e := v.Unquote(g, pos)
+
+    if e != nil {
+      return nil, e
+    }
+
+    f.Append(vf)
+  }
+  
+  return f, nil
+}
+
 func (v Val) AsVec() *Vec {
   return v.imp.(*Vec)
 }

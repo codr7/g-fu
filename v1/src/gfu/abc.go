@@ -7,6 +7,23 @@ import (
   "time"
 )
 
+func eval_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
+  in := args[0]
+  v, e := in.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+    
+  f, e := v.Unquote(g, pos)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  return f.Eval(g, env)
+}
+
 func do_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   return Forms(args).Eval(g, env)
 }
@@ -254,7 +271,7 @@ func eq_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   if e = g.prim.CheckArgs(g, pos, in); e != nil {
     return g.NIL, e
   }
-    
+
   var out Val
   v := in[0]
   
@@ -390,6 +407,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, g.S("T"), g.Bool, true, &g.T)
   e.AddVal(g, g.S("F"), g.Bool, false, &g.F)
   
+  e.AddPrim(g, g.S("eval"), 1, 1, eval_imp)
   e.AddPrim(g, g.S("do"), 0, -1, do_imp)
   e.AddPrim(g, g.S("fun"), 1, -1, fun_imp)
   e.AddPrim(g, g.S("let"), 1, -1, let_imp)

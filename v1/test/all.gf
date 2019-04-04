@@ -25,6 +25,7 @@
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
+
 (let (fib (fun (n)
             (if (< n 2)
               n
@@ -38,3 +39,12 @@
                 (recall (- n 1) b (+ a b)))
               a)))
   (test (= (fib 20 0 1) 6765)))
+
+(let (foo 42)
+  (test (= (eval 'foo) 42)))
+
+(let (foo 35)
+  (test (= (eval '(+ %foo 7)) 42)))
+
+(let (foo (Vec 35 7))
+  (test (= (eval '(+ %(foo)..)) 42)))

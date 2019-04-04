@@ -14,6 +14,7 @@ type Type interface {
   Is(*G, Val, Val) bool
   New(*G, Pos, Val, VecForm, *Env) (Val, E)
   Splat(*G, Val, []Val) []Val
+  Unquote(*G, Pos, Val) (Form, E)
 }
 
 type BasicType struct {
@@ -59,6 +60,10 @@ func (t *BasicType) New(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E)
 
 func (t *BasicType) Splat(g *G, val Val, out []Val) []Val {
   return append(out, val)
+}
+
+func (t *BasicType) Unquote(g *G, pos Pos, val Val) (Form, E) {
+  return new(LitForm).Init(pos, val), nil
 }
 
 func (e *Env) AddType(g *G, t Type) Type {

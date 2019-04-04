@@ -16,9 +16,12 @@ func (t *PrimType) Init(id *Sym) *PrimType {
 }
 
 func (t *PrimType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
+  pp := g.prim
   p := val.AsPrim()
   g.prim = p
-  return p.imp(g, pos, args, env)
+  v, e := p.imp(g, pos, args, env)
+  g.prim = pp
+  return v, e
 }
 
 func (t *PrimType) Dump(val Val, out *strings.Builder) {

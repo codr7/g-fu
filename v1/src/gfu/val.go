@@ -47,6 +47,10 @@ func (v Val) String() string {
   return DumpString(v)
 }
 
+func (v Val) Unquote(g *G, pos Pos) (Form, E) {
+  return v.val_type.Unquote(g, pos, v) 
+}
+
 func (env *Env) AddVal(g *G, id *Sym, val_type Type, val interface{}, out *Val) {
   out.Init(val_type, val)
   env.Put(id, *out)

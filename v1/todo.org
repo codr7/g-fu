@@ -1,4 +1,3 @@
-* add Val.Unqote(g, pos) (Form, Error)
 * split Prim into Fun & Macro
 ** add Fun.imp
 *** adapt type.Call/Dump
