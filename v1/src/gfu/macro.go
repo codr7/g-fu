@@ -8,10 +8,7 @@ type MacroImp func(*G, Pos, []Form, *Env) (Form, E)
 
 type Macro struct {
   env *Env
-
-  min_args, max_args int
-  args []*Sym
-
+  arg_list ArgList
   body []Form
   imp MacroImp
 }
@@ -22,34 +19,20 @@ func NewMacro(env *Env, args []*Sym) *Macro {
 
 func (m *Macro) Init(env *Env, args []*Sym) *Macro {
   m.env = env
-  m.args = args  
-  nargs := len(args)
-
-  if nargs > 0 {
-    m.min_args, m.max_args = nargs, nargs
-    a := args[nargs-1]
-    
-    if strings.HasSuffix(a.name, "..") {
-      m.min_args--
-      m.max_args = -1
-    }
-  }
-  
+  m.arg_list.Init(args)
   return m
 }
 
 func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  nargs := len(args)
-  
-  if (m.min_args != -1 && nargs < m.min_args) ||
-    (m.max_args != -1 && nargs > m.max_args) {
-    return g.NIL, g.E(pos, "Arg mismatch")
+  if e := m.arg_list.CheckVals(g, pos, args); e != nil {
+    return g.NIL, e
   }
   
   var be Env
   m.env.Clone(&be)
-    
-  for i, a := range m.args {
+  nargs := len(args)
+  
+  for i, a := range m.arg_list.args {
     id := a.name
     
     if strings.HasSuffix(id, "..") {
@@ -70,13 +53,10 @@ func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 }
 
 func (m *Macro) CallImp(g *G, pos Pos, args []Form, env *Env) (Form, E) {
-  nargs := len(args)
-  
-  if (m.min_args != -1 && nargs < m.min_args) ||
-    (m.max_args != -1 && nargs > m.max_args) {
-    return nil, g.E(pos, "Arg mismatch")
+  if e := m.arg_list.CheckForms(g, pos, args); e != nil {
+    return nil, e
   }
-  
+
   var f Form
   var e E
   
