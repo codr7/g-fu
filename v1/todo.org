@@ -4,7 +4,7 @@
 *** items, min/max
 ** extract splat logic from Fun/Macro
 ** parse foo? as opt
-** use in Fun/Macro
+** change Fun/Macro.args to Args
 ** add Prim args/check
 * add (macro) prim
 ** init and return macro
