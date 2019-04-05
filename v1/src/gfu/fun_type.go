@@ -13,15 +13,16 @@ type FunType struct {
 func (t *FunType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
   f := val.AsFun()
   avs, e := args.Eval(g, env)
+
+  if e != nil {
+    return g.NIL, g.E(pos, "Args eval failed: %v", e)
+  }
+
   nargs := len(avs)
   
   if (f.min_args != -1 && nargs < f.min_args) ||
     (f.max_args != -1 && nargs > f.max_args) {
     return g.NIL, g.E(pos, "Arg mismatch")
-  }
-
-  if e != nil {
-    return g.NIL, g.E(pos, "Args eval failed: %v", e)
   }
 recall:
   var v Val
