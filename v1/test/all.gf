@@ -1,6 +1,3 @@
-(test (? 42))
-(test (not (? 0)))
-
 (test (= (and T 42) 42))
 (test (= (or 42 T _) 42))
 
@@ -39,6 +36,7 @@
                 (recall (- n 1) b (+ a b)))
               a)))
   (test (= (fib 20 0 1) 6765)))
+
 
 (let (foo 42)
   (test (= (eval 'foo) 42)))

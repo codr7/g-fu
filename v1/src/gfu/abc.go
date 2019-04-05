@@ -224,12 +224,6 @@ func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
-func as_bool_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  v := args[0]
-  v.Init(g.Bool, v.AsBool(g))
-  return v, nil
-}
-
 func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
   v.Init(g.Bool, !v.AsBool(g))
@@ -344,7 +338,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "eval", eval_imp, "form")
   e.AddFun(g, "recall", recall_imp, "args..")
 
-  e.AddFun(g, "?", as_bool_imp, "x")
   e.AddFun(g, "not", not_imp, "x")
   
   e.AddFun(g, "=", eq_imp, "vals..")

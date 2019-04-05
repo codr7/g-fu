@@ -1,5 +1,14 @@
+* add Arg type
+** id/splat/opt
+** add ArgList
+** extract splat logic from Fun/Macro
+** parse foo? as opt
+** use in Fun/Macro
+** add Prim args/check
 * add (macro) prim
 ** init and return macro
+** add separate expand phase
+*** []Form -> []Form
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
