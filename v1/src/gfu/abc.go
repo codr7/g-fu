@@ -29,7 +29,7 @@ func fun_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
     } else if f, ok := af.(*SplatForm); ok {
       id = g.S(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
     } else {
-      return g.NIL, g.E(af.Pos(), "Invalid fun arg: %v", af)
+      return g.NIL, g.E(af.Pos(), "Invalid arg: %v", af)
     }
     
     as = append(as, id)

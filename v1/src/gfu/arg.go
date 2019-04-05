@@ -35,6 +35,7 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   }
   
   l.items = make([]Arg, nargs)
+  l.min, l.max = nargs, nargs
   
   for i, id := range args {
     a := &l.items[i]
@@ -44,6 +45,7 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
       a.arg_type = ARG_OPT
       idn := id.name
       a.id = g.S(idn[:len(idn)-1])
+      l.min--
     } else if strings.HasSuffix(id.name, "..") {
       a.arg_type = ARG_SPLAT
       idn := id.name
@@ -51,7 +53,6 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
     }
   }
   
-  l.min, l.max = nargs, nargs
   a := l.items[nargs-1]
   
   if a.arg_type == ARG_SPLAT {

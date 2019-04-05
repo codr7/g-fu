@@ -1,11 +1,11 @@
-* extract ArgList.Parse(Form) ([]*Sym, E) from fun_imp
+* extract ArgsForm.Eval([]Form) ([]*Sym, E) from fun_imp
 ** use in Macro
 * add Prim args/check
 ** copy Macro
 * add (macro) prim
 ** init and return macro
-** add separate expand phase
-*** []Form -> []Form
+** eval expansion in call
+* ---
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
