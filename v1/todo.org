@@ -1,15 +1,8 @@
-* add (LET) macro
-** add separate compile phase
-*** propagate values
 * add (macro) prim
 ** init and return macro
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
 ** modify current env if empty body
-* add (DO) macro
-** like do but compile time
 * fib_tail perf
 ** []Val copy?
-* only clone env when used
-** let/args

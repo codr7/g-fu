@@ -4,6 +4,10 @@
 ** move Eval to Op
 ** add Form.Compile
 * switch Fun body to Ops
+* add (LET) macro
+** run at compile time
+** compile body with bindings
+** propagate values
 * add g.stack
 ** keep track of stack size when compiling
 ** push/pop in LetOp
@@ -14,6 +18,11 @@
 ** set in current env
 ** add Var.def_env
 *** change let to backup/restore if set
+* add (DO) macro
+** like do but compile time
+* only clone env when used
+** let/args
+
 * switch Int to big.Int
 * add Rat type
 ** use big.Rat
