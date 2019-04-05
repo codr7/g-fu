@@ -10,9 +10,9 @@ type FunType struct {
   BasicType
 }
 
-func (t *FunType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
+func (t *FunType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   f := val.AsFun()
-  avs, e := args.Eval(g, env)
+  avs, e := VecForm(args).Eval(g, env)
 
   if e != nil {
     return g.NIL, g.E(pos, "Args eval failed: %v", e)

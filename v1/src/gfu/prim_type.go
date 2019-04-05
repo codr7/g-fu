@@ -10,7 +10,7 @@ type PrimType struct {
   BasicType
 }
 
-func (t *PrimType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
+func (t *PrimType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   pp := g.prim
   p := val.AsPrim()
   g.prim = p

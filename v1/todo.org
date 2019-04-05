@@ -1,4 +1,4 @@
-* switch Type.Call args from VecForm to []Form
+* remove g.prim
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr

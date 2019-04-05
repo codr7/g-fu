@@ -318,6 +318,7 @@ func (e *Env) InitAbc(g *G) {
   g.Bool = e.AddType(g, "Bool", new(BoolType))
   g.Fun = e.AddType(g, "Fun", new(FunType))
   g.Int = e.AddType(g, "Int", new(IntType))
+  g.Macro = e.AddType(g, "Macro", new(MacroType))
   g.Meta = e.AddType(g, "Meta", new(MetaType))
   g.Nil = e.AddType(g, "Nil", new(NilType))
   g.Prim = e.AddType(g, "Prim", new(PrimType))

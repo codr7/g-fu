@@ -7,10 +7,12 @@ import (
 type FunImp func(*G, Pos, []Val, *Env) (Val, E)
 
 type Fun struct {
-  min_args, max_args int
-  args []*Sym
-  body []Form
   env *Env
+
+  args []*Sym
+  min_args, max_args int
+
+  body []Form
   imp FunImp
 }
 
@@ -19,9 +21,8 @@ func NewFun(env *Env, args []*Sym) *Fun {
 }
 
 func (f *Fun) Init(env *Env, args []*Sym) *Fun {
-  f.args = args
   f.env = env
-  
+  f.args = args  
   nargs := len(args)
 
   if nargs > 0 {

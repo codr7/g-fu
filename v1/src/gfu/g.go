@@ -18,7 +18,7 @@ type G struct {
   prim *Prim
   recall_args []Val
   
-  Bool, Fun, Int, Meta, Nil, Prim, Splat, Sym, Vec Type
+  Bool, Fun, Int, Macro, Meta, Nil, Prim, Splat, Sym, Vec Type
   NIL, T, F Val
 }
 

@@ -7,7 +7,7 @@ import (
 
 type Type interface {
   AsBool(*G, Val) bool
-  Call(*G, Pos, Val, VecForm, *Env) (Val, E)
+  Call(*G, Pos, Val, []Form, *Env) (Val, E)
   Dump(Val, *strings.Builder)
   Eq(*G, Val, Val) bool
   Id() *Sym
@@ -30,7 +30,7 @@ func (t *BasicType) AsBool(g *G, val Val) bool {
   return true
 }
 
-func (t *BasicType) Call(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E) {
+func (t *BasicType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   if len(args) > 0 {
     return g.NIL, g.E(pos, "Too many args")
   }
