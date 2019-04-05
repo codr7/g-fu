@@ -1,6 +1,11 @@
-* add Macro type
+* switch Type.Call args from VecForm to []Form
+* add Macro struct
 ** copy Fun
 ** add (macro (args) body) prim
-** add separate expand phase
+** add Prim.ct_eval flag
+*** add AddPrim arg
+** add separate compile phase
+*** expand Macros
+*** run prims
 * fib_tail perf
 ** []Val copy?
