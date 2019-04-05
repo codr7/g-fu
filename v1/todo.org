@@ -1,8 +1,12 @@
 * add Arg type
-** id/splat/opt
+** add Arg(string) constructor 
+** BasicArg/SplatArg/OptArg
+*** str_id string, id *Sym
+** add Arg.Id(g *G)
+*** lazy alloc
 ** add Args type
 *** items, min/max
-** extract splat logic from Fun/Macro
+** move splat logic from Fun/Macro to SplatArg
 ** parse foo? as opt
 ** change Fun/Macro.args to Args
 ** add Prim args/check
