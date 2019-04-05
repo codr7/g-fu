@@ -1,5 +1,3 @@
-* extract ArgsForm.Eval([]Form) ([]*Sym, E) from fun_imp
-** use in Macro
 * add Prim args/check
 ** copy Macro
 * add (macro) prim

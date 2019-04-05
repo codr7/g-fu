@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   "strings"
 )
 
@@ -101,4 +102,26 @@ func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
     env.Put(a.id, args[i])
   }
 
+}
+
+type ArgsForm []Form
+
+func (fs ArgsForm) Parse(g *G) ([]*Sym, E) {
+  var out []*Sym
+  
+  for _, af := range fs {
+    var id *Sym
+    
+    if f, ok := af.(*IdForm); ok {
+      id = f.id
+    } else if f, ok := af.(*SplatForm); ok {
+      id = g.S(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
+    } else {
+      return nil, g.E(af.Pos(), "Invalid arg: %v", af)
+    }
+    
+    out = append(out, id)
+  }
+
+  return out, nil
 }

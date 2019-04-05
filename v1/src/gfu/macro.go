@@ -48,7 +48,6 @@ func (m *Macro) CallImp(g *G, pos Pos, args []Form, env *Env) (Form, E) {
   return f, nil
 }
 
-
 func (e *Env) AddMacro(g *G, id string, imp MacroImp, args...string) {
   as := make([]*Sym, len(args))
 
