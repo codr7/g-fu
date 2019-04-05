@@ -29,23 +29,7 @@ func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   
   var be Env
   m.env.Clone(&be)
-  nargs := len(args)
-  
-  for i, a := range m.arg_list.items {
-    if a.arg_type == ARG_SPLAT {
-      v := new(Vec)
-      v.items = make([]Val, nargs-i)
-      copy(v.items, args[i:])
-        
-      var vv Val
-      vv.Init(g.Vec, v)
-      be.Put(a.id, vv)
-      break
-    }
-
-    be.Put(a.id, args[i])
-  }
-    
+  m.arg_list.PutEnv(g, &be, args)
   return Forms(m.body).Eval(g, &be)
 }
 

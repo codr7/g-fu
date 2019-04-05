@@ -21,27 +21,13 @@ func (t *FunType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   if e := f.arg_list.CheckVals(g, pos, avs); e != nil {
     return g.NIL, e
   }
-recall:
-  nargs := len(avs)
-  var v Val
 
+  var v Val
+recall:
   if f.imp == nil {
     var be Env
     f.env.Clone(&be)
-    
-    for i, a := range f.arg_list.items {
-      if a.arg_type == ARG_SPLAT {
-        v := new(Vec)
-        v.items = make([]Val, nargs-i)
-        copy(v.items, avs[i:])
-        var vv Val
-        vv.Init(g.Vec, v)
-        be.Put(a.id, vv)
-        break
-      }
-      
-      be.Put(a.id, avs[i])
-    }
+    f.arg_list.PutEnv(g, &be, avs)
     
     if v, e = Forms(f.body).Eval(g, &be); e != nil {
       g.recall_args = nil

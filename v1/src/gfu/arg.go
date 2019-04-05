@@ -39,8 +39,12 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   for i, id := range args {
     a := &l.items[i]
     a.Init(id)
-    
-    if strings.HasSuffix(id.name, "..") {
+
+    if strings.HasSuffix(id.name, "?") {
+      a.arg_type = ARG_OPT
+      idn := id.name
+      a.id = g.S(idn[:len(idn)-1])
+    } else if strings.HasSuffix(id.name, "..") {
       a.arg_type = ARG_SPLAT
       idn := id.name
       a.id = g.S(idn[:len(idn)-2])
@@ -76,4 +80,24 @@ func (l *ArgList) CheckForms(g *G, pos Pos, args []Form) E {
   }
 
   return nil
+}
+
+func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
+  nargs := len(args)
+  
+  for i, a := range l.items {
+    if a.arg_type == ARG_SPLAT {
+      v := new(Vec)
+      v.items = make([]Val, nargs-i)
+      copy(v.items, args[i:])
+
+      var vv Val
+      vv.Init(g.Vec, v)
+      env.Put(a.id, vv)
+      break
+    }
+      
+    env.Put(a.id, args[i])
+  }
+
 }

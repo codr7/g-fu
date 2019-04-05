@@ -1,7 +1,5 @@
-** move splat logic from Fun/Macro
-** parse foo? as OPT
-** fix ReadId splat logic
-*** handle suffix
+* fix ReadId splat logic
+** handle suffix
 * add Prim args/check
 ** copy Macro
 * add (macro) prim
