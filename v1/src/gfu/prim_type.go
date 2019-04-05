@@ -11,7 +11,13 @@ type PrimType struct {
 }
 
 func (t *PrimType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
-  return val.AsPrim().imp(g, pos, args, env)
+  p := val.AsPrim()
+  
+  if e := p.arg_list.CheckForms(g, pos, args); e != nil {
+    return g.NIL, e
+  }
+
+  return p.imp(g, pos, args, env)
 }
 
 func (t *PrimType) Dump(val Val, out *strings.Builder) {

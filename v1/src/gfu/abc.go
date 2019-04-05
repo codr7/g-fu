@@ -93,7 +93,7 @@ func if_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
 
 func and_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   var e E
-  var v Val
+  v := g.NIL
   
   for _, in := range args {
     v, e = in.Eval(g, env)
@@ -320,15 +320,15 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, "T", g.Bool, true, &g.T)
   e.AddVal(g, "F", g.Bool, false, &g.F)
   
-  e.AddPrim(g, "do", do_imp)
-  e.AddPrim(g, "fun", fun_imp)
-  e.AddPrim(g, "let", let_imp)
-  e.AddPrim(g, "if", if_imp)
-  e.AddPrim(g, "or", or_imp)
-  e.AddPrim(g, "and", and_imp)
-  e.AddPrim(g, "for", for_imp)
-  e.AddPrim(g, "test", test_imp)
-  e.AddPrim(g, "bench", bench_imp)
+  e.AddPrim(g, "do", do_imp, "body..")
+  e.AddPrim(g, "fun", fun_imp, "args", "body..")
+  e.AddPrim(g, "let", let_imp, "args..")
+  e.AddPrim(g, "if", if_imp, "cond", "t", "f?")
+  e.AddPrim(g, "or", or_imp, "conds..")
+  e.AddPrim(g, "and", and_imp, "conds..")
+  e.AddPrim(g, "for", for_imp, "nreps", "body..")
+  e.AddPrim(g, "test", test_imp, "cases..")
+  e.AddPrim(g, "bench", bench_imp, "nreps", "body..")
 
   e.AddFun(g, "dump", dump_imp, "vals..")
   e.AddFun(g, "eval", eval_imp, "form")

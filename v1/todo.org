@@ -1,5 +1,3 @@
-* add Prim args/check
-** copy Macro
 * add (macro) prim
 ** init and return macro
 ** eval expansion in call
