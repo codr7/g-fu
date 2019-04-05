@@ -10,5 +10,3 @@
 ** (let x 35 y 7)
 *** read if first arg isn't expr
 ** modify current env if empty body
-* fib_tail perf
-** []Val copy?

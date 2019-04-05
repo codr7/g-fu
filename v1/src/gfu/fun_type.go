@@ -22,30 +22,27 @@ func (t *FunType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
     return g.NIL, e
   }
 
-  var v Val
-recall:
-  if f.imp == nil {
-    var be Env
-    f.env.Clone(&be)
-    f.arg_list.PutEnv(g, &be, avs)
-    
-    if v, e = Forms(f.body).Eval(g, &be); e != nil {
-      g.recall_args = nil
-      return g.NIL, e
-    }
-
-    if g.recall_args != nil {
-      avs, g.recall_args = g.recall_args, nil
-      goto recall
-    }
-  } else {
-    if v, e = f.imp(g, pos, avs, env); e != nil {
-      g.recall_args = nil
-      return g.NIL, e
-    }
+  if f.imp != nil {
+    return f.imp(g, pos, avs, env)
   }
   
-  return v, nil
+  var be Env
+  f.env.Clone(&be)
+  var v Val
+recall:
+  f.arg_list.PutEnv(g, &be, avs)
+
+  if v, e = Forms(f.body).Eval(g, &be); e != nil {
+    g.recall_args = nil
+    return g.NIL, e
+  }
+  
+  if g.recall_args != nil {
+    avs, g.recall_args = g.recall_args, nil
+    goto recall
+  }
+  
+  return v, e
 }
 
 func (t *FunType) Dump(val Val, out *strings.Builder) {
