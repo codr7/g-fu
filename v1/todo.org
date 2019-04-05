@@ -1,12 +1,12 @@
-* add (macro) imp Macro
+* add (LET) macro
+** add separate compile phase
+*** propagate values
+* add (macro) prim
+** init and return macro
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
 ** modify current env if empty body
-* add (LET) macro
-** same imp as let but run at compile time
-** add separate compile phase
-** propagate values at compile
 * add (DO) macro
 ** like do but compile time
 * fib_tail perf
