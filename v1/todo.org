@@ -1,4 +1,3 @@
-* switch Prim imp args from VecForm to []Form
 * extract ArgList.Parse(Form) ([]*Sym, E) from fun_imp
 ** use in Macro
 * add Prim args/check
