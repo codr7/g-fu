@@ -1,19 +1,11 @@
 * switch Type.Call args from VecForm to []Form
-* add def macro
+* relax let syntax
+** (let x 35 y 7)
+*** read if first arg isn't expr
+** modify current env if empty body
+* add LET macro
 ** like let but run at compile time
 ** add separate compile phase
-** drop bindings after body compile
-** support one/many defs
-*** (def foo 42)
-*** (def foo (macro (x y)))
-*** (def (foo (macro (x y))) ...)
-*** propagate at compile
-* add Macro struct
-** copy Fun
-** add (macro (args) body) prim
-** add Prim.ct_eval flag
-*** add AddPrim arg
-*** expand Macros
-*** run prims
+** propagate value at compile
 * fib_tail perf
 ** []Val copy?
