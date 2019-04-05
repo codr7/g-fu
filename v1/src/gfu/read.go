@@ -152,15 +152,20 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]F
   }
 
   s := buf.String()
-  
-  if s == ".." {
-    out_len := len(out)
 
-    if out_len == 0 {
-      return nil, g.E(*pos, "Nothing to splat")
+  if strings.HasSuffix(s, "..") {
+    if s == ".." {
+      out_len := len(out)
+
+      if out_len == 0 {
+        return nil, g.E(*pos, "Nothing to splat")
+      }
+
+      return append(out[:out_len-1], new(SplatForm).Init(fpos, out[out_len-1])), nil
+    } else {
+      f := new(IdForm).Init(fpos, g.S(s[:len(s)-2]))
+      return append(out, new(SplatForm).Init(fpos, f)), nil
     }
-
-    return append(out[:out_len-1], new(SplatForm).Init(fpos, out[out_len-1])), nil
   }
   
   return append(out, new(IdForm).Init(fpos, g.S(s))), nil

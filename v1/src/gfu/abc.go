@@ -2,6 +2,7 @@ package gfu
 
 import (
   //"log"
+  "fmt"
   "os"
   "strings"
   "time"
@@ -21,11 +22,17 @@ func fun_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
   var as []*Sym
   
   for _, af := range asf.(*ExprForm).body {
-    if _, ok := af.(*IdForm); !ok {
+    var id *Sym
+
+    if f, ok := af.(*IdForm); ok {
+      id = f.id
+    } else if f, ok := af.(*SplatForm); ok {
+      id = g.S(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
+    } else {
       return g.NIL, g.E(af.Pos(), "Invalid fun arg: %v", af)
     }
     
-    as = append(as, af.(*IdForm).id)
+    as = append(as, id)
   }
 
   f := NewFun(g, env, as)
