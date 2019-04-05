@@ -12,56 +12,21 @@ type MacroType struct {
 
 func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   m := val.AsMacro()
-  nargs := len(args)
-  
-  if (m.min_args != -1 && nargs < m.min_args) ||
-    (m.max_args != -1 && nargs > m.max_args) {
-    return g.NIL, g.E(pos, "Arg mismatch")
-  }
-  
-  if m.imp == nil {
-    var be Env
-    m.env.Clone(&be)
-    
-    for i, a := range m.args {
-      id := a.name
-      
-      if strings.HasSuffix(id, "..") {
-        v := new(Vec)
-        v.items = make([]Val, nargs-i)
-
-        for _, va := range args[i:] {
-          q, e := va.Quote(g, env, 1)
-
-          if e != nil {
-            return g.NIL, e
-          }
-
-          v.Push(q)
-        }
-        
-        var vv Val
-        vv.Init(g.Vec, v)
-        be.Put(g.S(id[:len(id)-2]), vv)
-        break
-      }
-
-      q, e := args[i].Quote(g, env, 1)
-
-      if e != nil {
-        return g.NIL, e
-      }
-      
-      be.Put(a, q)
-    }
-    
-    return Forms(m.body).Eval(g, &be)
-  }
-  
-  var f Form
   var e E
   
-  if f, e = m.imp(g, pos, args, env); e != nil {
+  if m.imp == nil {
+    avs := make([]Val, len(args))
+    
+    for i, a := range args {
+      avs[i], e = a.Quote(g, env, 1)
+    }
+    
+    return m.CallBody(g, pos, avs, env)
+  }
+
+  var f Form
+  
+  if f, e = m.CallImp(g, pos, args, env); e != nil {
     return g.NIL, e
   }
   
