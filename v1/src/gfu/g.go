@@ -15,7 +15,6 @@ type G struct {
   sym_tag Tag
   syms Syms
 
-  prim *Prim
   recall_args []Val
   
   Bool, Fun, Int, Macro, Meta, Nil, Prim, Splat, Sym, Vec Type
