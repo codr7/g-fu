@@ -1,6 +1,7 @@
 * add Arg type
 ** id/splat/opt
-** add ArgList
+** add Args type
+*** items, min/max
 ** extract splat logic from Fun/Macro
 ** parse foo? as opt
 ** use in Fun/Macro
