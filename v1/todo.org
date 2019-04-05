@@ -1,4 +1,6 @@
-* rename Prim to Macro
-** ditch CheckArgs
+* add Macro type
+** copy Fun
+** add (macro (args) body) prim
+** add separate expand phase
 * fib_tail perf
 ** []Val copy?
