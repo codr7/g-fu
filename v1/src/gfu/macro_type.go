@@ -42,7 +42,7 @@ func (t *MacroType) Dump(val Val, out *strings.Builder) {
       out.WriteRune(' ')
     }
 
-    out.WriteString(a.name)
+    out.WriteString(a.id.name)
   }
 
   if m.imp == nil {

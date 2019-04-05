@@ -28,7 +28,7 @@ func fun_imp(g *G, pos Pos, args VecForm, env *Env) (Val, E) {
     as = append(as, af.(*IdForm).id)
   }
 
-  f := NewFun(env, as)
+  f := NewFun(g, env, as)
   f.body = args[1:]
   
   var v Val

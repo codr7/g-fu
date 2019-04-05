@@ -4,23 +4,55 @@ import (
   "strings"
 )
 
+type ArgType int
+
+const (
+  ARG_PLAIN ArgType = 0
+  ARG_OPT ArgType = 1
+  ARG_SPLAT ArgType = 2
+)
+
+type Arg struct {
+  arg_type ArgType
+  id *Sym
+}
+
+func (a *Arg) Init(id *Sym) *Arg {
+  a.id = id
+  return a
+}
+
 type ArgList struct {
-  items []*Sym
+  items []Arg
   min, max int
 }
 
-func (l *ArgList) Init(args []*Sym) *ArgList {
-  l.items = args  
+func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   nargs := len(args)
-
-  if nargs > 0 {
-    l.min, l.max = nargs, nargs
-    a := args[nargs-1]
+  
+  if nargs == 0 {
+    return l
+  }
+  
+  l.items = make([]Arg, nargs)
+  
+  for i, id := range args {
+    a := &l.items[i]
+    a.Init(id)
     
-    if strings.HasSuffix(a.name, "..") {
-      l.min--
-      l.max = -1
+    if strings.HasSuffix(id.name, "..") {
+      a.arg_type = ARG_SPLAT
+      idn := id.name
+      a.id = g.S(idn[:len(idn)-2])
     }
+  }
+  
+  l.min, l.max = nargs, nargs
+  a := l.items[nargs-1]
+  
+  if a.arg_type == ARG_SPLAT {
+    l.min--
+    l.max = -1
   }
 
   return l

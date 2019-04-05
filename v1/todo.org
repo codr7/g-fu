@@ -1,11 +1,9 @@
-* add Arg type
-** ArgType ARG_PLAIN, ARG_SPLAT, ARG_OPT
-*** id *Sym, arg_type
 ** move splat logic from Fun/Macro
 ** parse foo? as OPT
 ** fix ReadId splat logic
 *** handle suffix
 * add Prim args/check
+** copy Macro
 * add (macro) prim
 ** init and return macro
 ** add separate expand phase

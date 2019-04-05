@@ -12,13 +12,13 @@ type Fun struct {
   imp FunImp
 }
 
-func NewFun(env *Env, args []*Sym) *Fun {
-  return new(Fun).Init(env, args)
+func NewFun(g *G, env *Env, args []*Sym) *Fun {
+  return new(Fun).Init(g, env, args)
 }
 
-func (f *Fun) Init(env *Env, args []*Sym) *Fun {
+func (f *Fun) Init(g *G, env *Env, args []*Sym) *Fun {
   f.env = env
-  f.arg_list.Init(args)
+  f.arg_list.Init(g, args)
   return f
 }
 
@@ -29,7 +29,7 @@ func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
     as[i] = g.S(a)
   }
   
-  f := NewFun(e, as)
+  f := NewFun(g, e, as)
   f.imp = imp
   
   var v Val

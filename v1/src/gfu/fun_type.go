@@ -30,19 +30,17 @@ recall:
     f.env.Clone(&be)
     
     for i, a := range f.arg_list.items {
-      id := a.name
-      
-      if strings.HasSuffix(id, "..") {
+      if a.arg_type == ARG_SPLAT {
         v := new(Vec)
         v.items = make([]Val, nargs-i)
         copy(v.items, avs[i:])
         var vv Val
         vv.Init(g.Vec, v)
-        be.Put(g.S(id[:len(id)-2]), vv)
+        be.Put(a.id, vv)
         break
       }
       
-      be.Put(a, avs[i])
+      be.Put(a.id, avs[i])
     }
     
     if v, e = Forms(f.body).Eval(g, &be); e != nil {
@@ -73,7 +71,7 @@ func (t *FunType) Dump(val Val, out *strings.Builder) {
       out.WriteRune(' ')
     }
 
-    out.WriteString(a.name)
+    out.WriteString(a.id.name)
   }
 
   if f.imp == nil {

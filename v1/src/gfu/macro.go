@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "strings"
 )
 
 type MacroImp func(*G, Pos, []Form, *Env) (Form, E)
@@ -13,13 +12,13 @@ type Macro struct {
   imp MacroImp
 }
 
-func NewMacro(env *Env, args []*Sym) *Macro {
-  return new(Macro).Init(env, args)
+func NewMacro(g *G, env *Env, args []*Sym) *Macro {
+  return new(Macro).Init(g, env, args)
 }
 
-func (m *Macro) Init(env *Env, args []*Sym) *Macro {
+func (m *Macro) Init(g *G, env *Env, args []*Sym) *Macro {
   m.env = env
-  m.arg_list.Init(args)
+  m.arg_list.Init(g, args)
   return m
 }
 
@@ -33,20 +32,18 @@ func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   nargs := len(args)
   
   for i, a := range m.arg_list.items {
-    id := a.name
-    
-    if strings.HasSuffix(id, "..") {
+    if a.arg_type == ARG_SPLAT {
       v := new(Vec)
       v.items = make([]Val, nargs-i)
       copy(v.items, args[i:])
         
       var vv Val
       vv.Init(g.Vec, v)
-      be.Put(g.S(id[:len(id)-2]), vv)
+      be.Put(a.id, vv)
       break
     }
 
-    be.Put(a, args[i])
+    be.Put(a.id, args[i])
   }
     
   return Forms(m.body).Eval(g, &be)
@@ -75,7 +72,7 @@ func (e *Env) AddMacro(g *G, id string, imp MacroImp, args...string) {
     as[i] = g.S(a)
   }
   
-  m := NewMacro(e, as)
+  m := NewMacro(g, e, as)
   m.imp = imp
   
   var v Val
