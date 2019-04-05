@@ -18,20 +18,18 @@ func (t *FunType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
     return g.NIL, g.E(pos, "Args eval failed: %v", e)
   }
 
-  nargs := len(avs)
-  
-  if (f.min_args != -1 && nargs < f.min_args) ||
-    (f.max_args != -1 && nargs > f.max_args) {
-    return g.NIL, g.E(pos, "Arg mismatch")
+  if e := f.arg_list.CheckVals(g, pos, avs); e != nil {
+    return g.NIL, e
   }
 recall:
+  nargs := len(avs)
   var v Val
 
   if f.imp == nil {
     var be Env
     f.env.Clone(&be)
     
-    for i, a := range f.args {
+    for i, a := range f.arg_list.args {
       id := a.name
       
       if strings.HasSuffix(id, "..") {
@@ -70,7 +68,7 @@ func (t *FunType) Dump(val Val, out *strings.Builder) {
   f := val.AsFun()
   out.WriteString("(fun (")
 
-  for i, a := range f.args {
+  for i, a := range f.arg_list.args {
     if i > 0 {
       out.WriteRune(' ')
     }

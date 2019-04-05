@@ -1,14 +1,8 @@
 * add Arg type
-** add Arg(string) constructor 
 ** ArgType ARG_PLAIN, ARG_SPLAT, ARG_OPT
-*** str_id string, id *Sym, arg_type
-** add Arg.Id(g *G)
-*** lazy alloc
-** add Args type
-*** items, min/max
+*** id *Sym, arg_type
 ** move splat logic from Fun/Macro
 ** parse foo? as OPT
-** change Fun/Macro.args to Args
 ** add Prim args/check
 * fix ReadId splat logic
 ** handle suffix
