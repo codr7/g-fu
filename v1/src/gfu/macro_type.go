@@ -18,9 +18,6 @@ func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E)
     (m.max_args != -1 && nargs > m.max_args) {
     return g.NIL, g.E(pos, "Arg mismatch")
   }
-
-  var v Val
-  var e E
   
   if m.imp == nil {
     var be Env
@@ -58,24 +55,17 @@ func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E)
       be.Put(a, q)
     }
     
-    if v, e = Forms(m.body).Eval(g, &be); e != nil {
-      return g.NIL, e
-    }
-  } else {
-    var f Form
-    
-    if f, e = m.imp(g, pos, args, env); e != nil {
-      return g.NIL, e
-    }
-
-    v, e = f.Quote(g, env, 1)
-    
-    if e != nil {
-      return g.NIL, e
-    }
+    return Forms(m.body).Eval(g, &be)
   }
-
-  return v, nil
+  
+  var f Form
+  var e E
+  
+  if f, e = m.imp(g, pos, args, env); e != nil {
+    return g.NIL, e
+  }
+  
+  return f.Quote(g, env, 1)
 }
 
 func (t *MacroType) Dump(val Val, out *strings.Builder) {
