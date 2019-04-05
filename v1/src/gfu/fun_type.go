@@ -29,7 +29,7 @@ recall:
     var be Env
     f.env.Clone(&be)
     
-    for i, a := range f.arg_list.args {
+    for i, a := range f.arg_list.items {
       id := a.name
       
       if strings.HasSuffix(id, "..") {
@@ -68,7 +68,7 @@ func (t *FunType) Dump(val Val, out *strings.Builder) {
   f := val.AsFun()
   out.WriteString("(fun (")
 
-  for i, a := range f.arg_list.args {
+  for i, a := range f.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
     }

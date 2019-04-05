@@ -3,9 +3,9 @@
 *** id *Sym, arg_type
 ** move splat logic from Fun/Macro
 ** parse foo? as OPT
-** add Prim args/check
-* fix ReadId splat logic
-** handle suffix
+** fix ReadId splat logic
+*** handle suffix
+* add Prim args/check
 * add (macro) prim
 ** init and return macro
 ** add separate expand phase

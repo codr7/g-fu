@@ -32,7 +32,7 @@ func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   m.env.Clone(&be)
   nargs := len(args)
   
-  for i, a := range m.arg_list.args {
+  for i, a := range m.arg_list.items {
     id := a.name
     
     if strings.HasSuffix(id, "..") {

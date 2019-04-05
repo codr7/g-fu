@@ -5,12 +5,12 @@ import (
 )
 
 type ArgList struct {
-  args []*Sym
+  items []*Sym
   min, max int
 }
 
 func (l *ArgList) Init(args []*Sym) *ArgList {
-  l.args = args  
+  l.items = args  
   nargs := len(args)
 
   if nargs > 0 {

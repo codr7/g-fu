@@ -37,7 +37,7 @@ func (t *MacroType) Dump(val Val, out *strings.Builder) {
   m := val.AsMacro()
   out.WriteString("(macro (")
 
-  for i, a := range m.arg_list.args {
+  for i, a := range m.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
     }
