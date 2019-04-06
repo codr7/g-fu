@@ -218,9 +218,7 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
 }
 
 func (f *QuoteForm) Eval(g *G, env *Env) (Val, E) {
-  var v Val
-  v.Init(g.Form, f.form)
-  return v, nil
+  return f.form.Quote(g, env, 1)
 }
 
 func (f *QuoteForm) Dump(out *strings.Builder) {
@@ -228,9 +226,15 @@ func (f *QuoteForm) Dump(out *strings.Builder) {
   f.form.Dump(out)
 }
 
-func (f *QuoteForm) Quote(g *G, env *Env, depth int) (Val, E) {
+func (f *QuoteForm) Quote(g *G, env *Env, depth int) (v Val, e E) {
   depth++
-  v, e := f.form.Quote(g, env, depth)
+
+  if depth == 1 {
+    v, e = f.form.Quote(g, env, depth)
+  } else {
+    v.Init(g.Form, f)
+  }
+  
   depth--
   return v, e
 }
