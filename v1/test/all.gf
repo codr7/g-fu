@@ -1,3 +1,6 @@
+(test (Bool 42))
+(test (not (Vec)))
+
 (test (= (and T 42) 42))
 (test (= (or 42 T _) 42))
 

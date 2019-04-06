@@ -69,7 +69,15 @@ func (t *BasicType) Unquote(g *G, pos Pos, val Val) (Form, E) {
 func (e *Env) AddType(g *G, id string, t Type) Type {
   t.Init(g.Sym(id))
   var v Val
-  v.Init(g.MetaType, t)
+  var mt Type
+
+  if id == "Meta" {
+    mt = t
+  } else {
+    mt = g.MetaType
+  }
+  
+  v.Init(mt, t)
   e.Put(t.Id(), v)
   return t
 }

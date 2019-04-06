@@ -345,12 +345,12 @@ func vec_pop_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 }
 
 func (e *Env) InitAbc(g *G) {
+  g.MetaType = e.AddType(g, "Meta", new(MetaType))
   g.BoolType = e.AddType(g, "Bool", new(BoolType))
   g.FormType = e.AddType(g, "Form", new(FormType))
   g.FunType = e.AddType(g, "Fun", new(FunType))
   g.IntType = e.AddType(g, "Int", new(IntType))
   g.MacroType = e.AddType(g, "Macro", new(MacroType))
-  g.MetaType = e.AddType(g, "Meta", new(MetaType))
   g.NilType = e.AddType(g, "Nil", new(NilType))
   g.PrimType = e.AddType(g, "Prim", new(PrimType))
   g.SplatType = e.AddType(g, "Splat", new(SplatType))

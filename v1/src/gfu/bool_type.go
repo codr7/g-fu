@@ -9,7 +9,7 @@ func (t *BoolType) Bool(g *G, val Val) bool {
 }
 
 func (t *BoolType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
-  val.Init(g.BoolType, val.AsBool(g))
+  val.Init(g.BoolType, args[0].AsBool(g))
   return val, nil
 }
 

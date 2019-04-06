@@ -9,7 +9,7 @@ type VecType struct {
 }
 
 func (t *VecType) Bool(g *G, val Val) bool {
-  return val.AsVec().items != nil
+  return len(val.AsVec().items) > 0
 }
 
 func (t *VecType) Dump(val Val, out *strings.Builder) {
