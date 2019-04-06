@@ -8,6 +8,7 @@
 (test (= (+ 35 7) 42))
 
 (test (== 'foo 'foo))
+(test (= ''foo ''foo))
 
 (test (= '(1 2 3) (Vec 1 2 3)))
 (test (= '(1 %(+ 2 3) 4) (Vec 1 5 4)))

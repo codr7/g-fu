@@ -51,7 +51,7 @@ func (t *BasicType) Id() *Sym {
 }
 
 func (t *BasicType) Is(g *G, x Val, y Val) bool {
-  return x == y
+  return x.imp == y.imp
 }
 
 func (t *BasicType) New(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E)  {

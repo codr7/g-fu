@@ -11,8 +11,9 @@ type Form interface {
   Dumper
   
   Body() []Form
-  Eval(g *G, env *Env) (Val, E)
-  Quote(g *G, env *Env, depth int) (Val, E)
+  Eq(*G, Form) bool
+  Eval(*G, *Env) (Val, E)
+  Quote(*G, *Env, int) (Val, E)
   Pos() Pos
 }
 
@@ -31,6 +32,10 @@ func (f *BasicForm) Body() []Form {
 
 func (f *BasicForm) Dump(out *strings.Builder) {
   out.WriteRune('?')
+}
+
+func (f *BasicForm) Eq(g *G, rhs Form) bool {
+  return f == rhs
 }
 
 func (f *BasicForm) Eval(g *G, env *Env) (Val, E) {
@@ -145,6 +150,10 @@ func (f *IdForm) Dump(out *strings.Builder) {
   out.WriteString(f.id.name)
 }
 
+func (f *IdForm) Eq(g *G, rhs Form) bool {
+  return f.id == rhs.(*IdForm).id
+}
+
 func (f *IdForm) Eval(g *G, env *Env) (Val, E) {
   id := f.id
   splat := false
@@ -190,6 +199,10 @@ func (f *LitForm) Init(pos Pos, val Val) *LitForm {
   return f
 }
 
+func (f *LitForm) Eq(g *G, rhs Form) bool {
+  return f.val.Eq(g, rhs.(*LitForm).val)
+}
+
 func (f *LitForm) Eval(g *G, env *Env) (Val, E) {
   return f.val, nil
 }
@@ -215,6 +228,10 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
   f.BasicForm.Init(pos)
   f.form = form
   return f
+}
+
+func (f *QuoteForm) Eq(g *G, rhs Form) bool {
+  return f.form.Eq(g, rhs.(*QuoteForm).form)
 }
 
 func (f *QuoteForm) Eval(g *G, env *Env) (Val, E) {
