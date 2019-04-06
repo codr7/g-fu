@@ -1,8 +1,9 @@
-* fix multi-quote issues
+* fix quote issues
 ** add Form type
-*** use for nested quotes
+*** return nested Form in Quote.Eval
 ** testquote.gf
 ** testmacro.gf
+* add expand(form) fun
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
