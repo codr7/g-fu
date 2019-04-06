@@ -325,6 +325,25 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return out, nil
 }
 
+func vec_len_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  v := args[0]  
+  v.Init(g.Int, len(v.AsVec().items))
+  return v, nil
+}
+
+func vec_push_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  args[0].AsVec().Push(args[1:]...)
+  return g.NIL, nil
+}
+
+func vec_peek_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  return args[0].AsVec().Peek(g), nil
+}
+
+func vec_pop_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  return args[0].AsVec().Pop(g), nil
+}
+
 func (e *Env) InitAbc(g *G) {
   g.Bool = e.AddType(g, "Bool", new(BoolType))
   g.Form = e.AddType(g, "Form", new(FormType))
@@ -365,4 +384,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "<", int_lt_imp, "vals..")
   e.AddFun(g, "+", int_add_imp, "vals..")
   e.AddFun(g, "-", int_sub_imp, "vals..")
+
+  e.AddFun(g, "len", vec_len_imp, "vec")
+  e.AddFun(g, "push", vec_push_imp, "vec val..")
+  e.AddFun(g, "peek", vec_peek_imp, "vec")
+  e.AddFun(g, "pop", vec_pop_imp, "vec")
 }

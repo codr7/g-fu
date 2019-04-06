@@ -17,6 +17,13 @@
 (test (= '(1 %(Vec 2 3)..) (Vec 1 2 3)))
 (test (= (+ (Vec 1 2 3)..) 6))
 
+(let (v (Vec))
+  (push v 1)
+  (push v 2 3)
+  (test (= (len v) 3))
+  (test (= (pop v) 3))
+  (test (= (peek v) 2)))
+
 (test (= (do 1 2 3) 3))
 
 (test (= ((fun (xs..) xs) 1 2 3) (Vec 1 2 3)))

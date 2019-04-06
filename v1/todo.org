@@ -3,7 +3,6 @@
 ** (let x 35 y 7)
 *** read if first arg isn't expr
 ** modify current env if empty body
-* add profiling section to readme
 * transducers in g-fu
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
