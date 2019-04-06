@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  //"log"
 )
 
 type MacroImp func(*G, Pos, []Form, *Env) (Form, E)
@@ -22,15 +23,23 @@ func (m *Macro) Init(g *G, env *Env, args []*Sym) *Macro {
   return m
 }
 
-func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  if e := m.arg_list.CheckVals(g, pos, args); e != nil {
-    return g.NIL, e
+func (m *Macro) CallBody(g *G, pos Pos, args []Val, env *Env) (Form, E) {
+  var e E
+  
+  if e = m.arg_list.CheckVals(g, pos, args); e != nil {
+    return nil, e
   }
   
   var be Env
   m.env.Clone(&be)
   m.arg_list.PutEnv(g, &be, args)
-  return Forms(m.body).Eval(g, &be)
+  var v Val
+  
+  if v, e = Forms(m.body).Eval(g, &be); e != nil {
+    return nil, e
+  }
+
+  return v.Unquote(g, pos)
 }
 
 func (m *Macro) CallImp(g *G, pos Pos, args []Form, env *Env) (Form, E) {

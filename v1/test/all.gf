@@ -22,6 +22,14 @@
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
+(let (foo (macro () ''bar))
+  (test (= (foo) 'bar)))
+
+(let (foo 42 bar (macro () 'foo))
+  (test (= (bar) 42)))
+
+(let (foo (macro (x) '(+ %x 7)))
+  (test (= (foo 35) 42)))
 
 (let (fib (fun (n)
             (if (< n 2)

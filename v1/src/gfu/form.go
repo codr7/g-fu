@@ -218,7 +218,8 @@ func (f *QuoteForm) Init(pos Pos, form Form) *QuoteForm {
 }
 
 func (f *QuoteForm) Eval(g *G, env *Env) (Val, E) {
-  return f.form.Quote(g, env, 1)
+  v, e := f.form.Quote(g, env, 1)
+  return v, e
 }
 
 func (f *QuoteForm) Dump(out *strings.Builder) {

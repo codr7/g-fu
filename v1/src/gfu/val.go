@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  //"log"
   "strings"
 )
 

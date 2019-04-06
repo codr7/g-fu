@@ -15,7 +15,7 @@ func fun_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   asf := args[0]
   
   if _, ok := asf.(*ExprForm); !ok {
-    return g.NIL, g.E(asf.Pos(), "Invalid fun args: %v", asf)
+    return g.NIL, g.E(asf.Pos(), "Invalid args: %v", asf)
   }
 
   as, e := ArgsForm(asf.(*ExprForm).body).Parse(g)
@@ -29,6 +29,27 @@ func fun_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   
   var v Val
   v.Init(g.Fun, f)
+  return v, nil
+}
+
+func macro_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
+  asf := args[0]
+  
+  if _, ok := asf.(*ExprForm); !ok {
+    return g.NIL, g.E(asf.Pos(), "Invalid args: %v", asf)
+  }
+
+  as, e := ArgsForm(asf.(*ExprForm).body).Parse(g)
+
+  if e != nil {
+    return g.NIL, e
+  }
+
+  m := NewMacro(g, env, as)
+  m.body = args[1:]
+  
+  var v Val
+  v.Init(g.Macro, m)
   return v, nil
 }
 
@@ -322,6 +343,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddPrim(g, "do", do_imp, "body..")
   e.AddPrim(g, "fun", fun_imp, "args", "body..")
+  e.AddPrim(g, "macro", macro_imp, "args", "body..")
   e.AddPrim(g, "let", let_imp, "args..")
   e.AddPrim(g, "if", if_imp, "cond", "t", "f?")
   e.AddPrim(g, "or", or_imp, "conds..")

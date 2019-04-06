@@ -1,7 +1,8 @@
-* add (macro) prim
-** init and return macro
-** eval expansion in call
-* ---
+* fix multi-quote issues
+** add Form type
+*** use for nested quotes
+** testquote.gf
+** testmacro.gf
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr

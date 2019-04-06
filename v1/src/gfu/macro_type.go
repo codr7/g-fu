@@ -12,6 +12,7 @@ type MacroType struct {
 
 func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   m := val.AsMacro()
+  var f Form
   var e E
   
   if m.imp == nil {
@@ -20,17 +21,15 @@ func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E)
     for i, a := range args {
       avs[i], e = a.Quote(g, env, 1)
     }
-    
-    return m.CallBody(g, pos, avs, env)
-  }
 
-  var f Form
-  
-  if f, e = m.CallImp(g, pos, args, env); e != nil {
+    if f, e = m.CallBody(g, pos, avs, env); e != nil {
+      return g.NIL, e
+    }
+  } else if f, e = m.CallImp(g, pos, args, env); e != nil {
     return g.NIL, e
   }
   
-  return f.Quote(g, env, 1)
+  return f.Eval(g, env)
 }
 
 func (t *MacroType) Dump(val Val, out *strings.Builder) {
