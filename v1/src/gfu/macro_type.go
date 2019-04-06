@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "fmt"
   //"log"
   "strings"
 )
@@ -13,19 +12,14 @@ type MacroType struct {
 func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
   m := val.AsMacro()
   var f Form
-  var e E
+  var e E  
+  avs := make([]Val, len(args))
   
-  if m.imp == nil {
-    avs := make([]Val, len(args))
-    
-    for i, a := range args {
-      avs[i], e = a.Quote(g, env, 1)
-    }
-
-    if f, e = m.CallBody(g, pos, avs, env); e != nil {
-      return g.NIL, e
-    }
-  } else if f, e = m.CallImp(g, pos, args, env); e != nil {
+  for i, a := range args {
+    avs[i], e = a.Quote(g, env, 1)
+  }
+  
+  if f, e = m.Call(g, pos, avs, env); e != nil {
     return g.NIL, e
   }
   
@@ -44,21 +38,17 @@ func (t *MacroType) Dump(val Val, out *strings.Builder) {
     out.WriteString(a.id.name)
   }
 
-  if m.imp == nil {
-    fmt.Fprintf(out, ") %v)", m.imp)
-  } else {
-    out.WriteString(") ")
-    
-    for i, bf := range m.body {
-      if i > 0 {
-        out.WriteRune(' ')
-      }
-      
-      out.WriteString(bf.String())   
-    }
+  out.WriteString(") ")
   
-    out.WriteRune(')')
+  for i, bf := range m.body {
+    if i > 0 {
+      out.WriteRune(' ')
+    }
+    
+    out.WriteString(bf.String())   
   }
+  
+  out.WriteRune(')')
 }
 
 func (v Val) AsMacro() *Macro {
