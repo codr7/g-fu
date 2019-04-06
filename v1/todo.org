@@ -1,4 +1,3 @@
-* rename bench.py
 * add expand(form n?) fun
 * relax let syntax
 ** (let x 35 y 7)
