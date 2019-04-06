@@ -4,16 +4,16 @@ type BoolType struct {
   BasicType
 }
 
-func (t *BoolType) AsBool(g *G, val Val) bool {
+func (t *BoolType) Bool(g *G, val Val) bool {
   return val.imp.(bool)
 }
 
-func (v Val) AsBool(g *G) bool {
+func (v Val) Bool(g *G) bool {
   vt := v.val_type
   
   if vt == g.Bool {
     return v.imp.(bool)
   }
 
-  return vt.AsBool(g, v)
+  return vt.Bool(g, v)
 }

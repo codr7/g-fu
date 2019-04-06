@@ -9,7 +9,7 @@ type NilType struct {
   BasicType
 }
 
-func (t *NilType) AsBool(g *G, val Val) bool {
+func (t *NilType) Bool(g *G, val Val) bool {
   return false
 }
 

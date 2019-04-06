@@ -8,7 +8,7 @@ type VecType struct {
   BasicType
 }
 
-func (t *VecType) AsBool(g *G, val Val) bool {
+func (t *VecType) Bool(g *G, val Val) bool {
   return val.AsVec().items != nil
 }
 

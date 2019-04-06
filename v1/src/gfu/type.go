@@ -6,7 +6,7 @@ import (
 )
 
 type Type interface {
-  AsBool(*G, Val) bool
+  Bool(*G, Val) bool
   Call(*G, Pos, Val, []Form, *Env) (Val, E)
   Dump(Val, *strings.Builder)
   Eq(*G, Val, Val) bool
@@ -26,7 +26,7 @@ func (t *BasicType) Init(id *Sym) {
   t.id = id
 }
 
-func (t *BasicType) AsBool(g *G, val Val) bool {
+func (t *BasicType) Bool(g *G, val Val) bool {
   return true
 }
 

@@ -9,7 +9,7 @@ type MetaType struct {
   BasicType
 }
 
-func (t *MetaType) AsBool(g *G, val Val) bool {
+func (t *MetaType) Bool(g *G, val Val) bool {
   return false
 }
 

@@ -101,7 +101,7 @@ func if_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
     return g.NIL, e
   }
 
-  if c.AsBool(g) {
+  if c.Bool(g) {
     return args[1].Eval(g, env)
   }
 
@@ -123,7 +123,7 @@ func and_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
     
-    if !v.AsBool(g) {
+    if !v.Bool(g) {
       return g.F, nil
     }
   }
@@ -139,7 +139,7 @@ func or_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
     
-    if v.AsBool(g) {
+    if v.Bool(g) {
       return v, nil
     }
   }
@@ -175,7 +175,7 @@ func test_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
 
-    if !v.AsBool(g) {
+    if !v.Bool(g) {
       return g.NIL, g.E(pos, "Test failed")
     }
   }
@@ -243,7 +243,7 @@ func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 
 func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
-  v.Init(g.Bool, !v.AsBool(g))
+  v.Init(g.Bool, !v.Bool(g))
   return v, nil
 }
 

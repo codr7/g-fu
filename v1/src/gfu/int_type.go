@@ -12,7 +12,7 @@ func Abs(x int) int {
   return x
 }
 
-func (t *IntType) AsBool(g *G, val Val) bool {
+func (t *IntType) Bool(g *G, val Val) bool {
   return val.AsInt() > 0
 }
 
