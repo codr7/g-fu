@@ -45,17 +45,11 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
   return true
 }
 
-func (t *VecType) New(g *G, pos Pos, val Val, args VecForm, env *Env) (Val, E)  {
-  is, e := args.Eval(g, env)
-
-  if e != nil {
-    return g.NIL, g.E(pos, "Constructor arg eval failed: %v", e)
-  }
-
+func (t *VecType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
   var out Val
   v := new(Vec)
-  v.items = is
-  out.Init(g.Vec, v)
+  v.items = args
+  out.Init(g.VecType, v)
   return out, nil
 }
 

@@ -29,3 +29,7 @@
 * use ':' to type annotate exprs/args
 ** (Vec 1 2 3:Int):Vec[Int]
 ** (fun[A B] (a:A b:B) (+ a b))
+* add {..}
+** inject compile time values
+** parse expr & eval in reader
+** (+ 1 {+ 2 3}) -> (+ 1 5) 

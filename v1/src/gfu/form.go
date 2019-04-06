@@ -119,7 +119,7 @@ func (f *ExprForm) Quote(g *G, env *Env, depth int) (Val, E) {
       return g.NIL, e
     }
     
-    if v.val_type == g.Splat {
+    if v.val_type == g.SplatType {
       out.items = v.Splat(g, out.items)
     } else {
       out.Push(v)
@@ -127,7 +127,7 @@ func (f *ExprForm) Quote(g *G, env *Env, depth int) (Val, E) {
   }
 
   var v Val
-  v.Init(g.Vec, &out)
+  v.Init(g.VecType, &out)
   return v, nil
 }
 
@@ -159,7 +159,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, E) {
   splat := false
   
   if strings.HasSuffix(id.name, "..") {
-    id = g.S(id.name[:len(id.name)-2])
+    id = g.Sym(id.name[:len(id.name)-2])
     splat = true
   }
   
@@ -172,7 +172,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, E) {
   v := found.Val
   
   if splat {
-    v.Init(g.Splat, v)
+    v.Init(g.SplatType, v)
   }
   
   return v, nil
@@ -180,7 +180,7 @@ func (f *IdForm) Eval(g *G, env *Env) (Val, E) {
 
 func (f *IdForm) Quote(g *G, env *Env, depth int) (Val, E) {
   var v Val
-  v.Init(g.Sym, f.id)
+  v.Init(g.SymType, f.id)
   return v, nil
 }
 
@@ -249,7 +249,7 @@ func (f *QuoteForm) Quote(g *G, env *Env, depth int) (v Val, e E) {
   if depth == 1 {
     v, e = f.form.Quote(g, env, depth)
   } else {
-    v.Init(g.Form, f)
+    v.Init(g.FormType, f)
   }
   
   depth--
@@ -279,7 +279,7 @@ func (f *SplatForm) Eval(g *G, env *Env) (Val, E) {
   }
 
   var v Val
-  v.Init(g.Splat, sv)
+  v.Init(g.SplatType, sv)
   return v, nil
 }
 
@@ -294,7 +294,7 @@ func (f *SplatForm) Quote(g *G, env *Env, depth int) (Val, E) {
     return g.NIL, e
   }
   
-  v.Init(g.Splat, v)
+  v.Init(g.SplatType, v)
   return v, nil
 }
 
@@ -318,7 +318,7 @@ func (f VecForm) Eval(g *G, env *Env) ([]Val, E) {
       break
     }
     
-    if v.val_type == g.Splat {
+    if v.val_type == g.SplatType {
       out = v.Splat(g, out)
     } else {
       out = append(out, v)

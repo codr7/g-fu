@@ -28,7 +28,7 @@ func fun_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   f.body = args[1:]
   
   var v Val
-  v.Init(g.Fun, f)
+  v.Init(g.FunType, f)
   return v, nil
 }
 
@@ -49,7 +49,7 @@ func macro_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   m.body = args[1:]
   
   var v Val
-  v.Init(g.Macro, m)
+  v.Init(g.MacroType, m)
   return v, nil
 }
 
@@ -101,7 +101,7 @@ func if_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
     return g.NIL, e
   }
 
-  if c.Bool(g) {
+  if c.AsBool(g) {
     return args[1].Eval(g, env)
   }
 
@@ -123,7 +123,7 @@ func and_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
     
-    if !v.Bool(g) {
+    if !v.AsBool(g) {
       return g.F, nil
     }
   }
@@ -139,7 +139,7 @@ func or_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
     
-    if v.Bool(g) {
+    if v.AsBool(g) {
       return v, nil
     }
   }
@@ -175,7 +175,7 @@ func test_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
       return g.NIL, e
     }
 
-    if !v.Bool(g) {
+    if !v.AsBool(g) {
       return g.NIL, g.E(pos, "Test failed")
     }
   }
@@ -206,7 +206,7 @@ func bench_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   }
 
   var v Val
-  v.Init(g.Int, time.Now().Sub(t).Nanoseconds() / 1000000) 
+  v.Init(g.IntType, time.Now().Sub(t).Nanoseconds() / 1000000) 
   return v, nil
 }
 
@@ -243,7 +243,7 @@ func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 
 func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
-  v.Init(g.Bool, !v.Bool(g))
+  v.Init(g.BoolType, !v.AsBool(g))
   return v, nil
 }
 
@@ -252,12 +252,12 @@ func eq_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Eq(g, v) {
-      v.Init(g.Bool, false)
+      v.Init(g.BoolType, false)
       return v, nil
     }
   }
   
-  v.Init(g.Bool, true)
+  v.Init(g.BoolType, true)
   return v, nil
 }
 
@@ -266,12 +266,12 @@ func is_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Is(g, v) {
-      v.Init(g.Bool, false)
+      v.Init(g.BoolType, false)
       return v, nil
     }
   }
   
-  v.Init(g.Bool, true)
+  v.Init(g.BoolType, true)
   return v, nil
 }
 
@@ -281,12 +281,12 @@ func int_lt_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   
   for _, a := range args[1:] {
     if a.AsInt() <= a0 {
-      v.Init(g.Bool, false)
+      v.Init(g.BoolType, false)
       return v, nil
     }
   }
   
-  v.Init(g.Bool, true)
+  v.Init(g.BoolType, true)
   return v, nil
 }
 
@@ -304,7 +304,7 @@ func int_add_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   }
   
   var out Val
-  out.Init(g.Int, v)
+  out.Init(g.IntType, v)
   return out, nil
 }
 
@@ -313,13 +313,13 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0].AsInt()
 
   if len(args) == 1 {
-    out.Init(g.Int, -v)
+    out.Init(g.IntType, -v)
   } else {    
     for _, iv := range args[1:] {
       v -= iv.AsInt()
     }
     
-    out.Init(g.Int, v)
+    out.Init(g.IntType, v)
   }
   
   return out, nil
@@ -327,7 +327,7 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 
 func vec_len_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]  
-  v.Init(g.Int, len(v.AsVec().items))
+  v.Init(g.IntType, len(v.AsVec().items))
   return v, nil
 }
 
@@ -345,21 +345,21 @@ func vec_pop_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.Bool = e.AddType(g, "Bool", new(BoolType))
-  g.Form = e.AddType(g, "Form", new(FormType))
-  g.Fun = e.AddType(g, "Fun", new(FunType))
-  g.Int = e.AddType(g, "Int", new(IntType))
-  g.Macro = e.AddType(g, "Macro", new(MacroType))
-  g.Meta = e.AddType(g, "Meta", new(MetaType))
-  g.Nil = e.AddType(g, "Nil", new(NilType))
-  g.Prim = e.AddType(g, "Prim", new(PrimType))
-  g.Splat = e.AddType(g, "Splat", new(SplatType))
-  g.Sym = e.AddType(g, "Sym", new(SymType))
-  g.Vec = e.AddType(g, "Vec", new(VecType))
+  g.BoolType = e.AddType(g, "Bool", new(BoolType))
+  g.FormType = e.AddType(g, "Form", new(FormType))
+  g.FunType = e.AddType(g, "Fun", new(FunType))
+  g.IntType = e.AddType(g, "Int", new(IntType))
+  g.MacroType = e.AddType(g, "Macro", new(MacroType))
+  g.MetaType = e.AddType(g, "Meta", new(MetaType))
+  g.NilType = e.AddType(g, "Nil", new(NilType))
+  g.PrimType = e.AddType(g, "Prim", new(PrimType))
+  g.SplatType = e.AddType(g, "Splat", new(SplatType))
+  g.SymType = e.AddType(g, "Sym", new(SymType))
+  g.VecType = e.AddType(g, "Vec", new(VecType))
   
-  e.AddVal(g, "_", g.Nil, nil, &g.NIL)
-  e.AddVal(g, "T", g.Bool, true, &g.T)
-  e.AddVal(g, "F", g.Bool, false, &g.F)
+  e.AddVal(g, "_", g.NilType, nil, &g.NIL)
+  e.AddVal(g, "T", g.BoolType, true, &g.T)
+  e.AddVal(g, "F", g.BoolType, false, &g.F)
   
   e.AddPrim(g, "do", do_imp, "body..")
   e.AddPrim(g, "fun", fun_imp, "args", "body..")

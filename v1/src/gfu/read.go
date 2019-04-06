@@ -163,12 +163,12 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]F
 
       return append(out[:out_len-1], new(SplatForm).Init(fpos, out[out_len-1])), nil
     } else {
-      f := new(IdForm).Init(fpos, g.S(s[:len(s)-2]))
+      f := new(IdForm).Init(fpos, g.Sym(s[:len(s)-2]))
       return append(out, new(SplatForm).Init(fpos, f)), nil
     }
   }
   
-  return append(out, new(IdForm).Init(fpos, g.S(s))), nil
+  return append(out, new(IdForm).Init(fpos, g.Sym(s))), nil
 }
 
 func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Form, E) {
@@ -218,7 +218,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Fo
   }
   
   var v Val
-  v.Init(g.Int, int(n))
+  v.Init(g.IntType, int(n))
   f := new(LitForm).Init(fpos, v)
   
   if splat {

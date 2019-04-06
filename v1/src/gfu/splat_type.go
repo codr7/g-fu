@@ -10,7 +10,7 @@ type SplatType struct {
 }
 
 func (t *SplatType) Bool(g *G, val Val) bool {
-  return val.AsSplat().Bool(g)
+  return val.AsSplat().AsBool(g)
 }
 
 func (t *SplatType) Dump(val Val, out *strings.Builder) {

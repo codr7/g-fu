@@ -9,6 +9,7 @@
 
 (test (== 'foo 'foo))
 (test (= ''foo ''foo))
+(test (not (= (Sym) (Sym))))
 
 (test (= '(1 2 3) (Vec 1 2 3)))
 (test (= '(1 %(+ 2 3) 4) (Vec 1 5 4)))

@@ -14,7 +14,13 @@ func (t *MetaType) Bool(g *G, val Val) bool {
 }
 
 func (t *MetaType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
-  return val.AsMeta().New(g, pos, val, args, env)
+  vs, e := VecForm(args).Eval(g, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+  
+  return val.AsMeta().New(g, pos, val, vs, env)
 }
   
 func (t *MetaType) Dump(val Val, out *strings.Builder) {

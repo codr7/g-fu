@@ -26,13 +26,13 @@ func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
   as := make([]*Sym, len(args))
 
   for i, a := range args {
-    as[i] = g.S(a)
+    as[i] = g.Sym(a)
   }
   
   f := NewFun(g, e, as)
   f.imp = imp
   
   var v Val
-  v.Init(g.Fun, f)
-  e.Put(g.S(id), v)
+  v.Init(g.FunType, f)
+  e.Put(g.Sym(id), v)
 }

@@ -37,7 +37,7 @@ func (v Val) Is(g *G, rhs Val) bool {
 }
 
 func (v Val) Splat(g *G, out []Val) []Val {
-  if v.val_type == g.Splat {
+  if v.val_type == g.SplatType {
     v = v.imp.(Val)
   }
   
@@ -54,5 +54,5 @@ func (v Val) Unquote(g *G, pos Pos) (Form, E) {
 
 func (env *Env) AddVal(g *G, id string, val_type Type, val interface{}, out *Val) {
   out.Init(val_type, val)
-  env.Put(g.S(id), *out)
+  env.Put(g.Sym(id), *out)
 }

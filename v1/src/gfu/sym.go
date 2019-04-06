@@ -20,7 +20,7 @@ func (s *Sym) String() string {
   return s.name
 }
 
-func (g *G) S(name string) *Sym {
+func (g *G) Sym(name string) *Sym {
   if s := g.syms[name]; s != nil { return s }
   return new(Sym).Init(g, name)
 }

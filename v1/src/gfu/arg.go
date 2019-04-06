@@ -45,12 +45,12 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
     if strings.HasSuffix(id.name, "?") {
       a.arg_type = ARG_OPT
       idn := id.name
-      a.id = g.S(idn[:len(idn)-1])
+      a.id = g.Sym(idn[:len(idn)-1])
       l.min--
     } else if strings.HasSuffix(id.name, "..") {
       a.arg_type = ARG_SPLAT
       idn := id.name
-      a.id = g.S(idn[:len(idn)-2])
+      a.id = g.Sym(idn[:len(idn)-2])
     }
   }
   
@@ -94,7 +94,7 @@ func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
       copy(v.items, args[i:])
 
       var vv Val
-      vv.Init(g.Vec, v)
+      vv.Init(g.VecType, v)
       env.Put(a.id, vv)
       break
     }
@@ -115,7 +115,7 @@ func (fs ArgsForm) Parse(g *G) ([]*Sym, E) {
     if f, ok := af.(*IdForm); ok {
       id = f.id
     } else if f, ok := af.(*SplatForm); ok {
-      id = g.S(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
+      id = g.Sym(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
     } else {
       return nil, g.E(af.Pos(), "Invalid arg: %v", af)
     }
