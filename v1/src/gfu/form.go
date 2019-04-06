@@ -99,7 +99,7 @@ func (f *ExprForm) Eval(g *G, env *Env) (Val, E) {
   if e != nil {
     return g.NIL, e
   }
-  
+
   rv, e := fv.Call(g, bf.Pos(), b[1:], env)
   
   if e != nil {

@@ -1,8 +1,17 @@
+* add while loop macro to readme
+** use recursive lambda
 * add expand(form n?) fun
+* add auto gensyms
+** $foo
+** bind fresh sym if not exists
+** return bound Sym on Quote
+* add Vec support to for-loop
+** add Iter/BasicIter
+** add Type.Iter method
 * relax let syntax
 ** (let x 35 y 7)
 *** read if first arg isn't expr
 ** modify current env if empty body
-* transducers in g-fu
+* transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
