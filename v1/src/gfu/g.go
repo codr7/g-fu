@@ -17,7 +17,7 @@ type G struct {
 
   recall_args []Val
   
-  Bool, Fun, Int, Macro, Meta, Nil, Prim, Splat, Sym, Vec Type
+  Bool, Form, Fun, Int, Macro, Meta, Nil, Prim, Splat, Sym, Vec Type
   NIL, T, F Val
 }
 

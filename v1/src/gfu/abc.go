@@ -327,6 +327,7 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 
 func (e *Env) InitAbc(g *G) {
   g.Bool = e.AddType(g, "Bool", new(BoolType))
+  g.Form = e.AddType(g, "Form", new(FormType))
   g.Fun = e.AddType(g, "Fun", new(FunType))
   g.Int = e.AddType(g, "Int", new(IntType))
   g.Macro = e.AddType(g, "Macro", new(MacroType))
