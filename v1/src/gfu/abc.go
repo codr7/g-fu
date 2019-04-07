@@ -267,10 +267,11 @@ func eval_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
 }
 
 func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  if g.recall_args != nil {
+  if g.recall {
     return g.NIL, g.E(pos, "Recall already in progress")
   }
-  
+
+  g.recall = true
   g.recall_args = args
   return g.NIL, nil
 }

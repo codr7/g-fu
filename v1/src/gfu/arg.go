@@ -90,18 +90,24 @@ func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
   for i, a := range l.items {
     if a.arg_type == ARG_SPLAT {
       v := new(Vec)
-      v.items = make([]Val, nargs-i)
-      copy(v.items, args[i:])
 
+      if i < nargs {
+        v.items = make([]Val, nargs-i)
+        copy(v.items, args[i:])
+      }
+      
       var vv Val
       vv.Init(g.VecType, v)
       env.Put(a.id, vv)
       break
     }
-      
-    env.Put(a.id, args[i])
-  }
 
+    if i < nargs {
+      env.Put(a.id, args[i])
+    } else {
+      env.Put(a.id, g.NIL)
+    }
+  }
 }
 
 type ArgsForm []Form

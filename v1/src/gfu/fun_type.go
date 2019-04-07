@@ -34,11 +34,13 @@ recall:
 
   if v, e = Forms(f.body).Eval(g, &be); e != nil {
     g.recall_args = nil
+    g.recall = false
     return g.NIL, e
   }
   
-  if g.recall_args != nil {
+  if g.recall {
     avs, g.recall_args = g.recall_args, nil
+    g.recall = false
     goto recall
   }
   

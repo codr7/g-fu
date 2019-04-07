@@ -38,6 +38,10 @@
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
+(let (foo (fun (x?) x))
+  (test (= (foo 42) 42))
+  (test (= (foo) _)))
+
 (let (foo (macro () ''bar))
   (test (= (foo) 'bar)))
 

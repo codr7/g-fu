@@ -1,19 +1,18 @@
 * testloop.gf
-** make break-args opt
-*** add opt arg test
-*** drop recall arg
-** readme
+** fix recall args
+*** readme
 ** add tests
 *** copy to v1/lib/loop.gf
 *** add load prim
 **** use in test
 ** commit
+* replace for-prim with loop macro
 * change push fun to return vec
 * add expand(form n?) fun
 * add let places
 ** (let (let-foo (v x) (dump (+ x v)) _) (let (foo 35) 7))
 *** pass value first
-** look for 'let-x' in env if place is expr otherwise id/var
+** find 'let-x' in env if expr otherwise id/var
 ** return prev value
 *** backup/restore in scoped let
 **** call 'del-x' if found when prev is nil

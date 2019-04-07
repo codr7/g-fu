@@ -314,7 +314,7 @@ func (f VecForm) Eval(g *G, env *Env) ([]Val, E) {
       return nil, g.E(bf.Pos(), "Arg eval failed: %v", e)
     }
 
-    if g.recall_args != nil {
+    if g.recall {
       break
     }
     
@@ -379,7 +379,7 @@ func (fs Forms) Eval(g *G, env *Env) (Val, E) {
       return g.NIL, e
     }
 
-    if g.recall_args != nil {
+    if g.recall {
       break
     }
   }

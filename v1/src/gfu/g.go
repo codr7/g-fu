@@ -15,6 +15,7 @@ type G struct {
   sym_tag Tag
   syms Syms
 
+  recall bool
   recall_args []Val
   
   MetaType,
