@@ -16,7 +16,7 @@
 ** look for 'let-x' in env if place is expr otherwise id/var
 ** return prev value
 *** backup/restore in scoped let
-**** call 'del-x' if prev is nil or 'let-x' with nil if not found
+**** call 'del-x' if found when prev is nil
 * transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
