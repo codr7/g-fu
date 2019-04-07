@@ -1,7 +1,5 @@
 * testloop.gf
-** fix recall args
-*** readme
-** add tests
+** add loop/while tests
 *** copy to v1/lib/loop.gf
 *** add load prim
 **** use in test

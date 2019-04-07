@@ -62,7 +62,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 ```
 
 ### Profiling
-CPU profiling may be enabled by passing `-prof` with a filename on the command line.
+CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_rec.prof` in this case.
 
 ```
 $ ./gfu -prof fib_rec.prof bench/fib_rec.gf
