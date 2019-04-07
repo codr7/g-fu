@@ -21,6 +21,46 @@ Press Return twice to evaluate.
 6765
 ```
 
+### Macros
+One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat values.
+
+```
+  (let while (macro (cond body..)
+         '(loop
+           (if %cond _ (break))
+           %body..)))
+
+  (let (i 0)
+    (while (< i 7)
+      (dump i)
+      (inc i)))
+
+0
+1
+2
+3
+4
+5
+6
+```
+
+`loop` allows exiting with a result by calling `break` anywhere within the body. Most of the hard work is performed by an anonymous, tail-recursive function. A locally scoped macro is used to trap `break`-calls and a fresh symbol is allocated for the variable `break-args` to prevent capturing the calling environment.
+
+```
+  (let loop (macro (body..)
+         (let break-args (Sym))
+         '(let (break (macro (args..)
+                  '(recall %args..)))
+            ((fun (%break-args)
+               (or %break-args (do %body.. (recall _))))
+             _))))
+
+  (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
+
+'foo
+'bar
+```
+
 ### Profiling
 CPU profiling may be enabled by passing `-prof` with a filename on the command line.
 

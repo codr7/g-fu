@@ -1,17 +1,14 @@
-* add while loop macro to readme
-** use recursive lambda
+* testloop.gf
+** make break-args opt
+*** skip recall arg
+** readme
+** add tests
+*** copy to v1/lib/loop.gf
+*** add load prim
+**** use in test
+** commit
+* change push fun to return vec
 * add expand(form n?) fun
-* add auto gensyms
-** $foo
-** bind fresh sym if not exists
-** return bound Sym on Quote
-* add Vec support to for-loop
-** add Iter/BasicIter
-** add Type.Iter method
-* relax let syntax
-** (let x 35 y 7)
-*** read if first arg isn't expr
-** modify current env if empty body
 * transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))

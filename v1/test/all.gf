@@ -4,6 +4,10 @@
 (test (= (and T 42) 42))
 (test (= (or 42 T _) 42))
 
+(let (x 35)
+  (test (= (inc x 7) 42))
+  (test (= x 42)))
+
 (test (= (- 42) -42))
 (test (= (- 10 1 2 3) 4))
 

@@ -55,15 +55,24 @@ func macro_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
 
 func let_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   bsf := args[0]
-
-  if _, ok := bsf.(*ExprForm); !ok {
-    return g.NIL, g.E(bsf.Pos(), "Invalid let bindings: %v", bsf)
+  var bs []Form
+  var is_scope bool
+  
+  if _, is_scope = bsf.(*ExprForm); is_scope {
+    bs = bsf.(*ExprForm).body
+  } else {
+    bs = args
   }
 
-  bs := bsf.(*ExprForm).body
-  var le Env
-  env.Clone(&le)
-  
+  var le *Env
+
+  if is_scope {
+    le = new(Env)
+    env.Clone(le)
+  } else {
+    le = env
+  }
+    
   for i := 0; i < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
@@ -72,7 +81,7 @@ func let_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
     }
 
     k := kf.(*IdForm).id
-    v, e := vf.Eval(g, &le)
+    v, e := vf.Eval(g, le)
 
     if e != nil {
       return g.NIL, e
@@ -81,11 +90,11 @@ func let_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
     le.Put(k, v)
   }
 
-  if len(args) == 1 {
+  if !is_scope {
     return g.NIL, nil
   }
   
-  rv, e := Forms(args[1:]).Eval(g, &le)
+  rv, e := Forms(args[1:]).Eval(g, le)
   
   if e != nil {
     return g.NIL, e
@@ -145,6 +154,31 @@ func or_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
   }
 
   return g.F, nil
+}
+
+func inc_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
+  id := args[0].(*IdForm).id
+  _, found := env.Find(id)
+
+  if found == nil {
+    return g.NIL, g.E(pos, "Unknown var: %v", id)
+  }
+
+  d := 1
+  
+  if len(args) == 2 {
+    dv, e := args[1].Eval(g, env)
+
+    if e != nil {
+      return g.NIL, e
+    }
+
+    d = dv.AsInt()
+  }
+
+  v := &found.Val
+  v.imp = v.AsInt() + d
+  return *v, nil
 }
 
 func for_imp(g *G, pos Pos, args []Form, env *Env) (Val, E) {
@@ -368,6 +402,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "if", if_imp, "cond", "t", "f?")
   e.AddPrim(g, "or", or_imp, "conds..")
   e.AddPrim(g, "and", and_imp, "conds..")
+  e.AddPrim(g, "inc", inc_imp, "var", "delta?")
   e.AddPrim(g, "for", for_imp, "nreps", "body..")
   e.AddPrim(g, "test", test_imp, "cases..")
   e.AddPrim(g, "bench", bench_imp, "nreps", "body..")
