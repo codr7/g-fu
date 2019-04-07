@@ -1,7 +1,7 @@
 ![Logo](logo.png)
 
 ### Intro
-g-fu is a practical [Lisp](https://xkcd.com/297/) developed and embedded in Go, The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with support for quotation and macros, symbols, lambdas, bindings, tail-call optimization and eval; all weighing in well below 2 kloc.
+g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with support for quotation and macros, symbols, lambdas, bindings, tail-call optimization and eval; all weighing in well below 2 kloc.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
