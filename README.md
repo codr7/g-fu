@@ -44,7 +44,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 6
 ```
 
-`loop` allows exiting with a result by calling `break` anywhere within the body. Most of the hard work is performed by an anonymous, tail-recursive function. A locally scoped macro is used to trap `break`-calls and a fresh symbol is allocated for the variable `break-args` to prevent capturing the calling environment.
+`loop` allows exiting with a result by calling `break` anywhere within the body. Most of the hard work is performed by an anonymous, tail-recursive function. A locally scoped macro is used to trap `break`-calls and a fresh symbol is allocated for the variable `break-args` to prevent potentially capturing the calling environment.
 
 ```
   (let loop (macro (body..)
