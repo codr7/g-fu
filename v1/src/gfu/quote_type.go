@@ -23,13 +23,7 @@ func (t *QuoteType) Eq(g *G, x Val, y Val) bool {
 }
 
 func (t *QuoteType) Eval(g *G, pos Pos, val Val, env *Env) (v Val, e E) {
-  v = val.AsQuote()
-
-  if v.val_type == g.QuoteType {
-    return v, nil
-  }
-  
-  return v.Quote(g, pos, env)
+  return val.AsQuote().Quote(g, pos, env)
 }
 
 func (v Val) AsQuote() Val {
