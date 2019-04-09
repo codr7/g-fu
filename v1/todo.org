@@ -1,3 +1,5 @@
+* prevent dup quoting of list items
+** switch Quote to do nothing by default (basictype)
 * quote payload in SplatType.Quote?
 ** testeval.gf
 ** testloop.gf

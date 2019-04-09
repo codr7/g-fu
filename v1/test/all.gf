@@ -65,7 +65,6 @@
               a)))
   (test (= (fib 20 0 1) 6765)))
 
-
 (let (foo 42)
   (test (= (eval 'foo) 42)))
 

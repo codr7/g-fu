@@ -64,7 +64,6 @@ func (t *BasicType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  
 }
 
 func (t *BasicType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
-  val.Init(pos, g.QuoteType, val)
   return val, nil
 }
 

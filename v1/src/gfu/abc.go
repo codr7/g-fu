@@ -210,7 +210,7 @@ func test_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
     }
 
     if !v.AsBool(g) {
-      return g.NIL, g.E(pos, "Test failed")
+      return g.NIL, g.E(pos, "Test failed: %v", in)
     }
   }
 
