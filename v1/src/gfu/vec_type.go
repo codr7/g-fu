@@ -87,7 +87,11 @@ func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
       return g.NIL, e
     }
     
-    out.Push(qv)
+    if qv.val_type == g.SplatType {
+      out.items = qv.Splat(g, pos, out.items)
+    } else {
+      out.Push(qv)
+    }
   }
 
   var v Val

@@ -1,5 +1,5 @@
-* fix testq2.gf
 * fix testloop.gf
+* fix test/all.gf
 * switch Vec to val semantics
 ** replace []Val with Vec everywhere
 ** replace access with Get
