@@ -64,7 +64,7 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   return l
 }
 
-func (l *ArgList) CheckVals(g *G, pos Pos, args []Val) E {
+func (l *ArgList) Check(g *G, pos Pos, args []Val) E {
   nargs := len(args)
 
   if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
@@ -74,17 +74,7 @@ func (l *ArgList) CheckVals(g *G, pos Pos, args []Val) E {
   return nil
 }
 
-func (l *ArgList) CheckForms(g *G, pos Pos, args []Form) E {
-  nargs := len(args)
-
-  if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
-    return g.E(pos, "Arg mismatch")
-  }
-
-  return nil
-}
-
-func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
+func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args []Val) {
   nargs := len(args)
   
   for i, a := range l.items {
@@ -97,7 +87,7 @@ func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
       }
       
       var vv Val
-      vv.Init(g.VecType, v)
+      vv.Init(pos, g.VecType, v)
       env.Put(a.id, vv)
       break
     }
@@ -110,20 +100,22 @@ func (l *ArgList) PutEnv(g *G, env *Env, args []Val) {
   }
 }
 
-type ArgsForm []Form
+type Args []Val
 
-func (fs ArgsForm) Parse(g *G) ([]*Sym, E) {
+func (vs Args) Parse(g *G) ([]*Sym, E) {
   var out []*Sym
   
-  for _, af := range fs {
+  for _, v := range vs {
     var id *Sym
     
-    if f, ok := af.(*IdForm); ok {
-      id = f.id
-    } else if f, ok := af.(*SplatForm); ok {
-      id = g.Sym(fmt.Sprintf("%v..", f.form.(*IdForm).id)) 
+    if v.val_type == g.SymType {
+      id = v.AsSym()
+    } else if v.val_type == g.OptType {
+      id = g.Sym(fmt.Sprintf("%v?", v.AsOpt().AsSym()))
+    } else if v.val_type == g.SplatType {
+      id = g.Sym(fmt.Sprintf("%v..", v.AsSplat().AsSym())) 
     } else {
-      return nil, g.E(af.Pos(), "Invalid arg: %v", af)
+      return nil, g.E(v.pos, "Invalid arg: %v", v)
     }
     
     out = append(out, id)

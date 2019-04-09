@@ -10,20 +10,26 @@ type SymType struct {
 }
 
 func (t *SymType) Dump(val Val, out *strings.Builder) {
-  out.WriteRune('\'')
   out.WriteString(val.AsSym().name)
+}
+
+func (t *SymType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+  s := val.AsSym()
+  _, found := env.Find(s)
+
+  if found == nil {
+    return g.NIL, g.E(val.pos, "Unknown: %v", s)
+  }
+
+  return found.Val, nil
 }
 
 func (t *SymType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
   n := fmt.Sprintf("g%v", g.NextSymTag())
   
   var out Val
-  out.Init(g.SymType, g.Sym(n))
+  out.Init(pos, g.SymType, g.Sym(n))
   return out, nil
-}
-
-func (t *SymType) Unquote(g *G, pos Pos, val Val) (Form, E) {
-  return new(IdForm).Init(pos, val.AsSym()), nil
 }
 
 func (v Val) AsSym() *Sym {

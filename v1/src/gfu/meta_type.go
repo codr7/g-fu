@@ -13,8 +13,8 @@ func (t *MetaType) Bool(g *G, val Val) bool {
   return false
 }
 
-func (t *MetaType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
-  vs, e := VecForm(args).Eval(g, env)
+func (t *MetaType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E) {
+  vs, e := List(args).Eval(g, pos, env)
 
   if e != nil {
     return g.NIL, e

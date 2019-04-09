@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  //"log"
   "strings"
 )
 
@@ -37,7 +38,7 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
   for i, xi := range xv {
     yi := yv[i]
     
-    if !xi.Eq(g, yi) {
+    if !xi.Is(g, yi) {
       return false
     }
   }
@@ -45,32 +46,57 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
   return true
 }
 
+func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+  v := val.AsVec()
+  
+  if len(v.items) == 0 {
+    return g.NIL, nil
+  }
+  
+  first := v.items[0]
+  first_val, e := first.Eval(g, pos, env)
+  
+  if e != nil {
+    return g.NIL, e
+  }
+
+  result, e := first_val.Call(g, pos, v.items[1:], env)
+  
+  if e != nil {
+    return g.NIL, g.E(pos, "Call failed: %v", e)
+  }
+  
+  return result, nil
+}
+
 func (t *VecType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
   var out Val
   v := new(Vec)
   v.items = args
-  out.Init(g.VecType, v)
+  out.Init(pos, g.VecType, v)
   return out, nil
 }
 
-func (t *VecType) Splat(g *G, val Val, out []Val) []Val {
-  return append(out, val.AsVec().items...)
-}
-
-func (t *VecType) Unquote(g *G, pos Pos, val Val) (Form, E) {
-  f := new(ExprForm).Init(pos)
+func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
+  var out Vec
 
   for _, v := range val.AsVec().items {
-    vf, e := v.Unquote(g, pos)
+    qv, e := v.Quote(g, pos, env)
 
     if e != nil {
-      return nil, e
+      return g.NIL, e
     }
-
-    f.Append(vf)
+    
+    out.Push(qv)
   }
-  
-  return f, nil
+
+  var v Val
+  v.Init(pos, g.VecType, &out)
+  return v, nil
+}
+
+func (t *VecType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
+  return append(out, val.AsVec().items...)
 }
 
 func (v Val) AsVec() *Vec {

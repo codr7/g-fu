@@ -7,7 +7,7 @@ import (
 type Macro struct {
   env *Env
   arg_list ArgList
-  body []Form
+  body []Val
 }
 
 func NewMacro(g *G, env *Env, args []*Sym) *Macro {
@@ -20,21 +20,15 @@ func (m *Macro) Init(g *G, env *Env, args []*Sym) *Macro {
   return m
 }
 
-func (m *Macro) Call(g *G, pos Pos, args []Val, env *Env) (Form, E) {
+func (m *Macro) Call(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   var e E
   
-  if e = m.arg_list.CheckVals(g, pos, args); e != nil {
-    return nil, e
+  if e = m.arg_list.Check(g, pos, args); e != nil {
+    return g.NIL, e
   }
   
   var be Env
   m.env.Clone(&be)
-  m.arg_list.PutEnv(g, &be, args)
-  var v Val
-  
-  if v, e = Forms(m.body).Eval(g, &be); e != nil {
-    return nil, e
-  }
-
-  return v.Unquote(g, pos)
+  m.arg_list.PutEnv(g, pos, &be, args)
+  return Expr(m.body).Eval(g, pos, &be)
 }

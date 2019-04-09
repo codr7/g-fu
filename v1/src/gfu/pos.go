@@ -5,10 +5,16 @@ type Pos struct {
   Row, Col int
 }
 
-var INIT_POS Pos
+var (
+  INIT_POS, NIL_POS Pos
+)
 
 func init() {
   INIT_POS.Init("n/a")
+  
+  NIL_POS.src = "n/a"
+  NIL_POS.Row = -1
+  NIL_POS.Col = -1
 }
 
 func (p *Pos) Init(src string) *Pos {

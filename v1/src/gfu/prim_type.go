@@ -10,10 +10,10 @@ type PrimType struct {
   BasicType
 }
 
-func (t *PrimType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
+func (t *PrimType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E) {
   p := val.AsPrim()
   
-  if e := p.arg_list.CheckForms(g, pos, args); e != nil {
+  if e := p.arg_list.Check(g, pos, args); e != nil {
     return g.NIL, e
   }
 

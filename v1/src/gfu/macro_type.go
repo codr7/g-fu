@@ -9,21 +9,21 @@ type MacroType struct {
   BasicType
 }
 
-func (t *MacroType) Call(g *G, pos Pos, val Val, args []Form, env *Env) (Val, E) {
+func (t *MacroType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (v Val, e E) {
   m := val.AsMacro()
-  var f Form
-  var e E  
   avs := make([]Val, len(args))
   
   for i, a := range args {
-    avs[i], e = a.Quote(g, env, 1)
+    if avs[i], e = a.Quote(g, pos, env); e != nil {
+      return g.NIL, e
+    }
   }
-  
-  if f, e = m.Call(g, pos, avs, env); e != nil {
+
+  if v, e = m.Call(g, pos, avs, env); e != nil {
     return g.NIL, e
   }
   
-  return f.Eval(g, env)
+  return v.Eval(g, pos, env)
 }
 
 func (t *MacroType) Dump(val Val, out *strings.Builder) {

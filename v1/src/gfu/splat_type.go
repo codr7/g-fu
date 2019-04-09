@@ -19,17 +19,7 @@ func (t *SplatType) Dump(val Val, out *strings.Builder) {
 }
 
 func (t *SplatType) Eq(g *G, x Val, y Val) bool {
-  return x.AsSplat().Eq(g, y.AsSplat())
-}
-
-func (t *SplatType) Unquote(g *G, pos Pos, val Val) (Form, E) {
-  f, e := val.AsSplat().Unquote(g, pos)
-
-  if e != nil {
-    return nil, e
-  }
-    
-  return new(SplatForm).Init(pos, f), nil
+  return x.AsSplat().Is(g, y.AsSplat())
 }
 
 func (v Val) AsSplat() Val {

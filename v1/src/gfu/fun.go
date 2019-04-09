@@ -8,7 +8,7 @@ type FunImp func(*G, Pos, []Val, *Env) (Val, E)
 type Fun struct {
   env *Env
   arg_list ArgList
-  body []Form
+  body []Val
   imp FunImp
 }
 
@@ -33,6 +33,6 @@ func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
   f.imp = imp
   
   var v Val
-  v.Init(g.FunType, f)
+  v.Init(NIL_POS, g.FunType, f)
   e.Put(g.Sym(id), v)
 }

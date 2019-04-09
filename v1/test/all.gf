@@ -73,4 +73,4 @@
   (test (= (eval '(+ %foo 7)) 42)))
 
 (let (foo (Vec 35 7))
-  (test (= (eval '(+ %(foo)..)) 42)))
+  (test (= (eval '(+ %foo..)) 42)))

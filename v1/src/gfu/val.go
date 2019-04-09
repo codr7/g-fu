@@ -6,21 +6,19 @@ import (
 )
 
 type Val struct {
+  pos Pos
   val_type Type
   imp interface{}
 }
 
-func NewVal(val_type Type, imp interface{}) *Val {
-  return new(Val).Init(val_type, imp)
-}
-
-func (v *Val) Init(val_type Type, imp interface{}) *Val {
+func (v *Val) Init(pos Pos, val_type Type, imp interface{}) *Val {
+  v.pos = pos
   v.val_type = val_type
   v.imp = imp
   return v
 }
   
-func (v Val) Call(g *G, pos Pos, args []Form, env *Env) (Val, E) {
+func (v Val) Call(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v.val_type.Call(g, pos, v, args, env)
 }
 
@@ -32,27 +30,77 @@ func (v Val) Eq(g *G, rhs Val) bool {
   return v.val_type.Eq(g, v, rhs)
 }
 
+func (v Val) Eval(g *G, pos Pos, env *Env) (Val, E) {
+  return v.val_type.Eval(g, pos, v, env)
+}
+
 func (v Val) Is(g *G, rhs Val) bool {
   return v.val_type.Is(g, v, rhs)
 }
 
-func (v Val) Splat(g *G, out []Val) []Val {
+func (v Val) Quote(g *G, pos Pos, env *Env) (Val, E) {
+  return v.val_type.Quote(g, pos, v, env)
+}
+
+func (v Val) Splat(g *G, pos Pos, out []Val) []Val {
   if v.val_type == g.SplatType {
     v = v.imp.(Val)
   }
   
-  return v.val_type.Splat(g, v, out)
+  return v.val_type.Splat(g, pos, v, out)
 }
 
 func (v Val) String() string {
   return DumpString(v)
 }
 
-func (v Val) Unquote(g *G, pos Pos) (Form, E) {
-  return v.val_type.Unquote(g, pos, v) 
+type List []Val
+
+func (vs List) Eval(g *G, pos Pos, env *Env) ([]Val, E) {
+  var out []Val
+  
+  for _, v := range vs {
+    vv, e := v.Eval(g, pos, env)
+
+    if e != nil {
+      return nil, g.E(v.pos, "Arg eval failed: %v", e)
+    }
+
+    if g.recall {
+      break
+    }
+    
+    if vv.val_type == g.SplatType {
+      out = vv.Splat(g, pos, out)
+    } else {
+      out = append(out, vv)
+    }
+  }
+
+  return out, nil
+}
+
+type Expr []Val
+
+func (vs Expr) Eval(g *G, pos Pos, env *Env) (Val, E) {
+  out := g.NIL
+  
+  for _, v := range vs {
+    var e E
+    
+    if out, e = v.Eval(g, pos, env); e != nil {
+      return g.NIL, e
+    }
+
+    if g.recall {
+      break
+    }
+  }
+
+  return out, nil
 }
 
 func (env *Env) AddVal(g *G, id string, val_type Type, val interface{}, out *Val) {
-  out.Init(val_type, val)
+  out.Init(NIL_POS, val_type, val)
   env.Put(g.Sym(id), *out)
 }

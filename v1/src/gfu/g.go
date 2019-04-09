@@ -19,8 +19,8 @@ type G struct {
   recall_args []Val
   
   MetaType,
-  BoolType, FormType, FunType, IntType, MacroType, NilType, PrimType, SplatType,
-  SymType, VecType Type
+  BoolType, FunType, IntType, MacroType, NilType, OptType, PrimType, QuoteType,
+  SplatType, SpliceType, SymType, VecType Type
   
   NIL, T, F Val
 }
@@ -36,7 +36,7 @@ func (g *G) Init() (*G, E) {
 
 func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
   in := strings.NewReader(s)
-  var out Forms
+  var out Expr
   
   for {
     fs, e := g.Read(&pos, in, out, 0)
@@ -52,7 +52,7 @@ func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
     out = fs
   }
 
-  return out.Eval(g, env)  
+  return out.Eval(g, pos, env)  
 }
 
 func (g *G) Load(pos Pos, fname string, env *Env) (Val, E) {

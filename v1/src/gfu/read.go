@@ -14,7 +14,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
   if e == io.EOF {
     return 0, nil
   }
-    
+  
   if e != nil {
     return 0, g.E(*pos, "Failed reading char: %v", e)
   }
@@ -43,7 +43,7 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   return nil
 }
 
-func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
+func (g *G) Read(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
   var c rune
   var e E
 
@@ -58,11 +58,15 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E)
     case ' ', '\n':
       break
     case '(':
-      return g.ReadExpr(pos, in, out)
+      return g.ReadVec(pos, in, out)
     case '\'':
       return g.ReadQuote(pos, in, out, end)
+    case '?':
+      return g.ReadOpt(pos, in, out)
+    case '.':
+      return g.ReadSplat(pos, in, out)
     case '%':
-      return g.ReadUnquote(pos, in, out, end)
+      return g.ReadSplice(pos, in, out, end)
     default:
       if unicode.IsDigit(c) {
         if e = g.Unread(pos, in, c); e != nil {
@@ -83,7 +87,7 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E)
         if e = g.Unread(pos, in, nc); e != nil {
           return nil, e
         }
-          
+        
         if is_num {
           return g.ReadNum(pos, in, out, true)
         }
@@ -102,28 +106,31 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E)
   }
 }
 
-func (g *G) ReadExpr(pos *Pos, in *strings.Reader, out []Form) ([]Form, E) {
-  ef := new(ExprForm).Init(*pos)
+func (g *G) ReadVec(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+  vpos := *pos
+  body := new(Vec)
 
   for {
-    fs, e := g.Read(pos, in, ef.body, ')')
+    out, e := g.Read(pos, in, body.items, ')')
 
     if e != nil {
       return nil, e
     }
 
-    if fs == nil {
+    if out == nil {
       break
     }
 
-    ef.body = fs
+    body.items = out
   }
 
-  return append(out, ef), nil
+  var v Val
+  v.Init(vpos, g.VecType, body)
+  return append(out, v), nil
 }
 
-func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]Form, E) {
-  fpos := *pos
+func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Val, prefix string) ([]Val, E) {
+  vpos := *pos
   var buf strings.Builder
   buf.WriteString(prefix)
   
@@ -138,7 +145,8 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]F
       break
     }
 
-    if unicode.IsSpace(c) || c == '%' || c == '(' || c == ')' {
+    if unicode.IsSpace(c) ||
+      c == '.' || c == '?' || c == '%' || c == '(' || c == ')' {
       if e := g.Unread(pos, in, c); e != nil {
         return nil, e
       }
@@ -151,28 +159,13 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Form, prefix string) ([]F
     }
   }
 
-  s := buf.String()
-
-  if strings.HasSuffix(s, "..") {
-    if s == ".." {
-      out_len := len(out)
-
-      if out_len == 0 {
-        return nil, g.E(*pos, "Nothing to splat")
-      }
-
-      return append(out[:out_len-1], new(SplatForm).Init(fpos, out[out_len-1])), nil
-    } else {
-      f := new(IdForm).Init(fpos, g.Sym(s[:len(s)-2]))
-      return append(out, new(SplatForm).Init(fpos, f)), nil
-    }
-  }
-  
-  return append(out, new(IdForm).Init(fpos, g.Sym(s))), nil
+  var v Val
+  v.Init(vpos, g.SymType, g.Sym(buf.String()))
+  return append(out, v), nil
 }
 
-func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Form, E) {
-  fpos := *pos
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Val, is_neg bool) ([]Val, E) {
+  vpos := *pos
   var buf strings.Builder
   
   for {
@@ -218,58 +211,92 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Form, is_neg bool) ([]Fo
   }
   
   var v Val
-  v.Init(g.IntType, int(n))
-  f := new(LitForm).Init(fpos, v)
+  v.Init(vpos, g.IntType, int(n))
   
   if splat {
-    out = append(out, new(SplatForm).Init(fpos, f))
-  } else {
-    out = append(out, f)
+    v.Init(vpos, g.SplatType, v)
   }
+
+  return append(out, v), nil
 
   return out, nil
 }
 
-func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
-  fpos := *pos
-  var fs []Form
-  fs, e := g.Read(pos, in, fs, end)
+func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+  i := len(out)
+  
+  if i == 0 {
+    return nil, g.E(*pos, "Missing opt value")        
+  }
+  
+  v := &out[i-1]
+  v.Init(*pos, g.OptType, *v)
+  return out, nil      
+}
+
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
+  vpos := *pos
+  var vs []Val
+  vs, e := g.Read(pos, in, vs, end)
 
   if e != nil {
     return nil, e
   }
 
-  if len(fs) == 0 {
-    return nil, g.E(*pos, "Nothing to quote")
+  if len(vs) == 0 {
+    return nil, g.E(vpos, "Nothing to quote")
   }
 
-  for _, f := range fs {
-    out = append(out, new(QuoteForm).Init(fpos, f))
+  v := vs[0]
+  v.Init(vpos, g.QuoteType, v)
+  return append(out, v), nil
+}
+
+func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+  vpos := *pos
+  vpos.Col--
+  
+  var nc rune
+  var e E
+  
+  nc, e = g.ReadChar(pos, in)
+  
+  if e != nil {
+    return nil, e
   }
 
-  return out, nil
+  if nc != '.' {
+    return nil, g.E(*pos, "Invalid input: .%v", nc)
+  }
+  
+  i := len(out)
+
+  if i == 0 {
+    return nil, g.E(*pos, "Missing splat value")        
+  }
+
+  v := &out[i-1]
+  v.Init(vpos, g.SplatType, *v)
+  return out, nil      
 }
 
-func (g *G) ReadString(pos *Pos, in string) ([]Form, E) {
-  var out []Form
-  return g.Read(pos, strings.NewReader(in), out, 0)
-}
-
-func (g *G) ReadUnquote(pos *Pos, in *strings.Reader, out []Form, end rune) ([]Form, E) {
-  var fs []Form
-  fs, e := g.Read(pos, in, fs, end)
+func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
+  vpos := *pos
+  vpos.Col--
+  
+  var vs []Val
+  vs, e := g.Read(pos, in, vs, end)
 
   if e != nil {
     return nil, e
   }
 
-  if len(fs) == 0 {
-    return nil, g.E(*pos, "Nothing to unquote")
+  if len(vs) == 0 {
+    return nil, g.E(vpos, "Nothing to eval")
   }
 
-  for _, f := range fs {
-    out = append(out, new(UnquoteForm).Init(f.Pos(), f))
-  }
-
-  return out, nil
+  v := vs[0]
+  v.Init(vpos, g.SpliceType, v)
+  return append(out, v), nil
 }
+

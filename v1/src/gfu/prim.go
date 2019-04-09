@@ -1,6 +1,6 @@
 package gfu
 
-type PrimImp func (*G, Pos, []Form, *Env) (Val, E)
+type PrimImp func (*G, Pos, []Val, *Env) (Val, E)
 
 type Prim struct {
   id *Sym
@@ -25,6 +25,6 @@ func (e *Env) AddPrim(g *G, id string, imp PrimImp, args...string) {
     as[i] = g.Sym(a)
   }
 
-  p.Init(g.PrimType, NewPrim(g, ids, imp, as))
+  p.Init(NIL_POS, g.PrimType, NewPrim(g, ids, imp, as))
   e.Put(ids, p)
 }
