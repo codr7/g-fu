@@ -1,10 +1,14 @@
 * fix testloop.gf
+** add splat eval
+*** splat to vec
+**** skip payload quote
+*** return val or val.Eval?
 * fix test/all.gf
 * switch Vec to val semantics
 ** replace []Val with Vec everywhere
 ** replace access with Get
 ** replace return with Push/Peek/Pop
-* switch Val.Init to return by value
+* switch Val.Init to return by value?
 ** grep ".Init(" and simplify
 * remove Type/Val.New
 ** Vec, Sym

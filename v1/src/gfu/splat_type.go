@@ -22,6 +22,17 @@ func (t *SplatType) Eq(g *G, x Val, y Val) bool {
   return x.AsSplat().Is(g, y.AsSplat())
 }
 
+func (t *SplatType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+  var e E
+  val.imp, e = val.AsSplat().Eval(g, pos, env)
+
+  if e != nil {
+    return g.NIL, e
+  }
+  
+  return val, nil
+}
+
 func (t *SplatType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   var e E
 
