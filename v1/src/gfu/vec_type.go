@@ -10,14 +10,14 @@ type VecType struct {
 }
 
 func (t *VecType) Bool(g *G, val Val) bool {
-  return len(val.AsVec().items) > 0
+  return len(val.AsVec()) > 0
 }
 
 func (t *VecType) Dump(val Val, out *strings.Builder) {
   v := val.AsVec()
   out.WriteRune('(')
   
-  for i, iv := range v.items {
+  for i, iv := range v {
     if i > 0 {
       out.WriteRune(' ')
     }
@@ -29,7 +29,7 @@ func (t *VecType) Dump(val Val, out *strings.Builder) {
 }
 
 func (t *VecType) Eq(g *G, x Val, y Val) bool {
-  xv, yv := x.AsVec().items, y.AsVec().items
+  xv, yv := x.AsVec(), y.AsVec()
 
   if len(xv) != len(yv) {
     return false
@@ -49,18 +49,18 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
 func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   v := val.AsVec()
   
-  if len(v.items) == 0 {
+  if len(v) == 0 {
     return g.NIL, nil
   }
   
-  first := v.items[0]
+  first := v[0]
   first_val, e := first.Eval(g, pos, env)
   
   if e != nil {
     return g.NIL, e
   }
 
-  result, e := first_val.Call(g, pos, v.items[1:], env)
+  result, e := first_val.Call(g, pos, v[1:], env)
   
   if e != nil {
     return g.NIL, g.E(pos, "Call failed: %v", e)
@@ -69,32 +69,35 @@ func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   return result, nil
 }
 
+func (t *VecType) Is(g *G, x Val, y Val) bool {
+  return t.Eq(g, x, y)
+}
+
 func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   var out Vec
 
-  for _, v := range val.AsVec().items {
+  for _, v := range val.AsVec() {
     qv, e := v.Quote(g, pos, env)
 
     if e != nil {
       return g.NIL, e
     }
     
-    out.Push(qv)
+    out = out.Push(qv)
   }
 
   var v Val
-  v.Init(pos, g.VecType, &out)
+  v.Init(pos, g.VecType, out)
   return v, nil
 }
 
-func (t *VecType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
-  for _, it := range val.AsVec().items {
+func (t *VecType) Splat(g *G, pos Pos, val Val, out Vec) Vec {
+  for _, it := range val.AsVec() {
     if it.val_type == g.SplatType {
       out = it.Splat(g, pos, out)
     } else {
       if it.val_type == g.VecType {
-        v := it.AsVec()
-        v.items = it.Splat(g, pos, nil)
+        it.imp = it.Splat(g, pos, nil)
       }
       
       out = append(out, it)
@@ -104,7 +107,7 @@ func (t *VecType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
   return out
 }
 
-func (v Val) AsVec() *Vec {
-  return v.imp.(*Vec)
+func (v Val) AsVec() Vec {
+  return v.imp.(Vec)
 }
 

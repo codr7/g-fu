@@ -8,18 +8,18 @@ import (
   "time"
 )
 
-func do_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  return Expr(args).Eval(g, pos, env)
+func do_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
+  return args.EvalExpr(g, pos, env)
 }
 
-func fun_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func fun_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   avs := args[0]
   
   if avs.val_type != g.VecType {
     return g.NIL, g.E(avs.pos, "Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.AsVec().items).Parse(g)
+  as, e := Args(avs.AsVec()).Parse(g)
 
   if e != nil {
     return g.NIL, e
@@ -33,14 +33,14 @@ func fun_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func macro_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func macro_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   avs := args[0]
   
   if avs.val_type != g.VecType {
     return g.NIL, g.E(avs.pos, "Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.AsVec().items).Parse(g)
+  as, e := Args(avs.AsVec()).Parse(g)
 
   if e != nil {
     return g.NIL, e
@@ -54,13 +54,13 @@ func macro_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func let_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func let_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   bsf := args[0]
-  var bs []Val
+  var bs Vec
   is_scope := bsf.val_type == g.VecType
   
   if is_scope {
-    bs = bsf.AsVec().items
+    bs = bsf.AsVec()
   } else {
     bs = args
   }
@@ -95,7 +95,7 @@ func let_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
     return g.NIL, nil
   }
   
-  rv, e := Expr(args[1:]).Eval(g, pos, le)
+  rv, e := args[1:].EvalExpr(g, pos, le)
   
   if e != nil {
     return g.NIL, e
@@ -104,7 +104,7 @@ func let_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return rv, nil
 }
 
-func if_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func if_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   c, e := args[0].Eval(g, pos, env)
 
   if e != nil {
@@ -122,7 +122,7 @@ func if_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
-func and_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func and_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   var e E
   v := g.NIL
   
@@ -141,7 +141,7 @@ func and_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func or_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func or_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   for _, in := range args {
     v, e := in.Eval(g, pos, env)
 
@@ -157,7 +157,7 @@ func or_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.F, nil
 }
 
-func inc_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func inc_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   id := args[0].AsSym()
   _, found := env.Find(id)
 
@@ -182,7 +182,7 @@ func inc_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return *v, nil
 }
 
-func for_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func for_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   nv, e := args[0].Eval(g, pos, env)
 
   if e != nil {
@@ -190,11 +190,11 @@ func for_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   }
 
   n := nv.AsInt()
-  b := Expr(args[1:])
+  b := args[1:]
   v := g.NIL
   
   for i := 0; i < n; i++ {
-    if v, e = b.Eval(g, pos, env); e != nil {
+    if v, e = b.EvalExpr(g, pos, env); e != nil {
       return g.NIL, e
     }
   }
@@ -202,7 +202,7 @@ func for_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func test_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func test_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   for _, in := range args {
     v, e := in.Eval(g, pos, env)
 
@@ -218,7 +218,7 @@ func test_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
-func bench_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func bench_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   nv, e := args[0].Eval(g, pos, env)
 
   if e != nil {
@@ -226,16 +226,16 @@ func bench_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   }
 
   n := nv.AsInt()
-  b := Expr(args[1:])
+  b := args[1:]
 
   for i := 0; i < n; i++ {
-    b.Eval(g, pos, env)
+    b.EvalExpr(g, pos, env)
   }
 
   t := time.Now()
   
   for i := 0; i < n; i++ {
-    if _, e = b.Eval(g, pos, env); e != nil {
+    if _, e = b.EvalExpr(g, pos, env); e != nil {
       return g.NIL, e
     }
   }
@@ -245,7 +245,7 @@ func bench_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func dump_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func dump_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   var out strings.Builder
   
   for _, v := range args {
@@ -257,11 +257,11 @@ func dump_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
-func eval_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func eval_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   return args[0].Eval(g, pos, env)
 }
 
-func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func recall_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   if g.recall {
     return g.NIL, g.E(pos, "Recall already in progress")
   }
@@ -271,7 +271,7 @@ func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
-func g_sym_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func g_sym_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   var n string
   t := g.NextSymTag()
     
@@ -286,19 +286,19 @@ func g_sym_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return out, nil
 }
 
-func bool_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func bool_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]
   v.Init(pos, g.BoolType, v.AsBool(g))
   return v, nil
 }
 
-func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func not_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]
   v.Init(pos, g.BoolType, !v.AsBool(g))
   return v, nil
 }
 
-func eq_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func eq_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]
   
   for _, iv := range args[1:] {
@@ -312,7 +312,7 @@ func eq_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func is_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func is_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]
   
   for _, iv := range args[1:] {
@@ -326,7 +326,7 @@ func is_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func int_lt_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func int_lt_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]
   a0 := v.AsInt()
   
@@ -341,7 +341,7 @@ func int_lt_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return v, nil
 }
 
-func int_add_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func int_add_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   if len(args) == 1 {
     v := args[0]
     v.imp = Abs(v.AsInt())
@@ -359,7 +359,7 @@ func int_add_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return out, nil
 }
 
-func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func int_sub_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   var out Val
   v := args[0].AsInt()
 
@@ -376,31 +376,47 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return out, nil
 }
 
-func vec_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func vec_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   var out Val
-  v := new(Vec)
-  v.items = args
-  out.Init(pos, g.VecType, v)
+  out.Init(pos, g.VecType, args)
   return out, nil
 }
 
-func vec_len_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func vec_len_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   v := args[0]  
-  v.Init(pos, g.IntType, len(v.AsVec().items))
+  v.Init(pos, g.IntType, len(v.AsVec()))
   return v, nil
 }
 
-func vec_push_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  args[0].AsVec().Push(args[1:]...)
-  return g.NIL, nil
+func vec_push_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
+  id := args[0].AsSym()
+  _, found := env.Find(id)
+
+  if found == nil {
+    return g.NIL, g.E(pos, "Unknown var: %v", id)
+  }
+
+  v := &found.Val
+  v.imp = v.AsVec().Push(args[1:]...)
+  return *v, nil
 }
 
-func vec_peek_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+func vec_peek_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
   return args[0].AsVec().Peek(g), nil
 }
 
-func vec_pop_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
-  return args[0].AsVec().Pop(g), nil
+func vec_pop_imp(g *G, pos Pos, args Vec, env *Env) (Val, E) {
+  id := args[0].AsSym()
+  _, found := env.Find(id)
+
+  if found == nil {
+    return g.NIL, g.E(pos, "Unknown var: %v", id)
+  }
+
+  v := &found.Val
+  var out Val
+  out, v.imp = v.AsVec().Pop(g)
+  return out, nil
 }
 
 func (e *Env) InitAbc(g *G) {
@@ -451,7 +467,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "vec", vec_imp, "items..")
   e.AddFun(g, "len", vec_len_imp, "vec")
-  e.AddFun(g, "push", vec_push_imp, "vec val..")
+  e.AddPrim(g, "push", vec_push_imp, "vec val..")
   e.AddFun(g, "peek", vec_peek_imp, "vec")
-  e.AddFun(g, "pop", vec_pop_imp, "vec")
+  e.AddPrim(g, "pop", vec_pop_imp, "vec")
 }

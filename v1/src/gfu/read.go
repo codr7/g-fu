@@ -43,7 +43,7 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   return nil
 }
 
-func (g *G) Read(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
+func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
   var c rune
   var e E
 
@@ -106,22 +106,22 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
   }
 }
 
-func (g *G) ReadVec(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   vpos := *pos
-  body := new(Vec)
+  var body Vec
 
   for {
-    out, e := g.Read(pos, in, body.items, ')')
+    vs, e := g.Read(pos, in, body, ')')
 
     if e != nil {
       return nil, e
     }
 
-    if out == nil {
+    if vs == nil {
       break
     }
 
-    body.items = out
+    body = vs
   }
 
   var v Val
@@ -129,7 +129,7 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
   return append(out, v), nil
 }
 
-func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Val, prefix string) ([]Val, E) {
+func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E) {
   vpos := *pos
   var buf strings.Builder
   buf.WriteString(prefix)
@@ -164,7 +164,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out []Val, prefix string) ([]Va
   return append(out, v), nil
 }
 
-func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Val, is_neg bool) ([]Val, E) {
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E) {
   vpos := *pos
   var buf strings.Builder
   
@@ -222,7 +222,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out []Val, is_neg bool) ([]Val
   return out, nil
 }
 
-func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   i := len(out)
   
   if i == 0 {
@@ -234,9 +234,9 @@ func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
   return out, nil      
 }
 
-func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
   vpos := *pos
-  var vs []Val
+  var vs Vec
   vs, e := g.Read(pos, in, vs, end)
 
   if e != nil {
@@ -252,7 +252,7 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val,
   return append(out, v), nil
 }
 
-func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
+func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   vpos := *pos
   vpos.Col--
   
@@ -280,11 +280,11 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out []Val) ([]Val, E) {
   return out, nil      
 }
 
-func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out []Val, end rune) ([]Val, E) {
+func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
   vpos := *pos
   vpos.Col--
   
-  var vs []Val
+  var vs Vec
   vs, e := g.Read(pos, in, vs, end)
 
   if e != nil {

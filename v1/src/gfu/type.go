@@ -7,7 +7,7 @@ import (
 
 type Type interface {
   Bool(*G, Val) bool
-  Call(*G, Pos, Val, []Val, *Env) (Val, E)
+  Call(*G, Pos, Val, Vec, *Env) (Val, E)
   Dump(Val, *strings.Builder)
   Eq(*G, Val, Val) bool
   Eval(*G, Pos, Val, *Env) (Val, E)
@@ -15,7 +15,7 @@ type Type interface {
   Init(*Sym)
   Is(*G, Val, Val) bool
   Quote(*G, Pos, Val, *Env) (Val, E)
-  Splat(*G, Pos, Val, []Val) []Val
+  Splat(*G, Pos, Val, Vec) Vec
 }
 
 type BasicType struct {
@@ -30,7 +30,7 @@ func (t *BasicType) Bool(g *G, val Val) bool {
   return true
 }
 
-func (t *BasicType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E) {
+func (t *BasicType) Call(g *G, pos Pos, val Val, args Vec, env *Env) (Val, E) {
   if len(args) > 0 {
     return g.NIL, g.E(pos, "Too many args")
   }
@@ -62,7 +62,7 @@ func (t *BasicType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   return val, nil
 }
 
-func (t *BasicType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
+func (t *BasicType) Splat(g *G, pos Pos, val Val, out Vec) Vec {
   return append(out, val)
 }
 

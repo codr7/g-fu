@@ -16,7 +16,7 @@ type G struct {
   syms Syms
 
   recall bool
-  recall_args []Val
+  recall_args Vec
   
   MetaType,
   BoolType, FunType, IntType, MacroType, NilType, OptType, PrimType, QuoteType,
@@ -36,23 +36,23 @@ func (g *G) Init() (*G, E) {
 
 func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
   in := strings.NewReader(s)
-  var out Expr
+  var out Vec
   
   for {
-    fs, e := g.Read(&pos, in, out, 0)
+    vs, e := g.Read(&pos, in, Vec(out), 0)
     
     if e != nil {
       return g.NIL, e
     }
     
-    if fs == nil {
+    if vs == nil {
       break
     }
 
-    out = fs
+    out = vs
   }
 
-  return out.Eval(g, pos, env)  
+  return out.EvalExpr(g, pos, env)  
 }
 
 func (g *G) Load(pos Pos, fname string, env *Env) (Val, E) {

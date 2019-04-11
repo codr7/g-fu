@@ -79,7 +79,7 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   return l
 }
 
-func (l *ArgList) Check(g *G, pos Pos, args []Val) E {
+func (l *ArgList) Check(g *G, pos Pos, args Vec) E {
   nargs := len(args)
 
   if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
@@ -89,16 +89,16 @@ func (l *ArgList) Check(g *G, pos Pos, args []Val) E {
   return nil
 }
 
-func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args []Val) {
+func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args Vec) {
   nargs := len(args)
   
   for i, a := range l.items {
     if a.arg_type == ARG_SPLAT {
-      v := new(Vec)
+      var v Vec
 
       if i < nargs {
-        v.items = make([]Val, nargs-i)
-        copy(v.items, args[i:])
+        v = make(Vec, nargs-i)
+        copy(v, args[i:])
       }
       
       var vv Val
@@ -115,7 +115,7 @@ func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args []Val) {
   }
 }
 
-type Args []Val
+type Args Vec
 
 func (vs Args) Parse(g *G) ([]*Sym, E) {
   var out []*Sym

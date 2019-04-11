@@ -1,9 +1,3 @@
-* remove Vec wrapper
-** move/rename List alias from val.go
-*** rename Eval to EvalItems
-** switch *Vec to Vec
-** update funs to assign
-** grep new(Vec)
 * profile fibs
 ** update readme
 * move Type methods to Val

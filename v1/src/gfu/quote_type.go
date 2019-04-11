@@ -30,8 +30,7 @@ func (t *QuoteType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   }
 
   if val.val_type == g.VecType {
-    v := val.AsVec()
-    v.items = val.Splat(g, pos, nil)
+    val.imp = val.Splat(g, pos, nil)
   }
 
   return val, nil

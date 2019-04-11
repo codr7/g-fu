@@ -10,9 +10,9 @@ type FunType struct {
   BasicType
 }
 
-func (t *FunType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E) {
+func (t *FunType) Call(g *G, pos Pos, val Val, args Vec, env *Env) (Val, E) {
   f := val.AsFun()
-  avs, e := List(args).Eval(g, pos, env)
+  avs, e := args.EvalVec(g, pos, env)
 
   if e != nil {
     return g.NIL, g.E(pos, "Args eval failed: %v", e)
@@ -32,7 +32,7 @@ func (t *FunType) Call(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E) {
 recall:
   f.arg_list.PutEnv(g, pos, &be, avs)
 
-  if v, e = Expr(f.body).Eval(g, pos, &be); e != nil {
+  if v, e = f.body.EvalExpr(g, pos, &be); e != nil {
     g.recall_args = nil
     g.recall = false
     return g.NIL, e

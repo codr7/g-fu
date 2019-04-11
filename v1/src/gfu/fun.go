@@ -3,12 +3,12 @@ package gfu
 import (
 )
 
-type FunImp func(*G, Pos, []Val, *Env) (Val, E)
+type FunImp func(*G, Pos, Vec, *Env) (Val, E)
 
 type Fun struct {
   env *Env
   arg_list ArgList
-  body []Val
+  body Vec
   imp FunImp
 }
 

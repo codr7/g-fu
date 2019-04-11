@@ -1,6 +1,6 @@
 package gfu
 
-type PrimImp func (*G, Pos, []Val, *Env) (Val, E)
+type PrimImp func (*G, Pos, Vec, *Env) (Val, E)
 
 type Prim struct {
   id *Sym
