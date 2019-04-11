@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "fmt"
   "strings"
 )
 
@@ -22,14 +21,6 @@ func (t *SymType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   }
 
   return found.Val, nil
-}
-
-func (t *SymType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
-  n := fmt.Sprintf("g%v", g.NextSymTag())
-  
-  var out Val
-  out.Init(pos, g.SymType, g.Sym(n))
-  return out, nil
 }
 
 func (v Val) AsSym() *Sym {

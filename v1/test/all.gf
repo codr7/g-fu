@@ -1,5 +1,5 @@
-(test (Bool 42))
-(test (not (Vec)))
+(test (bool 42))
+(test (not (vec)))
 
 (test (= (and T 42) 42))
 (test (= (or 42 T _) 42))
@@ -16,16 +16,16 @@
 
 (test (== 'foo 'foo))
 (test (= ''foo ''foo))
-(test (not (= (Sym) (Sym))))
+(test (not (= (g-sym) (g-sym))))
 
-(test (= '(1 2 3) (Vec 1 2 3)))
-(test (= '(1 %(+ 2 3) 4) (Vec 1 5 4)))
-(test (= (Vec 1 2 3) (Vec 1 2 3)))
-(test (not (== (Vec 1 2 3) (Vec 1 2 3))))
-(test (= '(1 %(Vec 2 3)..) (Vec 1 2 3)))
-(test (= (+ (Vec 1 2 3)..) 6))
+(test (= '(1 2 3) (vec 1 2 3)))
+(test (= '(1 %(+ 2 3) 4) (vec 1 5 4)))
+(test (= (vec 1 2 3) (vec 1 2 3)))
+(test (not (== (vec 1 2 3) (vec 1 2 3))))
+(test (= '(1 %(vec 2 3)..) (vec 1 2 3)))
+(test (= (+ (vec 1 2 3)..) 6))
 
-(let (v (Vec))
+(let (v (vec))
   (push v 1)
   (push v 2 3)
   (test (= (len v) 3))
@@ -34,7 +34,7 @@
 
 (test (= (do 1 2 3) 3))
 
-(test (= ((fun (xs..) xs) 1 2 3) (Vec 1 2 3)))
+(test (= ((fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
@@ -71,5 +71,5 @@
 (let (foo 35)
   (test (= (eval '(+ %foo 7)) 42)))
 
-(let (foo (Vec 35 7))
+(let (foo (vec 35 7))
   (test (= (eval '(+ %foo..)) 42)))

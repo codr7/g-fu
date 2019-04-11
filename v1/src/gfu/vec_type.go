@@ -69,14 +69,6 @@ func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   return result, nil
 }
 
-func (t *VecType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
-  var out Val
-  v := new(Vec)
-  v.items = args
-  out.Init(pos, g.VecType, v)
-  return out, nil
-}
-
 func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   var out Vec
 

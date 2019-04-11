@@ -1,14 +1,12 @@
-* remove Type/Val.New
-** Vec, Sym
-** remove Meta.Call
-** use regular funs 
-*** *vec/sym etc.
 * add testX.gf to test/all
+** add load fun
 * remove Vec wrapper
 ** move/rename List alias from val.go
 ** switch *Vec to Vec
 ** update funs to assign
 ** grep new(Vec)
+* profile fibs
+** update readme
 * move type methods to value
 ** add Int type alias
 * --

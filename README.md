@@ -48,7 +48,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 
 ```
   (let loop (macro (body..)
-    (let done (Sym) result (Sym))
+    (let done (g-sym) result (g-sym))
   
     '(let (break (macro (args..) '(recall T %args..)))
        ((fun (%done? %result..)

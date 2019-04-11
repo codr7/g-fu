@@ -14,7 +14,6 @@ type Type interface {
   Id() *Sym
   Init(*Sym)
   Is(*G, Val, Val) bool
-  New(*G, Pos, Val, []Val, *Env) (Val, E)
   Quote(*G, Pos, Val, *Env) (Val, E)
   Splat(*G, Pos, Val, []Val) []Val
 }
@@ -57,10 +56,6 @@ func (t *BasicType) Id() *Sym {
 
 func (t *BasicType) Is(g *G, x Val, y Val) bool {
   return x.imp == y.imp
-}
-
-func (t *BasicType) New(g *G, pos Pos, val Val, args []Val, env *Env) (Val, E)  {
-  return g.NIL, g.E(pos, "Missing constructor: %v", t.Id())
 }
 
 func (t *BasicType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {

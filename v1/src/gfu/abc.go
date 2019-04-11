@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   //"log"
   "os"
   "strings"
@@ -270,6 +271,27 @@ func recall_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return g.NIL, nil
 }
 
+func g_sym_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  var n string
+  t := g.NextSymTag()
+    
+  if len(args) > 0 {
+    n = fmt.Sprintf("g-%v-%v", args[0], t)
+  } else {
+    n = fmt.Sprintf("g-%v", t)
+  }
+  
+  var out Val
+  out.Init(pos, g.SymType, g.Sym(n))
+  return out, nil
+}
+
+func bool_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  v := args[0]
+  v.Init(pos, g.BoolType, v.AsBool(g))
+  return v, nil
+}
+
 func not_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]
   v.Init(pos, g.BoolType, !v.AsBool(g))
@@ -354,6 +376,14 @@ func int_sub_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   return out, nil
 }
 
+func vec_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
+  var out Val
+  v := new(Vec)
+  v.items = args
+  out.Init(pos, g.VecType, v)
+  return out, nil
+}
+
 func vec_len_imp(g *G, pos Pos, args []Val, env *Env) (Val, E) {
   v := args[0]  
   v.Init(pos, g.IntType, len(v.AsVec().items))
@@ -407,8 +437,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "dump", dump_imp, "vals..")
   e.AddFun(g, "eval", eval_imp, "form")
   e.AddFun(g, "recall", recall_imp, "args..")
+  e.AddFun(g, "g-sym", g_sym_imp, "prefix?")
 
-  e.AddFun(g, "not", not_imp, "x")
+  e.AddFun(g, "bool", bool_imp, "val")
+  e.AddFun(g, "not", not_imp, "val")
   
   e.AddFun(g, "=", eq_imp, "vals..")
   e.AddFun(g, "==", is_imp, "vals..")
@@ -417,6 +449,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "+", int_add_imp, "vals..")
   e.AddFun(g, "-", int_sub_imp, "vals..")
 
+  e.AddFun(g, "vec", vec_imp, "items..")
   e.AddFun(g, "len", vec_len_imp, "vec")
   e.AddFun(g, "push", vec_push_imp, "vec val..")
   e.AddFun(g, "peek", vec_peek_imp, "vec")
