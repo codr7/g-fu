@@ -61,32 +61,32 @@ One of the most common macro examples is the `while`-loop. The example below def
 ```
 
 ### Profiling
-CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_rec.prof` in the following example.
+CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_tail.prof` in the following example.
 
 ```
-$ ./gfu -prof fib_rec.prof bench/fib_rec.gf
+$ ./gfu -prof fib_tail.prof bench/fib_tail.gf
 
-$ go tool pprof fib_rec.prof 
+$ go tool pprof fib_tail.prof
 File: gfu
 Type: cpu
-Time: Apr 6, 2019 at 4:29pm (CEST)
-Duration: 16.52s, Total samples = 19.72s (119.38%)
+Time: Apr 12, 2019 at 12:52am (CEST)
+Duration: 16.52s, Total samples = 17.31s (104.79%)
 Entering interactive mode (type "help" for commands, "o" for options)
 (pprof) top10
-Showing nodes accounting for 12320ms, 62.47% of 19720ms total
-Dropped 124 nodes (cum <= 98.60ms)
-Showing top 10 nodes out of 95
+Showing nodes accounting for 10890ms, 62.91% of 17310ms total
+Dropped 99 nodes (cum <= 86.55ms)
+Showing top 10 nodes out of 79
       flat  flat%   sum%        cum   cum%
-    3410ms 17.29% 17.29%     3650ms 18.51%  runtime.heapBitsSetType
-    2370ms 12.02% 29.31%     2370ms 12.02%  runtime.memclrNoHeapPointers
-    1520ms  7.71% 37.02%     1520ms  7.71%  runtime.memmove
-    1100ms  5.58% 42.60%     2010ms 10.19%  runtime.scanobject
-    1000ms  5.07% 47.67%    10460ms 53.04%  runtime.mallocgc
-     920ms  4.67% 52.33%     1200ms  6.09%  _/home/a/Dev/g-fu/v1/src/gfu.(*Env).Find
-     530ms  2.69% 55.02%    16980ms 86.11%  _/home/a/Dev/g-fu/v1/src/gfu.(*ExprForm).Eval
-     530ms  2.69% 57.71%    16980ms 86.11%  _/home/a/Dev/g-fu/v1/src/gfu.VecForm.Eval
-     490ms  2.48% 60.19%     9200ms 46.65%  runtime.growslice
-     450ms  2.28% 62.47%      590ms  2.99%  runtime.findObject
+    2130ms 12.31% 12.31%    15980ms 92.32%  _/home/a/Dev/g-fu/v1/src/gfu.Vec.EvalVec
+    1580ms  9.13% 21.43%    15980ms 92.32%  _/home/a/Dev/g-fu/v1/src/gfu.(*VecType).Eval
+    1500ms  8.67% 30.10%     1680ms  9.71%  runtime.heapBitsSetType
+    1180ms  6.82% 36.92%     1520ms  8.78%  _/home/a/Dev/g-fu/v1/src/gfu.(*Env).Find
+     970ms  5.60% 42.52%     2290ms 13.23%  _/home/a/Dev/g-fu/v1/src/gfu.(*SymType).Eval
+     830ms  4.79% 47.31%    15980ms 92.32%  _/home/a/Dev/g-fu/v1/src/gfu.Val.Eval
+     780ms  4.51% 51.82%     4440ms 25.65%  runtime.mallocgc
+     770ms  4.45% 56.27%      770ms  4.45%  runtime.memclrNoHeapPointers
+     730ms  4.22% 60.49%    15980ms 92.32%  _/home/a/Dev/g-fu/v1/src/gfu.(*FunType).Call
+     420ms  2.43% 62.91%      420ms  2.43%  runtime.memmove
 ```
 
 ### License

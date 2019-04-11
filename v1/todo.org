@@ -1,11 +1,8 @@
-* profile fibs
-** update readme
 * move Type methods to Val
 ** add Int type alias
 ** check fixed while in test/all
-* --
-* add bang calls
-** prefix with ! to call without args
+* simplify args
+** pass as Vec, not []*Sym
 * add expand(form n?) fun
 * add let places
 ** (let (let-foo (v x) (dump (+ x v)) _) (let (foo 35) 7))
@@ -14,8 +11,33 @@
 ** return prev value
 *** backup/restore in scoped let
 **** call 'del-x' if found when prev is nil
+* add bang calls
+** add separate Bang type
+*** store target
+*** ! reader-support
+*** quote as '(xxx)
+** update loop test/readme
 * transducers
 * replace for-prim with loop macro
 ** add lib/iter.gf
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
+
+(let loop (macro (body..)
+  (let done !g-sym result !g-sym)
+  
+  '(let (break (macro (args..) '(recall T %args..)))
+     ((fun (%done? %result..)
+        (if %done %result.. (do %body.. !recall)))))))
+
+(dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
+
+(let while (macro (cond body..)
+  '(loop
+     (if %cond _ !break)
+     %body..)))
+
+(let (i 0)
+  (while (< i 7)
+    (dump i)
+    (inc i)))
