@@ -6,6 +6,11 @@
 ** remove Meta.Call
 ** use regular funs 
 *** *vec/sym etc.
+* remove Vec wrapper
+** move/rename List alias from val.go
+** switch *Vec to Vec
+** update funs to assign
+** grep new(Vec)
 * --
 * replace for-prim with loop macro
 * change push fun to return vec

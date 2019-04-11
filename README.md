@@ -22,7 +22,7 @@ Press Return twice to evaluate.
 ```
 
 ### Macros
-One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat values.
+One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
 
 ```
   (let while (macro (cond body..)
@@ -44,7 +44,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 6
 ```
 
-`loop` supports exiting with a result using `break` within its body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to prevent potentially capturing the calling environment.
+`loop` supports exiting with a result using `break` within its body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to avoid capturing the calling environment.
 
 ```
   (let loop (macro (body..)
