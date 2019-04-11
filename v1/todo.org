@@ -6,14 +6,12 @@
 ** grep new(Vec)
 * profile fibs
 ** update readme
-* move type methods to value
+* move Type methods to Val
 ** add Int type alias
 ** check fixed while in test/all
 * --
 * add bang calls
 ** prefix with ! to call without args
-* replace for-prim with loop macro
-* change push fun to return vec
 * add expand(form n?) fun
 * add let places
 ** (let (let-foo (v x) (dump (+ x v)) _) (let (foo 35) 7))
@@ -23,5 +21,7 @@
 *** backup/restore in scoped let
 **** call 'del-x' if found when prev is nil
 * transducers
+* replace for-prim with loop macro
+** add lib/iter.gf
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
