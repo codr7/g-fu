@@ -1,4 +1,3 @@
-* fix testq2.gf
 * fix testloop.gf
 * remove Type/Val.New
 ** Vec, Sym
