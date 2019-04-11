@@ -73,3 +73,23 @@
 
 (let (foo (vec 35 7))
   (test (= (eval '(+ %foo..)) 42)))
+
+
+(let loop (macro (body..)
+  (let done (g-sym) result (g-sym))
+  
+  '(let (break (macro (args..) '(recall T %args..)))
+     ((fun (%done? %result..)
+        (if %done %result.. (do %body.. (recall))))))))
+
+(test (= (loop (break 'foo)) 'foo))
+
+
+(let while (macro (cond body..)
+  '(loop
+     (if %cond _ (break))
+     %body..)))
+
+(let (i 0)
+  (while (< (inc i) 7))
+  (test (= i 7)))

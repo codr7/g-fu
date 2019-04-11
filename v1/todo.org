@@ -1,7 +1,6 @@
-* add testX.gf to test/all
-** add load fun
 * remove Vec wrapper
 ** move/rename List alias from val.go
+*** rename Eval to EvalItems
 ** switch *Vec to Vec
 ** update funs to assign
 ** grep new(Vec)
@@ -9,6 +8,7 @@
 ** update readme
 * move type methods to value
 ** add Int type alias
+** check fixed while in test/all
 * --
 * add bang calls
 ** prefix with ! to call without args
