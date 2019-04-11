@@ -1,5 +1,6 @@
-* fix testloop.gf
-** prevent break args splat
+* add testX.gf to test/all
+* fix opt args in testloop.gf
+** make %done optional
 * remove Type/Val.New
 ** Vec, Sym
 ** remove Meta.Call

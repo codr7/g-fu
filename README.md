@@ -26,9 +26,9 @@ One of the most common macro examples is the `while`-loop. The example below def
 
 ```
   (let while (macro (cond body..)
-         '(loop
-           (if %cond _ (break))
-           %body..)))
+    '(loop
+       (if %cond _ (break))
+       %body..)))
 
   (let (i 0)
     (while (< i 7)
@@ -44,16 +44,16 @@ One of the most common macro examples is the `while`-loop. The example below def
 6
 ```
 
-`loop` allows exiting with a result by calling `break` anywhere within the body. Most of the hard work is performed by an anonymous, tail-recursive function. A locally scoped macro is used to trap `break`-calls and a fresh symbol is allocated for the variable `break-args` to prevent potentially capturing the calling environment.
+`loop` allows exiting with a result by calling `break` anywhere within the body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh symbols are allocated for arguments to prevent potentially capturing the calling environment.
 
 ```
   (let loop (macro (body..)
-         (let break-args (Sym))
-         '(let (break (macro (args..)
-                  '(recall %args..)))
-            ((fun (%(break-args)?)
-               (or %break-args (do %body.. (recall))))
-             _))))
+    (let done (Sym) result (Sym))
+  
+    '(let (break (macro (args..) '(recall T %args..)))
+       ((fun (%done %result..)
+          (if %done %result.. (do %body.. (recall F))))
+        F))))
 
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
 
