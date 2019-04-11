@@ -1,17 +1,19 @@
-* add testX.gf to test/all
-* fix opt args in testloop.gf
-** make %done optional
 * remove Type/Val.New
 ** Vec, Sym
 ** remove Meta.Call
 ** use regular funs 
 *** *vec/sym etc.
+* add testX.gf to test/all
 * remove Vec wrapper
 ** move/rename List alias from val.go
 ** switch *Vec to Vec
 ** update funs to assign
 ** grep new(Vec)
+* move type methods to value
+** add Int type alias
 * --
+* add bang calls
+** prefix with ! to call without args
 * replace for-prim with loop macro
 * change push fun to return vec
 * add expand(form n?) fun
