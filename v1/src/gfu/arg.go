@@ -2,6 +2,7 @@ package gfu
 
 import (
   "fmt"
+  //"log"
   "strings"
 )
 
@@ -21,6 +22,20 @@ type Arg struct {
 func (a *Arg) Init(id *Sym) *Arg {
   a.id = id
   return a
+}
+
+func (a Arg) String() string {
+  var out strings.Builder
+  out.WriteString(a.id.name)
+
+  switch a.arg_type {
+  case ARG_OPT:
+    out.WriteRune('?')
+  case ARG_SPLAT:
+    out.WriteString("..")
+  }
+  
+  return out.String()
 }
 
 type ArgList struct {

@@ -52,24 +52,29 @@ func (v Val) String() string {
 
 type List []Val
 
-func (vs List) Eval(g *G, pos Pos, env *Env) ([]Val, E) {
+func (in List) Eval(g *G, pos Pos, env *Env) ([]Val, E) {
   var out []Val
   
-  for _, v := range vs {
-    vv, e := v.Eval(g, pos, env)
+  for _, iv := range in {
+    ov, e := iv.Eval(g, pos, env)
 
     if e != nil {
-      return nil, g.E(v.pos, "Arg eval failed: %v", e)
+      return nil, g.E(iv.pos, "Arg eval failed: %v", e)
     }
 
     if g.recall {
       break
     }
     
-    if vv.val_type == g.SplatType {
-      out = vv.Splat(g, pos, out)
+    if ov.val_type == g.SplatType {
+      out = ov.Splat(g, pos, out)
     } else {
-      out = append(out, vv)
+      if ov.val_type == g.VecType {
+        v := ov.AsVec()
+        v.items = ov.Splat(g, pos, nil)
+      }
+      
+      out = append(out, ov)
     }
   }
 

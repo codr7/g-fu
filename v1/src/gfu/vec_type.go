@@ -100,6 +100,11 @@ func (t *VecType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
     if it.val_type == g.SplatType {
       out = it.Splat(g, pos, out)
     } else {
+      if it.val_type == g.VecType {
+        v := it.AsVec()
+        v.items = it.Splat(g, pos, nil)
+      }
+      
       out = append(out, it)
     }
   }
