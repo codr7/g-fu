@@ -43,10 +43,6 @@ func (v Val) Quote(g *G, pos Pos, env *Env) (Val, E) {
 }
 
 func (v Val) Splat(g *G, pos Pos, out []Val) []Val {
-  if v.val_type == g.SplatType {
-    v = v.imp.(Val)
-  }
-  
   return v.val_type.Splat(g, pos, v, out)
 }
 

@@ -96,7 +96,11 @@ func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
 }
 
 func (t *VecType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
-  return append(out, val.AsVec().items...)
+  for _, it := range val.AsVec().items {
+    out = it.Splat(g, pos, out)
+  }
+
+  return out
 }
 
 func (v Val) AsVec() *Vec {

@@ -33,6 +33,10 @@ func (t *SplatType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   return val, nil
 }
 
+func (t *SplatType) Splat(g *G, pos Pos, val Val, out []Val) []Val {
+  return val.AsSplat().Splat(g, pos, out)
+}
+
 func (v Val) AsSplat() Val {
   return v.imp.(Val)
 }
