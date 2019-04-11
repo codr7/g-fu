@@ -1,7 +1,5 @@
 * fix testloop.gf
-** splat vecs recursively
-*** add case for nested vec
-**** scan for splats & replace items
+** prevent break args splat
 * remove Type/Val.New
 ** Vec, Sym
 ** remove Meta.Call
