@@ -1,21 +1,10 @@
-* move Type methods to Val
-** add Int type alias
-** check fixed while in test/all
-** switch inc/push/pop prims back to funs
-*** use arg instead of lookup
-** tag vars with env and COW external
+* add expand(form n?) fun
 * simplify args
 ** pass as Vec, not []*Sym
-* add expand(form n?) fun
-* add bang calls
-** add separate Bang type
-*** store target
-*** ! reader support
-*** quote as '(xxx)
-** update loop test/readme
 * optimize vec splats
 ** don't allocate new vec if no splats
 ** bench
+* vec iter
 * transducers
 * replace for-prim with loop macro
 ** add lib/iter.gf
@@ -40,3 +29,9 @@
   (while (< i 7)
     (dump i)
     (inc i)))
+* add bang calls
+** add separate Bang type
+*** store target
+*** ! reader support
+*** quote as '(xxx)
+** update loop test/readme
