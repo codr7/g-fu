@@ -3,7 +3,7 @@ package gfu
 import (
 )
 
-type FunImp func(*G, Pos, Vec, *Env) (Val, E)
+type FunImp func(*G, Vec, *Env) (Val, E)
 
 type Fun struct {
   env *Env
@@ -33,6 +33,6 @@ func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
   f.imp = imp
   
   var v Val
-  v.Init(NIL_POS, g.FunType, f)
+  v.Init(g.FunType, f)
   e.Put(g.Sym(id), v)
 }

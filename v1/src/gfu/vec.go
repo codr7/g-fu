@@ -6,13 +6,13 @@ import (
 
 type Vec []Val
 
-func (v Vec) EvalExpr(g *G, pos Pos, env *Env) (Val, E) {
+func (v Vec) EvalExpr(g *G, env *Env) (Val, E) {
   out := g.NIL
   
   for _, it := range v {
     var e E
     
-    if out, e = it.Eval(g, pos, env); e != nil {
+    if out, e = it.Eval(g, env); e != nil {
       return g.NIL, e
     }
 
@@ -24,14 +24,14 @@ func (v Vec) EvalExpr(g *G, pos Pos, env *Env) (Val, E) {
   return out, nil
 }
 
-func (v Vec) EvalVec(g *G, pos Pos, env *Env) (Vec, E) {
+func (v Vec) EvalVec(g *G, env *Env) (Vec, E) {
   var out Vec
   
   for _, it := range v {
-    it, e := it.Eval(g, pos, env)
+    it, e := it.Eval(g, env)
 
     if e != nil {
-      return nil, g.E(it.pos, "Arg eval failed: %v", e)
+      return nil, g.E("Arg eval failed: %v", e)
     }
 
     if g.recall {
@@ -39,10 +39,10 @@ func (v Vec) EvalVec(g *G, pos Pos, env *Env) (Vec, E) {
     }
     
     if it.val_type == g.SplatType {
-      out = it.Splat(g, it.pos, out)
+      out = it.Splat(g, out)
     } else {
       if it.val_type == g.VecType {
-        it.imp = it.Splat(g, it.pos, nil)
+        it.imp = it.Splat(g, nil)
       }
       
       out = append(out, it)

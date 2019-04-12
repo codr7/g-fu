@@ -20,15 +20,15 @@ func (m *Macro) Init(g *G, env *Env, args []*Sym) *Macro {
   return m
 }
 
-func (m *Macro) Call(g *G, pos Pos, args Vec, env *Env) (Val, E) {
+func (m *Macro) Call(g *G, args Vec, env *Env) (Val, E) {
   var e E
   
-  if e = m.arg_list.Check(g, pos, args); e != nil {
+  if e = m.arg_list.Check(g, args); e != nil {
     return g.NIL, e
   }
   
   var be Env
   m.env.Clone(&be)
-  m.arg_list.PutEnv(g, pos, &be, args)
-  return m.body.EvalExpr(g, pos, &be)
+  m.arg_list.PutEnv(g, &be, args)
+  return m.body.EvalExpr(g, &be)
 }

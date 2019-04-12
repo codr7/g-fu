@@ -1,4 +1,5 @@
-* remove Val.pos
+* add @ reader support
+** replace with current pos
 * move Type into Val
 ** use bare Type */Int as types
 ** tag vars with env and COW external

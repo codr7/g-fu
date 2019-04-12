@@ -46,7 +46,7 @@ func (t *VecType) Eq(g *G, x Val, y Val) bool {
   return true
 }
 
-func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+func (t *VecType) Eval(g *G, val Val, env *Env) (Val, E) {
   v := val.AsVec()
   
   if len(v) == 0 {
@@ -54,16 +54,16 @@ func (t *VecType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
   }
   
   first := v[0]
-  first_val, e := first.Eval(g, pos, env)
+  first_val, e := first.Eval(g, env)
   
   if e != nil {
     return g.NIL, e
   }
 
-  result, e := first_val.Call(g, pos, v[1:], env)
+  result, e := first_val.Call(g, v[1:], env)
   
   if e != nil {
-    return g.NIL, g.E(pos, "Call failed: %v", e)
+    return g.NIL, g.E("Call failed: %v", e)
   }
   
   return result, nil
@@ -73,11 +73,11 @@ func (t *VecType) Is(g *G, x Val, y Val) bool {
   return t.Eq(g, x, y)
 }
 
-func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
+func (t *VecType) Quote(g *G, val Val, env *Env) (Val, E) {
   var out Vec
 
   for _, v := range val.AsVec() {
-    qv, e := v.Quote(g, pos, env)
+    qv, e := v.Quote(g, env)
 
     if e != nil {
       return g.NIL, e
@@ -87,17 +87,17 @@ func (t *VecType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
   }
 
   var v Val
-  v.Init(pos, g.VecType, out)
+  v.Init(g.VecType, out)
   return v, nil
 }
 
-func (t *VecType) Splat(g *G, pos Pos, val Val, out Vec) Vec {
+func (t *VecType) Splat(g *G, val Val, out Vec) Vec {
   for _, it := range val.AsVec() {
     if it.val_type == g.SplatType {
-      out = it.Splat(g, pos, out)
+      out = it.Splat(g, out)
     } else {
       if it.val_type == g.VecType {
-        it.imp = it.Splat(g, pos, nil)
+        it.imp = it.Splat(g, nil)
       }
       
       out = append(out, it)

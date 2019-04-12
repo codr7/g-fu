@@ -71,7 +71,7 @@ func main() {
     }
   } else {
     for _, a := range args {
-      if _, e := g.Load(gfu.INIT_POS, a, &g.RootEnv); e != nil {
+      if _, e := g.Load(a, &g.RootEnv); e != nil {
         log.Fatal(e);
       }
     }

@@ -16,7 +16,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
   }
   
   if e != nil {
-    return 0, g.E(*pos, "Failed reading char: %v", e)
+    return 0, g.ReadE(*pos, "Failed reading char: %v", e)
   }
 
   if c == '\n' {
@@ -31,7 +31,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
 
 func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   if e := in.UnreadRune(); e != nil {
-    return g.E(*pos, "Failed unreading char")
+    return g.ReadE(*pos, "Failed unreading char")
   }
 
   if c == '\n' {
@@ -101,13 +101,12 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
         return g.ReadId(pos, in, out, "")
       }
 
-      return nil, g.E(*pos, "Unexpected input: %v", c)
+      return nil, g.ReadE(*pos, "Unexpected input: %v", c)
     }
   }
 }
 
 func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-  vpos := *pos
   var body Vec
 
   for {
@@ -125,12 +124,11 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   }
 
   var v Val
-  v.Init(vpos, g.VecType, body)
+  v.Init(g.VecType, body)
   return append(out, v), nil
 }
 
 func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E) {
-  vpos := *pos
   var buf strings.Builder
   buf.WriteString(prefix)
   
@@ -155,17 +153,16 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.E(*pos, "Failed writing char: %v", we)
+      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
     }
   }
 
   var v Val
-  v.Init(vpos, g.SymType, g.Sym(buf.String()))
+  v.Init(g.SymType, g.Sym(buf.String()))
   return append(out, v), nil
 }
 
 func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E) {
-  vpos := *pos
   var buf strings.Builder
   
   for {
@@ -188,7 +185,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E)
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.E(*pos, "Failed writing char: %v", we)
+      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
     }
   }
 
@@ -203,7 +200,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E)
   n, e := strconv.ParseInt(s, 10, 64)
 
   if e != nil {
-    return nil, g.E(*pos, "Invalid num: %v", s) 
+    return nil, g.ReadE(*pos, "Invalid num: %v", s) 
   }
 
   if is_neg {
@@ -211,10 +208,10 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E)
   }
   
   var v Val
-  v.Init(vpos, g.IntType, int(n))
+  v.Init(g.IntType, int(n))
   
   if splat {
-    v.Init(vpos, g.SplatType, v)
+    v.Init(g.SplatType, v)
   }
 
   return append(out, v), nil
@@ -226,11 +223,11 @@ func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   i := len(out)
   
   if i == 0 {
-    return nil, g.E(*pos, "Missing opt value")        
+    return nil, g.ReadE(*pos, "Missing opt value")        
   }
   
   v := &out[i-1]
-  v.Init(*pos, g.OptType, *v)
+  v.Init(g.OptType, *v)
   return out, nil      
 }
 
@@ -244,11 +241,11 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) 
   }
 
   if len(vs) == 0 {
-    return nil, g.E(vpos, "Nothing to quote")
+    return nil, g.ReadE(vpos, "Nothing to quote")
   }
 
   v := vs[0]
-  v.Init(vpos, g.QuoteType, v)
+  v.Init(g.QuoteType, v)
   return append(out, v), nil
 }
 
@@ -266,17 +263,17 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   }
 
   if nc != '.' {
-    return nil, g.E(*pos, "Invalid input: .%v", nc)
+    return nil, g.ReadE(*pos, "Invalid input: .%v", nc)
   }
   
   i := len(out)
 
   if i == 0 {
-    return nil, g.E(*pos, "Missing splat value")        
+    return nil, g.ReadE(*pos, "Missing splat value")        
   }
 
   v := &out[i-1]
-  v.Init(vpos, g.SplatType, *v)
+  v.Init(g.SplatType, *v)
   return out, nil      
 }
 
@@ -292,11 +289,11 @@ func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E)
   }
 
   if len(vs) == 0 {
-    return nil, g.E(vpos, "Nothing to eval")
+    return nil, g.ReadE(vpos, "Nothing to eval")
   }
 
   v := vs[0]
-  v.Init(vpos, g.SpliceType, v)
+  v.Init(g.SpliceType, v)
   return append(out, v), nil
 }
 

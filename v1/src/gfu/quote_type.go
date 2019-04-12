@@ -22,15 +22,15 @@ func (t *QuoteType) Eq(g *G, x Val, y Val) bool {
   return x.AsQuote().Is(g, y.AsQuote())
 }
 
-func (t *QuoteType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+func (t *QuoteType) Eval(g *G, val Val, env *Env) (Val, E) {
   var e E
   
-  if val, e = val.AsQuote().Quote(g, pos, env); e != nil {
+  if val, e = val.AsQuote().Quote(g, env); e != nil {
     return g.NIL, e
   }
 
   if val.val_type == g.VecType {
-    val.imp = val.Splat(g, pos, nil)
+    val.imp = val.Splat(g, nil)
   }
 
   return val, nil

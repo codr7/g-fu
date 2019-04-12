@@ -22,12 +22,12 @@ func (t *SpliceType) Eq(g *G, x Val, y Val) bool {
   return x.AsSplice().Is(g, y.AsSplice())
 }
 
-func (t *SpliceType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
-  return g.NIL, g.E(pos, "Unquoted splice")
+func (t *SpliceType) Eval(g *G, val Val, env *Env) (Val, E) {
+  return g.NIL, g.E("Unquoted splice")
 }
 
-func (t *SpliceType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
-  return val.AsSplice().Eval(g, pos, env)
+func (t *SpliceType) Quote(g *G, val Val, env *Env) (Val, E) {
+  return val.AsSplice().Eval(g, env)
 }
 
 func (v Val) AsSplice() Val {

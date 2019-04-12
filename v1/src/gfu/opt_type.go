@@ -22,20 +22,20 @@ func (t *OptType) Eq(g *G, x Val, y Val) bool {
   return x.AsOpt().Is(g, y.AsOpt())
 }
 
-func (t *OptType) Eval(g *G, pos Pos, val Val, env *Env) (Val, E) {
+func (t *OptType) Eval(g *G, val Val, env *Env) (Val, E) {
   var e E
-  val.imp, e = val.AsOpt().Eval(g, pos, env)
+  val.imp, e = val.AsOpt().Eval(g, env)
   return val, e
 }
 
-func (t *OptType) Quote(g *G, pos Pos, val Val, env *Env) (Val, E) {
+func (t *OptType) Quote(g *G, val Val, env *Env) (Val, E) {
   var e E
 
-  if val, e = val.AsOpt().Quote(g, pos, env); e != nil {
+  if val, e = val.AsOpt().Quote(g, env); e != nil {
     return g.NIL, e
   }
 
-  val.Init(pos, g.OptType, val)
+  val.Init(g.OptType, val)
   return val, nil
 }
 

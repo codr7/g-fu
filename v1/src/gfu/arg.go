@@ -79,17 +79,17 @@ func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
   return l
 }
 
-func (l *ArgList) Check(g *G, pos Pos, args Vec) E {
+func (l *ArgList) Check(g *G, args Vec) E {
   nargs := len(args)
 
   if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
-    return g.E(pos, "Arg mismatch")
+    return g.E("Arg mismatch")
   }
 
   return nil
 }
 
-func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args Vec) {
+func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
   nargs := len(args)
   
   for i, a := range l.items {
@@ -102,7 +102,7 @@ func (l *ArgList) PutEnv(g *G, pos Pos, env *Env, args Vec) {
       }
       
       var vv Val
-      vv.Init(pos, g.VecType, v)
+      vv.Init(g.VecType, v)
       env.Put(a.id, vv)
       break
     }
@@ -130,7 +130,7 @@ func (vs Args) Parse(g *G) ([]*Sym, E) {
     } else if v.val_type == g.SplatType {
       id = g.Sym(fmt.Sprintf("%v..", v.AsSplat().AsSym())) 
     } else {
-      return nil, g.E(v.pos, "Invalid arg: %v", v)
+      return nil, g.E("Invalid arg: %v", v)
     }
     
     out = append(out, id)

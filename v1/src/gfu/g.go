@@ -37,7 +37,7 @@ func (g *G) Init() (*G, E) {
 func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
   in := strings.NewReader(s)
   var out Vec
-  
+
   for {
     vs, e := g.Read(&pos, in, Vec(out), 0)
     
@@ -52,17 +52,17 @@ func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
     out = vs
   }
 
-  return out.EvalExpr(g, pos, env)  
+  return out.EvalExpr(g, env)  
 }
 
-func (g *G) Load(pos Pos, fname string, env *Env) (Val, E) {
+func (g *G) Load(fname string, env *Env) (Val, E) {
   s, e := ioutil.ReadFile(fname)
   
   if e != nil {
-    return g.NIL, g.E(pos, "Failed loading file: %v\n%v", fname, e)
+    return g.NIL, g.E("Failed loading file: %v\n%v", fname, e)
   }
 
-  var fpos Pos
-  fpos.Init(fname)
-  return g.EvalString(fpos, string(s), env)
+  var pos Pos
+  pos.Init(fname)
+  return g.EvalString(pos, string(s), env)
 }
