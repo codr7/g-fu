@@ -3,6 +3,7 @@
 ** check fixed while in test/all
 ** switch inc/push/pop prims back to funs
 *** use arg instead of lookup
+** tag vars with env and COW external
 * simplify args
 ** pass as Vec, not []*Sym
 * add expand(form n?) fun
