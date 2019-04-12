@@ -1,22 +1,20 @@
 * move Type methods to Val
 ** add Int type alias
 ** check fixed while in test/all
+** switch inc/push/pop prims back to funs
+*** use arg instead of lookup
 * simplify args
 ** pass as Vec, not []*Sym
 * add expand(form n?) fun
-* add let places
-** (let (let-foo (v x) (dump (+ x v)) _) (let (foo 35) 7))
-*** pass value first
-** find 'let-x' in env if expr otherwise id/var
-** return prev value
-*** backup/restore in scoped let
-**** call 'del-x' if found when prev is nil
 * add bang calls
 ** add separate Bang type
 *** store target
-*** ! reader-support
+*** ! reader support
 *** quote as '(xxx)
 ** update loop test/readme
+* optimize vec splats
+** don't allocate new vec if no splats
+** bench
 * transducers
 * replace for-prim with loop macro
 ** add lib/iter.gf
@@ -27,8 +25,8 @@
   (let done !g-sym result !g-sym)
   
   '(let (break (macro (args..) '(recall T %args..)))
-     ((fun (%done? %result..)
-        (if %done %result.. (do %body.. !recall)))))))
+     !(fun (%done? %result..)
+        (if %done %result.. (do %body.. !recall))))))
 
 (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
 
