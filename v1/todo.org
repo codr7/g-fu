@@ -1,3 +1,8 @@
+* remove Val.pos
+* move Type into Val
+** use bare Type */Int as types
+** tag vars with env and COW external
+* --
 * add expand(form n?) fun
 * simplify args
 ** pass as Vec, not []*Sym
