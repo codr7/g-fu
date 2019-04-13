@@ -4,13 +4,13 @@ import (
   "io/ioutil"
   //"log"
   "strings"
+  "sync"
 )
 
-type Syms map[string]*Sym
-
 type G struct {
-  syms Syms
-
+  syms sync.Map
+  nsyms uint64
+  
   Debug bool  
   MainTask Task
   RootEnv Env
@@ -29,7 +29,6 @@ func NewG() (*G, E) {
 }
 
 func (g *G) Init() (*G, E) {
-  g.syms = make(Syms)
   g.MainTask.Init(g, NewChan(0), nil)
   return g, nil
 }

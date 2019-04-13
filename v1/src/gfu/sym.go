@@ -4,6 +4,7 @@ import (
   "fmt"
   //"log"
   "strings"
+  "sync/atomic"
 )
 
 type Sym struct {
@@ -11,14 +12,13 @@ type Sym struct {
   name string
 }
 
-func NewSym(g *G, name string) *Sym {
-  return new(Sym).Init(g, name)
+func NewSym(tag Tag, name string) *Sym {
+  return new(Sym).Init(tag, name)
 }
 
-func (s *Sym) Init(g *G, name string) *Sym {
-  s.tag = Tag(len(g.syms))
+func (s *Sym) Init(tag Tag, name string) *Sym {
+  s.tag = tag
   s.name = name
-  g.syms[name] = s
   return s
 }
 
@@ -70,19 +70,30 @@ func (_ *Sym) Type(g *G) *Type {
 
 func (g *G) GSym(prefix string) *Sym {
   var name string
-  n := len(g.syms)
+  tag := g.NextSymTag()
     
   if len(prefix) > 0 {
-    name = fmt.Sprintf("g-%v-%v", prefix, n)
+    name = fmt.Sprintf("g-%v-%v", prefix, tag)
   } else {
-    name = fmt.Sprintf("g-%v", n)
+    name = fmt.Sprintf("g-%v", tag)
   }
-  
-  return g.Sym(name)
+
+  s := NewSym(tag, name)
+  g.syms.Store(name, s)
+  return s
 }
 
 func (g *G) Sym(name string) *Sym {
-  if s := g.syms[name]; s != nil { return s }
-  return new(Sym).Init(g, name)
+  var s Sym
+  
+  if out, found := g.syms.LoadOrStore(name, &s); found {
+    return out.(*Sym)
+  }
+  
+  return s.Init(g.NextSymTag(), name)
+}
+
+func (g *G) NextSymTag() Tag {
+  return Tag(atomic.AddUint64(&g.nsyms, 1))
 }
 
