@@ -5,7 +5,7 @@ import (
   "strings"
 )
 
-type PrimImp func (*G, Vec, *Env) (Val, E)
+type PrimImp func (*G, *Task, *Env, Vec) (Val, E)
 
 type Prim struct {
   id *Sym
@@ -25,12 +25,12 @@ func (_ *Prim) Bool(g *G) bool {
   return true
 }
 
-func (p *Prim) Call(g *G, args Vec, env *Env) (Val, E) {
+func (p *Prim) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   if e := p.arg_list.Check(g, args); e != nil {
     return nil, e
   }
 
-  return p.imp(g, args, env)
+  return p.imp(g, task, env, args)
 }
 
 func (p *Prim) Dump(out *strings.Builder) {
@@ -41,7 +41,7 @@ func (p *Prim) Eq(g *G, rhs Val) bool {
   return p == rhs
 }
 
-func (p *Prim) Eval(g *G, env *Env) (Val, E) {
+func (p *Prim) Eval(g *G, task *Task, env *Env) (Val, E) {
   return p, nil
 }
 
@@ -49,7 +49,7 @@ func (p *Prim) Is(g *G, rhs Val) bool {
   return p == rhs
 }
 
-func (p *Prim) Quote(g *G, env *Env) (Val, E) {
+func (p *Prim) Quote(g *G, task *Task, env *Env) (Val, E) {
   return p, nil
 }
 

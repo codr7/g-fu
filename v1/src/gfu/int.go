@@ -20,7 +20,7 @@ func (i Int) Bool(g *G) bool {
   return i != 0
 }
 
-func (i Int) Call(g *G, args Vec, env *Env) (Val, E) {
+func (i Int) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return i, nil 
 }
   
@@ -33,7 +33,7 @@ func (i Int) Eq(g *G, rhs Val) bool {
   return ok && ri == i
 }
 
-func (i Int) Eval(g *G, env *Env) (Val, E) {
+func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
   return i, nil
 }
 
@@ -41,7 +41,7 @@ func (i Int) Is(g *G, rhs Val) bool {
   return i.Eq(g, rhs)
 }
 
-func (i Int) Quote(g *G, env *Env) (Val, E) {
+func (i Int) Quote(g *G, task *Task, env *Env) (Val, E) {
   return i, nil
 }
 

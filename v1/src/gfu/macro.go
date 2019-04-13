@@ -25,11 +25,11 @@ func (m *Macro) Bool(g *G) bool {
   return true
 }
 
-func (m *Macro) Call(g *G, args Vec, env *Env) (v Val, e E) {
+func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   avs := make(Vec, len(args))
   
   for i, a := range args {
-    if avs[i], e = a.Quote(g, env); e != nil {
+    if avs[i], e = a.Quote(g, task, env); e != nil {
       return nil, e
     }
   }
@@ -42,11 +42,11 @@ func (m *Macro) Call(g *G, args Vec, env *Env) (v Val, e E) {
   m.env.Clone(&be)
   m.arg_list.PutEnv(g, &be, args)
 
-  if v, e = m.body.EvalExpr(g, &be); e != nil {
+  if v, e = m.body.EvalExpr(g, task, &be); e != nil {
     return nil, e
   }
   
-  return v.Eval(g, env)
+  return v.Eval(g, task, env)
 }
 
 func (m *Macro) Dump(out *strings.Builder) {
@@ -77,7 +77,7 @@ func (m *Macro) Eq(g *G, rhs Val) bool {
   return m == rhs
 }
 
-func (m *Macro) Eval(g *G, env *Env) (Val, E) {
+func (m *Macro) Eval(g *G, task *Task, env *Env) (Val, E) {
   return m, nil
 }
 
@@ -85,7 +85,7 @@ func (m *Macro) Is(g *G, rhs Val) bool {
   return m == rhs
 }
 
-func (m *Macro) Quote(g *G, env *Env) (Val, E) {
+func (m *Macro) Quote(g *G, task *Task, env *Env) (Val, E) {
   return m, nil
 }
 

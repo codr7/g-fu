@@ -7,12 +7,12 @@ import (
 
 type Val interface {
   Bool(*G) bool
-  Call(*G, Vec, *Env) (Val, E)
+  Call(*G, *Task, *Env, Vec) (Val, E)
   Dump(*strings.Builder)
   Eq(*G, Val) bool
-  Eval(*G, *Env) (Val, E)
+  Eval(*G, *Task, *Env) (Val, E)
   Is(*G, Val) bool
-  Quote(*G, *Env) (Val, E)
+  Quote(*G, *Task, *Env) (Val, E)
   Splat(*G, Vec) Vec
   Type(*G) *Type
 }

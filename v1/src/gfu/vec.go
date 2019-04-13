@@ -11,7 +11,7 @@ func (v Vec) Bool(g *G) bool {
   return len(v) > 0
 }
 
-func (v Vec) Call(g *G, args Vec, env *Env) (Val, E) {
+func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil 
 }
 
@@ -47,19 +47,19 @@ func (v Vec) Eq(g *G, rhs Val) bool {
   return true
 }
 
-func (v Vec) Eval(g *G, env *Env) (Val, E) {
+func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
   if len(v) == 0 {
     return &g.NIL, nil
   }
   
   first := v[0]
-  first_val, e := first.Eval(g, env)
+  first_val, e := first.Eval(g, task, env)
   
   if e != nil {
     return nil, e
   }
 
-  result, e := first_val.Call(g, v[1:], env)
+  result, e := first_val.Call(g, task, env, v[1:])
   
   if e != nil {
     return nil, g.E("Call failed: %v", e)
@@ -68,17 +68,17 @@ func (v Vec) Eval(g *G, env *Env) (Val, E) {
   return result, nil
 }
 
-func (v Vec) EvalExpr(g *G, env *Env) (Val, E) {
+func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
   var out Val = &g.NIL
   
   for _, it := range v {
     var e E
     
-    if out, e = it.Eval(g, env); e != nil {
+    if out, e = it.Eval(g, task, env); e != nil {
       return nil, e
     }
 
-    if g.recall {
+    if task.recall {
       break
     }
   }
@@ -86,17 +86,17 @@ func (v Vec) EvalExpr(g *G, env *Env) (Val, E) {
   return out, nil
 }
 
-func (v Vec) EvalVec(g *G, env *Env) (Vec, E) {
+func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
   var out Vec
   
   for _, it := range v {
-    it, e := it.Eval(g, env)
+    it, e := it.Eval(g, task, env)
 
     if e != nil {
       return nil, g.E("Arg eval failed: %v", e)
     }
 
-    if g.recall {
+    if task.recall {
       break
     }
     
@@ -146,11 +146,11 @@ func (v Vec) Pop(g *G) (Val, Vec) {
   return v[n-1], v[:n-1]
 }
 
-func (v Vec) Quote(g *G, env *Env) (Val, E) {
+func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
   var e E
 
   for i, it := range v {
-    v[i], e = it.Quote(g, env)
+    v[i], e = it.Quote(g, task, env)
 
     if e != nil {
       return nil, e

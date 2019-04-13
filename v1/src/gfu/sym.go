@@ -26,7 +26,7 @@ func (s *Sym) Bool(g *G) bool {
   return true
 }
 
-func (s *Sym) Call(g *G, args Vec, env *Env) (Val, E) {
+func (s *Sym) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return s, nil 
 }
 
@@ -38,7 +38,7 @@ func (s *Sym) Eq(g *G, rhs Val) bool {
   return s == rhs
 }
 
-func (s *Sym) Eval(g *G, env *Env) (Val, E) {
+func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
   _, found := env.Find(s)
 
   if found == nil {
@@ -52,7 +52,7 @@ func (s *Sym) Is(g *G, rhs Val) bool {
   return s == rhs
 }
 
-func (s *Sym) Quote(g *G, env *Env) (Val, E) {
+func (s *Sym) Quote(g *G, task *Task, env *Env) (Val, E) {
   return s, nil
 }
 

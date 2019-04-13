@@ -67,10 +67,6 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
       return g.ReadSplat(pos, in, out)
     case '%':
       return g.ReadSplice(pos, in, out, end)
-    case '@':
-      p := *pos
-      p.Col--
-      return append(out, p), nil
     default:
       if unicode.IsDigit(c) {
         if e = g.Unread(pos, in, c); e != nil {

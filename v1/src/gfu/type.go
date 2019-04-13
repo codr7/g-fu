@@ -17,7 +17,7 @@ func (t *Type) Bool(g *G) bool {
   return true
 }
 
-func (t *Type) Call(g *G, args Vec, env *Env) (Val, E) {
+func (t *Type) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t, nil
 }
 
@@ -29,7 +29,7 @@ func (t *Type) Eq(g *G, rhs Val) bool {
   return t == rhs
 }
 
-func (t *Type) Eval(g *G, env *Env) (Val, E) {
+func (t *Type) Eval(g *G, task *Task, env *Env) (Val, E) {
   return t, nil
 }
 
@@ -41,7 +41,7 @@ func (t *Type) Is(g *G, rhs Val) bool {
   return t == rhs
 }
 
-func (t *Type) Quote(g *G, env *Env) (Val, E) {
+func (t *Type) Quote(g *G, task *Task, env *Env) (Val, E) {
   return t, nil
 }
 

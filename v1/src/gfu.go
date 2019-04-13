@@ -48,7 +48,7 @@ func main() {
 
       if len(line) == 0 {
         if buf.Len() > 0 {
-          v, e := g.EvalString(gfu.INIT_POS, buf.String(), &g.RootEnv)
+          v, e := g.EvalString(&g.MainTask, g.NewEnv(), gfu.INIT_POS, buf.String())
 
           if e == nil {
             fmt.Printf("\r%v\n", v)
@@ -71,7 +71,7 @@ func main() {
     }
   } else {
     for _, a := range args {
-      if _, e := g.Load(a, &g.RootEnv); e != nil {
+      if _, e := g.Load(&g.MainTask, g.NewEnv(), a); e != nil {
         log.Fatal(e);
       }
     }

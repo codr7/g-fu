@@ -14,7 +14,7 @@ func NewQuote(val Val) (q Quote) {
   return q
 }
 
-func (q Quote) Call(g *G, args Vec, env *Env) (Val, E) {
+func (q Quote) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return q, nil 
 }
 
@@ -27,8 +27,8 @@ func (q Quote) Eq(g *G, rhs Val) bool {
   return q.val.Is(g, rhs.(Quote).val)
 }
 
-func (q Quote) Eval(g *G, env *Env) (Val, E) {
-  qv, e := q.val.Quote(g, env)
+func (q Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
+  qv, e := q.val.Quote(g, task, env)
   
   if e != nil {
     return nil, e
@@ -45,7 +45,7 @@ func (q Quote) Is(g *G, rhs Val) bool {
   return q == rhs
 }
 
-func (q Quote) Quote(g *G, env *Env) (Val, E) {
+func (q Quote) Quote(g *G, task *Task, env *Env) (Val, E) {
   return q, nil
 }
 

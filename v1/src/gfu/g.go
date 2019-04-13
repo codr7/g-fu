@@ -9,16 +9,14 @@ import (
 type Syms map[string]*Sym
 
 type G struct {
-  Debug bool
-  RootEnv Env
-  
   syms Syms
 
-  recall bool
-  recall_args Vec
-  
+  Debug bool  
+  MainTask Task
+  RootEnv Env
+
   MetaType,
-  FalseType, FunType, IntType, MacroType, NilType, OptType, PosType, PrimType,
+  FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType,
   QuoteType, SplatType, SpliceType, SymType, TrueType, VecType Type
   
   NIL Nil
@@ -32,10 +30,17 @@ func NewG() (*G, E) {
 
 func (g *G) Init() (*G, E) {
   g.syms = make(Syms)
+  g.MainTask.Init(NewChan(0), nil)
   return g, nil
 }
 
-func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
+func (g *G) NewEnv() *Env {
+  var env Env 
+  g.RootEnv.Clone(&env)
+  return &env
+}
+
+func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   in := strings.NewReader(s)
   var out Vec
 
@@ -53,10 +58,10 @@ func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
     out = vs
   }
 
-  return out.EvalExpr(g, env)  
+  return out.EvalExpr(g, &g.MainTask, env)  
 }
 
-func (g *G) Load(fname string, env *Env) (Val, E) {
+func (g *G) Load(task *Task, env *Env, fname string) (Val, E) {
   s, e := ioutil.ReadFile(fname)
   
   if e != nil {
@@ -65,5 +70,5 @@ func (g *G) Load(fname string, env *Env) (Val, E) {
 
   var pos Pos
   pos.Init(fname)
-  return g.EvalString(pos, string(s), env)
+  return g.EvalString(task, env, pos, string(s))
 }

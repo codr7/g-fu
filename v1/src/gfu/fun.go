@@ -6,7 +6,7 @@ import (
   "strings"
 )
 
-type FunImp func(*G, Vec, *Env) (Val, E)
+type FunImp func(*G, *Task, *Env, Vec) (Val, E)
 
 type Fun struct {
   env *Env
@@ -29,8 +29,8 @@ func (_ *Fun) Bool(g *G) bool {
   return true
 }
 
-func (f *Fun) Call(g *G, args Vec, env *Env) (Val, E) {
-  avs, e := args.EvalVec(g, env)
+func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  avs, e := args.EvalVec(g, task, env)
 
   if e != nil {
     return nil, g.E("Args eval failed: %v", e)
@@ -41,7 +41,7 @@ func (f *Fun) Call(g *G, args Vec, env *Env) (Val, E) {
   }
 
   if f.imp != nil {
-    return f.imp(g, avs, env)
+    return f.imp(g, task, env, avs)
   }
   
   var be Env
@@ -50,15 +50,15 @@ func (f *Fun) Call(g *G, args Vec, env *Env) (Val, E) {
 recall:
   f.arg_list.PutEnv(g, &be, avs)
 
-  if v, e = f.body.EvalExpr(g, &be); e != nil {
-    g.recall_args = nil
-    g.recall = false
+  if v, e = f.body.EvalExpr(g, task, &be); e != nil {
+    task.recall_args = nil
+    task.recall = false
     return nil, e
   }
   
-  if g.recall {
-    avs, g.recall_args = g.recall_args, nil
-    g.recall = false
+  if task.recall {
+    avs, task.recall_args = task.recall_args, nil
+    task.recall = false
     goto recall
   }
   
@@ -97,7 +97,7 @@ func (f *Fun) Eq(g *G, rhs Val) bool {
   return f == rhs
 }
 
-func (f *Fun) Eval(g *G, env *Env) (Val, E) {
+func (f *Fun) Eval(g *G, task *Task, env *Env) (Val, E) {
   return f, nil
 }
 
@@ -105,7 +105,7 @@ func (f *Fun) Is(g *G, rhs Val) bool {
   return f == rhs
 }
 
-func (f *Fun) Quote(g *G, env *Env) (Val, E) {
+func (f *Fun) Quote(g *G, task *Task, env *Env) (Val, E) {
   return f, nil
 }
 

@@ -14,7 +14,7 @@ func NewOpt(val Val) (o Opt) {
   return o
 }
 
-func (o Opt) Call(g *G, args Vec, env *Env) (Val, E) {
+func (o Opt) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return o, nil 
 }
 
@@ -27,9 +27,9 @@ func (o Opt) Eq(g *G, rhs Val) bool {
   return o.val.Is(g, rhs.(Opt).val)
 }
 
-func (o Opt) Eval(g *G, env *Env) (Val, E) {
+func (o Opt) Eval(g *G, task *Task, env *Env) (Val, E) {
   var e E
-  o.val, e = o.val.Eval(g, env)
+  o.val, e = o.val.Eval(g, task, env)
 
   if e != nil {
     return nil, e
@@ -42,9 +42,9 @@ func (o Opt) Is(g *G, rhs Val) bool {
   return o == rhs
 }
 
-func (o Opt) Quote(g *G, env *Env) (Val, E) {
+func (o Opt) Quote(g *G, task *Task, env *Env) (Val, E) {
   var e E
-  o.val, e = o.val.Quote(g, env)
+  o.val, e = o.val.Quote(g, task, env)
 
   if e != nil {
     return nil, e

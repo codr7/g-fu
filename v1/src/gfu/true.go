@@ -12,7 +12,7 @@ func (_ *True) Bool(g *G) bool {
   return true
 }
 
-func (t *True) Call(g *G, args Vec, ent *Env) (Val, E) {
+func (t *True) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t, nil
 }
   
@@ -24,7 +24,7 @@ func (t *True) Eq(g *G, rhs Val) bool {
   return t == rhs
 }
 
-func (t *True) Eval(g *G, ent *Env) (Val, E) {
+func (t *True) Eval(g *G, task *Task, env *Env) (Val, E) {
   return t, nil
 }
 
@@ -32,7 +32,7 @@ func (t *True) Is(g *G, rhs Val) bool {
   return t == rhs
 }
 
-func (t *True) Quote(g *G, env *Env) (Val, E) {
+func (t *True) Quote(g *G, task *Task, env *Env) (Val, E) {
   return t, nil
 }
 

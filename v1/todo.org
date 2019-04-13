@@ -1,3 +1,17 @@
+* add Task type
+** add Task type
+** add (task (inbox) ...) prim
+*** return *Task
+** add Task.lock/done sync.Cond
+*** broadcast cond on exit
+*** add Task.Join/fun
+** type Chan chan Val
+** add (<- chan?) / (-> args..)
+*** check args[0] for chan
+** switch g.syms to sync.Map
+*** call LoadOrStore with empty Sym
+*** bench
+* remove @/Pos type/G
 * simplify args
 ** pass as Vec, not []*Sym
 * add for-var support
@@ -8,22 +22,6 @@
 *** grab from snigl
 * change bench to take vec arg for reps
 ** update bench/
-* add Task type
-** move G.RootEnv
-*** add G.MainTask
-** add (task (inbox) ...) prim
-*** return *Task
-** pass *Task as separate Eval arg
-** add NewTask(inbox Chan, body Val) *Task
-*** run eval in separate goroutine
-** add Task.lock/done sync.Cond
-*** broadcast cond on exit
-*** add Task.Join/fun
-** type Chan chan Val
-** add (<- chan?) / (-> args..)
-*** check args[0] for chan
-** switch g.syms to sync.Map
-*** bench
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox

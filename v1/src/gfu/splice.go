@@ -14,7 +14,7 @@ func NewSplice(val Val) (s Splice) {
   return s
 }
 
-func (s Splice) Call(g *G, args Vec, env *Env) (Val, E) {
+func (s Splice) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return s, nil 
 }
 
@@ -27,7 +27,7 @@ func (s Splice) Eq(g *G, rhs Val) bool {
   return s.val.Is(g, rhs.(Splice).val)
 }
 
-func (_ Splice) Eval(g *G, env *Env) (Val, E) {
+func (_ Splice) Eval(g *G, task *Task, env *Env) (Val, E) {
   return nil, g.E("Unquoted splice")
 }
 
@@ -35,8 +35,8 @@ func (s Splice) Is(g *G, rhs Val) bool {
   return s == rhs
 }
 
-func (s Splice) Quote(g *G, env *Env) (Val, E) {
-  return s.val.Eval(g, env)
+func (s Splice) Quote(g *G, task *Task, env *Env) (Val, E) {
+  return s.val.Eval(g, task, env)
 }
 
 func (s Splice) Splat(g *G, out Vec) Vec {

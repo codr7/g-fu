@@ -14,7 +14,7 @@ func NewSplat(val Val) (s Splat) {
   return s
 }
 
-func (s Splat) Call(g *G, args Vec, env *Env) (Val, E) {
+func (s Splat) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return s, nil 
 }
 
@@ -27,9 +27,9 @@ func (s Splat) Eq(g *G, rhs Val) bool {
   return s.val.Is(g, rhs.(Splat).val)
 }
 
-func (s Splat) Eval(g *G, env *Env) (Val, E) {
+func (s Splat) Eval(g *G, task *Task, env *Env) (Val, E) {
   var e E
-  s.val, e = s.val.Eval(g, env)
+  s.val, e = s.val.Eval(g, task, env)
 
   if e != nil {
     return nil, e
@@ -42,9 +42,9 @@ func (s Splat) Is(g *G, rhs Val) bool {
   return s == rhs
 }
 
-func (s Splat) Quote(g *G, env *Env) (Val, E) {
+func (s Splat) Quote(g *G, task *Task, env *Env) (Val, E) {
   var e E
-  s.val, e = s.val.Quote(g, env)
+  s.val, e = s.val.Quote(g, task, env)
 
   if e != nil {
     return nil, e
