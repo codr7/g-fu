@@ -94,7 +94,7 @@ func (f *Fun) Dump(out *strings.Builder) {
 }
 
 func (f *Fun) Eq(g *G, rhs Val) bool {
-  return f == rhs
+  return f.Is(g, rhs)
 }
 
 func (f *Fun) Eval(g *G, task *Task, env *Env) (Val, E) {

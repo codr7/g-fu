@@ -1,7 +1,7 @@
 package gfu
 
 import (
-  //"log"
+  "log"
   "os"
   "strings"
   "time"
@@ -388,6 +388,40 @@ func vec_pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  as, e := args[0].Eval(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+
+  var max_buf Int = 0
+  
+  if v, ok := as.(Vec); ok {
+    log.Printf("task_imp vec args: %v", v)
+  }
+  
+  t := NewTask(g, NewChan(max_buf), args[1:])
+  t.Start(g, env)
+  return t, nil
+}
+
+func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  nargs := len(args)
+  
+  if nargs == 1 {
+    return args[0].(*Task).Wait(), nil
+  }
+
+  out := make(Vec, nargs)
+  
+  for i, a := range args {
+    out[i] = a.(*Task).Wait()
+  }
+
+  return out, nil
+}
+
 func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.MetaType, "Meta")
   e.AddType(g, &g.FalseType, "False")
@@ -401,6 +435,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")
   e.AddType(g, &g.SymType, "Sym")
+  e.AddType(g, &g.TaskType, "Task")
   e.AddType(g, &g.TrueType, "True")
   e.AddType(g, &g.VecType, "Vec")
   
@@ -440,4 +475,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "push", vec_push_imp, "vec val..")
   e.AddFun(g, "peek", vec_peek_imp, "vec")
   e.AddPrim(g, "pop", vec_pop_imp, "vec")
+
+  e.AddPrim(g, "task", task_imp, "args body..")
+  e.AddFun(g, "wait", task_wait_imp, "tasks..")
 }

@@ -17,7 +17,7 @@ type G struct {
 
   MetaType,
   FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType,
-  QuoteType, SplatType, SpliceType, SymType, TrueType, VecType Type
+  QuoteType, SplatType, SpliceType, SymType, TaskType, TrueType, VecType Type
   
   NIL Nil
   T True
@@ -30,7 +30,7 @@ func NewG() (*G, E) {
 
 func (g *G) Init() (*G, E) {
   g.syms = make(Syms)
-  g.MainTask.Init(NewChan(0), nil)
+  g.MainTask.Init(g, NewChan(0), nil)
   return g, nil
 }
 

@@ -1,19 +1,15 @@
-* add Task type
-** add Task type
-** add (task (inbox) ...) prim
-*** return *Task
-** add Task.lock/done sync.Cond
-*** broadcast cond on exit
-*** add Task.Join/fun
-** type Chan chan Val
-** add (<- chan?) / (-> args..)
-*** check args[0] for chan
+* add Task
+** add task test
+*** testtask.gf
+** commit
 ** switch g.syms to sync.Map
 *** call LoadOrStore with empty Sym
 *** bench
-* remove @/Pos type/G
 * simplify args
 ** pass as Vec, not []*Sym
+* replace opt with nested Vec
+** foo? -> (foo _)
+** remove Opt type
 * add for-var support
 ** (for (10 i) ...)
 *** always expect Vec

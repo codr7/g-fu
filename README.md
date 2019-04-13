@@ -60,6 +60,19 @@ One of the most common macro examples is the `while`-loop. The example below def
 'bar
 ```
 
+### Tasks
+Tasks are first class goroutines that execute in separate environments and interact exclusively using channels (except for final results). New tasks are started using `task` which optionally takes a channel argument and returns the task. `wait` may be used to wait for task completion and get the results.
+
+```
+  (let (t1 (task _ (dump 'foo) 'bar)
+        t2 (task _ (dump 'baz) 'qux))
+    (dump (wait t1 t2)))
+
+baz
+foo
+(bar qux)
+```
+
 ### Profiling
 CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_tail.prof` in the following example.
 
