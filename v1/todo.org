@@ -1,6 +1,7 @@
 * add @ reader support
 ** add Pos type
 ** replace with current pos
+** testpos.gf
 * simplify args
 ** pass as Vec, not []*Sym
 * add for-var support
@@ -14,19 +15,22 @@
 * add Task type
 ** move G.RootEnv
 *** add G.MainTask
-** add (task (inbox-chan) ...) prim
+** add (task (inbox) ...) prim
 *** return *Task
 ** pass *Task as separate Eval arg
-** add NewTask(nbuf Int, body Val) *Task
+** add NewTask(inbox Chan, body Val) *Task
 *** run eval in separate goroutine
 ** type Chan chan Val
-*** add Task.inbox Chan
-** add Task.Send/Recv
-*** add (recv) / (send task val)
+** add (<- chan) / (-> chan val)
+** add inbox var
+*** bind to chan in task root env
 ** switch g.syms to sync.Map
 *** bench
-** add Str type
-** add load fun
+* add coro/coret g-fu macros
+** based on task
+** call through inbox
+* add Str type
+* add load fun
 * convert test to gfu macro
 ** add lib/test.gf
 ** load in test/all.gf
