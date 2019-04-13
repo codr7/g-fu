@@ -75,6 +75,14 @@
   (test (= (eval '(+ %foo..)) 42)))
 
 
+(let (t (task _ 'foo))
+  (test (= (wait t) 'foo)))
+
+(let (t1 (task _ 35)
+      t2 (task _ 7))
+  (test (= (+ (wait t1 t2)..) 42)))
+
+
 (let loop (macro (body..)
   (let done (g-sym) result (g-sym))
   
