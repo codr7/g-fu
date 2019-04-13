@@ -18,8 +18,8 @@ type G struct {
   recall_args Vec
   
   MetaType,
-  FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType, QuoteType,
-  SplatType, SpliceType, SymType, TrueType, VecType Type
+  FalseType, FunType, IntType, MacroType, NilType, OptType, PosType, PrimType,
+  QuoteType, SplatType, SpliceType, SymType, TrueType, VecType Type
   
   NIL Nil
   T True

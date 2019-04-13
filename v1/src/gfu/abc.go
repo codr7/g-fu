@@ -397,6 +397,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.OptType, "Opt")
   e.AddType(g, &g.PrimType, "Prim")
+  e.AddType(g, &g.PosType, "Pos")
   e.AddType(g, &g.QuoteType, "Quote")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")

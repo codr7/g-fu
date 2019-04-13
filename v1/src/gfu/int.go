@@ -29,7 +29,8 @@ func (i Int) Dump(out *strings.Builder) {
 }
 
 func (i Int) Eq(g *G, rhs Val) bool {
-  return i == rhs.(Int)
+  ri, ok := rhs.(Int)
+  return ok && ri == i
 }
 
 func (i Int) Eval(g *G, env *Env) (Val, E) {
