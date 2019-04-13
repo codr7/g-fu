@@ -28,13 +28,14 @@ func (o Opt) Eq(g *G, rhs Val) bool {
 }
 
 func (o Opt) Eval(g *G, env *Env) (Val, E) {
-  v, e := o.val.Eval(g, env)
+  var e E
+  o.val, e = o.val.Eval(g, env)
 
   if e != nil {
     return nil, e
   }
   
-  return NewOpt(v), nil
+  return o, nil
 }
 
 func (o Opt) Is(g *G, rhs Val) bool {
@@ -42,13 +43,14 @@ func (o Opt) Is(g *G, rhs Val) bool {
 }
 
 func (o Opt) Quote(g *G, env *Env) (Val, E) {
-  v, e := o.val.Quote(g, env)
+  var e E
+  o.val, e = o.val.Quote(g, env)
 
   if e != nil {
     return nil, e
   }
 
-  return NewOpt(v), nil
+  return o, nil
 }
 
 func (o Opt) Splat(g *G, out Vec) Vec {
