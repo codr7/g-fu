@@ -27,26 +27,30 @@ func (s Splat) Eq(g *G, rhs Val) bool {
   return s.val.Is(g, rhs.(Splat).val)
 }
 
-func (s Splat) Eval(g *G, env *Env) (v Val, e E) {
-  v, e = s.val.Eval(g, env)
+func (s Splat) Eval(g *G, env *Env) (Val, E) {
+  var e E
+  s.val, e = s.val.Eval(g, env)
 
   if e != nil {
     return nil, e
   }
   
-  return NewSplat(v), e
+  return s, nil
 }
 
 func (s Splat) Is(g *G, rhs Val) bool {
   return s == rhs
 }
 
-func (s Splat) Quote(g *G, env *Env) (v Val, e E) {
-  if v, e = s.val.Quote(g, env); e != nil {
+func (s Splat) Quote(g *G, env *Env) (Val, E) {
+  var e E
+  s.val, e = s.val.Quote(g, env)
+
+  if e != nil {
     return nil, e
   }
 
-  return NewSplat(v), nil
+  return s, nil
 }
 
 func (s Splat) Splat(g *G, out Vec) Vec {
