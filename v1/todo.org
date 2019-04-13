@@ -1,22 +1,52 @@
 * add @ reader support
 ** add Pos type
 ** replace with current pos
-* fix test/all while loop
 * simplify args
 ** pass as Vec, not []*Sym
-* optimize vec splats
-** don't allocate new vec if no splats
-** bench
-* add lib/iter.gf
-** move loops from testloop.gf
+* add for-var support
+** (for (10 i) ...)
+*** always expect Vec
+**** update test/bench
+** add bench/stack
+*** grab from snigl
+* add Task type
+** move G.RootEnv
+*** add G.MainTask
+** add (task (nbuf) ...) prim
+*** return *Task
+** pass *Task as separate Eval arg
+** add NewTask(nbuf Int, body Val) *Task
+*** run eval in separate goroutine
+** type Chan chan Val
+*** add Task.inbox Chan
+** add Task.Send/Recv
+*** add (recv) / (send task val)
+** switch g.syms to sync.Map
+*** bench
 ** add Str type
 ** add load fun
+* convert test to gfu macro
+** add lib/test.gf
+** load in test/all.gf
+** add throw fun
+*** switch BasicE.msg from string to Val
+* fix test/all while loop
+* optimize vec splats
+** don't allocate new vec if no splats
+* add lib/iter.gf
+** move loops from testloop.gf
 ** load iter.gf from test/all
 * add expand(form n?) fun
 * vec iter
 * transducers
 * replace for-prim with loop macro
 ** add lib/iter.gf
+* add bang calls
+** add separate Bang type
+*** store target
+*** ! reader support
+*** quote as '(xxx)
+** update loop test/readme
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
 
@@ -38,9 +68,3 @@
   (while (< i 7)
     (dump i)
     (inc i)))
-* add bang calls
-** add separate Bang type
-*** store target
-*** ! reader support
-*** quote as '(xxx)
-** update loop test/readme
