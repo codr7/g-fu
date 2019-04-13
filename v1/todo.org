@@ -1,9 +1,7 @@
-* add BasicVal with default imps
-** use as base for Nil/Vec/Sym/Fun/Macro/Prim/Wrap
-* fix test/all while loop
 * add @ reader support
 ** add Pos type
 ** replace with current pos
+* fix test/all while loop
 * simplify args
 ** pass as Vec, not []*Sym
 * optimize vec splats
