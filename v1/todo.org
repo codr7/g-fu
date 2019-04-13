@@ -1,4 +1,4 @@
-* add @ reader support
+* add @ support
 ** add Pos type
 ** replace with current pos
 ** testpos.gf
@@ -20,10 +20,12 @@
 ** pass *Task as separate Eval arg
 ** add NewTask(inbox Chan, body Val) *Task
 *** run eval in separate goroutine
+** add Task.lock/done sync.Cond
+*** broadcast cond on exit
+*** add Task.Join/fun
 ** type Chan chan Val
-** add (<- chan) / (-> chan val)
-** add inbox var
-*** bind to chan in task root env
+** add (<- chan?) / (-> args..)
+*** check args[0] for chan
 ** switch g.syms to sync.Map
 *** bench
 * add coro/coret g-fu macros
