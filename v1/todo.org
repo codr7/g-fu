@@ -5,6 +5,7 @@
 ** switch g.syms to sync.Map
 *** call LoadOrStore with empty Sym
 *** bench
+* add g.Chan type
 * simplify args
 ** pass as Vec, not []*Sym
 * replace opt with nested Vec

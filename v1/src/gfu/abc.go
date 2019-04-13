@@ -395,13 +395,13 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
 
-  var max_buf Int = 0
+  var inbox Chan
   
   if v, ok := as.(Vec); ok {
     log.Printf("task_imp vec args: %v", v)
   }
   
-  t := NewTask(g, NewChan(max_buf), args[1:])
+  t := NewTask(g, inbox, args[1:])
   t.Start(g, env)
   return t, nil
 }
