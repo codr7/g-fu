@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "fmt"
   //"log"
   "os"
   "strings"
@@ -264,16 +263,7 @@ func recall_imp(g *G, args Vec, env *Env) (Val, E) {
 }
 
 func g_sym_imp(g *G, args Vec, env *Env) (Val, E) {
-  var n string
-  t := g.NextSymTag()
-    
-  if len(args) > 0 {
-    n = fmt.Sprintf("g-%v-%v", args[0], t)
-  } else {
-    n = fmt.Sprintf("g-%v", t)
-  }
-  
-  return g.Sym(n), nil
+  return g.GSym(""), nil
 }
 
 func bool_imp(g *G, args Vec, env *Env) (Val, E) {

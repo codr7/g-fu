@@ -1,6 +1,5 @@
 * add BasicVal with default imps
 ** use as base for Nil/Vec/Sym/Fun/Macro/Prim/Wrap
-* replace g.sym_tag with len(syms)
 * convert NIL/T/F to ptrs
 ** bench
 * fix test/all while loop

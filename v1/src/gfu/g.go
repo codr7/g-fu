@@ -12,7 +12,6 @@ type G struct {
   Debug bool
   RootEnv Env
   
-  sym_tag Tag
   syms Syms
 
   recall bool

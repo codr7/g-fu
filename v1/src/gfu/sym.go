@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   //"log"
   "strings"
 )
@@ -15,7 +16,7 @@ func NewSym(g *G, name string) *Sym {
 }
 
 func (s *Sym) Init(g *G, name string) *Sym {
-  s.tag = g.NextSymTag()
+  s.tag = Tag(len(g.syms))
   s.name = name
   g.syms[name] = s
   return s
@@ -67,13 +68,21 @@ func (_ *Sym) Type(g *G) *Type {
   return &g.SymType
 }
 
+func (g *G) GSym(prefix string) *Sym {
+  var name string
+  n := len(g.syms)
+    
+  if len(prefix) > 0 {
+    name = fmt.Sprintf("g-%v-%v", prefix, n)
+  } else {
+    name = fmt.Sprintf("g-%v", n)
+  }
+  
+  return g.Sym(name)
+}
+
 func (g *G) Sym(name string) *Sym {
   if s := g.syms[name]; s != nil { return s }
   return new(Sym).Init(g, name)
-}
-
-func (g *G) NextSymTag() Tag {
-  g.sym_tag++
-  return g.sym_tag
 }
 
