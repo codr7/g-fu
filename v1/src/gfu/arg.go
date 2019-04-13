@@ -108,7 +108,7 @@ func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
     if i < nargs {
       env.Put(a.id, args[i])
     } else {
-      env.Put(a.id, g.NIL)
+      env.Put(a.id, &g.NIL)
     }
   }
 }

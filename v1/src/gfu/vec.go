@@ -49,7 +49,7 @@ func (v Vec) Eq(g *G, rhs Val) bool {
 
 func (v Vec) Eval(g *G, env *Env) (Val, E) {
   if len(v) == 0 {
-    return g.NIL, nil
+    return &g.NIL, nil
   }
   
   first := v[0]
@@ -69,7 +69,7 @@ func (v Vec) Eval(g *G, env *Env) (Val, E) {
 }
 
 func (v Vec) EvalExpr(g *G, env *Env) (Val, E) {
-  var out Val = g.NIL
+  var out Val = &g.NIL
   
   for _, it := range v {
     var e E
@@ -130,7 +130,7 @@ func (v Vec) Peek(g *G) Val {
   n := len(v)
   
   if n == 0 {
-    return g.NIL
+    return &g.NIL
   }
 
   return v[n-1]
@@ -140,7 +140,7 @@ func (v Vec) Pop(g *G) (Val, Vec) {
   n := len(v)
 
   if n == 0 {
-    return g.NIL, v
+    return &g.NIL, v
   }
 
   return v[n-1], v[:n-1]

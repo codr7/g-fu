@@ -42,7 +42,7 @@ func (q Quote) Eval(g *G, env *Env) (Val, E) {
 }
 
 func (q Quote) Is(g *G, rhs Val) bool {
-  return q == rhs.(Quote)
+  return q == rhs
 }
 
 func (q Quote) Quote(g *G, env *Env) (Val, E) {

@@ -1,9 +1,6 @@
 * add BasicVal with default imps
 ** use as base for Nil/Vec/Sym/Fun/Macro/Prim/Wrap
-* convert NIL/T/F to ptrs
-** bench
 * fix test/all while loop
-** add Ref type?
 * add @ reader support
 ** add Pos type
 ** replace with current pos

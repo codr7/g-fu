@@ -85,7 +85,7 @@ func let_imp(g *G, args Vec, env *Env) (Val, E) {
   }
 
   if !is_scope {
-    return g.NIL, nil
+    return &g.NIL, nil
   }
   
   rv, e := args[1:].EvalExpr(g, le)
@@ -112,12 +112,12 @@ func if_imp(g *G, args Vec, env *Env) (Val, E) {
     return args[2].Eval(g, env)
   }
 
-  return g.NIL, nil
+  return &g.NIL, nil
 }
 
 func and_imp(g *G, args Vec, env *Env) (Val, E) {
   var e E
-  var v Val = g.NIL
+  var v Val = &g.NIL
   
   for _, in := range args {
     v, e = in.Eval(g, env)
@@ -127,7 +127,7 @@ func and_imp(g *G, args Vec, env *Env) (Val, E) {
     }
     
     if !v.Bool(g) {
-      return g.F, nil
+      return &g.F, nil
     }
   }
 
@@ -147,7 +147,7 @@ func or_imp(g *G, args Vec, env *Env) (Val, E) {
     }
   }
 
-  return g.F, nil
+  return &g.F, nil
 }
 
 func inc_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -184,7 +184,7 @@ func for_imp(g *G, args Vec, env *Env) (Val, E) {
 
   n := nv.(Int)
   b := args[1:]
-  var v Val = g.NIL
+  var v Val = &g.NIL
   
   for i := Int(0); i < n; i++ {
     if v, e = b.EvalExpr(g, env); e != nil {
@@ -208,7 +208,7 @@ func test_imp(g *G, args Vec, env *Env) (Val, E) {
     }
   }
 
-  return g.NIL, nil
+  return &g.NIL, nil
 }
 
 func bench_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -245,7 +245,7 @@ func dump_imp(g *G, args Vec, env *Env) (Val, E) {
   }
 
   os.Stderr.WriteString(out.String())
-  return g.NIL, nil
+  return &g.NIL, nil
 }
 
 func eval_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -259,7 +259,7 @@ func recall_imp(g *G, args Vec, env *Env) (Val, E) {
 
   g.recall = true
   g.recall_args = args
-  return g.NIL, nil
+  return &g.NIL, nil
 }
 
 func g_sym_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -268,18 +268,18 @@ func g_sym_imp(g *G, args Vec, env *Env) (Val, E) {
 
 func bool_imp(g *G, args Vec, env *Env) (Val, E) {
   if b := args[0].Bool(g); b {
-    return g.T, nil
+    return &g.T, nil
   }
 
-  return g.F, nil
+  return &g.F, nil
 }
 
 func not_imp(g *G, args Vec, env *Env) (Val, E) {
   if b := args[0].Bool(g); b {
-    return g.F, nil
+    return &g.F, nil
   }
 
-  return g.T, nil
+  return &g.T, nil
 }
 
 func eq_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -287,11 +287,11 @@ func eq_imp(g *G, args Vec, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Eq(g, v) {
-      return g.F, nil
+      return &g.F, nil
     }
   }
   
-  return g.T, nil
+  return &g.T, nil
 }
 
 func is_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -299,11 +299,11 @@ func is_imp(g *G, args Vec, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Is(g, v) {
-      return g.F, nil
+      return &g.F, nil
     }
   }
   
-  return g.T, nil
+  return &g.T, nil
 }
 
 func int_lt_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -313,13 +313,13 @@ func int_lt_imp(g *G, args Vec, env *Env) (Val, E) {
     rhs := a.(Int)
     
     if rhs <= lhs {
-      return g.F, nil
+      return &g.F, nil
     }
 
     lhs = rhs
   }
   
-  return g.T, nil
+  return &g.T, nil
 }
 
 func int_add_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -404,9 +404,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.TrueType, "True")
   e.AddType(g, &g.VecType, "Vec")
   
-  e.AddVal(g, "_", g.NIL)
-  e.AddVal(g, "T", g.T)
-  e.AddVal(g, "F", g.F)
+  e.AddVal(g, "_", &g.NIL)
+  e.AddVal(g, "T", &g.T)
+  e.AddVal(g, "F", &g.F)
   
   e.AddPrim(g, "do", do_imp, "body..")
   e.AddPrim(g, "fun", fun_imp, "args", "body..")
