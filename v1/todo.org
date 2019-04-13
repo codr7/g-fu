@@ -14,7 +14,7 @@
 * add Task type
 ** move G.RootEnv
 *** add G.MainTask
-** add (task (nbuf) ...) prim
+** add (task (inbox-chan) ...) prim
 *** return *Task
 ** pass *Task as separate Eval arg
 ** add NewTask(nbuf Int, body Val) *Task
