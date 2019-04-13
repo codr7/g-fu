@@ -33,11 +33,11 @@ func (f *Fun) Call(g *G, args Vec, env *Env) (Val, E) {
   avs, e := args.EvalVec(g, env)
 
   if e != nil {
-    return g.NIL, g.E("Args eval failed: %v", e)
+    return nil, g.E("Args eval failed: %v", e)
   }
 
   if e := f.arg_list.Check(g, avs); e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
   if f.imp != nil {
@@ -53,7 +53,7 @@ recall:
   if v, e = f.body.EvalExpr(g, &be); e != nil {
     g.recall_args = nil
     g.recall = false
-    return g.NIL, e
+    return nil, e
   }
   
   if g.recall {

@@ -44,7 +44,7 @@ func (g *G) EvalString(pos Pos, s string, env *Env) (Val, E) {
     vs, e := g.Read(&pos, in, Vec(out), 0)
     
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
     
     if vs == nil {
@@ -61,7 +61,7 @@ func (g *G) Load(fname string, env *Env) (Val, E) {
   s, e := ioutil.ReadFile(fname)
   
   if e != nil {
-    return g.NIL, g.E("Failed loading file: %v\n%v", fname, e)
+    return nil, g.E("Failed loading file: %v\n%v", fname, e)
   }
 
   var pos Pos

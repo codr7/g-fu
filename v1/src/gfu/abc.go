@@ -72,7 +72,7 @@ func let_imp(g *G, args Vec, env *Env) (Val, E) {
     kf, vf := bs[i], bs[i+1]
 
     if _, ok := kf.(*Sym); !ok {
-      return g.NIL, g.E("Invalid let key: %v", kf)
+      return nil, g.E("Invalid let key: %v", kf)
     }
 
     k := kf.(*Sym)
@@ -118,8 +118,7 @@ func if_imp(g *G, args Vec, env *Env) (Val, E) {
 
 func and_imp(g *G, args Vec, env *Env) (Val, E) {
   var e E
-  var v Val
-  v = g.NIL
+  var v Val = g.NIL
   
   for _, in := range args {
     v, e = in.Eval(g, env)
@@ -190,7 +189,7 @@ func for_imp(g *G, args Vec, env *Env) (Val, E) {
   
   for i := Int(0); i < n; i++ {
     if v, e = b.EvalExpr(g, env); e != nil {
-      return g.NIL, e
+      return nil, e
     }
   }
   
@@ -256,7 +255,7 @@ func eval_imp(g *G, args Vec, env *Env) (Val, E) {
 
 func recall_imp(g *G, args Vec, env *Env) (Val, E) {
   if g.recall {
-    return g.NIL, g.E("Recall already in progress")
+    return nil, g.E("Recall already in progress")
   }
 
   g.recall = true
@@ -391,7 +390,7 @@ func vec_pop_imp(g *G, args Vec, env *Env) (Val, E) {
   _, found := env.Find(id)
 
   if found == nil {
-    return g.NIL, g.E("Unknown var: %v", id)
+    return nil, g.E("Unknown var: %v", id)
   }
   
   var v Val

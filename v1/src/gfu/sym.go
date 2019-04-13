@@ -41,7 +41,7 @@ func (s *Sym) Eval(g *G, env *Env) (Val, E) {
   _, found := env.Find(s)
 
   if found == nil {
-    return g.NIL, g.E("Unknown: %v", s)
+    return nil, g.E("Unknown: %v", s)
   }
 
   return found.Val, nil

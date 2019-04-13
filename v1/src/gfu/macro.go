@@ -30,12 +30,12 @@ func (m *Macro) Call(g *G, args Vec, env *Env) (v Val, e E) {
   
   for i, a := range args {
     if avs[i], e = a.Quote(g, env); e != nil {
-      return g.NIL, e
+      return nil, e
     }
   }
 
   if e = m.arg_list.Check(g, args); e != nil {
-    return g.NIL, e
+    return nil, e
   }
   
   var be Env
@@ -43,7 +43,7 @@ func (m *Macro) Call(g *G, args Vec, env *Env) (v Val, e E) {
   m.arg_list.PutEnv(g, &be, args)
 
   if v, e = m.body.EvalExpr(g, &be); e != nil {
-    return g.NIL, e
+    return nil, e
   }
   
   return v.Eval(g, env)

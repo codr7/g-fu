@@ -27,7 +27,7 @@ func (_ *Prim) Bool(g *G) bool {
 
 func (p *Prim) Call(g *G, args Vec, env *Env) (Val, E) {
   if e := p.arg_list.Check(g, args); e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
   return p.imp(g, args, env)
