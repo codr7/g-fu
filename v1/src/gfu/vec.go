@@ -147,19 +147,17 @@ func (v Vec) Pop(g *G) (Val, Vec) {
 }
 
 func (v Vec) Quote(g *G, env *Env) (Val, E) {
-  var out Vec
+  var e E
 
-  for _, it := range v {
-    q, e := it.Quote(g, env)
+  for i, it := range v {
+    v[i], e = it.Quote(g, env)
 
     if e != nil {
       return nil, e
     }
-    
-    out = out.Push(q)
   }
 
-  return out, nil
+  return v, nil
 }
 
 func (v Vec) Splat(g *G, out Vec) Vec {
