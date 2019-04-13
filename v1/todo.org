@@ -9,6 +9,8 @@
 **** update test/bench
 ** add bench/stack
 *** grab from snigl
+* change bench to take vec arg for reps
+** update bench/
 * add Task type
 ** move G.RootEnv
 *** add G.MainTask
@@ -49,22 +51,3 @@
 ** update loop test/readme
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
-
-(let loop (macro (body..)
-  (let done !g-sym result !g-sym)
-  
-  '(let (break (macro (args..) '(recall T %args..)))
-     !(fun (%done? %result..)
-        (if %done %result.. (do %body.. !recall))))))
-
-(dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
-
-(let while (macro (cond body..)
-  '(loop
-     (if %cond _ !break)
-     %body..)))
-
-(let (i 0)
-  (while (< i 7)
-    (dump i)
-    (inc i)))
