@@ -19,10 +19,12 @@ type G struct {
   recall_args Vec
   
   MetaType,
-  BoolType, FunType, IntType, MacroType, NilType, OptType, PrimType, QuoteType,
-  SplatType, SpliceType, SymType, VecType Type
+  FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType, QuoteType,
+  SplatType, SpliceType, SymType, TrueType, VecType Type
   
-  NIL, T, F Val
+  NIL Nil
+  T True
+  F False
 }
 
 func NewG() (*G, E) {

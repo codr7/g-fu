@@ -1,5 +1,10 @@
 package gfu
 
+import (
+  "fmt"
+  "strings"
+)
+
 type PrimImp func (*G, Vec, *Env) (Val, E)
 
 type Prim struct {
@@ -16,8 +21,47 @@ func NewPrim(g *G, id *Sym, imp PrimImp, args []*Sym) *Prim {
   return p
 }
 
+func (_ *Prim) Bool(g *G) bool {
+  return true
+}
+
+func (p *Prim) Call(g *G, args Vec, env *Env) (Val, E) {
+  if e := p.arg_list.Check(g, args); e != nil {
+    return g.NIL, e
+  }
+
+  return p.imp(g, args, env)
+}
+
+func (p *Prim) Dump(out *strings.Builder) {
+  fmt.Fprintf(out, "(Prim %v)", p.id)
+}
+
+func (p *Prim) Eq(g *G, rhs Val) bool {
+  return p == rhs
+}
+
+func (p *Prim) Eval(g *G, env *Env) (Val, E) {
+  return p, nil
+}
+
+func (p *Prim) Is(g *G, rhs Val) bool {
+  return p == rhs
+}
+
+func (p *Prim) Quote(g *G, env *Env) (Val, E) {
+  return p, nil
+}
+
+func (p *Prim) Splat(g *G, out Vec) Vec {
+  return append(out, p)
+}
+
+func (p *Prim) Type(g *G) *Type {
+  return &g.PrimType
+}
+
 func (e *Env) AddPrim(g *G, id string, imp PrimImp, args...string) {
-  var p Val
   ids := g.Sym(id)
   as := make([]*Sym, len(args))
 
@@ -25,6 +69,5 @@ func (e *Env) AddPrim(g *G, id string, imp PrimImp, args...string) {
     as[i] = g.Sym(a)
   }
 
-  p.Init(g.PrimType, NewPrim(g, ids, imp, as))
-  e.Put(ids, p)
+  e.Put(ids, NewPrim(g, ids, imp, as))
 }

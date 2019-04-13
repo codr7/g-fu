@@ -101,9 +101,7 @@ func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
         copy(v, args[i:])
       }
       
-      var vv Val
-      vv.Init(g.VecType, v)
-      env.Put(a.id, vv)
+      env.Put(a.id, v)
       break
     }
 
@@ -123,12 +121,12 @@ func (vs Args) Parse(g *G) ([]*Sym, E) {
   for _, v := range vs {
     var id *Sym
     
-    if v.val_type == g.SymType {
-      id = v.AsSym()
-    } else if v.val_type == g.OptType {
-      id = g.Sym(fmt.Sprintf("%v?", v.AsOpt().AsSym()))
-    } else if v.val_type == g.SplatType {
-      id = g.Sym(fmt.Sprintf("%v..", v.AsSplat().AsSym())) 
+    if sv, ok := v.(*Sym); ok {
+      id = sv
+    } else if ov, ok := v.(Opt); ok {
+      id = g.Sym(fmt.Sprintf("%v?", ov.val.(*Sym)))
+    } else if sv, ok := v.(Splat); ok {
+      id = g.Sym(fmt.Sprintf("%v..", sv.val.(*Sym)))
     } else {
       return nil, g.E("Invalid arg: %v", v)
     }

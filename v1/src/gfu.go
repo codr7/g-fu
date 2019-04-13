@@ -39,7 +39,7 @@ func main() {
   args := flag.Args()
   
   if len(args) == 0 {
-    fmt.Printf("g-fu v1.5\n\nPress Return twice to evaluate.\n\n  ")
+    fmt.Printf("g-fu v1.6\n\nPress Return twice to evaluate.\n\n  ")
     in := bufio.NewScanner(os.Stdin)
     var buf strings.Builder
     
@@ -49,7 +49,7 @@ func main() {
       if len(line) == 0 {
         if buf.Len() > 0 {
           v, e := g.EvalString(gfu.INIT_POS, buf.String(), &g.RootEnv)
-          
+
           if e == nil {
             fmt.Printf("\r%v\n", v)
           } else {

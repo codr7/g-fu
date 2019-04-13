@@ -15,52 +15,46 @@ func do_imp(g *G, args Vec, env *Env) (Val, E) {
 func fun_imp(g *G, args Vec, env *Env) (Val, E) {
   avs := args[0]
   
-  if avs.val_type != g.VecType {
-    return g.NIL, g.E("Invalid args: %v", avs)
+  if _, ok := avs.(Vec); !ok {
+    return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.AsVec()).Parse(g)
+  as, e := Args(avs.(Vec)).Parse(g)
 
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
   f := NewFun(g, env, as)
   f.body = args[1:]
-  
-  var v Val
-  v.Init(g.FunType, f)
-  return v, nil
+  return f, nil
 }
 
 func macro_imp(g *G, args Vec, env *Env) (Val, E) {
   avs := args[0]
   
-  if avs.val_type != g.VecType {
-    return g.NIL, g.E("Invalid args: %v", avs)
+  if _, ok := avs.(Vec); !ok {
+    return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.AsVec()).Parse(g)
+  as, e := Args(avs.(Vec)).Parse(g)
 
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
   m := NewMacro(g, env, as)
   m.body = args[1:]
-  
-  var v Val
-  v.Init(g.MacroType, m)
-  return v, nil
+  return m, nil
 }
 
 func let_imp(g *G, args Vec, env *Env) (Val, E) {
   bsf := args[0]
   var bs Vec
-  is_scope := bsf.val_type == g.VecType
+  _, is_scope := bsf.(Vec)
   
   if is_scope {
-    bs = bsf.AsVec()
+    bs = bsf.(Vec)
   } else {
     bs = args
   }
@@ -77,15 +71,15 @@ func let_imp(g *G, args Vec, env *Env) (Val, E) {
   for i := 0; i < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
-    if kf.val_type != g.SymType {
+    if _, ok := kf.(*Sym); !ok {
       return g.NIL, g.E("Invalid let key: %v", kf)
     }
 
-    k := kf.AsSym()
+    k := kf.(*Sym)
     v, e := vf.Eval(g, le)
 
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
 
     le.Put(k, v)
@@ -98,7 +92,7 @@ func let_imp(g *G, args Vec, env *Env) (Val, E) {
   rv, e := args[1:].EvalExpr(g, le)
   
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
   
   return rv, nil
@@ -108,10 +102,10 @@ func if_imp(g *G, args Vec, env *Env) (Val, E) {
   c, e := args[0].Eval(g, env)
 
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
-  if c.AsBool(g) {
+  if c.Bool(g) {
     return args[1].Eval(g, env)
   }
 
@@ -124,16 +118,17 @@ func if_imp(g *G, args Vec, env *Env) (Val, E) {
 
 func and_imp(g *G, args Vec, env *Env) (Val, E) {
   var e E
-  v := g.NIL
+  var v Val
+  v = g.NIL
   
   for _, in := range args {
     v, e = in.Eval(g, env)
 
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
     
-    if !v.AsBool(g) {
+    if !v.Bool(g) {
       return g.F, nil
     }
   }
@@ -146,10 +141,10 @@ func or_imp(g *G, args Vec, env *Env) (Val, E) {
     v, e := in.Eval(g, env)
 
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
     
-    if v.AsBool(g) {
+    if v.Bool(g) {
       return v, nil
     }
   }
@@ -158,42 +153,42 @@ func or_imp(g *G, args Vec, env *Env) (Val, E) {
 }
 
 func inc_imp(g *G, args Vec, env *Env) (Val, E) {
-  id := args[0].AsSym()
+  id := args[0].(*Sym)
   _, found := env.Find(id)
 
   if found == nil {
-    return g.NIL, g.E("Unknown var: %v", id)
+    return nil, g.E("Unknown var: %v", id)
   }
 
-  d := 1
+  d := Int(1)
   
   if len(args) == 2 {
     dv, e := args[1].Eval(g, env)
 
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
 
-    d = dv.AsInt()
+    d = dv.(Int)
   }
 
-  v := &found.Val
-  v.imp = v.AsInt() + d
-  return *v, nil
+  v := found.Val.(Int) + d
+  found.Val = v
+  return v, nil
 }
 
 func for_imp(g *G, args Vec, env *Env) (Val, E) {
   nv, e := args[0].Eval(g, env)
 
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
-  n := nv.AsInt()
+  n := nv.(Int)
   b := args[1:]
-  v := g.NIL
+  var v Val = g.NIL
   
-  for i := 0; i < n; i++ {
+  for i := Int(0); i < n; i++ {
     if v, e = b.EvalExpr(g, env); e != nil {
       return g.NIL, e
     }
@@ -207,11 +202,11 @@ func test_imp(g *G, args Vec, env *Env) (Val, E) {
     v, e := in.Eval(g, env)
 
     if e != nil {
-      return g.NIL, e
+      return nil, e
     }
 
-    if !v.AsBool(g) {
-      return g.NIL, g.E("Test failed: %v", in)
+    if !v.Bool(g) {
+      return nil, g.E("Test failed: %v", in)
     }
   }
 
@@ -222,27 +217,25 @@ func bench_imp(g *G, args Vec, env *Env) (Val, E) {
   nv, e := args[0].Eval(g, env)
 
   if e != nil {
-    return g.NIL, e
+    return nil, e
   }
 
-  n := nv.AsInt()
+  n := nv.(Int)
   b := args[1:]
 
-  for i := 0; i < n; i++ {
+  for i := Int(0); i < n; i++ {
     b.EvalExpr(g, env)
   }
 
   t := time.Now()
   
-  for i := 0; i < n; i++ {
+  for i := Int(0); i < n; i++ {
     if _, e = b.EvalExpr(g, env); e != nil {
-      return g.NIL, e
+      return nil, e
     }
   }
 
-  var v Val
-  v.Init(g.IntType, time.Now().Sub(t).Nanoseconds() / 1000000) 
-  return v, nil
+  return Int(time.Now().Sub(t).Nanoseconds() / 1000000), nil
 }
 
 func dump_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -281,21 +274,23 @@ func g_sym_imp(g *G, args Vec, env *Env) (Val, E) {
     n = fmt.Sprintf("g-%v", t)
   }
   
-  var out Val
-  out.Init(g.SymType, g.Sym(n))
-  return out, nil
+  return g.Sym(n), nil
 }
 
 func bool_imp(g *G, args Vec, env *Env) (Val, E) {
-  v := args[0]
-  v.Init(g.BoolType, v.AsBool(g))
-  return v, nil
+  if b := args[0].Bool(g); b {
+    return g.T, nil
+  }
+
+  return g.F, nil
 }
 
 func not_imp(g *G, args Vec, env *Env) (Val, E) {
-  v := args[0]
-  v.Init(g.BoolType, !v.AsBool(g))
-  return v, nil
+  if b := args[0].Bool(g); b {
+    return g.F, nil
+  }
+
+  return g.T, nil
 }
 
 func eq_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -303,13 +298,11 @@ func eq_imp(g *G, args Vec, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Eq(g, v) {
-      v.Init(g.BoolType, false)
-      return v, nil
+      return g.F, nil
     }
   }
   
-  v.Init(g.BoolType, true)
-  return v, nil
+  return g.T, nil
 }
 
 func is_imp(g *G, args Vec, env *Env) (Val, E) {
@@ -317,126 +310,114 @@ func is_imp(g *G, args Vec, env *Env) (Val, E) {
   
   for _, iv := range args[1:] {
     if !iv.Is(g, v) {
-      v.Init(g.BoolType, false)
-      return v, nil
+      return g.F, nil
     }
   }
   
-  v.Init(g.BoolType, true)
-  return v, nil
+  return g.T, nil
 }
 
 func int_lt_imp(g *G, args Vec, env *Env) (Val, E) {
-  v := args[0]
-  a0 := v.AsInt()
+  lhs := args[0].(Int)
   
   for _, a := range args[1:] {
-    if a.AsInt() <= a0 {
-      v.Init(g.BoolType, false)
-      return v, nil
+    rhs := a.(Int)
+    
+    if rhs <= lhs {
+      return g.F, nil
     }
+
+    lhs = rhs
   }
   
-  v.Init(g.BoolType, true)
-  return v, nil
+  return g.T, nil
 }
 
 func int_add_imp(g *G, args Vec, env *Env) (Val, E) {
   if len(args) == 1 {
-    v := args[0]
-    v.imp = Abs(v.AsInt())
-    return v, nil
+    return args[0].(Int).Abs(), nil
   }
   
-  var v int
+  var v Int
 
   for _, iv := range args {
-    v += iv.AsInt()
+    v += iv.(Int)
   }
   
-  var out Val
-  out.Init(g.IntType, v)
-  return out, nil
-}
-
-func int_sub_imp(g *G, args Vec, env *Env) (Val, E) {
-  var out Val
-  v := args[0].AsInt()
-
-  if len(args) == 1 {
-    out.Init(g.IntType, -v)
-  } else {    
-    for _, iv := range args[1:] {
-      v -= iv.AsInt()
-    }
-    
-    out.Init(g.IntType, v)
-  }
-  
-  return out, nil
-}
-
-func vec_imp(g *G, args Vec, env *Env) (Val, E) {
-  var out Val
-  out.Init(g.VecType, args)
-  return out, nil
-}
-
-func vec_len_imp(g *G, args Vec, env *Env) (Val, E) {
-  v := args[0]  
-  v.Init(g.IntType, len(v.AsVec()))
   return v, nil
 }
 
+func int_sub_imp(g *G, args Vec, env *Env) (Val, E) {
+  v := args[0].(Int)
+
+  if len(args) == 1 {
+    return -v, nil
+  }
+
+  for _, iv := range args[1:] {
+    v -= iv.(Int)
+  }
+  
+  return v, nil
+}
+
+func vec_imp(g *G, args Vec, env *Env) (Val, E) {
+  return args, nil
+}
+
+func vec_len_imp(g *G, args Vec, env *Env) (Val, E) {
+  return args[0].(Vec).Len(), nil
+}
+
 func vec_push_imp(g *G, args Vec, env *Env) (Val, E) {
-  id := args[0].AsSym()
+  id := args[0].(*Sym)
   _, found := env.Find(id)
 
   if found == nil {
-    return g.NIL, g.E("Unknown var: %v", id)
+    return nil, g.E("Unknown var: %v", id)
   }
 
-  v := &found.Val
-  v.imp = v.AsVec().Push(args[1:]...)
-  return *v, nil
+  v := found.Val.(Vec).Push(args[1:]...)
+  found.Val = v
+  return v, nil
 }
 
 func vec_peek_imp(g *G, args Vec, env *Env) (Val, E) {
-  return args[0].AsVec().Peek(g), nil
+  return args[0].(Vec).Peek(g), nil
 }
 
 func vec_pop_imp(g *G, args Vec, env *Env) (Val, E) {
-  id := args[0].AsSym()
+  id := args[0].(*Sym)
   _, found := env.Find(id)
 
   if found == nil {
     return g.NIL, g.E("Unknown var: %v", id)
   }
-
-  v := &found.Val
-  var out Val
-  out, v.imp = v.AsVec().Pop(g)
-  return out, nil
+  
+  var v Val
+  v, found.Val = found.Val.(Vec).Pop(g)
+  return v, nil
 }
 
 func (e *Env) InitAbc(g *G) {
-  g.MetaType = e.AddType(g, "Meta", new(MetaType))
-  g.BoolType = e.AddType(g, "Bool", new(BoolType))
-  g.FunType = e.AddType(g, "Fun", new(FunType))
-  g.IntType = e.AddType(g, "Int", new(IntType))
-  g.MacroType = e.AddType(g, "Macro", new(MacroType))
-  g.NilType = e.AddType(g, "Nil", new(NilType))
-  g.OptType = e.AddType(g, "Opt", new(OptType))
-  g.PrimType = e.AddType(g, "Prim", new(PrimType))
-  g.QuoteType = e.AddType(g, "Quote", new(QuoteType))
-  g.SpliceType = e.AddType(g, "Splice", new(SpliceType))
-  g.SplatType = e.AddType(g, "Splat", new(SplatType))
-  g.SymType = e.AddType(g, "Sym", new(SymType))
-  g.VecType = e.AddType(g, "Vec", new(VecType))
+  e.AddType(g, &g.MetaType, "Meta")
+  e.AddType(g, &g.FalseType, "False")
+  e.AddType(g, &g.FunType, "Fun")
+  e.AddType(g, &g.IntType, "Int")
+  e.AddType(g, &g.MacroType, "Macro")
+  e.AddType(g, &g.NilType, "Nil")
+  e.AddType(g, &g.OptType, "Opt")
+  e.AddType(g, &g.PrimType, "Prim")
+  e.AddType(g, &g.QuoteType, "Quote")
+  e.AddType(g, &g.SpliceType, "Splice")
+  e.AddType(g, &g.SplatType, "Splat")
+  e.AddType(g, &g.SymType, "Sym")
+  e.AddType(g, &g.TrueType, "True")
+  e.AddType(g, &g.VecType, "Vec")
   
-  e.AddVal(g, "_", g.NilType, nil, &g.NIL)
-  e.AddVal(g, "T", g.BoolType, true, &g.T)
-  e.AddVal(g, "F", g.BoolType, false, &g.F)
+  e.AddVal(g, "_", g.NIL)
+  e.AddVal(g, "T", g.T)
+  e.AddVal(g, "F", g.F)
   
   e.AddPrim(g, "do", do_imp, "body..")
   e.AddPrim(g, "fun", fun_imp, "args", "body..")

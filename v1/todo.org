@@ -1,15 +1,23 @@
+* simplify Wrap types to alias
+* replace g.NIL with nil on error
+* add BasicVal with default imps
+** use as base for Nil/Vec/Sym/Fun/Macro/Prim/Wrap
+* replace g.sym_tag with len(syms)
+* fix test/all while loop
 * add @ reader support
+** add Pos type
 ** replace with current pos
-* move Type into Val
-** use bare Type */Int as types
-** tag vars with env and COW external
-* --
-* add expand(form n?) fun
 * simplify args
 ** pass as Vec, not []*Sym
 * optimize vec splats
 ** don't allocate new vec if no splats
 ** bench
+* add lib/iter.gf
+** move loops from testloop.gf
+** add Str type
+** add load fun
+** load iter.gf from test/all
+* add expand(form n?) fun
 * vec iter
 * transducers
 * replace for-prim with loop macro
