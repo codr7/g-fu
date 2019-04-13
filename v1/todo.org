@@ -1,9 +1,9 @@
-* simplify Wrap types to alias
 * replace g.NIL with nil on error
 * add BasicVal with default imps
 ** use as base for Nil/Vec/Sym/Fun/Macro/Prim/Wrap
 * replace g.sym_tag with len(syms)
 * fix test/all while loop
+** add Ref type?
 * add @ reader support
 ** add Pos type
 ** replace with current pos

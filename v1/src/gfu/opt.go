@@ -10,7 +10,7 @@ type Opt struct {
 }
 
 func NewOpt(val Val) (o Opt) {
-  o.Wrap.val = val
+  o.val = val
   return o
 }
 

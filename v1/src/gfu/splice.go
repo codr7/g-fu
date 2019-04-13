@@ -10,7 +10,7 @@ type Splice struct {
 }
 
 func NewSplice(val Val) (s Splice) {
-  s.Wrap.val = val
+  s.val = val
   return s
 }
 

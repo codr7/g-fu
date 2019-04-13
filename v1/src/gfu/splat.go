@@ -10,7 +10,7 @@ type Splat struct {
 }
 
 func NewSplat(val Val) (s Splat) {
-  s.Wrap.val = val
+  s.val = val
   return s
 }
 

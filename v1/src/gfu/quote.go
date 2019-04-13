@@ -10,7 +10,7 @@ type Quote struct {
 }
 
 func NewQuote(val Val) (q Quote) {
-  q.Wrap.val = val
+  q.val = val
   return q
 }
 
