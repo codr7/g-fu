@@ -77,12 +77,12 @@ foo
 Channels are optionally buffered thread-safe queues, new channels may be created using `chan`.
 
 ```
-  (chan)
+  (chan 10)
 
 (Chan 0xc00005a240)
 ```
 
-Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task, which then replies with `'foo` and finally returns `'bar`
+Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task `t`, which then replies `'foo` and finally returns `'bar`
 
 ```
   (let (t (task _
