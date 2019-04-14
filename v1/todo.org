@@ -1,6 +1,3 @@
-* debug difference between testwhile.gf & test/all
-** enable while test
-** commit env update
 * simplify args
 ** pass as Vec, not []*Sym
 * replace opt with nested Vec
