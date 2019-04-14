@@ -52,14 +52,19 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
     return &g.NIL, nil
   }
   
-  first := v[0]
-  first_val, e := first.Eval(g, task, env)
+  f := v[0]
+  
+  if s, ok := f.(*Sym); ok && s == g.nil_sym {
+    return &g.NIL, nil
+  }
+  
+  fv, e := f.Eval(g, task, env)
   
   if e != nil {
     return nil, e
   }
 
-  result, e := first_val.Call(g, task, env, v[1:])
+  result, e := fv.Call(g, task, env, v[1:])
   
   if e != nil {
     return nil, g.E("Call failed: %v", e)

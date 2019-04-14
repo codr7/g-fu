@@ -5,6 +5,8 @@
 * replace opt with nested Vec
 ** foo? -> (foo _)
 ** remove Opt type
+** add _? fun
+*** true if nil
 * add for-var support
 ** (for (10 i) ...)
 *** always expect Vec

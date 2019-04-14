@@ -10,6 +10,7 @@ import (
 type G struct {
   syms sync.Map
   nsyms uint64
+  nil_sym *Sym
   
   Debug bool  
   MainTask Task
@@ -29,6 +30,7 @@ func NewG() (*G, E) {
 }
 
 func (g *G) Init() (*G, E) {
+  g.nil_sym = g.Sym("_")
   g.MainTask.Init(g, NewChan(0), nil)
   return g, nil
 }

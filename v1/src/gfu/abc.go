@@ -389,24 +389,26 @@ func vec_pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  as, e := args[0].Eval(g, task, env)
-
-  if e != nil {
-    return nil, e
-  }
-
+  var e E
+  as := args[0]
   var inbox Chan
   
   if v, ok := as.(Vec); ok {
-    a0 := v[0]
-    
+    var a0 Val
+
+    if a0, e = v[0].Eval(g, task, env); e != nil {
+      return nil, e
+    }
+
     if v, ok := a0.(Int); ok {
       inbox = NewChan(v)
     } else {
       inbox = a0.(Chan)
     }
-  } else {
+  } else if s, ok := as.(*Sym); ok && s == g.nil_sym {
     inbox = NewChan(0)
+  } else {
+    return nil, g.E("Invalid task args: %v", as)
   }
 
   t := NewTask(g, inbox, args[1:])

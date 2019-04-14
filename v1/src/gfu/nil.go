@@ -12,8 +12,8 @@ func (_ *Nil) Bool(g *G) bool {
   return false
 }
 
-func (n *Nil) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return n, nil
+func (_ *Nil) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return nil, g.E("Nil call")
 }
   
 func (_ *Nil) Dump(out *strings.Builder) {

@@ -1,3 +1,5 @@
+(test (= (_ foo bar baz) _))
+
 (test (bool 42))
 (test (not (vec)))
 
