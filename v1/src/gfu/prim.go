@@ -13,7 +13,7 @@ type Prim struct {
   imp PrimImp
 }
 
-func NewPrim(g *G, id *Sym, imp PrimImp, args []*Sym) *Prim {
+func NewPrim(g *G, id *Sym, imp PrimImp, args []Arg) *Prim {
   p := new(Prim)
   p.id = id
   p.arg_list.Init(g, args)
@@ -61,13 +61,20 @@ func (p *Prim) Type(g *G) *Type {
   return &g.PrimType
 }
 
-func (e *Env) AddPrim(g *G, id string, imp PrimImp, args...string) {
+func (env *Env) AddPrim(g *G, id string, imp PrimImp, args...string) E {
   ids := g.Sym(id)
-  as := make([]*Sym, len(args))
+  vs := make(Vec, len(args))
 
   for i, a := range args {
-    as[i] = g.Sym(a)
+    vs[i] = g.Sym(a)
   }
 
-  e.Put(ids, NewPrim(g, ids, imp, as))
+  as, e := ParseArgs(g, vs)
+
+  if e != nil {
+    return e
+  }
+
+  env.Put(ids, NewPrim(g, ids, imp, as))
+  return nil
 }

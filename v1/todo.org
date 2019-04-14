@@ -1,23 +1,20 @@
-* simplify args
-** pass as Vec, not []*Sym
-* replace opt with nested Vec
+* replace opt arg with nested Vec
 ** foo? -> (foo _)
 ** remove Opt type
-** add _? fun
-*** true if nil
 * add for-var support
 ** (for (10 i) ...)
 *** always expect Vec
 **** update test/bench
 ** add bench/stack
 *** grab from snigl
-* change bench to take vec arg for reps
-** update bench/
 * add load fun
 ** add Str type
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
+
+* change bench to take vec arg for reps
+** update bench/
 * dlambda
 ** https://letoverlambda.com/index.cl/guest/chap5.html#sec_7
 ** add map fun

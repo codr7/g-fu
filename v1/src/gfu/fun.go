@@ -15,11 +15,11 @@ type Fun struct {
   imp FunImp
 }
 
-func NewFun(g *G, env *Env, args []*Sym) *Fun {
+func NewFun(g *G, env *Env, args []Arg) *Fun {
   return new(Fun).Init(g, env, args)
 }
 
-func (f *Fun) Init(g *G, env *Env, args []*Sym) *Fun {
+func (f *Fun) Init(g *G, env *Env, args []Arg) *Fun {
   f.env = env
   f.arg_list.Init(g, args)
   return f
@@ -117,14 +117,21 @@ func (f *Fun) Type(g *G) *Type {
   return &g.FunType
 }
 
-func (e *Env) AddFun(g *G, id string, imp FunImp, args...string) {
-  as := make([]*Sym, len(args))
+func (env *Env) AddFun(g *G, id string, imp FunImp, args...string) E {
+  vs := make(Vec, len(args))
 
   for i, a := range args {
-    as[i] = g.Sym(a)
+    vs[i] = g.Sym(a)
+  }
+
+  as, e := ParseArgs(g, vs)
+
+  if e != nil {
+    return e
   }
   
-  f := NewFun(g, e, as)
+  f := NewFun(g, env, as)
   f.imp = imp
-  e.Put(g.Sym(id), f)
+  env.Put(g.Sym(id), f)
+  return nil
 }

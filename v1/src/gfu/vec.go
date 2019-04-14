@@ -57,7 +57,7 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
   if s, ok := f.(*Sym); ok && s == g.nil_sym {
     return &g.NIL, nil
   }
-  
+
   fv, e := f.Eval(g, task, env)
   
   if e != nil {

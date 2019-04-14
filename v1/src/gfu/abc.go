@@ -18,7 +18,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.(Vec)).Parse(g)
+  as, e := ParseArgs(g, avs.(Vec))
 
   if e != nil {
     return nil, e
@@ -36,7 +36,7 @@ func macro_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := Args(avs.(Vec)).Parse(g)
+  as, e := ParseArgs(g, avs.(Vec))
 
   if e != nil {
     return nil, e

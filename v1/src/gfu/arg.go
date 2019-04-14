@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "fmt"
   //"log"
   "strings"
 )
@@ -43,30 +42,20 @@ type ArgList struct {
   min, max int
 }
 
-func (l *ArgList) Init(g *G, args []*Sym) *ArgList {
+func (l *ArgList) Init(g *G, args []Arg) *ArgList {
   nargs := len(args)
   
   if nargs == 0 {
     return l
   }
   
-  l.items = make([]Arg, nargs)
+  l.items = args
   l.min, l.max = nargs, nargs
   
-  for i, id := range args {
-    a := &l.items[i]
-    a.Init(id)
-
-    if strings.HasSuffix(id.name, "?") {
-      a.arg_type = ARG_OPT
-      idn := id.name
-      a.id = g.Sym(idn[:len(idn)-1])
+  for _, a := range args {
+    if a.arg_type == ARG_OPT {
       l.min--
-    } else if strings.HasSuffix(id.name, "..") {
-      a.arg_type = ARG_SPLAT
-      idn := id.name
-      a.id = g.Sym(idn[:len(idn)-2])
-    }
+    } 
   }
   
   a := l.items[nargs-1]
@@ -113,25 +102,35 @@ func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
   }
 }
 
-type Args Vec
-
-func (vs Args) Parse(g *G) ([]*Sym, E) {
-  var out []*Sym
+func ParseArgs(g *G, in Vec) ([]Arg, E) {
+  var out []Arg
   
-  for _, v := range vs {
-    var id *Sym
+  for _, v := range in {
+    var a Arg
     
-    if sv, ok := v.(*Sym); ok {
-      id = sv
+    if id, ok := v.(*Sym); ok {
+      idn := id.name
+
+      if strings.HasSuffix(idn, "?") {
+        a.arg_type = ARG_OPT
+        a.id = g.Sym(idn[:len(idn)-1])
+      } else if strings.HasSuffix(idn, "..") {
+        a.arg_type = ARG_SPLAT
+        a.id = g.Sym(idn[:len(idn)-2])
+      } else {
+        a.id = id
+      }
     } else if ov, ok := v.(Opt); ok {
-      id = g.Sym(fmt.Sprintf("%v?", ov.val.(*Sym)))
+      a.arg_type = ARG_OPT
+      a.id = ov.val.(*Sym)
     } else if sv, ok := v.(Splat); ok {
-      id = g.Sym(fmt.Sprintf("%v..", sv.val.(*Sym)))
+      a.arg_type = ARG_SPLAT
+      a.id = sv.val.(*Sym)
     } else {
       return nil, g.E("Invalid arg: %v", v)
     }
     
-    out = append(out, id)
+    out = append(out, a)
   }
 
   return out, nil
