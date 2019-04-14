@@ -84,6 +84,13 @@
       t2 (task _ 7))
   (test (= (+ (wait t1 t2)..) 42)))
 
+(let (t (task (0)
+          (post (fetch) 'foo)
+          'bar))
+  (post t (this-task))
+  (test (= (fetch) 'foo))
+  (test (= (wait t) 'bar)))
+
 
 (let loop (macro (body..)
   (let done (g-sym) result (g-sym))

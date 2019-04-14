@@ -1,5 +1,3 @@
-* add chan test
-** readme
 * add Env.Update(key, func(Val) (Val, E)) E
 ** add Var.env, set on put
 *** follow on update

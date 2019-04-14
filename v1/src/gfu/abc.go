@@ -416,6 +416,10 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t, nil
 }
 
+func task_this_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return task, nil
+}
+
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   t := args[0]
 
@@ -520,6 +524,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "pop", vec_pop_imp, "vec")
 
   e.AddPrim(g, "task", task_imp, "args", "body..")
+  e.AddFun(g, "this-task", task_this_imp)
   e.AddFun(g, "post", task_post_imp, "task", "vals..")
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, "tasks..")

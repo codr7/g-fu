@@ -77,11 +77,24 @@ foo
 Channels are optionally buffered thread-safe queues, new channels may be created using `chan`.
 
 ```
-  (chan 1)
+  (chan)
 
 (Chan 0xc00005a240)
 ```
 
+Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task, which then replies with `'foo` and finally returns `'bar`
+
+```
+  (let (t (task (0)
+            (post (fetch) 'foo)
+            'bar))
+    (post t (this-task))
+    (dump (fetch))
+    (dump (wait t)))
+
+foo
+bar
+```
 
 ### Profiling
 CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_tail.prof` in the following example.
