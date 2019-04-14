@@ -6,7 +6,7 @@ import (
   "strings"
 )
 
-type Int int
+type Int int64
 
 func (i Int) Abs() Int {
   if i < 0 {
