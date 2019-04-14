@@ -400,7 +400,7 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   if v, ok := as.(Vec); ok {
     log.Printf("task_imp vec args: %v", v)
   }
-  
+
   t := NewTask(g, inbox, args[1:])
   t.Start(g, env)
   return t, nil
@@ -422,8 +422,21 @@ func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return out, nil
 }
 
+func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  buf := Int(0)
+
+  if len(args) > 0 {
+    if v, ok := args[0].(Int); ok {
+      buf = v
+    }
+  }
+
+  return NewChan(buf), nil
+}
+
 func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.MetaType, "Meta")
+  e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int")
@@ -478,4 +491,5 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddPrim(g, "task", task_imp, "args body..")
   e.AddFun(g, "wait", task_wait_imp, "tasks..")
+  e.AddFun(g, "chan", chan_imp, "buf?")
 }

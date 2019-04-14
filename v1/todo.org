@@ -1,4 +1,6 @@
-* add g.Chan type
+* add chan send/recv
+** test
+** readme
 * simplify args
 ** pass as Vec, not []*Sym
 * replace opt with nested Vec

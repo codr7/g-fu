@@ -16,7 +16,7 @@ type G struct {
   RootEnv Env
 
   MetaType,
-  FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType,
+  ChanType, FalseType, FunType, IntType, MacroType, NilType, OptType, PrimType,
   QuoteType, SplatType, SpliceType, SymType, TaskType, TrueType, VecType Type
   
   NIL Nil

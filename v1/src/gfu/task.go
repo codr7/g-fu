@@ -12,7 +12,7 @@ type Task struct {
   
   body Vec
   mutex sync.Mutex
-  exit *sync.Cond
+  cond *sync.Cond
   done, recall bool
   recall_args Vec
   result Val
@@ -25,13 +25,13 @@ func NewTask(g *G, inbox Chan, body Vec) *Task {
 func (t *Task) Init(g *G, inbox Chan, body Vec) *Task {
   t.Inbox = inbox
   t.body = body
-  t.exit = sync.NewCond(&t.mutex)
+  t.cond = sync.NewCond(&t.mutex)
   return t
 }
 
-func (t *Task) Bool(g *G) (out bool) {
+func (t *Task) Bool(g *G) bool {
   t.mutex.Lock()
-  out = t.done
+  out := t.done
   t.mutex.Unlock()
   return out
 }
@@ -41,7 +41,7 @@ func (t *Task) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (t *Task) Dump(out *strings.Builder) {
-  fmt.Fprintf(out, "(Task %v)", t)
+  fmt.Fprintf(out, "(Task %v)", (chan Val)(t.Inbox))
 }
 
 func (t *Task) Eq(g *G, rhs Val) bool {
@@ -69,6 +69,7 @@ func (t *Task) Start(g *G, root_env *Env) {
   root_env.Clone(&env)
   
   go func () {
+    t.cond.Broadcast()
     var e E
     
     if t.result, e = t.body.EvalExpr(g, t, &env); e != nil {
@@ -77,9 +78,13 @@ func (t *Task) Start(g *G, root_env *Env) {
 
     t.mutex.Lock()
     t.done = true
-    t.exit.Broadcast()
+    t.cond.Broadcast()
     t.mutex.Unlock()
   }()
+}
+
+func (t *Task) String() string {
+  return DumpString(t)
 }
 
 func (t *Task) Type(g *G) *Type {
@@ -89,8 +94,8 @@ func (t *Task) Type(g *G) *Type {
 func (t *Task) Wait() Val {
   t.mutex.Lock()
 
-  if !t.done {
-    t.exit.Wait()
+  for !t.done {
+    t.cond.Wait()
   }
   
   t.mutex.Unlock()
