@@ -402,7 +402,7 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   t := NewTask(g, inbox, args[1:])
-  t.Start(g, env)
+  t.Start(g, &g.RootEnv)
   return t, nil
 }
 
