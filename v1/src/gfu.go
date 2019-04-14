@@ -21,7 +21,7 @@ func main() {
     log.Fatal(e)
   }
   
-  g.Debug = true
+  //g.Debug = true
   g.RootEnv.InitAbc(g)
   flag.Parse()
   
