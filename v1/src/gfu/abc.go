@@ -1,7 +1,7 @@
 package gfu
 
 import (
-  "log"
+  //"log"
   "os"
   "strings"
   "time"
@@ -398,12 +398,40 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var inbox Chan
   
   if v, ok := as.(Vec); ok {
-    log.Printf("task_imp vec args: %v", v)
+    a0 := v[0]
+    
+    if v, ok := a0.(Int); ok {
+      inbox = NewChan(v)
+    } else {
+      inbox = a0.(Chan)
+    }
+  } else {
+    inbox = NewChan(0)
   }
 
   t := NewTask(g, inbox, args[1:])
   t.Start(g, &g.RootEnv)
   return t, nil
+}
+
+func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  t := args[0]
+
+  for _, v := range args[1:] {
+    t.(*Task).Inbox<- v
+  }
+  
+  return &g.NIL, nil
+}
+
+func task_fetch_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  v := <-task.Inbox
+
+  if v == nil {
+    v = &g.NIL
+  }
+  
+  return v, nil
 }
 
 func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -485,11 +513,13 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "vec", vec_imp, "items..")
   e.AddFun(g, "len", vec_len_imp, "vec")
-  e.AddPrim(g, "push", vec_push_imp, "vec val..")
+  e.AddPrim(g, "push", vec_push_imp, "vec", "val..")
   e.AddFun(g, "peek", vec_peek_imp, "vec")
   e.AddPrim(g, "pop", vec_pop_imp, "vec")
 
-  e.AddPrim(g, "task", task_imp, "args body..")
+  e.AddPrim(g, "task", task_imp, "args", "body..")
+  e.AddFun(g, "post", task_post_imp, "task", "vals..")
+  e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, "tasks..")
   e.AddFun(g, "chan", chan_imp, "buf?")
 }

@@ -1,5 +1,4 @@
-* add chan send/recv
-** test
+* add chan test
 ** readme
 * simplify args
 ** pass as Vec, not []*Sym
@@ -17,6 +16,7 @@
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
+* dlambda
 * add Str type
 * add load fun
 * convert test to gfu macro

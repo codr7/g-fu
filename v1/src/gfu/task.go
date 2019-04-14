@@ -69,7 +69,6 @@ func (t *Task) Start(g *G, root_env *Env) {
   root_env.Clone(&env)
   
   go func () {
-    t.cond.Broadcast()
     var e E
     
     if t.result, e = t.body.EvalExpr(g, t, &env); e != nil {
