@@ -84,7 +84,7 @@
       t2 (task _ 7))
   (test (= (+ (wait t1 t2)..) 42)))
 
-(let (t (task (0)
+(let (t (task _
           (post (fetch) 'foo)
           'bar))
   (post t (this-task))

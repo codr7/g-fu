@@ -85,7 +85,7 @@ Channels are optionally buffered thread-safe queues, new channels may be created
 Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task, which then replies with `'foo` and finally returns `'bar`
 
 ```
-  (let (t (task (0)
+  (let (t (task _
             (post (fetch) 'foo)
             'bar))
     (post t (this-task))
