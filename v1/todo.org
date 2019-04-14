@@ -15,12 +15,15 @@
 *** grab from snigl
 * change bench to take vec arg for reps
 ** update bench/
+* add load fun
+** add Str type
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
 * dlambda
-* add Str type
-* add load fun
+** https://letoverlambda.com/index.cl/guest/chap5.html#sec_7
+** add map fun
+** add case macro
 * convert test to gfu macro
 ** add lib/test.gf
 ** load in test/all.gf
