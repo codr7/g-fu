@@ -101,7 +101,6 @@
 
 (test (= (loop (break 'foo)) 'foo))
 
-
 (let while (macro (cond body..)
   '(loop
      (if %cond _ (break))
@@ -109,4 +108,4 @@
 
 (let (i 0)
   (while (< (inc i) 7))
-  (_ (test (= i 7))))
+  (test (= i 7)))

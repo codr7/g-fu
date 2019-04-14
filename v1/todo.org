@@ -1,7 +1,6 @@
-* add Env.Update(key, func(Val) (Val, E)) E
-** add Var.env, set on put
-*** follow on update
-** enable whle-test in /all
+* debug difference between testwhile.gf & test/all
+** enable while test
+** commit env update
 * simplify args
 ** pass as Vec, not []*Sym
 * replace opt with nested Vec

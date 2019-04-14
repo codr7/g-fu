@@ -93,7 +93,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   if e != nil {
     return nil, e
   }
-  
+
   return rv, nil
 }
 
@@ -151,13 +151,6 @@ func or_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  id := args[0].(*Sym)
-  _, found := env.Find(id)
-
-  if found == nil {
-    return nil, g.E("Unknown var: %v", id)
-  }
-
   d := Int(1)
   
   if len(args) == 2 {
@@ -170,9 +163,9 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     d = dv.(Int)
   }
 
-  v := found.Val.(Int) + d
-  found.Val = v
-  return v, nil
+  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
+    return v.(Int)+d, nil
+  })
 }
 
 func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -359,16 +352,9 @@ func vec_len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func vec_push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  id := args[0].(*Sym)
-  _, found := env.Find(id)
-
-  if found == nil {
-    return nil, g.E("Unknown var: %v", id)
-  }
-
-  v := found.Val.(Vec).Push(args[1:]...)
-  found.Val = v
-  return v, nil
+  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
+    return v.(Vec).Push(args[1:]...), nil
+  })
 }
 
 func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -376,16 +362,15 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func vec_pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  id := args[0].(*Sym)
-  _, found := env.Find(id)
-
-  if found == nil {
-    return nil, g.E("Unknown var: %v", id)
-  }
+  var it Val
   
-  var v Val
-  v, found.Val = found.Val.(Vec).Pop(g)
-  return v, nil
+  env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
+    var rest Vec
+    it, rest = v.(Vec).Pop(g)
+    return rest, nil
+  })
+
+  return it, nil
 }
 
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
