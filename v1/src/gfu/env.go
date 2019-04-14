@@ -10,6 +10,7 @@ type Env struct {
 
 type Var struct {
   env *Env
+  ext_var *Var
   key *Sym
   Val Val
 }
@@ -20,7 +21,7 @@ func (v *Var) Init(env *Env, key *Sym) *Var {
   return v
 }
 
-func (v *Var) Update(env *Env, f func(Val) (Val, E)) (Val, E) {
+func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
   var e E
   
   if v.Val, e = f(v.Val); e != nil {
@@ -28,7 +29,15 @@ func (v *Var) Update(env *Env, f func(Val) (Val, E)) (Val, E) {
   }
 
   if v.env != env {
-    v.env.Put(v.key, v.Val)
+    if v.ext_var == nil {
+      _, v.ext_var = v.env.Find(v.key)
+    }
+    
+    if v.ext_var == nil {
+      return nil, g.E("Missing ext var: %v", v.key)
+    }
+
+    v.ext_var.Val = v.Val
   }
 
   return v.Val, nil
@@ -91,5 +100,5 @@ func (e *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
     return nil, g.E("Unknown var: %v", key)
   }
 
-  return found.Update(e, f)
+  return found.Update(g, e, f)
 }
