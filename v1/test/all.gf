@@ -100,4 +100,4 @@
 
 (let (i 0)
   (while (< (inc i) 7))
-  (test (= i 7)))
+  (_ (test (= i 7))))
