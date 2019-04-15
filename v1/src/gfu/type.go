@@ -59,5 +59,5 @@ func (t *Type) Type(g *G) *Type {
 
 func (e *Env) AddType(g *G, t *Type, id string) {
   t.Init(g.Sym(id))
-  e.Put(t.Id(), t)
+  e.Let(t.Id(), t)
 }

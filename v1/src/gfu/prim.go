@@ -75,6 +75,6 @@ func (env *Env) AddPrim(g *G, id string, imp PrimImp, args...string) E {
     return e
   }
 
-  env.Put(ids, NewPrim(g, ids, imp, as))
+  env.Let(ids, NewPrim(g, ids, imp, as))
   return nil
 }

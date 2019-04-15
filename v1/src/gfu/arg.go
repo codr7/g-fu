@@ -78,7 +78,7 @@ func (l *ArgList) Check(g *G, args Vec) E {
   return nil
 }
 
-func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
+func (l *ArgList) LetEnv(g *G, env *Env, args Vec) {
   nargs := len(args)
   
   for i, a := range l.items {
@@ -90,14 +90,14 @@ func (l *ArgList) PutEnv(g *G, env *Env, args Vec) {
         copy(v, args[i:])
       }
       
-      env.Put(a.id, v)
+      env.Let(a.id, v)
       break
     }
 
     if i < nargs {
-      env.Put(a.id, args[i])
+      env.Let(a.id, args[i])
     } else {
-      env.Put(a.id, &g.NIL)
+      env.Let(a.id, &g.NIL)
     }
   }
 }

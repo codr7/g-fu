@@ -84,6 +84,11 @@
       t2 (task _ 7))
   (test (= (+ (wait t1 t2)..) 42)))
 
+(let (v 42
+      t (task _ (inc v)))
+  (test (= (wait t) 43))
+  (test (= v 42)))
+
 (let (t (task _
           (post (fetch) 'foo)
           'bar))

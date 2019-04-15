@@ -18,5 +18,5 @@ type Val interface {
 }
 
 func (env *Env) AddVal(g *G, id string, val Val) {
-  env.Put(g.Sym(id), val)
+  env.Let(g.Sym(id), val)
 }

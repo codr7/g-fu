@@ -48,7 +48,7 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   f.env.Clone(&be)
   var v Val
 recall:
-  f.arg_list.PutEnv(g, &be, avs)
+  f.arg_list.LetEnv(g, &be, avs)
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
     task.recall_args = nil
@@ -132,6 +132,6 @@ func (env *Env) AddFun(g *G, id string, imp FunImp, args...string) E {
   
   f := NewFun(g, env, as)
   f.imp = imp
-  env.Put(g.Sym(id), f)
+  env.Let(g.Sym(id), f)
   return nil
 }

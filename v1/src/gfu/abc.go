@@ -81,7 +81,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
       return nil, e
     }
 
-    le.Put(k, v)
+    le.Let(k, v)
   }
 
   if !is_scope {
@@ -397,7 +397,7 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   t := NewTask(g, inbox, args[1:])
-  t.Start(g, &g.RootEnv)
+  t.Start(g, env)
   return t, nil
 }
 

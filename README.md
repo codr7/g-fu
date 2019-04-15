@@ -61,7 +61,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 ```
 
 ### Tasks
-Tasks are first class, preemptive green threads that run in separate environments and interact with the outside world using channels (except for final results). New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
+Tasks are first class, preemptive green threads that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
   (let (t1 (task _ (dump 'foo) 'bar)
@@ -71,6 +71,18 @@ Tasks are first class, preemptive green threads that run in separate environment
 baz
 foo
 (bar qux)
+```
+
+The defining environment is cloned; and may be read, but not modified by the task.
+
+```
+  (let (v 42
+        t (task _ (inc v)))
+    (dump (wait t))
+    (dump v))
+
+43
+42
 ```
 
 #### Channels

@@ -64,14 +64,14 @@ func (t *Task) Splat(g *G, out Vec) Vec {
   return append(out, t)
 }
 
-func (t *Task) Start(g *G, root_env *Env) {
-  var env Env
-  root_env.Clone(&env)
+func (t *Task) Start(g *G, env *Env) {
+  var te Env
+  env.Clone(&te).Localize()
   
   go func () {
     var e E
     
-    if t.result, e = t.body.EvalExpr(g, t, &env); e != nil {
+    if t.result, e = t.body.EvalExpr(g, t, &te); e != nil {
       log.Fatal(e)
     }
 

@@ -43,10 +43,11 @@ func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
   return v.Val, nil
 }
 
-func (e *Env) Clone(dst *Env) {
+func (e *Env) Clone(dst *Env) *Env {
   src := e.vars
   dst.vars = make([]Var, len(src))
   copy(dst.vars, src)
+  return dst
 }
 
 func (e *Env) Find(key *Sym) (int, *Var) {
@@ -70,6 +71,12 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   return max, nil
 }
 
+func (e *Env) Localize() {
+  for i, _ := range e.vars {
+    e.vars[i].env = e
+  }
+}
+
 func (e *Env) Insert(i int, key *Sym) *Var {
   var v Var
   vs := append(e.vars, v)
@@ -82,7 +89,7 @@ func (e *Env) Insert(i int, key *Sym) *Var {
   return vs[i].Init(e, key)
 }
 
-func (e *Env) Put(key *Sym, val Val) {
+func (e *Env) Let(key *Sym, val Val) {
   i, found := e.Find(key)
   
   if found == nil {

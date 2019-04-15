@@ -40,7 +40,7 @@ func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   
   var be Env
   m.env.Clone(&be)
-  m.arg_list.PutEnv(g, &be, args)
+  m.arg_list.LetEnv(g, &be, args)
 
   if v, e = m.body.EvalExpr(g, task, &be); e != nil {
     return nil, e
