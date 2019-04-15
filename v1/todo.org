@@ -1,10 +1,11 @@
 * add load fun
+** add Task.load_path
+** set during eval
 * add lib/iter.gf
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
-
-*  use type switch where applicable
+* use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
 * dlambda
@@ -16,19 +17,12 @@
 ** load in test/all.gf
 ** add throw fun
 *** switch BasicE.msg from string to Val
-* fix test/all while loop
 * optimize vec splats
 ** don't allocate new vec if no splats
 * add lib/iter.gf
 ** move loops from testloop.gf
 ** load iter.gf from test/all
 * add expand(form (n _)) fun
-* vec iter
-* add for based on loop macro
-** add lib/iter.gf
-** replace prim?
-*** bench
-
 * transducers
 * add bang calls
 ** add separate Bang type
