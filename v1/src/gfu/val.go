@@ -35,11 +35,11 @@ func (v *BasicVal) Push(g *G, its...Val) (Val, E) {
   return nil, g.E("Push not supported: %v", v.imp_type)
 }
 
-func (v *BasicVal) Type(g *G) *Type {
+func (v BasicVal) Type(g *G) *Type {
   return v.imp_type
 }
 
-func (v *BasicVal) String() string {
+func (v BasicVal) String() string {
   return DumpString(v.imp)
 }
 

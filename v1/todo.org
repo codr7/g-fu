@@ -26,7 +26,7 @@
 * add lib/iter.gf
 ** move loops from testloop.gf
 ** load iter.gf from test/all
-* add expand(form n?) fun
+* add expand(form (n _)) fun
 * vec iter
 * add for based on loop macro
 ** add lib/iter.gf
