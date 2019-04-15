@@ -20,11 +20,11 @@ func (c Chan) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (c Chan) Clone(g *G) (Val, E) {
-  return c.Dup(g)
+  return c, nil
 }
 
-func (_ Chan) Dup(g *G) (Val, E) {
-  return nil, g.E("Dup not supported: Chan")
+func (c Chan) Dup(g *G) (Val, E) {
+  return c, nil
 }
 
 func (c Chan) Dump(out *strings.Builder) {
@@ -47,7 +47,7 @@ func (c Chan) Len(g *G) (Int, E) {
   return Int(len(c)), nil
 }
 
-func (c Chan ) Pop(g *G) (Val, Val, E) {
+func (c Chan) Pop(g *G) (Val, Val, E) {
   v := <- c
 
   if v == nil {
@@ -58,7 +58,13 @@ func (c Chan ) Pop(g *G) (Val, Val, E) {
 }
 
 func (c Chan) Push(g *G, its...Val) (Val, E) {
+  var e E
+  
   for _, v := range its {
+    if v, e = v.Clone(g); e != nil {
+      return nil, e
+    }
+    
     c <- v
   }
 
