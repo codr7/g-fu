@@ -44,16 +44,15 @@ One of the most common macro examples is the `while`-loop. The example below def
 
   (let (i 0)
     (while (< i 7)
-      (dump i)
-      (inc i)))
+      (dump (inc i))))
 
-0
 1
 2
 3
 4
 5
 6
+7
 ```
 
 `loop` supports exiting with a result using `break` within its body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to avoid capturing the calling environment.
