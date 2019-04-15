@@ -84,7 +84,7 @@ foo
 (bar qux)
 ```
 
-The defining environment is cloned; and may be read, but not modified by the task.
+The defining environment is cloned to prevent data races.
 
 ```
   (let (v 42
@@ -97,7 +97,7 @@ The defining environment is cloned; and may be read, but not modified by the tas
 ```
 
 #### Channels
-Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values.
+Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values. Values sent over channels are cloned to prevent data races.
 
 ```
   (let (c (chan 1))
