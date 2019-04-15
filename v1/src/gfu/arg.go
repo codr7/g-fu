@@ -30,14 +30,14 @@ func A(id string) (a Arg) {
   return a
 }
 
-func OptA(id string, val Val) (a Arg) {
+func AOpt(id string, val Val) (a Arg) {
   a.str_id = id
   a.opt_val = val
   a.arg_type = ARG_OPT
   return a
 }
 
-func SplatA(id string) (a Arg) {
+func ASplat(id string) (a Arg) {
   a.str_id = id
   a.arg_type = ARG_SPLAT
   return a
