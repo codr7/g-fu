@@ -15,8 +15,12 @@ func (s Str) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return s, nil
 }
 
-func (s Str) Clone() Val {
-  return s
+func (s Str) Clone(g *G) (Val, E) {
+  return s, nil
+}
+
+func (s Str) Dup(g *G) (Val, E) {
+  return s, nil
 }
 
 func (s Str) Dump(out *strings.Builder) {

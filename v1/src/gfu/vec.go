@@ -15,14 +15,17 @@ func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
-func (v Vec) Clone() Val {
+func (v Vec) Clone(g *G) (Val, E) {
   out := make(Vec, len(v))
-
+  var e E
+  
   for i, it := range v {
-    out[i] = it.Clone()
+    if out[i], e = it.Clone(g); e != nil {
+      return nil, e
+    }
   }
   
-  return out
+  return out, nil
 }
 
 func (v Vec) Dump(out *strings.Builder) {
@@ -37,6 +40,19 @@ func (v Vec) Dump(out *strings.Builder) {
   }
 
   out.WriteRune(')')
+}
+
+func (v Vec) Dup(g *G) (Val, E) {
+  out := make(Vec, len(v))
+  var e E
+  
+  for i, it := range v {
+    if out[i], e = it.Dup(g); e != nil {
+      return nil, e
+    }
+  }
+  
+  return out, nil
 }
 
 func (v Vec) Eq(g *G, rhs Val) bool {
@@ -108,7 +124,7 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
     it, e := it.Eval(g, task, env)
 
     if e != nil {
-      return nil, g.E("Arg eval failed: %v", e)
+      return nil, e
     }
 
     if task.recall {

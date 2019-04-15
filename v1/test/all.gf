@@ -27,6 +27,11 @@
 
 (test (= (len (vec)) 0))
 (test (= (len '(1 2 3)) 3))
+
+(let (v1 '(1 2 3) v2 (dup v1))
+  (test (= v1 v2))
+  (test (not (== v1 v2))))
+  
 (test (= '(1 2 3) (vec 1 2 3)))
 (test (= '(1 %(+ 2 3) 4) (vec 1 5 4)))
 (test (= (vec 1 2 3) (vec 1 2 3)))

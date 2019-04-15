@@ -8,23 +8,39 @@ type Env struct {
   vars []Var
 }
 
-func (e *Env) Clone(dst *Env) *Env {
-  e.Dup(dst)
+func (env *Env) Clone(g *G, dst *Env) (*Env, E)  {
+  src := env.vars
+  dst.vars = make([]Var, len(src))
+  copy(dst.vars, src)
+  var e E
   
   for i, _ := range dst.vars {
     v := &dst.vars[i]
     v.env = dst
-    v.Val = v.Val.Clone()
+    
+    if v.Val, e = v.Val.Clone(g); e != nil {
+      return nil, e
+    }
   }
 
-  return dst
+  return dst, nil
 }
 
-func (e *Env) Dup(dst *Env) *Env {
-  src := e.vars
+func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
+  src := env.vars
   dst.vars = make([]Var, len(src))
   copy(dst.vars, src)
-  return dst
+  var e E
+  
+  for i, _ := range dst.vars {
+    v := &dst.vars[i]
+    
+    if v.Val, e = v.Val.Dup(g); e != nil {
+      return nil, e
+    }
+  }
+
+  return dst, nil
 }
 
 func (e *Env) Find(key *Sym) (int, *Var) {

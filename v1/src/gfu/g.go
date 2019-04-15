@@ -37,7 +37,7 @@ func (g *G) Init() (*G, E) {
 
 func (g *G) NewEnv() *Env {
   var env Env
-  g.RootEnv.Dup(&env)
+  g.RootEnv.Dup(g, &env)
   return &env
 }
 

@@ -43,7 +43,7 @@ func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   }
 
   var be Env
-  m.env.Dup(&be)
+  m.env.Dup(g, &be)
   m.arg_list.LetVars(g, &be, args)
 
   if v, e = m.body.EvalExpr(g, task, &be); e != nil {

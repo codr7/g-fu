@@ -19,8 +19,12 @@ func (c Chan) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return c, nil
 }
 
-func (c Chan) Clone() Val {
-  return c
+func (c Chan) Clone(g *G) (Val, E) {
+  return c.Dup(g)
+}
+
+func (_ Chan) Dup(g *G) (Val, E) {
+  return nil, g.E("Dup not supported: Chan")
 }
 
 func (c Chan) Dump(out *strings.Builder) {

@@ -52,7 +52,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   if is_scope {
     le = new(Env)
-    env.Dup(le)
+    env.Dup(g, le)
   } else {
     le = env
   }
@@ -252,6 +252,14 @@ func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   os.Stderr.WriteString(out.String())
   return &g.NIL, nil
+}
+
+func dup_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args[0].Dup(g)
+}
+
+func clone_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args[0].Clone(g)
 }
 
 func eval_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -495,6 +503,8 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp) 
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
+  e.AddFun(g, "dup", dup_imp, A("val"))
+  e.AddFun(g, "clone", clone_imp, A("val"))
   e.AddFun(g, "eval", eval_imp, A("form"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))

@@ -19,9 +19,24 @@ func (w Wrap) Bool(g *G) bool {
   return w.val.Bool(g)
 }
 
-func (w Wrap) Clone() Val {
-  w.val = w.val.Clone()
-  return w.imp
+func (w Wrap) Clone(g *G) (Val, E) {
+  var e E
+  
+  if w.val, e = w.val.Clone(g); e != nil {
+    return nil, e
+  }
+  
+  return w.imp, nil
+}
+
+func (w Wrap) Dup(g *G) (Val, E) {
+  var e E
+  
+  if w.val, e = w.val.Dup(g); e != nil {
+    return nil, e
+  }
+  
+  return w.imp, nil
 }
 
 func (w Wrap) Pop(g *G) (Val, Val, E) {

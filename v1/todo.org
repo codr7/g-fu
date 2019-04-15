@@ -1,8 +1,4 @@
-* add Dup method
-** shallow clone
-** implement for Vec/Wrap
-** add clone/dup funs
-*** readme
+* dup/clone readme
 * add default methods using imp
 * ---
 * add load fun

@@ -11,7 +11,8 @@ type Val interface {
   
   Bool(*G) bool
   Call(*G, *Task, *Env, Vec) (Val, E)
-  Clone() Val
+  Clone(*G) (Val, E)
+  Dup(*G) (Val, E)
   Eq(*G, Val) bool
   Eval(*G, *Task, *Env) (Val, E)
   Is(*G, Val) bool
@@ -34,8 +35,12 @@ func (v *BasicVal) Init(imp_type *Type, imp Val) *BasicVal {
   return v
 }
 
-func (v BasicVal) Clone() Val {
-  return v.imp
+func (v BasicVal) Clone(g *G) (Val, E) {
+  return v.imp.Dup(g)
+}
+
+func (v BasicVal) Dup(g *G) (Val, E) {
+  return v.imp, nil
 }
 
 func (v BasicVal) Len(g *G) (Int, E) {
