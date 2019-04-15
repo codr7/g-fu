@@ -15,6 +15,16 @@ func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func (v Vec) Clone() Val {
+  out := make(Vec, len(v))
+
+  for i, it := range v {
+    out[i] = it.Clone()
+  }
+  
+  return out
+}
+
 func (v Vec) Dump(out *strings.Builder) {
   out.WriteRune('(')
 

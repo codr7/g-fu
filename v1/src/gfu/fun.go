@@ -48,7 +48,7 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   var be Env
-  f.env.Clone(&be)
+  f.env.Dup(&be)
   var v Val
 recall:
   f.arg_list.LetVars(g, &be, avs)

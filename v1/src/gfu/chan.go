@@ -19,6 +19,10 @@ func (c Chan) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return c, nil
 }
 
+func (c Chan) Clone() Val {
+  return c
+}
+
 func (c Chan) Dump(out *strings.Builder) {
   fmt.Fprintf(out, "(Chan %v)", (chan Val)(c))
 }

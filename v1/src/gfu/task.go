@@ -68,7 +68,7 @@ func (t *Task) Splat(g *G, out Vec) Vec {
 
 func (t *Task) Start(g *G, env *Env) {
   var te Env
-  env.Clone(&te).Localize()
+  env.Clone(&te)
 
   go func() {
     var e E

@@ -52,7 +52,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   if is_scope {
     le = new(Env)
-    env.Clone(le)
+    env.Dup(le)
   } else {
     le = env
   }
@@ -193,7 +193,7 @@ func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func test_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   for _, in := range args {
     v, e := in.Eval(g, task, env)
-
+    
     if e != nil {
       return nil, e
     }
@@ -235,6 +235,11 @@ func bench_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   return Int(time.Now().Sub(t).Nanoseconds() / 1000000), nil
+}
+
+func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  g.Debug = true
+  return &g.NIL, nil
 }
 
 func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -488,6 +493,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 
+  e.AddFun(g, "debug", debug_imp) 
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
   e.AddFun(g, "eval", eval_imp, A("form"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))

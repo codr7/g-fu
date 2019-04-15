@@ -15,6 +15,10 @@ func (s Str) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return s, nil
 }
 
+func (s Str) Clone() Val {
+  return s
+}
+
 func (s Str) Dump(out *strings.Builder) {
   out.WriteRune('"')
   out.WriteString(string(s))

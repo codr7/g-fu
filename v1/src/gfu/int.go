@@ -24,6 +24,10 @@ func (i Int) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return i, nil
 }
 
+func (i Int) Clone() Val {
+  return i
+}
+
 func (i Int) Dump(out *strings.Builder) {
   fmt.Fprintf(out, "%v", int64(i))
 }
