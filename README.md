@@ -22,7 +22,7 @@ Press Return twice to evaluate.
 ```
 
 ### Equality & Identity
-`=` may be used to check if any number of values are deeply equal, while `==` checks if they have the same identity. The difference only makes sense for reference types (`Vec` as of right now).
+`=` may be used to check if any number of values are deeply equal, while `==` checks if they have the same identity. Both functions return the same result for value types, which is everything except `Vec` as of right now.
 
 ```
   (let (v1 (vec 1 2 3) v2 (vec 1 2 3))
