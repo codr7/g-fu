@@ -38,6 +38,10 @@ func (s Str) Is(g *G, rhs Val) bool {
   return s.Eq(g, rhs)
 }
 
+func (s Str) Len(g *G) (Int, E) {
+  return Int(len(s)), nil
+}
+
 func (_ Str) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: Str")
 }

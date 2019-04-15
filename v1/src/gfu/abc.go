@@ -379,12 +379,12 @@ func pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return it, nil
 }
 
-func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args, nil
+func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args[0].Len(g)
 }
 
-func vec_len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args[0].(Vec).Len(), nil
+func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args, nil
 }
 
 func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -509,11 +509,11 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 
-  e.AddPrim(g, "push", push_imp, A("sink"), ASplat("its"))
-  e.AddPrim(g, "pop", pop_imp, A("source"))
+  e.AddPrim(g, "push", push_imp, A("sink"), ASplat("vals"))
+  e.AddPrim(g, "pop", pop_imp, A("seq"))
+  e.AddFun(g, "len", len_imp, A("seq"))
 
-  e.AddFun(g, "vec", vec_imp, ASplat("items"))
-  e.AddFun(g, "len", vec_len_imp, A("vec"))
+  e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
 
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))

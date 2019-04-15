@@ -106,6 +106,7 @@ Channels are optionally buffered, thread-safe pipes. `chan` may be used to creat
     (dump (len c))
     (dump (pop c)))
 
+1
 42
 ```
 

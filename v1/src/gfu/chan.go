@@ -39,6 +39,10 @@ func (c Chan) Is(g *G, rhs Val) bool {
   return c == rhs
 }
 
+func (c Chan) Len(g *G) (Int, E) {
+  return Int(len(c)), nil
+}
+
 func (c Chan ) Pop(g *G) (Val, Val, E) {
   v := <- c
 

@@ -141,8 +141,8 @@ func (v Vec) Is(g *G, rhs Val) bool {
   return ok && vl == len(rv) && (vl == 0 || &v[0] == &rv[0])
 }
 
-func (v Vec) Len() Int {
-  return Int(len(v))
+func (v Vec) Len(g *G) (Int, E) {
+  return Int(len(v)), nil
 }
 
 func (v Vec) Push(g *G, its...Val) (Val, E) {

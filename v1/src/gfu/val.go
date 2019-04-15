@@ -15,8 +15,9 @@ type Val interface {
   Eq(*G, Val) bool
   Eval(*G, *Task, *Env) (Val, E)
   Is(*G, Val) bool
-  Pop(g *G) (Val, Val, E)
-  Push(g *G, its...Val) (Val, E)
+  Len(*G) (Int, E)
+  Pop(*G) (Val, Val, E)
+  Push(*G, ...Val) (Val, E)
   Quote(*G, *Task, *Env) (Val, E)
   Splat(*G, Vec) Vec
   Type(*G) *Type
@@ -35,6 +36,10 @@ func (v *BasicVal) Init(imp_type *Type, imp Val) *BasicVal {
 
 func (v BasicVal) Clone() Val {
   return v.imp
+}
+
+func (v BasicVal) Len(g *G) (Int, E) {
+  return -1, g.E("Len not supported: %v", v.imp_type)
 }
 
 func (v *BasicVal) Pop(g *G) (Val, Val, E) {

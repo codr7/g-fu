@@ -22,6 +22,11 @@
 (test (= ''foo ''foo))
 (test (not (= (g-sym) (g-sym))))
 
+(test (= (len "") 0))
+(test (= (len "foo") 3))
+
+(test (= (len (vec)) 0))
+(test (= (len '(1 2 3)) 3))
 (test (= '(1 2 3) (vec 1 2 3)))
 (test (= '(1 %(+ 2 3) 4) (vec 1 5 4)))
 (test (= (vec 1 2 3) (vec 1 2 3)))
@@ -84,6 +89,11 @@
   (test (= (eval '(+ %foo..)) 42)))
 
 
+(let (c (chan 1))
+  (push c 42)
+  (test (= (len c) 1))
+  (test (= (pop c) 42)))
+
 (let (t (task _ 'foo))
   (test (= (wait t) 'foo)))
 
@@ -102,7 +112,6 @@
   (post t (this-task))
   (test (= (fetch) 'foo))
   (test (= (wait t) 'bar)))
-
 
 (let loop (macro (body..)
   (let done (g-sym) result (g-sym))
