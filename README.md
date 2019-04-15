@@ -21,7 +21,7 @@ Press Return twice to evaluate.
 6765
 ```
 
-### Equality && Identity
+### Equality & Identity
 `=` may be used to check if any number of values are deeply equal, while `==` checks if they have the same identity. The difference only makes sense for reference types (`Vec` as of right now).
 
 ```
