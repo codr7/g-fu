@@ -1,6 +1,4 @@
-* dup/clone readme
 * add default methods using imp
-* ---
 * add load fun
 * add lib/iter.gf
 * add coro/coret g-fu macros
