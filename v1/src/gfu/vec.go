@@ -1,188 +1,188 @@
 package gfu
 
 import (
-  //"log"
-  "strings"
+	//"log"
+	"strings"
 )
 
 type Vec []Val
 
 func (v Vec) Bool(g *G) bool {
-  return len(v) > 0
+	return len(v) > 0
 }
 
 func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return v, nil 
+	return v, nil
 }
 
 func (v Vec) Dump(out *strings.Builder) {
-  out.WriteRune('(')
-  
-  for i, iv := range v {
-    if i > 0 {
-      out.WriteRune(' ')
-    }
+	out.WriteRune('(')
 
-    iv.Dump(out)
-  }
-  
-  out.WriteRune(')')
+	for i, iv := range v {
+		if i > 0 {
+			out.WriteRune(' ')
+		}
+
+		iv.Dump(out)
+	}
+
+	out.WriteRune(')')
 }
 
 func (v Vec) Eq(g *G, rhs Val) bool {
-  rv := rhs.(Vec)
-  
-  if len(v) != len(rv) {
-    return false
-  }
+	rv := rhs.(Vec)
 
-  for i, vi := range v {
-    ri := rv[i]
-    
-    if !vi.Is(g, ri) {
-      return false
-    }
-  }
+	if len(v) != len(rv) {
+		return false
+	}
 
-  return true
+	for i, vi := range v {
+		ri := rv[i]
+
+		if !vi.Is(g, ri) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
-  if len(v) == 0 {
-    return &g.NIL, nil
-  }
-  
-  f := v[0]
-  
-  if s, ok := f.(*Sym); ok && s == g.nil_sym {
-    return &g.NIL, nil
-  }
+	if len(v) == 0 {
+		return &g.NIL, nil
+	}
 
-  fv, e := f.Eval(g, task, env)
-  
-  if e != nil {
-    return nil, e
-  }
+	f := v[0]
 
-  result, e := fv.Call(g, task, env, v[1:])
-  
-  if e != nil {
-    return nil, g.E("Call failed: %v", e)
-  }
-  
-  return result, nil
+	if s, ok := f.(*Sym); ok && s == g.nil_sym {
+		return &g.NIL, nil
+	}
+
+	fv, e := f.Eval(g, task, env)
+
+	if e != nil {
+		return nil, e
+	}
+
+	result, e := fv.Call(g, task, env, v[1:])
+
+	if e != nil {
+		return nil, g.E("Call failed: %v", e)
+	}
+
+	return result, nil
 }
 
 func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
-  var out Val = &g.NIL
-  
-  for _, it := range v {
-    var e E
-    
-    if out, e = it.Eval(g, task, env); e != nil {
-      return nil, e
-    }
+	var out Val = &g.NIL
 
-    if task.recall {
-      break
-    }
-  }
+	for _, it := range v {
+		var e E
 
-  return out, nil
+		if out, e = it.Eval(g, task, env); e != nil {
+			return nil, e
+		}
+
+		if task.recall {
+			break
+		}
+	}
+
+	return out, nil
 }
 
 func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
-  var out Vec
-  
-  for _, it := range v {
-    it, e := it.Eval(g, task, env)
+	var out Vec
 
-    if e != nil {
-      return nil, g.E("Arg eval failed: %v", e)
-    }
+	for _, it := range v {
+		it, e := it.Eval(g, task, env)
 
-    if task.recall {
-      break
-    }
-    
-    if _, ok := it.(Splat); ok {
-      out = it.Splat(g, out)
-    } else {
-      if _, ok := it.(Vec); ok {
-        it = it.Splat(g, nil)
-      }
-      
-      out = append(out, it)
-    }
-  }
+		if e != nil {
+			return nil, g.E("Arg eval failed: %v", e)
+		}
 
-  return out, nil
+		if task.recall {
+			break
+		}
+
+		if _, ok := it.(Splat); ok {
+			out = it.Splat(g, out)
+		} else {
+			if _, ok := it.(Vec); ok {
+				it = it.Splat(g, nil)
+			}
+
+			out = append(out, it)
+		}
+	}
+
+	return out, nil
 }
 
 func (v Vec) Is(g *G, rhs Val) bool {
-  return v.Eq(g, rhs)
+	return v.Eq(g, rhs)
 }
 
 func (v Vec) Len() Int {
-  return Int(len(v))
+	return Int(len(v))
 }
 
-func (v Vec) Push(its...Val) Vec {
-  return append(v, its...)
+func (v Vec) Push(its ...Val) Vec {
+	return append(v, its...)
 }
 
 func (v Vec) Peek(g *G) Val {
-  n := len(v)
-  
-  if n == 0 {
-    return &g.NIL
-  }
+	n := len(v)
 
-  return v[n-1]
+	if n == 0 {
+		return &g.NIL
+	}
+
+	return v[n-1]
 }
 
 func (v Vec) Pop(g *G) (Val, Vec) {
-  n := len(v)
+	n := len(v)
 
-  if n == 0 {
-    return &g.NIL, v
-  }
+	if n == 0 {
+		return &g.NIL, v
+	}
 
-  return v[n-1], v[:n-1]
+	return v[n-1], v[:n-1]
 }
 
 func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
-  var e E
-  out := make(Vec, len(v))
-  
-  for i, it := range v {
-    out[i], e = it.Quote(g, task, env)
+	var e E
+	out := make(Vec, len(v))
 
-    if e != nil {
-      return nil, e
-    }
-  }
+	for i, it := range v {
+		out[i], e = it.Quote(g, task, env)
 
-  return out, nil
+		if e != nil {
+			return nil, e
+		}
+	}
+
+	return out, nil
 }
 
 func (v Vec) Splat(g *G, out Vec) Vec {
-  for i, it := range v {
-    if _, ok := it.(Splat); ok {
-      out = it.Splat(g, out)
-    } else {
-      if _, ok := it.(Vec); ok {
-        it = it.Splat(g, nil)
-        v[i] = it
-      }
-      
-      out = append(out, it)
-    }
-  }
+	for i, it := range v {
+		if _, ok := it.(Splat); ok {
+			out = it.Splat(g, out)
+		} else {
+			if _, ok := it.(Vec); ok {
+				it = it.Splat(g, nil)
+				v[i] = it
+			}
 
-  return out
+			out = append(out, it)
+		}
+	}
+
+	return out
 }
 
 func (v Vec) Type(g *G) *Type {
-  return &g.VecType
+	return &g.VecType
 }

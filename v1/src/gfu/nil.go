@@ -1,49 +1,49 @@
 package gfu
 
 import (
-  //"log"
-  "strings"
+	//"log"
+	"strings"
 )
 
 type Nil struct {
 }
 
 func (_ *Nil) Bool(g *G) bool {
-  return false
+	return false
 }
 
 func (_ *Nil) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.E("Nil call")
+	return nil, g.E("Nil call")
 }
-  
+
 func (_ *Nil) Dump(out *strings.Builder) {
-  out.WriteRune('_')
+	out.WriteRune('_')
 }
 
 func (n *Nil) Eq(g *G, rhs Val) bool {
-  return n == rhs
+	return n == rhs
 }
 
 func (n *Nil) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return n, nil
+	return n, nil
 }
 
 func (n *Nil) Is(g *G, rhs Val) bool {
-  return n == rhs
+	return n == rhs
 }
 
 func (n *Nil) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return n, nil
+	return n, nil
 }
 
 func (_ *Nil) Splat(g *G, out Vec) Vec {
-  return out
+	return out
 }
 
 func (n *Nil) String() string {
-  return "_"
+	return "_"
 }
 
 func (_ *Nil) Type(g *G) *Type {
-  return &g.NilType
+	return &g.NilType
 }
