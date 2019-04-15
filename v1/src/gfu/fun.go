@@ -9,6 +9,8 @@ import (
 type FunImp func(*G, *Task, *Env, Vec) (Val, E)
 
 type Fun struct {
+  BasicVal
+  
   env      *Env
   arg_list ArgList
   body     Vec
@@ -20,6 +22,7 @@ func NewFun(g *G, env *Env, args []Arg) *Fun {
 }
 
 func (f *Fun) Init(g *G, env *Env, args []Arg) *Fun {
+  f.BasicVal.Init(&g.FunType, f)
   f.env = env
   f.arg_list.Init(g, args)
   return f
@@ -113,8 +116,8 @@ func (f *Fun) Splat(g *G, out Vec) Vec {
   return append(out, f)
 }
 
-func (f *Fun) Type(g *G) *Type {
-  return &g.FunType
+func (f *Fun) String() string {
+  return DumpString(f)
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {

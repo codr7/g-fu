@@ -34,6 +34,10 @@ func (s Str) Is(g *G, rhs Val) bool {
   return s.Eq(g, rhs)
 }
 
+func (s Str) Push(g *G, its...Val) (Val, E) {
+  return nil, g.E("Push not supported: Str")
+}
+
 func (s Str) Quote(g *G, task *Task, env *Env) (Val, E) {
   return s, nil
 }

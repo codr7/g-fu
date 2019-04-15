@@ -351,18 +351,18 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
+    return v.Push(g, args[1:]...)
+  })
+}
+
 func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args, nil
 }
 
 func vec_len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].(Vec).Len(), nil
-}
-
-func vec_push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    return v.(Vec).Push(args[1:]...), nil
-  })
 }
 
 func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -415,12 +415,8 @@ func task_this_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   t := args[0]
-
-  for _, v := range args[1:] {
-    t.(*Task).Inbox <- v
-  }
-
-  return &g.NIL, nil
+  t.(*Task).Inbox.Push(g, args[1:]...)
+  return t, nil
 }
 
 func task_fetch_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -471,9 +467,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.TrueType, "True")
   e.AddType(g, &g.VecType, "Vec")
 
-  e.AddVal(g, "_", &g.NIL)
-  e.AddVal(g, "T", &g.T)
-  e.AddVal(g, "F", &g.F)
+  e.AddVal(g, "_", g.NIL.Init(g))
+  e.AddVal(g, "T", g.T.Init(g))
+  e.AddVal(g, "F", g.F.Init(g))
 
   e.AddPrim(g, "do", do_imp, SplatA("body"))
   e.AddPrim(g, "fun", fun_imp, A("args"), SplatA("body"))
@@ -502,9 +498,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "+", int_add_imp, SplatA("vals"))
   e.AddFun(g, "-", int_sub_imp, SplatA("vals"))
 
+  e.AddPrim(g, "push", push_imp, A("sink"), SplatA("its"))
+
   e.AddFun(g, "vec", vec_imp, SplatA("items"))
   e.AddFun(g, "len", vec_len_imp, A("vec"))
-  e.AddPrim(g, "push", vec_push_imp, A("vec"), SplatA("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
   e.AddPrim(g, "pop", vec_pop_imp, A("vec"))
 

@@ -6,6 +6,8 @@ import (
 )
 
 type Macro struct {
+  BasicVal
+  
   env      *Env
   arg_list ArgList
   body     Vec
@@ -16,6 +18,8 @@ func NewMacro(g *G, env *Env, args []Arg) *Macro {
 }
 
 func (m *Macro) Init(g *G, env *Env, args []Arg) *Macro {
+  m.BasicVal.Init(&g.MacroType, m)
+
   m.env = env
   m.arg_list.Init(g, args)
   return m
@@ -93,6 +97,6 @@ func (m *Macro) Splat(g *G, out Vec) Vec {
   return append(out, m)
 }
 
-func (m *Macro) Type(g *G) *Type {
-  return &g.MacroType
+func (m *Macro) String() string {
+  return DumpString(m)
 }

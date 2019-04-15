@@ -191,7 +191,7 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) 
     return nil, g.ReadE(vpos, "Nothing to quote")
   }
 
-  return append(out, NewQuote(vs[0])), nil
+  return append(out, NewQuote(g, vs[0])), nil
 }
 
 func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
@@ -217,7 +217,7 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
     return nil, g.ReadE(*pos, "Missing splat value")
   }
 
-  out[i-1] = NewSplat(out[i-1])
+  out[i-1] = NewSplat(g, out[i-1])
   return out, nil
 }
 
@@ -235,7 +235,7 @@ func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E)
     return nil, g.ReadE(vpos, "Nothing to eval")
   }
 
-  return append(out, NewSplice(vs[0])), nil
+  return append(out, NewSplice(g, vs[0])), nil
 }
 
 func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {

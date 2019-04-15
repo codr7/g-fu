@@ -1,54 +1,62 @@
 package gfu
 
 import (
-	"fmt"
-	//"log"
-	"strings"
+  "fmt"
+  //"log"
+  "strings"
 )
 
 type Int int64
 
 func (i Int) Abs() Int {
-	if i < 0 {
-		return -i
-	}
+  if i < 0 {
+    return -i
+  }
 
-	return i
+  return i
 }
 
 func (i Int) Bool(g *G) bool {
-	return i != 0
+  return i != 0
 }
 
 func (i Int) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-	return i, nil
+  return i, nil
 }
 
 func (i Int) Dump(out *strings.Builder) {
-	fmt.Fprintf(out, "%v", i)
+  fmt.Fprintf(out, "%v", int64(i))
 }
 
 func (i Int) Eq(g *G, rhs Val) bool {
-	ri, ok := rhs.(Int)
-	return ok && ri == i
+  ri, ok := rhs.(Int)
+  return ok && ri == i
 }
 
 func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
-	return i, nil
+  return i, nil
 }
 
 func (i Int) Is(g *G, rhs Val) bool {
-	return i.Eq(g, rhs)
+  return i.Eq(g, rhs)
+}
+
+func (v Int) Push(g *G, its...Val) (Val, E) {
+  return nil, g.E("Push not supported: Int")
 }
 
 func (i Int) Quote(g *G, task *Task, env *Env) (Val, E) {
-	return i, nil
+  return i, nil
 }
 
 func (i Int) Splat(g *G, out Vec) Vec {
-	return append(out, i)
+  return append(out, i)
+}
+
+func (i Int) String() string {
+  return DumpString(i)
 }
 
 func (_ Int) Type(g *G) *Type {
-	return &g.IntType
+  return &g.IntType
 }

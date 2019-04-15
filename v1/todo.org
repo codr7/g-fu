@@ -1,12 +1,6 @@
-* add push/pop/len val methods
-** implement all for Vec/Chan & Str.len
-** add BasicVal
-*** use as base for Wrap, Fun, Macro, Task, Chan, Nil, Prim, Sym, Type, True, False
-*** throw error for push/pop/len
-* add default Splat method in BasicVal
-** throw error
-** grep ") Splat("
-
+* add pop/len val methods
+** implement both for Vec/Chan & Str.len
+* add default methods using imp
 * ---
 * add load fun
 * add lib/iter.gf
