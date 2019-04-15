@@ -1,18 +1,13 @@
-* add bench/stack
-** use for/push/pop
-** snigl
-* add for based on loop macro
-** add lib/iter.gf
-** replace prim?
-*** bench
+* change task_imp to skip nested arg Vec
+** accept bare Int/Chan
+** test
 * add load fun
 ** add Str type
+** add lib/iter.gf
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
 
-* change bench to take vec arg for reps
-** update bench/
 * dlambda
 ** https://letoverlambda.com/index.cl/guest/chap5.html#sec_7
 ** add map fun
@@ -30,6 +25,11 @@
 ** load iter.gf from test/all
 * add expand(form n?) fun
 * vec iter
+* add for based on loop macro
+** add lib/iter.gf
+** replace prim?
+*** bench
+
 * transducers
 * add bang calls
 ** add separate Bang type
