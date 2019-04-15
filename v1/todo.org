@@ -5,6 +5,9 @@
 ** based on task
 ** call through inbox
 
+*  use type switch where applicable
+** https://tour.golang.org/methods/16
+** grep "\.("
 * dlambda
 ** https://letoverlambda.com/index.cl/guest/chap5.html#sec_7
 ** add map fun
