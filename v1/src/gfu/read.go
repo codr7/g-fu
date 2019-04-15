@@ -61,8 +61,6 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
       return g.ReadVec(pos, in, out)
     case '\'':
       return g.ReadQuote(pos, in, out, end)
-    case '?':
-      return g.ReadOpt(pos, in, out)
     case '.':
       return g.ReadSplat(pos, in, out)
     case '%':
@@ -197,17 +195,6 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E)
   }
   
   return append(out, Int(n)), nil
-}
-
-func (g *G) ReadOpt(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-  i := len(out)
-  
-  if i == 0 {
-    return nil, g.ReadE(*pos, "Missing opt value")        
-  }
-  
-  out[i-1] = NewOpt(out[i-1]) 
-  return out, nil
 }
 
 func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {

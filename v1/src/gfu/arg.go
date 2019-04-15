@@ -15,7 +15,9 @@ const (
 
 type Arg struct {
   arg_type ArgType
+  str_id string
   id *Sym
+  opt_val Val
 }
 
 func (a *Arg) Init(id *Sym) *Arg {
@@ -23,15 +25,38 @@ func (a *Arg) Init(id *Sym) *Arg {
   return a
 }
 
+func A(id string) (a Arg) {
+  a.str_id = id
+  return a
+}
+
+func OptA(id string, val Val) (a Arg) {
+  a.str_id = id
+  a.opt_val = val
+  a.arg_type = ARG_OPT
+  return a
+}
+
+func SplatA(id string) (a Arg) {
+  a.str_id = id
+  a.arg_type = ARG_SPLAT
+  return a
+}
+
 func (a Arg) String() string {
   var out strings.Builder
-  out.WriteString(a.id.name)
 
   switch a.arg_type {
   case ARG_OPT:
-    out.WriteRune('?')
+    out.WriteRune('(')
+    out.WriteString(a.id.name)
+    a.opt_val.Dump(&out)
+    out.WriteRune(')')
   case ARG_SPLAT:
+    out.WriteString(a.id.name)
     out.WriteString("..")
+  default:
+    out.WriteString(a.id.name)
   }
   
   return out.String()
@@ -52,10 +77,14 @@ func (l *ArgList) Init(g *G, args []Arg) *ArgList {
   l.items = args
   l.min, l.max = nargs, nargs
   
-  for _, a := range args {
+  for i, a := range l.items {
     if a.arg_type == ARG_OPT {
       l.min--
-    } 
+    }
+
+    if a.id == nil {
+      l.items[i].id = g.Sym(a.str_id)
+    }
   }
   
   a := l.items[nargs-1]
@@ -78,6 +107,30 @@ func (l *ArgList) Check(g *G, args Vec) E {
   return nil
 }
 
+func (l *ArgList) Fill(g *G, args Vec) Vec {
+  for i := len(args); i < len(l.items); i++ {
+    a := l.items[i]
+
+    if a.arg_type != ARG_OPT {
+      break
+    }
+
+    args = append(args, a.OptVal(g))
+  }
+
+  return args
+}
+
+func (a Arg) OptVal(g *G) Val {
+  v := a.opt_val
+      
+  if v == nil {
+    v = &g.NIL
+  }
+
+  return v
+}
+
 func (l *ArgList) LetEnv(g *G, env *Env, args Vec) {
   nargs := len(args)
   
@@ -97,32 +150,29 @@ func (l *ArgList) LetEnv(g *G, env *Env, args Vec) {
     if i < nargs {
       env.Let(a.id, args[i])
     } else {
-      env.Let(a.id, &g.NIL)
+      env.Let(a.id, a.OptVal(g))
     }
   }
 }
 
-func ParseArgs(g *G, in Vec) ([]Arg, E) {
+func ParseArgs(g *G, task *Task, env *Env, in Vec) ([]Arg, E) {
+  var e E
   var out []Arg
   
   for _, v := range in {
     var a Arg
     
     if id, ok := v.(*Sym); ok {
-      idn := id.name
-
-      if strings.HasSuffix(idn, "?") {
-        a.arg_type = ARG_OPT
-        a.id = g.Sym(idn[:len(idn)-1])
-      } else if strings.HasSuffix(idn, "..") {
-        a.arg_type = ARG_SPLAT
-        a.id = g.Sym(idn[:len(idn)-2])
-      } else {
-        a.id = id
-      }
-    } else if ov, ok := v.(Opt); ok {
+      a.id = id
+    } else if vv, ok := v.(Vec); ok {
       a.arg_type = ARG_OPT
-      a.id = ov.val.(*Sym)
+      a.id = vv[0].(*Sym)
+
+      if len(vv) > 1 {
+        if a.opt_val, e = vv[1].Eval(g, task, env); e != nil {
+          return nil, e
+        }
+      }
     } else if sv, ok := v.(Splat); ok {
       a.arg_type = ARG_SPLAT
       a.id = sv.val.(*Sym)

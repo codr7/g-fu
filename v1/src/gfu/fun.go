@@ -41,7 +41,7 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   if f.imp != nil {
-    return f.imp(g, task, env, avs)
+    return f.imp(g, task, env, f.arg_list.Fill(g, avs))
   }
   
   var be Env
@@ -117,20 +117,8 @@ func (f *Fun) Type(g *G) *Type {
   return &g.FunType
 }
 
-func (env *Env) AddFun(g *G, id string, imp FunImp, args...string) E {
-  vs := make(Vec, len(args))
-
-  for i, a := range args {
-    vs[i] = g.Sym(a)
-  }
-
-  as, e := ParseArgs(g, vs)
-
-  if e != nil {
-    return e
-  }
-  
-  f := NewFun(g, env, as)
+func (env *Env) AddFun(g *G, id string, imp FunImp, args...Arg) E {
+  f := NewFun(g, env, args)
   f.imp = imp
   env.Let(g.Sym(id), f)
   return nil

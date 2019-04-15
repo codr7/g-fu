@@ -40,9 +40,13 @@
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
-(let (foo (fun (x?) x))
-  (test (= (foo 42) 42))
-  (test (= (foo) _)))
+(let (foo (fun ((x)) x))
+  (test (= (foo) _))
+  (test (= (foo 42) 42)))
+
+(let (foo (fun ((x 42)) x))
+  (test (= (foo) 42))
+  (test (= (foo 7) 7)))
 
 (let (foo (macro () ''bar))
   (test (= (foo) 'bar)))
@@ -101,7 +105,7 @@
   (let done (g-sym) result (g-sym))
   
   '(let (break (macro (args..) '(recall T %args..)))
-     ((fun (%done? %result..)
+     ((fun ((%done F) %result..)
         (if %done %result.. (do %body.. (recall))))))))
 
 (test (= (loop (break 'foo)) 'foo))

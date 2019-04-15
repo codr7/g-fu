@@ -30,7 +30,7 @@ func (p *Prim) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
 
-  return p.imp(g, task, env, args)
+  return p.imp(g, task, env, p.arg_list.Fill(g, args))
 }
 
 func (p *Prim) Dump(out *strings.Builder) {
@@ -61,20 +61,8 @@ func (p *Prim) Type(g *G) *Type {
   return &g.PrimType
 }
 
-func (env *Env) AddPrim(g *G, id string, imp PrimImp, args...string) E {
+func (env *Env) AddPrim(g *G, id string, imp PrimImp, args...Arg) E {
   ids := g.Sym(id)
-  vs := make(Vec, len(args))
-
-  for i, a := range args {
-    vs[i] = g.Sym(a)
-  }
-
-  as, e := ParseArgs(g, vs)
-
-  if e != nil {
-    return e
-  }
-
-  env.Let(ids, NewPrim(g, ids, imp, as))
+  env.Let(ids, NewPrim(g, ids, imp, args))
   return nil
 }

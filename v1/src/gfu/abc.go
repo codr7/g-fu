@@ -18,7 +18,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := ParseArgs(g, avs.(Vec))
+  as, e := ParseArgs(g, task, env, avs.(Vec))
 
   if e != nil {
     return nil, e
@@ -36,7 +36,7 @@ func macro_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, g.E("Invalid args: %v", avs)
   }
 
-  as, e := ParseArgs(g, avs.(Vec))
+  as, e := ParseArgs(g, task, env, avs.(Vec))
 
   if e != nil {
     return nil, e
@@ -151,20 +151,14 @@ func or_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  d := Int(1)
-  
-  if len(args) == 2 {
-    dv, e := args[1].Eval(g, task, env)
+  d, e := args[1].Eval(g, task, env)
 
-    if e != nil {
-      return nil, e
-    }
-
-    d = dv.(Int)
+  if e != nil {
+    return nil, e
   }
-
+  
   return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    return v.(Int)+d, nil
+    return v.(Int)+d.(Int), nil
   })
 }
 
@@ -442,15 +436,7 @@ func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  buf := Int(0)
-
-  if len(args) > 0 {
-    if v, ok := args[0].(Int); ok {
-      buf = v
-    }
-  }
-
-  return NewChan(buf), nil
+  return NewChan(args[0].(Int)), nil
 }
 
 func (e *Env) InitAbc(g *G) {
@@ -461,7 +447,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.IntType, "Int")
   e.AddType(g, &g.MacroType, "Macro")
   e.AddType(g, &g.NilType, "Nil")
-  e.AddType(g, &g.OptType, "Opt")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
   e.AddType(g, &g.SpliceType, "Splice")
@@ -475,43 +460,43 @@ func (e *Env) InitAbc(g *G) {
   e.AddVal(g, "T", &g.T)
   e.AddVal(g, "F", &g.F)
   
-  e.AddPrim(g, "do", do_imp, "body..")
-  e.AddPrim(g, "fun", fun_imp, "args", "body..")
-  e.AddPrim(g, "macro", macro_imp, "args", "body..")
-  e.AddPrim(g, "let", let_imp, "args..")
-  e.AddPrim(g, "if", if_imp, "cond", "t", "f?")
-  e.AddPrim(g, "or", or_imp, "conds..")
-  e.AddPrim(g, "and", and_imp, "conds..")
-  e.AddPrim(g, "inc", inc_imp, "var", "delta?")
-  e.AddPrim(g, "for", for_imp, "nreps", "body..")
-  e.AddPrim(g, "test", test_imp, "cases..")
-  e.AddPrim(g, "bench", bench_imp, "nreps", "body..")
+  e.AddPrim(g, "do", do_imp, SplatA("body"))
+  e.AddPrim(g, "fun", fun_imp, A("args"), SplatA("body"))
+  e.AddPrim(g, "macro", macro_imp, A("args"), SplatA("body"))
+  e.AddPrim(g, "let", let_imp, SplatA("args"))
+  e.AddPrim(g, "if", if_imp, A("cond"), A("t"), OptA("f", nil))
+  e.AddPrim(g, "or", or_imp, SplatA("conds"))
+  e.AddPrim(g, "and", and_imp, SplatA("conds"))
+  e.AddPrim(g, "inc", inc_imp, A("var"), OptA("delta", Int(1)))
+  e.AddPrim(g, "for", for_imp, A("nreps"), SplatA("body"))
+  e.AddPrim(g, "test", test_imp, SplatA("cases"))
+  e.AddPrim(g, "bench", bench_imp, A("nreps"), SplatA("body"))
 
-  e.AddFun(g, "dump", dump_imp, "vals..")
-  e.AddFun(g, "eval", eval_imp, "form")
-  e.AddFun(g, "recall", recall_imp, "args..")
-  e.AddFun(g, "g-sym", g_sym_imp, "prefix?")
+  e.AddFun(g, "dump", dump_imp, SplatA("vals"))
+  e.AddFun(g, "eval", eval_imp, A("form"))
+  e.AddFun(g, "recall", recall_imp, SplatA("args"))
+  e.AddFun(g, "g-sym", g_sym_imp, OptA("prefix", nil))
 
-  e.AddFun(g, "bool", bool_imp, "val")
-  e.AddFun(g, "not", not_imp, "val")
+  e.AddFun(g, "bool", bool_imp, A("val"))
+  e.AddFun(g, "not", not_imp, A("val"))
   
-  e.AddFun(g, "=", eq_imp, "vals..")
-  e.AddFun(g, "==", is_imp, "vals..")
+  e.AddFun(g, "=", eq_imp, SplatA("vals"))
+  e.AddFun(g, "==", is_imp, SplatA("vals"))
   
-  e.AddFun(g, "<", int_lt_imp, "vals..")
-  e.AddFun(g, "+", int_add_imp, "vals..")
-  e.AddFun(g, "-", int_sub_imp, "vals..")
+  e.AddFun(g, "<", int_lt_imp, SplatA("vals"))
+  e.AddFun(g, "+", int_add_imp, SplatA("vals"))
+  e.AddFun(g, "-", int_sub_imp, SplatA("vals"))
 
-  e.AddFun(g, "vec", vec_imp, "items..")
-  e.AddFun(g, "len", vec_len_imp, "vec")
-  e.AddPrim(g, "push", vec_push_imp, "vec", "val..")
-  e.AddFun(g, "peek", vec_peek_imp, "vec")
-  e.AddPrim(g, "pop", vec_pop_imp, "vec")
+  e.AddFun(g, "vec", vec_imp, SplatA("items"))
+  e.AddFun(g, "len", vec_len_imp, A("vec"))
+  e.AddPrim(g, "push", vec_push_imp, A("vec"), SplatA("vals"))
+  e.AddFun(g, "peek", vec_peek_imp, A("vec"))
+  e.AddPrim(g, "pop", vec_pop_imp, A("vec"))
 
-  e.AddPrim(g, "task", task_imp, "args", "body..")
+  e.AddPrim(g, "task", task_imp, A("args"), SplatA("body"))
   e.AddFun(g, "this-task", task_this_imp)
-  e.AddFun(g, "post", task_post_imp, "task", "vals..")
+  e.AddFun(g, "post", task_post_imp, A("task"), SplatA("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
-  e.AddFun(g, "wait", task_wait_imp, "tasks..")
-  e.AddFun(g, "chan", chan_imp, "buf?")
+  e.AddFun(g, "wait", task_wait_imp, SplatA("tasks"))
+  e.AddFun(g, "chan", chan_imp, OptA("buf", Int(0)))
 }

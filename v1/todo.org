@@ -1,12 +1,13 @@
-* replace opt arg with nested Vec
-** foo? -> (foo _)
-** remove Opt type
 * add for-var support
 ** (for (10 i) ...)
 *** always expect Vec
 **** update test/bench
 ** add bench/stack
-*** grab from snigl
+*** snigl
+** add for based on loop macro
+** add lib/iter.gf
+** replace prim?
+*** bench
 * add load fun
 ** add Str type
 * add coro/coret g-fu macros
@@ -33,8 +34,6 @@
 * add expand(form n?) fun
 * vec iter
 * transducers
-* replace for-prim with loop macro
-** add lib/iter.gf
 * add bang calls
 ** add separate Bang type
 *** store target
