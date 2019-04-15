@@ -66,3 +66,17 @@ func (env *Env) AddPrim(g *G, id string, imp PrimImp, args...Arg) E {
   env.Let(ids, NewPrim(g, ids, imp, args))
   return nil
 }
+
+func ParsePrimArgs(g *G, args Val) Vec {
+  if s, ok := args.(*Sym); ok && s == g.nil_sym {
+    return nil
+  } else if v, ok := args.(Vec); ok {
+    if len(v) == 0 {
+      return nil
+    }
+    
+    return v
+  }
+
+  return Vec{args}
+}

@@ -163,23 +163,24 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  as := args[0]
   var id *Sym
   var n Val
   var e E
   
-  if v, ok := as.(Vec); ok {
-    if len(v) == 1 {
-      n = v[0]
-    } else {
-      id = v[0].(*Sym)
-      n = v[1]
-    }
-  } else {
-    n = as
-  }
+  as := ParsePrimArgs(g, args[0])
 
-  if n, e = n.Eval(g, task, env); e != nil {
+  if as == nil {
+    return nil, g.E("Invalid for args: %v", as)
+  }
+  
+  if len(as) == 1 {
+    n, e = as[0].Eval(g, task, env)
+  } else {
+    id = as[0].(*Sym)
+    n, e = as[1].Eval(g, task, env)
+  }
+  
+  if e != nil {
     return nil, e
   }
 
@@ -216,13 +217,19 @@ func test_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func bench_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  nv, e := args[0].Eval(g, task, env)
+  as := ParsePrimArgs(g, args[0])
+
+  if as == nil {
+    return nil, g.E("Invalid bench args: %v", as)
+  }
+
+  a, e := as[0].Eval(g, task, env)
 
   if e != nil {
     return nil, e
   }
 
-  n := nv.(Int)
+  n := a.(Int)
   b := args[1:]
 
   for i := Int(0); i < n; i++ {
@@ -386,25 +393,25 @@ func vec_pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
-  as := args[0]
+  as := ParsePrimArgs(g, args[0])
   var inbox Chan
   
-  if v, ok := as.(Vec); ok {
-    var a0 Val
-
-    if a0, e = v[0].Eval(g, task, env); e != nil {
+  if as == nil {
+    inbox = NewChan(0)
+  } else {
+    var a Val
+    
+    if a, e = as[0].Eval(g, task, env); e != nil {
       return nil, e
     }
 
-    if v, ok := a0.(Int); ok {
+    if v, ok := a.(Int); ok {
       inbox = NewChan(v)
+    } else if v, ok := a.(Chan); ok {
+      inbox = v
     } else {
-      inbox = a0.(Chan)
+      return nil, g.E("Invalid task args: %v", as)
     }
-  } else if s, ok := as.(*Sym); ok && s == g.nil_sym {
-    inbox = NewChan(0)
-  } else {
-    return nil, g.E("Invalid task args: %v", as)
   }
 
   t := NewTask(g, inbox, args[1:])

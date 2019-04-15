@@ -1,6 +1,3 @@
-* change task_imp to skip nested arg Vec
-** accept bare Int/Chan
-** test
 * add load fun
 ** add Str type
 ** add lib/iter.gf
