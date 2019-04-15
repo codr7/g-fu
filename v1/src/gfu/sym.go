@@ -24,16 +24,8 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) Bool(g *G) bool {
-  return true
-}
-
 func (s *Sym) Dump(out *strings.Builder) {
   out.WriteString(s.name)
-}
-
-func (s *Sym) Eq(g *G, rhs Val) bool {
-  return s == rhs
 }
 
 func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
@@ -44,18 +36,6 @@ func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
   }
 
   return found.Val, nil
-}
-
-func (s *Sym) Is(g *G, rhs Val) bool {
-  return s == rhs
-}
-
-func (s *Sym) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return s, nil
-}
-
-func (s *Sym) Splat(g *G, out Vec) Vec {
-  return append(out, s)
 }
 
 func (s *Sym) String() string {

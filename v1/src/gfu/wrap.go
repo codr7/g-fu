@@ -2,6 +2,7 @@ package gfu
 
 import (
   //"log"
+  "strings"
 )
 
 type Wrap struct {
@@ -29,6 +30,10 @@ func (w Wrap) Clone(g *G) (Val, E) {
   return w.imp, nil
 }
 
+func (w Wrap) Dump(out *strings.Builder) {
+  w.val.Dump(out)
+}
+
 func (w Wrap) Dup(g *G) (Val, E) {
   var e E
   
@@ -37,6 +42,11 @@ func (w Wrap) Dup(g *G) (Val, E) {
   }
   
   return w.imp, nil
+}
+
+func (w Wrap) Eq(g *G, rhs Val) bool {
+  rw, ok := rhs.(Wrap)
+  return ok && w.val.Eq(g, rw.val)
 }
 
 func (w Wrap) Pop(g *G) (Val, Val, E) {

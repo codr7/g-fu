@@ -37,8 +37,7 @@ func (i Int) Dump(out *strings.Builder) {
 }
 
 func (i Int) Eq(g *G, rhs Val) bool {
-  ri, ok := rhs.(Int)
-  return ok && ri == i
+  return i.Is(g, rhs)
 }
 
 func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
@@ -46,7 +45,7 @@ func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
 }
 
 func (i Int) Is(g *G, rhs Val) bool {
-  return i.Eq(g, rhs)
+  return i == rhs
 }
 
 func (_ Int) Len(g *G) (Int, E) {

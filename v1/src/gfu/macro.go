@@ -25,10 +25,6 @@ func (m *Macro) Init(g *G, env *Env, args []Arg) *Macro {
   return m
 }
 
-func (m *Macro) Bool(g *G) bool {
-  return true
-}
-
 func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   avs := make(Vec, len(args))
 
@@ -75,28 +71,4 @@ func (m *Macro) Dump(out *strings.Builder) {
   }
 
   out.WriteRune(')')
-}
-
-func (m *Macro) Eq(g *G, rhs Val) bool {
-  return m == rhs
-}
-
-func (m *Macro) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return m, nil
-}
-
-func (m *Macro) Is(g *G, rhs Val) bool {
-  return m == rhs
-}
-
-func (m *Macro) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return m, nil
-}
-
-func (m *Macro) Splat(g *G, out Vec) Vec {
-  return append(out, m)
-}
-
-func (m *Macro) String() string {
-  return DumpString(m)
 }

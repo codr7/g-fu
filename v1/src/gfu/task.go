@@ -38,32 +38,8 @@ func (t *Task) Bool(g *G) bool {
   return out
 }
 
-func (t *Task) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return t, nil
-}
-
 func (t *Task) Dump(out *strings.Builder) {
   fmt.Fprintf(out, "(Task %v)", (chan Val)(t.Inbox))
-}
-
-func (t *Task) Eq(g *G, rhs Val) bool {
-  return t.Is(g, rhs)
-}
-
-func (t *Task) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return t, nil
-}
-
-func (t *Task) Is(g *G, rhs Val) bool {
-  return t == rhs
-}
-
-func (t *Task) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return t, nil
-}
-
-func (t *Task) Splat(g *G, out Vec) Vec {
-  return append(out, t)
 }
 
 func (t *Task) Start(g *G, env *Env) {
@@ -82,10 +58,6 @@ func (t *Task) Start(g *G, env *Env) {
     t.cond.Broadcast()
     t.mutex.Unlock()
   }()
-}
-
-func (t *Task) String() string {
-  return DumpString(t)
 }
 
 func (t *Task) Wait() Val {

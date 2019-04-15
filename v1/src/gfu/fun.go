@@ -28,10 +28,6 @@ func (f *Fun) Init(g *G, env *Env, args []Arg) *Fun {
   return f
 }
 
-func (_ *Fun) Bool(g *G) bool {
-  return true
-}
-
 func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   avs, e := args.EvalVec(g, task, env)
 
@@ -94,30 +90,6 @@ func (f *Fun) Dump(out *strings.Builder) {
 
     out.WriteRune(')')
   }
-}
-
-func (f *Fun) Eq(g *G, rhs Val) bool {
-  return f.Is(g, rhs)
-}
-
-func (f *Fun) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return f, nil
-}
-
-func (f *Fun) Is(g *G, rhs Val) bool {
-  return f == rhs
-}
-
-func (f *Fun) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return f, nil
-}
-
-func (f *Fun) Splat(g *G, out Vec) Vec {
-  return append(out, f)
-}
-
-func (f *Fun) String() string {
-  return DumpString(f)
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
