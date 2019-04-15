@@ -18,10 +18,6 @@ func (_ *True) Bool(g *G) bool {
   return true
 }
 
-func (t *True) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return t, nil
-}
-
 func (_ *True) Dump(out *strings.Builder) {
   out.WriteRune('T')
 }

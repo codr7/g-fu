@@ -28,10 +28,6 @@ func (s *Sym) Bool(g *G) bool {
   return true
 }
 
-func (s *Sym) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return s, nil
-}
-
 func (s *Sym) Dump(out *strings.Builder) {
   out.WriteString(s.name)
 }

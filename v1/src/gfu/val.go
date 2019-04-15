@@ -35,6 +35,10 @@ func (v *BasicVal) Init(imp_type *Type, imp Val) *BasicVal {
   return v
 }
 
+func (v BasicVal) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return v.imp, nil
+}
+
 func (v BasicVal) Clone(g *G) (Val, E) {
   return v.imp.Dup(g)
 }

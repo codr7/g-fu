@@ -19,10 +19,6 @@ func (t *Type) Bool(g *G) bool {
   return true
 }
 
-func (t *Type) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return t, nil
-}
-
 func (t *Type) Dump(out *strings.Builder) {
   out.WriteString(t.id.name)
 }
