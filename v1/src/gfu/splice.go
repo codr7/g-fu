@@ -24,7 +24,13 @@ func (s Splice) Dump(out *strings.Builder) {
 }
 
 func (s Splice) Eq(g *G, rhs Val) bool {
-  return s.val.Is(g, rhs.(Splice).val)
+  rs, ok := rhs.(Splice)
+
+  if !ok {
+    return false
+  }
+
+  return s.val.Eq(g, rs.val)
 }
 
 func (_ Splice) Eval(g *G, task *Task, env *Env) (Val, E) {

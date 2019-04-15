@@ -24,7 +24,13 @@ func (s Splat) Dump(out *strings.Builder) {
 }
 
 func (s Splat) Eq(g *G, rhs Val) bool {
-  return s.val.Is(g, rhs.(Splat).val)
+  rs, ok := rhs.(Splat)
+
+  if !ok {
+    return false
+  }
+
+  return s.val.Eq(g, rs.val)
 }
 
 func (s Splat) Eval(g *G, task *Task, env *Env) (Val, E) {

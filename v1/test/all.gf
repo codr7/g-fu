@@ -25,7 +25,7 @@
 (test (= '(1 2 3) (vec 1 2 3)))
 (test (= '(1 %(+ 2 3) 4) (vec 1 5 4)))
 (test (= (vec 1 2 3) (vec 1 2 3)))
-(test (== (vec 1 2 3) (vec 1 2 3)))
+(test (not (== (vec 1 2 3) (vec 1 2 3))))
 (test (= '(1 %(vec 2 3)..) (vec 1 2 3)))
 (test (= (+ (vec 1 2 3)..) 6))
 

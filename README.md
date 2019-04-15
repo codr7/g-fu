@@ -21,6 +21,18 @@ Press Return twice to evaluate.
 6765
 ```
 
+### Equality && Identity
+`=` may be used to check if any number of values are deeply equal, while `==` checks if they have the same identity. The difference only makes sense for reference types (`Vec` as of right now).
+
+```
+  (let (v1 (vec 1 2 3) v2 (vec 1 2 3))
+    (dump (= v1 v2))
+    (dump (== v1 v2)))
+
+T
+F
+```
+
 ### Macros
 One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
 

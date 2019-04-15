@@ -130,7 +130,15 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
 }
 
 func (v Vec) Is(g *G, rhs Val) bool {
-  return v.Eq(g, rhs)
+  rv, ok := rhs.(Vec)
+
+  if !ok {
+    return false
+  }
+  
+  vl := len(v)
+  
+  return ok && vl == len(rv) && (vl == 0 || &v[0] == &rv[0])
 }
 
 func (v Vec) Len() Int {

@@ -3,6 +3,11 @@
 * add chan push/pop test
 ** testchan.gf
 * add default methods using imp
+* add Dup method
+** shallow clone
+** implement for Vec/Wrap
+** add clone/dup funs
+*** readme
 * ---
 * add load fun
 * add lib/iter.gf

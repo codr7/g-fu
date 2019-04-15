@@ -24,7 +24,13 @@ func (q Quote) Dump(out *strings.Builder) {
 }
 
 func (q Quote) Eq(g *G, rhs Val) bool {
-  return q.val.Is(g, rhs.(Quote).val)
+  rq, ok := rhs.(Quote)
+
+  if !ok {
+    return false
+  }
+
+  return q.val.Eq(g, rq.val)
 }
 
 func (q Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
