@@ -1,10 +1,10 @@
+* add Str type
+** add push/pop/len val methods
+*** implement for Vec/Chan/Str
+** add BasicVal
+*** use as base for Wrap, Fun, Macro, Task, Chan, Nil, Prim, Sym, Type, True, False
+*** throw error for push/pop/len
 * add load fun
-** add Str type
-*** add push/pop/len val methods
-**** implement for Vec/Chan/Str
-*** add BasicVal
-**** use as base for Wrap, Fun, Macro, Task, Chan, Nil, Prim, Sym, Type, True, False
-**** throw error for push/pop/len
 * add lib/iter.gf
 * add coro/coret g-fu macros
 ** based on task
