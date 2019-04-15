@@ -163,17 +163,34 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  nv, e := args[0].Eval(g, task, env)
+  as := args[0]
+  var id *Sym
+  var n Val
+  var e E
+  
+  if v, ok := as.(Vec); ok {
+    if len(v) == 1 {
+      n = v[0]
+    } else {
+      id = v[0].(*Sym)
+      n = v[1]
+    }
+  } else {
+    n = as
+  }
 
-  if e != nil {
+  if n, e = n.Eval(g, task, env); e != nil {
     return nil, e
   }
 
-  n := nv.(Int)
   b := args[1:]
   var v Val = &g.NIL
   
-  for i := Int(0); i < n; i++ {
+  for i := Int(0); i < n.(Int); i++ {
+    if id != nil {
+      env.Let(id, i)
+    }
+    
     if v, e = b.EvalExpr(g, task, env); e != nil {
       return nil, e
     }

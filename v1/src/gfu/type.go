@@ -21,6 +21,10 @@ func (t *Type) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t, nil
 }
 
+func (t *Type) Clone(g *G, task *Task, env *Env) (Val, E) {
+  return t, nil
+}
+
 func (t *Type) Dump(out *strings.Builder) {
   out.WriteString(t.id.name)
 }

@@ -1,10 +1,7 @@
-* add for-var support
-** (for (10 i) ...)
-*** always expect Vec
-**** update test/bench
-** add bench/stack
-*** snigl
-** add for based on loop macro
+* add bench/stack
+** use for/push/pop
+** snigl
+* add for based on loop macro
 ** add lib/iter.gf
 ** replace prim?
 *** bench

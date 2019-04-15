@@ -39,7 +39,7 @@ func main() {
   args := flag.Args()
   
   if len(args) == 0 {
-    fmt.Printf("g-fu v1.7\n\nPress Return twice to evaluate.\n\n  ")
+    fmt.Printf("g-fu v1.8\n\nPress Return twice to evaluate.\n\n  ")
     in := bufio.NewScanner(os.Stdin)
     var buf strings.Builder
     
