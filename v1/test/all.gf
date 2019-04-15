@@ -36,6 +36,7 @@
 
 (test (= (do 1 2 3) 3))
 
+(test (= ((fun _ 42)) 42))
 (test (= ((fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))

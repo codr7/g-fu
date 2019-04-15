@@ -12,13 +12,8 @@ func do_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  avs := args[0]
-  
-  if _, ok := avs.(Vec); !ok {
-    return nil, g.E("Invalid args: %v", avs)
-  }
-
-  as, e := ParseArgs(g, task, env, avs.(Vec))
+  avs := ParsePrimArgs(g, args[0])
+  as, e := ParseArgs(g, task, env, avs)
 
   if e != nil {
     return nil, e
@@ -30,13 +25,8 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func macro_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  avs := args[0]
-  
-  if _, ok := avs.(Vec); !ok {
-    return nil, g.E("Invalid args: %v", avs)
-  }
-
-  as, e := ParseArgs(g, task, env, avs.(Vec))
+  avs := ParsePrimArgs(g, args[0])
+  as, e := ParseArgs(g, task, env, avs)
 
   if e != nil {
     return nil, e
