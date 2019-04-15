@@ -30,16 +30,6 @@ func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
   src := env.vars
   dst.vars = make([]Var, len(src))
   copy(dst.vars, src)
-  var e E
-  
-  for i, _ := range dst.vars {
-    v := &dst.vars[i]
-    
-    if v.Val, e = v.Val.Dup(g); e != nil {
-      return nil, e
-    }
-  }
-
   return dst, nil
 }
 

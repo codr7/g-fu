@@ -44,14 +44,7 @@ func (v Vec) Dump(out *strings.Builder) {
 
 func (v Vec) Dup(g *G) (Val, E) {
   out := make(Vec, len(v))
-  var e E
-  
-  for i, it := range v {
-    if out[i], e = it.Dup(g); e != nil {
-      return nil, e
-    }
-  }
-  
+  copy(out, v)
   return out, nil
 }
 
