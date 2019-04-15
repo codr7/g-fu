@@ -86,12 +86,15 @@ The defining environment is cloned; and may be read, but not modified by the tas
 ```
 
 #### Channels
-Channels are optionally buffered thread-safe pipes, new channels may be created using `chan`.
+Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values.
 
 ```
-  (chan 10)
+  (let (c (chan 1))
+    (push c 42)
+    (dump (len c))
+    (dump (pop c)))
 
-(Chan 0xc00005a240)
+42
 ```
 
 Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task `t`, which then replies `'foo` and finally returns `'bar`

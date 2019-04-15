@@ -41,7 +41,11 @@ func (i Int) Is(g *G, rhs Val) bool {
   return i.Eq(g, rhs)
 }
 
-func (v Int) Push(g *G, its...Val) (Val, E) {
+func (_ Int) Pop(g *G) (Val, Val, E) {
+  return nil, nil, g.E("Pop not supported: Int")
+}
+
+func (_ Int) Push(g *G, its...Val) (Val, E) {
   return nil, g.E("Push not supported: Int")
 }
 

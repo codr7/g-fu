@@ -1,7 +1,8 @@
-* add pop/len val methods
-** implement both for Vec/Chan & Str.len
+* add Len method
+** Vec/Chan/Str
+* add chan push/pop test
+** testchan.gf
 * add default methods using imp
-* add chan push/pop to readme
 * ---
 * add load fun
 * add lib/iter.gf

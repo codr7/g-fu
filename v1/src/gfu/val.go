@@ -14,6 +14,7 @@ type Val interface {
   Eq(*G, Val) bool
   Eval(*G, *Task, *Env) (Val, E)
   Is(*G, Val) bool
+  Pop(g *G) (Val, Val, E)
   Push(g *G, its...Val) (Val, E)
   Quote(*G, *Task, *Env) (Val, E)
   Splat(*G, Vec) Vec
@@ -29,6 +30,10 @@ func (v *BasicVal) Init(imp_type *Type, imp Val) *BasicVal {
   v.imp_type = imp_type
   v.imp = imp
   return v
+}
+
+func (v *BasicVal) Pop(g *G) (Val, Val, E) {
+  return nil, nil, g.E("Pop not supported: %v", v.imp_type)
 }
 
 func (v *BasicVal) Push(g *G, its...Val) (Val, E) {

@@ -35,6 +35,16 @@ func (c Chan) Is(g *G, rhs Val) bool {
   return c == rhs
 }
 
+func (c Chan ) Pop(g *G) (Val, Val, E) {
+  v := <- c
+
+  if v == nil {
+    v = &g.NIL
+  }
+
+  return v, c, nil
+}
+
 func (c Chan) Push(g *G, its...Val) (Val, E) {
   for _, v := range its {
     c <- v

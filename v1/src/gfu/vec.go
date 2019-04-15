@@ -141,14 +141,14 @@ func (v Vec) Peek(g *G) Val {
   return v[n-1]
 }
 
-func (v Vec) Pop(g *G) (Val, Vec) {
+func (v Vec) Pop(g *G) (Val, Val, E) {
   n := len(v)
 
   if n == 0 {
-    return &g.NIL, v
+    return &g.NIL, v, nil
   }
 
-  return v[n-1], v[:n-1]
+  return v[n-1], v[:n-1], nil
 }
 
 func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
