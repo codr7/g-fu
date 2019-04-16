@@ -254,6 +254,10 @@ func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
+func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return g.Load(task, env, string(args[0].(Str)))
+}
+
 func dup_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Dup(g)
 }
@@ -503,6 +507,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp) 
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
+  e.AddFun(g, "load", load_imp, A("path"))
   
   e.AddFun(g, "dup", dup_imp, A("val"))
   e.AddFun(g, "clone", clone_imp, A("val"))

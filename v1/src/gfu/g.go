@@ -3,6 +3,7 @@ package gfu
 import (
   "io/ioutil"
   //"log"
+  "path/filepath"
   "strings"
   "sync"
 )
@@ -11,7 +12,8 @@ type G struct {
   syms    sync.Map
   nsyms   uint64
   nil_sym *Sym
-
+  load_path string
+  
   Debug    bool
   MainTask Task
   RootEnv  Env
@@ -62,14 +64,19 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   return out.EvalExpr(g, &g.MainTask, env)
 }
 
-func (g *G) Load(task *Task, env *Env, fname string) (Val, E) {
-  s, e := ioutil.ReadFile(fname)
+func (g *G) Load(task *Task, env *Env, path string) (Val, E) {
+  path = filepath.Join(g.load_path, path)
+  s, re := ioutil.ReadFile(path)
 
-  if e != nil {
-    return nil, g.E("Failed loading file: %v\n%v", fname, e)
+  if re != nil {
+    return nil, g.E("Failed loading file: %v\n%v", path, re)
   }
 
   var pos Pos
-  pos.Init(fname)
-  return g.EvalString(task, env, pos, string(s))
+  pos.Init(path)
+  prev_path := g.load_path
+  g.load_path = filepath.Dir(path)
+  v, e := g.EvalString(task, env, pos, string(s))
+  g.load_path = prev_path
+  return v, e
 }

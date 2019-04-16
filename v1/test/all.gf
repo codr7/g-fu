@@ -88,53 +88,5 @@
 (let (foo (vec 35 7))
   (test (= (eval '(+ %foo..)) 42)))
 
-
-(let (c (chan 1))
-  (push c 42)
-  (test (= (len c) 1))
-  (test (= (pop c) 42)))
-
-(let (t (task _ 'foo))
-  (test (= (wait t) 'foo)))
-
-(let (t1 (task _ 35)
-      t2 (task _ 7))
-  (test (= (+ (wait t1 t2)..) 42)))
-
-(let (v 42
-      t (task _ (inc v)))
-  (test (= (wait t) 43))
-  (test (= v 42)))
-
-(let (t (task _
-          (post (fetch) 'foo)
-          'bar))
-  (post t (this-task))
-  (test (= (fetch) 'foo))
-  (test (= (wait t) 'bar)))
-
-(let loop (macro (body..)
-  (let done (g-sym) result (g-sym))
-  
-  '(let (break (macro (args..) '(recall T %args..)))
-     ((fun ((%done F) %result..)
-        (if %done %result.. (do %body.. (recall))))))))
-
-(test (= (loop (break 'foo)) 'foo))
-
-(let while (macro (cond body..)
-  '(loop
-     (if %cond _ (break))
-     %body..)))
-
-(let (i 0)
-  (while (< (inc i) 7))
-  (test (= i 7)))
-
-(let (i 0)
-  (for 7 (inc i))
-  (test (= i 7)))
-
-(let (i 0)
-  (for (j 7) (inc i j))
-  (test (= i 21)))
+(load "iter.gf")
+(load "task.gf")

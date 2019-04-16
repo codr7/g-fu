@@ -1,7 +1,3 @@
-* add load fun
-** add Task.load_path
-** set during eval
-* add lib/iter.gf
 * add coro/coret g-fu macros
 ** based on task
 ** call through inbox
