@@ -262,6 +262,10 @@ func clone_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Clone(g)
 }
 
+func move_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return NewMove(g, args[0]), nil
+}
+
 func eval_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Eval(g, task, env)
 }
@@ -474,6 +478,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int")
   e.AddType(g, &g.MacroType, "Macro")
+  e.AddType(g, &g.MoveType, "Move")
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
@@ -503,8 +508,11 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp) 
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
+  
   e.AddFun(g, "dup", dup_imp, A("val"))
   e.AddFun(g, "clone", clone_imp, A("val"))
+  e.AddFun(g, "move", move_imp, A("val"))
+
   e.AddFun(g, "eval", eval_imp, A("form"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))

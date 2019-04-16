@@ -58,7 +58,7 @@ func (v Vec) Eq(g *G, rhs Val) bool {
   for i, vi := range v {
     ri := rv[i]
 
-    if !vi.Is(g, ri) {
+    if !vi.Eq(g, ri) {
       return false
     }
   }
@@ -139,15 +139,21 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
 }
 
 func (v Vec) Is(g *G, rhs Val) bool {
-  rv, ok := rhs.(Vec)
+  rv := rhs.(Vec)
 
-  if !ok {
+  if len(v) != len(rv) {
     return false
   }
-  
-  vl := len(v)
-  
-  return ok && vl == len(rv) && (vl == 0 || &v[0] == &rv[0])
+
+  for i, vi := range v {
+    ri := rv[i]
+
+    if !vi.Is(g, ri) {
+      return false
+    }
+  }
+
+  return true
 }
 
 func (v Vec) Len(g *G) (Int, E) {

@@ -49,10 +49,32 @@ func (w Wrap) Eq(g *G, rhs Val) bool {
   return ok && w.val.Eq(g, rw.val)
 }
 
+func (w Wrap) Eval(g *G, task *Task, env *Env) (Val, E) {
+  var e E
+  w.val, e = w.val.Eval(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+
+  return w.imp, nil
+}
+
 func (w Wrap) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", w.imp_type)
 }
 
 func (w Wrap) Push(g *G, its...Val) (Val, E) {
   return nil, g.E("Push not supported: %v", w.imp_type)
+}
+
+func (w Wrap) Quote(g *G, task *Task, env *Env) (Val, E) {
+  var e E
+  w.val, e = w.val.Quote(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+
+  return w.imp, nil
 }

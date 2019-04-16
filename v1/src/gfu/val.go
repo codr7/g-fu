@@ -67,11 +67,11 @@ func (v BasicVal) Len(g *G) (Int, E) {
   return -1, g.E("Len not supported: %v", v.imp_type)
 }
 
-func (v *BasicVal) Pop(g *G) (Val, Val, E) {
+func (v BasicVal) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", v.imp_type)
 }
 
-func (v *BasicVal) Push(g *G, its...Val) (Val, E) {
+func (v BasicVal) Push(g *G, its...Val) (Val, E) {
   return nil, g.E("Push not supported: %v", v.imp_type)
 }
 

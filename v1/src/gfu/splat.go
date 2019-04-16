@@ -14,10 +14,6 @@ func NewSplat(g *G, val Val) (s Splat) {
   return s
 }
 
-func (s Splat) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return s, nil
-}
-
 func (s Splat) Dump(out *strings.Builder) {
   s.val.Dump(out)
   out.WriteString("..")
@@ -42,10 +38,6 @@ func (s Splat) Eval(g *G, task *Task, env *Env) (Val, E) {
   }
 
   return s, nil
-}
-
-func (s Splat) Is(g *G, rhs Val) bool {
-  return s == rhs
 }
 
 func (s Splat) Quote(g *G, task *Task, env *Env) (Val, E) {
