@@ -1,10 +1,6 @@
 * vectorize _/Nil
 ** implement Push/Pop/Len
 ** use instead of '()/(vec)
-* add ,-operator
-** read rest as separate vec
-** break id-loop on ,
-** bench/lib
 * switch Env to import on first use
 ** add clone-flag to Update
 *** use on import
@@ -38,11 +34,6 @@
 ** update loop test/readme
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
-
-(dump (bench 10
-  (let (s '())
-    for (i 100000) (push s i),
-    for 100000 (pop s))))
 
 (let (fib (fun n
             (if, < n 2

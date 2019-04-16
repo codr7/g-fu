@@ -48,7 +48,7 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   var out Vec
 
   for {
-    vs, e := g.Read(&pos, in, Vec(out), 0)
+    vs, e := g.Read(&pos, in, Vec(out), "")
 
     if e != nil {
       return nil, e

@@ -8,6 +8,12 @@ import (
   "unicode"
 )
 
+type CharSet string
+
+func (s CharSet) Member(c rune) bool {
+  return strings.IndexRune(string(s), c) != -1
+}
+
 func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
   c, _, e := in.ReadRune()
 
@@ -43,22 +49,36 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   return nil
 }
 
-func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
+func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
   var c rune
   var e E
 
   for {
     c, e = g.ReadChar(pos, in)
 
-    if e != nil || c == 0 || c == end {
+    if e != nil {
       return nil, e
     }
 
+    if end.Member(c) {
+      if e = g.Unread(pos, in, c); e != nil {
+        return nil, e
+      }
+      
+      c = 0
+    } 
+
+    if c == 0 {
+      return nil, e
+    }
+        
     switch c {
     case ' ', '\n':
       break
     case '(':
       return g.ReadVec(pos, in, out)
+    case ',':
+      return g.ReadRest(pos, in, out)
     case '\'':
       return g.ReadQuote(pos, in, out, end)
     case '.':
@@ -122,7 +142,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
     }
 
     if unicode.IsSpace(c) ||
-      c == '.' || c == '%' || c == '(' || c == ')' {
+      c == '.' || c == '%' || c == '(' || c == ')' || c == ',' {
       if e := g.Unread(pos, in, c); e != nil {
         return nil, e
       }
@@ -179,7 +199,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E)
   return append(out, Int(n)), nil
 }
 
-func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
+func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
   vpos := *pos
   vs, e := g.Read(pos, in, nil, end)
 
@@ -192,6 +212,26 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) 
   }
 
   return append(out, NewQuote(g, vs[0])), nil
+}
+
+func (g *G) ReadRest(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
+  var body Vec
+    
+  for {
+    vs, e := g.Read(pos, in, body, ",)")
+
+    if e != nil {
+      return nil, e
+    }
+
+    if vs == nil {
+      break
+    }
+
+    body = vs
+  }
+
+  return append(out, body), nil
 }
 
 func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
@@ -221,7 +261,7 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   return out, nil
 }
 
-func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end rune) (Vec, E) {
+func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
   vpos := *pos
   vpos.Col--
 
@@ -264,7 +304,7 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   var body Vec
 
   for {
-    vs, e := g.Read(pos, in, body, ')')
+    vs, e := g.Read(pos, in, body, ")")
 
     if e != nil {
       return nil, e
@@ -277,5 +317,15 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
     body = vs
   }
 
+  c, e := g.ReadChar(pos, in)
+  
+  if e != nil {
+    return nil, e
+  }
+
+  if c != ')' {
+    return nil, g.E("Invalid vec end: %v", string(c))
+  }
+  
   return append(out, body), nil
 }

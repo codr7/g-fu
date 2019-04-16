@@ -1,5 +1,7 @@
 (debug)
 
+(test (= (-, + 1 2, + 3 4) -4))
+
 (test (= (_ foo bar baz) _))
 
 (test (bool 42))
