@@ -24,7 +24,7 @@ Press Return twice to evaluate.
 ### Syntax
 One potential issue with Lisp's (lack of) syntax is nesting. Any non-trivial piece of code will inevitably drift towards the right margin and end in an impressive stack of parens.
 
-To help improve the situation, g-fu supports a non-scoped, generalized form of `let`; atoms as stand-ins for single element macro argument lists; and using `,` to separate arguments. Keeping these ideas in mind, the Fibonacci-example above could be rewritten as follows.
+To help improve the situation, g-fu supports a non-scoped, generalized form of `let`; atoms as stand-ins for single item macro argument lists; and using `,` to separate arguments. Keeping these ideas in mind, the Fibonacci-example above could be rewritten as follows.
 
 ```
   (let fib, fun n
