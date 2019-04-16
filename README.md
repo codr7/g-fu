@@ -36,12 +36,18 @@ F
 ### Macros
 One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
 
+The macros presented below may be `load`-ed as part of the [iter](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf) library.
+
+```
+  (load "lib/iter.gf")
+```
 ```
   (let while (macro (cond body..)
     '(loop
        (if %cond _ (break))
        %body..)))
-
+```
+```
   (let (i 0)
     (while (< i 7)
       (dump (inc i))))
@@ -64,7 +70,8 @@ One of the most common macro examples is the `while`-loop. The example below def
     '(let (break (macro (args..) '(recall T %args..)))
        ((fun ((%done F) %result..)
           (if %done %result.. (do %body.. (recall))))))))
-
+```
+```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
 
 'foo
