@@ -67,11 +67,11 @@
 (let (foo (macro (x) '(+ %x 7)))
   (test (= (foo 35) 42)))
 
-(let (fib (fun (n)
-            (if (< n 2)
-              n
-              (+ (fib (- n 1)) (fib (- n 2))))))
-  (test (= (fib 20) 6765)))
+(let (fib (fun n
+            (if, < n 2,
+              n,
+              (+, fib (- n 1), fib (- n 2)))))
+  (test, = (fib 20) 6765))
 
 (let (fib (fun (n a b)
             (if n 
