@@ -15,9 +15,6 @@
 *** switch BasicE.msg from string to Val
 * optimize vec splats
 ** don't allocate new vec if no splats
-* add lib/iter.gf
-** move loops from testloop.gf
-** load iter.gf from test/all
 * add expand(form (n _)) fun
 * transducers
 * add bang calls
