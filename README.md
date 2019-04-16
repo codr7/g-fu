@@ -27,12 +27,15 @@ One potential issue with Lisp's (lack of) syntax is nesting. Any non-trivial pie
 To help improve the situation, g-fu supports a non-scoped, generalized form of `let`; atoms as stand-ins for single element macro argument lists; and using `,` to separate arguments. Keeping these ideas in mind, the Fibonacci-example above could be rewritten as follows.
 
 ```
-(let fib, fun n
-  (if, < n 2,
-    n,
-    (+, fib (- n 1), fib (- n 2))))
+  (let fib, fun n
+    (if, < n 2,
+      n,
+      (+, fib (- n 1), fib (- n 2))))
+```
+```
+  (dump, fib 20)
 
-(dump, fib 20)
+6765
 ```
 
 ### Macros
