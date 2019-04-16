@@ -1,3 +1,10 @@
+* vectorize _/Nil
+** implement Push/Pop/Len
+** use instead of '()/(vec)
+* add ,-operator
+** read rest as separate vec
+** break id-loop on ,
+** bench/lib
 * add coro/coret g-fu macros
 ** based on task
 ** safe?-flag
@@ -27,3 +34,32 @@
 ** update loop test/readme
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
+
+(dump (bench 10
+  (let (s '())
+    for (i 100000) (push s i),
+    for 100000 (pop s))))
+
+(let (fib (fun n
+            (if, < n 2
+              n,
+              (+, fib (- n 1), fib (- n 2)))))
+  (dump (bench 10, for 10 (fib 20))))
+
+(let (fib (fun, n a b,
+            if n 
+              (if, = n 1, b (recall, - n 1, b, + a b))
+              a))
+  (dump (bench 10, for 10000 (fib 20 0 1))))
+
+(let loop (macro body..,
+  let done? (g-sym) result (g-sym),
+  
+  '(let (break (macro (args..) '(recall T %args..)))
+     ((fun ((%done? F) %result..)
+        (if %done? %result.. (do %body.. (recall))))))))
+
+(let while (macro, cond body..,
+  '(loop
+     (if %cond _, break)
+     %body..)))
