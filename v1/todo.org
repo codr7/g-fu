@@ -26,12 +26,6 @@
 ** don't allocate new vec if no splats
 * add expand(form (n _)) fun
 * transducers
-* add bang calls
-** add separate Bang type
-*** store target
-*** ! reader support
-*** quote as '(xxx)
-** update loop test/readme
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
 
