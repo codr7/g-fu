@@ -53,11 +53,11 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
 
 ```
   (let loop (macro (body..)
-    (let done (g-sym) result (g-sym))
+    (let done? (g-sym) result (g-sym))
   
     '(let (break (macro (args..) '(recall T %args..)))
-       ((fun ((%done F) %result..)
-          (if %done %result.. (do %body.. (recall))))))))
+       ((fun ((%done? F) %result..)
+          (if %done? %result.. (do %body.. (recall))))))))
 ```
 ```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
@@ -79,7 +79,7 @@ foo
 (bar qux)
 ```
 
-The defining environment is cloned to prevent data races.
+The defining environment is cloned by default to prevent data races.
 
 ```
   (let (v 42
@@ -92,7 +92,7 @@ The defining environment is cloned to prevent data races.
 ```
 
 #### Channels
-Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values. Values sent over channels are cloned to prevent data races.
+Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values. Values sent over channels are cloned by default to prevent data races.
 
 ```
   (let (c (chan 1))

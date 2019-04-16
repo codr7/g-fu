@@ -122,7 +122,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
     }
 
     if unicode.IsSpace(c) ||
-      c == '.' || c == '?' || c == '%' || c == '(' || c == ')' {
+      c == '.' || c == '%' || c == '(' || c == ')' {
       if e := g.Unread(pos, in, c); e != nil {
         return nil, e
       }
