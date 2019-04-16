@@ -406,8 +406,10 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
   as := ParsePrimArgs(g, args[0])
+  nargs := len(as)
   var inbox Chan
-
+  safe := true
+  
   if as == nil {
     inbox = NewChan(0)
   } else {
@@ -424,9 +426,17 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     } else {
       return nil, g.E("Invalid task args: %v", as)
     }
+
+    if nargs > 1 {
+      if a, e = as[1].Eval(g, task, env); e != nil {
+        return nil, e
+      }
+
+      safe = a.Bool(g)
+    }
   }
 
-  t := NewTask(g, inbox, args[1:])
+  t := NewTask(g, inbox, safe, args[1:])
   t.Start(g, env)
   return t, nil
 }
@@ -436,8 +446,21 @@ func task_this_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  t := args[0]
-  t.(*Task).Inbox.Push(g, args[1:]...)
+  t := args[0].(*Task)
+  var e E
+  
+  if task.safe || t.safe {
+    for _, v := range args[1:] {
+      if v, e = v.Clone(g); e != nil {
+        return nil, e
+      }
+      
+      t.Inbox.Push(g, v)
+    }
+  } else {
+    t.Inbox.Push(g, args[1:]...)
+  }
+  
   return t, nil
 }
 

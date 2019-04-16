@@ -9,9 +9,7 @@ type Env struct {
 }
 
 func (env *Env) Clone(g *G, dst *Env) (*Env, E)  {
-  src := env.vars
-  dst.vars = make([]Var, len(src))
-  copy(dst.vars, src)
+  env.Dup(g, dst)
   var e E
   
   for i, _ := range dst.vars {

@@ -58,13 +58,7 @@ func (c Chan) Pop(g *G) (Val, Val, E) {
 }
 
 func (c Chan) Push(g *G, its...Val) (Val, E) {
-  var e E
-  
   for _, v := range its {
-    if v, e = v.Clone(g); e != nil {
-      return nil, e
-    }
-    
     c <- v
   }
 

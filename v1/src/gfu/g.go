@@ -33,7 +33,7 @@ func NewG() (*G, E) {
 
 func (g *G) Init() (*G, E) {
   g.nil_sym = g.Sym("_")
-  g.MainTask.Init(g, NewChan(0), nil)
+  g.MainTask.Init(g, NewChan(0), true, nil)
   return g, nil
 }
 

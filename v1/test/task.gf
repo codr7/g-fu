@@ -15,7 +15,7 @@
   (test (= (wait t) 43))
   (test (= v 42)))
 
-(let (t (task _
+(let (t (task (0 F)
           (post (fetch) 'foo)
           'bar))
   (post t (this-task))

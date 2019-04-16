@@ -1,8 +1,7 @@
-* add safe?-arg (T/F) to (chan) & (task)
-** default T
 * add coro/coret g-fu macros
 ** based on task
-*** safe? F
+** safe?-flag
+*** propagate to task
 ** call through inbox
 * use type switch where applicable
 ** https://tour.golang.org/methods/16

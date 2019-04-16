@@ -10,22 +10,25 @@ import (
 type Task struct {
   BasicVal
   Inbox Chan
-
+  
   body         Vec
   mutex        sync.Mutex
   cond         *sync.Cond
-  done, recall bool
+  done,
+  recall,
+  safe         bool
   recall_args  Vec
   result       Val
 }
 
-func NewTask(g *G, inbox Chan, body Vec) *Task {
-  return new(Task).Init(g, inbox, body)
+func NewTask(g *G, inbox Chan, safe bool, body Vec) *Task {
+  return new(Task).Init(g, inbox, safe, body)
 }
 
-func (t *Task) Init(g *G, inbox Chan, body Vec) *Task {
+func (t *Task) Init(g *G, inbox Chan, safe bool, body Vec) *Task {
   t.BasicVal.Init(&g.TaskType, t)
   t.Inbox = inbox
+  t.safe = safe
   t.body = body
   t.cond = sync.NewCond(&t.mutex)
   return t
@@ -44,7 +47,12 @@ func (t *Task) Dump(out *strings.Builder) {
 
 func (t *Task) Start(g *G, env *Env) {
   var te Env
-  env.Clone(g, &te)
+  
+  if t.safe {
+    env.Clone(g, &te)
+  } else {
+    env.Dup(g, &te)
+  }
 
   go func() {
     var e E
