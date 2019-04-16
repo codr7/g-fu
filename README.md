@@ -24,7 +24,7 @@ Press Return twice to evaluate.
 ### Syntax
 One potential issue with Lisp's (lack of) syntax is nesting. Any non-trivial piece of code will inevitably drift towards the right margin and end in an impressive stack of parens.
 
-g-fu supports breaking expressions into parts without nesting parens using `,`. Using this capability, the Fibonacci-example above could be rewritten as follows.
+g-fu supports breaking expressions into parts without nesting parens using `,`. Keeping this in mind, the Fibonacci-example above could be rewritten as follows.
 
 ```
 (let (fib (fun (n)
