@@ -1,6 +1,3 @@
-* vectorize _/Nil
-** implement Push/Pop/Len
-** use instead of '()/(vec)
 * switch Env to import on first use
 ** add clone-flag to Update
 *** use on import

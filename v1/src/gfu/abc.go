@@ -369,8 +369,15 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    return v.Push(g, args[1:]...)
+  id := args[0].(*Sym)
+  vs, e := args[1:].EvalVec(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  return env.Update(g, id, func(v Val) (Val, E) {
+    return v.Push(g, vs...)
   })
 }
 

@@ -36,6 +36,11 @@
 (test (= '(1 %(vec 2 3)..) (vec 1 2 3)))
 (test (= (+ (vec 1 2 3)..) 6))
 
+(let (v _)
+  (push v 'foo 'bar 'baz)
+  (test (= (len v) 3))
+  (test (= (pop v) 'baz)))
+
 (let (v (vec))
   (push v 1)
   (push v 2 3)

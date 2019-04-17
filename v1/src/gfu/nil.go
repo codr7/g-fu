@@ -26,6 +26,18 @@ func (_ *Nil) Dump(out *strings.Builder) {
   out.WriteRune('_')
 }
 
+func (_ *Nil) Len(g *G) (Int, E) {
+  return 0, nil
+}
+
+func (n *Nil) Pop(g *G) (Val, Val, E) {
+  return n, n, nil
+}
+
+func (_ *Nil) Push(g *G, its...Val) (Val, E) {
+  return Vec(its), nil
+}
+
 func (_ *Nil) Splat(g *G, out Vec) Vec {
   return out
 }

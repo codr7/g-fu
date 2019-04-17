@@ -52,7 +52,7 @@ func (v BasicVal) Dup(g *G) (Val, E) {
 }
 
 func (v BasicVal) Eq(g *G, rhs Val) bool {
-  return v.Is(g, rhs)
+  return v.imp.Is(g, rhs)
 }
 
 func (v BasicVal) Eval(g *G, task *Task, env *Env) (Val, E) {

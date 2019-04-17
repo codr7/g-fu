@@ -49,9 +49,9 @@ func (v Vec) Dup(g *G) (Val, E) {
 }
 
 func (v Vec) Eq(g *G, rhs Val) bool {
-  rv := rhs.(Vec)
+  rv, ok := rhs.(Vec)
 
-  if len(v) != len(rv) {
+  if !ok || len(v) != len(rv) {
     return false
   }
 
@@ -200,13 +200,12 @@ func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
 }
 
 func (v Vec) Splat(g *G, out Vec) Vec {
-  for i, it := range v {
+  for _, it := range v {
     if _, ok := it.(Splat); ok {
       out = it.Splat(g, out)
     } else {
       if _, ok := it.(Vec); ok {
         it = it.Splat(g, nil)
-        v[i] = it
       }
 
       out = append(out, it)

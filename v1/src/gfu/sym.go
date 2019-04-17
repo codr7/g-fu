@@ -38,10 +38,6 @@ func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
   return found.Val, nil
 }
 
-func (s *Sym) String() string {
-  return s.name
-}
-
 func (g *G) GSym(prefix string) *Sym {
   var name string
   tag := g.NextSymTag()
