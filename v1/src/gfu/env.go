@@ -52,6 +52,16 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   return max, nil
 }
 
+func (e *Env) Get(g *G, key *Sym) (Val, E) {
+  _, found := e.Find(key)
+
+  if found == nil {
+    return nil, g.E("Unknown: %v", key)
+  }
+
+  return found.Val, nil
+}
+
 func (e *Env) Insert(i int, key *Sym) *Var {
   var v Var
   vs := append(e.vars, v)

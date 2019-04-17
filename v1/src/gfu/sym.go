@@ -29,13 +29,7 @@ func (s *Sym) Dump(out *strings.Builder) {
 }
 
 func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
-  _, found := env.Find(s)
-
-  if found == nil {
-    return nil, g.E("Unknown: %v", s)
-  }
-
-  return found.Val, nil
+  return env.Get(g, s)
 }
 
 func (g *G) GSym(prefix string) *Sym {
