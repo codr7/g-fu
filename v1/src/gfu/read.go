@@ -248,7 +248,7 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   }
 
   if nc != '.' {
-    return nil, g.ReadE(*pos, "Invalid input: .%v", nc)
+    return nil, g.ReadE(*pos, "Invalid input: .%v", string(nc))
   }
 
   i := len(out)

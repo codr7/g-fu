@@ -1,27 +1,6 @@
-* switch Env to import on first use
-** add Env.source
-*** add Env.Extend() *Env
-**** init source
-** skip clone/dup
-** add clone-flag to Update
-*** use on import
-* add coro/coret g-fu macros
-** based on task
-** safe?-flag
-*** propagate to task
-** call through inbox
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
-* dlambda
-** https://letoverlambda.com/index.cl/guest/chap5.html#sec_7
-** add map fun
-** add case macro
-* convert test to gfu macro
-** add lib/test.gf
-** load in test/all.gf
-** add throw fun
-*** switch BasicE.msg from string to Val
 * optimize vec splats
 ** don't allocate new vec if no splats
 * add expand(form (n _)) fun
