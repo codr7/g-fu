@@ -1,4 +1,8 @@
 * switch Env to import on first use
+** add Env.source
+*** add Env.Extend() *Env
+**** init source
+** skip clone/dup
 ** add clone-flag to Update
 *** use on import
 * add coro/coret g-fu macros
@@ -6,7 +10,6 @@
 ** safe?-flag
 *** propagate to task
 ** call through inbox
-* ---
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
