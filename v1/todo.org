@@ -1,8 +1,12 @@
+* expand macros all the way in EvalString
+** add bool Result to Expand
+** add macro.Expand(, n) func
+*** cut expand fun
+* optimize vec splats
+** don't allocate new vec if no splats
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
-* optimize vec splats
-** don't allocate new vec if no splats
 * transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
