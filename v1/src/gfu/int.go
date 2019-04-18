@@ -44,6 +44,10 @@ func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
   return i, nil
 }
 
+func (i Int) Expand(g *G, task *Task, env *Env) (Val, E) {
+  return i, nil
+}
+
 func (i Int) Is(g *G, rhs Val) bool {
   return i == rhs
 }

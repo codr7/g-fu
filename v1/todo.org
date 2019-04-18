@@ -3,7 +3,6 @@
 ** grep "\.("
 * optimize vec splats
 ** don't allocate new vec if no splats
-* add expand(form (n _)) fun
 * transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))

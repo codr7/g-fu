@@ -39,6 +39,10 @@ func (c Chan) Eval(g *G, task *Task, env *Env) (Val, E) {
   return c, nil
 }
 
+func (c Chan) Expand(g *G, task *Task, env *Env) (Val, E) {
+  return c, nil
+}
+
 func (c Chan) Is(g *G, rhs Val) bool {
   return c == rhs
 }

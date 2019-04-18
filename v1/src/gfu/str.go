@@ -38,6 +38,10 @@ func (s Str) Eval(g *G, task *Task, env *Env) (Val, E) {
   return s, nil
 }
 
+func (s Str) Expand(g *G, task *Task, env *Env) (Val, E) {
+  return s, nil
+}
+
 func (s Str) Is(g *G, rhs Val) bool {
   return s.Eq(g, rhs)
 }

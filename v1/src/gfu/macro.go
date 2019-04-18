@@ -25,7 +25,7 @@ func (m *Macro) Init(g *G, env *Env, args []Arg) *Macro {
   return m
 }
 
-func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+func (m *Macro) ExpandCall(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   avs := make(Vec, len(args))
 
   for i, a := range args {
@@ -41,8 +41,11 @@ func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   var be Env
   m.env.Dup(g, &be)
   m.arg_list.LetVars(g, &be, args)
+  return m.body.EvalExpr(g, task, &be)
+}
 
-  if v, e = m.body.EvalExpr(g, task, &be); e != nil {
+func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  if v, e = m.ExpandCall(g, task, env, args); e != nil {
     return nil, e
   }
 

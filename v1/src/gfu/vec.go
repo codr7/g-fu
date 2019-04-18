@@ -86,10 +86,37 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
   result, e := fv.Call(g, task, env, v[1:])
 
   if e != nil {
-    return nil, g.E("Call failed: %v", e)
+    return nil, e
   }
 
   return result, nil
+}
+
+func (v Vec) Expand(g *G, task *Task, env *Env) (Val, E) {
+  if len(v) == 0 {
+    return &g.NIL, nil
+  }
+
+  idv := v[0]
+
+  if s, ok := idv.(*Sym); ok && s == g.nil_sym {
+    return &g.NIL, nil
+  }
+
+  id := idv.(*Sym)
+  _, mv := env.Find(id)
+  
+  if mv == nil {
+    return v, nil
+  }
+  
+  m, ok := mv.Val.(*Macro)
+
+  if !ok {
+    return v, nil
+  }
+  
+  return m.ExpandCall(g, task, env, v[1:])
 }
 
 func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
