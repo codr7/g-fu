@@ -92,7 +92,7 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
   return result, nil
 }
 
-func (v Vec) Expand(g *G, task *Task, env *Env) (Val, E) {
+func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   if len(v) == 0 {
     return &g.NIL, nil
   }
@@ -103,7 +103,12 @@ func (v Vec) Expand(g *G, task *Task, env *Env) (Val, E) {
     return &g.NIL, nil
   }
 
-  id := idv.(*Sym)
+  id, ok := idv.(*Sym)
+
+  if !ok {
+    return v, nil
+  }
+
   _, mv := env.Find(id)
   
   if mv == nil {
@@ -113,10 +118,16 @@ func (v Vec) Expand(g *G, task *Task, env *Env) (Val, E) {
   m, ok := mv.Val.(*Macro)
 
   if !ok {
-    return v, nil
+    return v, v.ExpandVec(g, task, env, depth-1)
   }
   
-  return m.ExpandCall(g, task, env, v[1:])
+  out, e := m.ExpandCall(g, task, env, v[1:])
+
+  if depth == 1 || e != nil {
+    return out, e
+  }
+
+  return out.Expand(g, task, env, depth-1)
 }
 
 func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
@@ -163,6 +174,18 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
   }
 
   return out, nil
+}
+
+func (v Vec) ExpandVec(g *G, task *Task, env *Env, depth Int) E {
+  for i, it := range v {
+    var e E
+
+    if v[i], e = it.Expand(g, task, env, depth); e != nil {
+      return e
+    }
+  }
+
+  return nil
 }
 
 func (v Vec) Is(g *G, rhs Val) bool {

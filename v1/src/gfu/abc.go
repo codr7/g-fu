@@ -266,22 +266,18 @@ func clone_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Clone(g)
 }
 
-func eval_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args[0].Eval(g, task, env)
+func eval_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  v = args[0]
+  
+  if v, e = v.Expand(g, task, env, -1); e != nil {
+    return nil, e
+  }
+
+  return v.Eval(g, task, env)
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  v = args[0]
-
-  for i := Int(0); i < args[1].(Int); i ++ {
-    v, e = v.Expand(g, task, env)
-
-    if e != nil {
-      break
-    }
-  }
-
-  return v, e
+  return args[0].Expand(g, task, env, args[1].(Int))
 }
 
 func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -557,7 +553,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "clone", clone_imp, A("val"))
 
   e.AddFun(g, "eval", eval_imp, A("expr"))
-  e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(1)))
+  e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))
 

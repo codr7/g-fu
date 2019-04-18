@@ -40,6 +40,16 @@ func (s Splat) Eval(g *G, task *Task, env *Env) (Val, E) {
   return s, nil
 }
 
+func (s Splat) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
+  var e E
+  
+  if s.val, e = s.val.Expand(g, task, env, depth); e != nil {
+    return nil, e
+  }
+
+  return s, nil
+}
+
 func (s Splat) Quote(g *G, task *Task, env *Env) (Val, E) {
   var e E
   s.val, e = s.val.Quote(g, task, env)

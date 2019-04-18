@@ -26,7 +26,7 @@ func (w Wrap) Clone(g *G) (Val, E) {
   if w.val, e = w.val.Clone(g); e != nil {
     return nil, e
   }
-  
+
   return w.imp, nil
 }
 

@@ -9,3 +9,10 @@
   '(loop
      (if %cond _ (break))
      %body..)))
+
+(let g-for (macro (arg body..)
+  (let i (g-sym) n (g-sym))
+  '(let (%i 0 %n %arg)
+     (while (< %i %n)
+       %body..
+       (inc %i)))))

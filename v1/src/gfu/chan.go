@@ -39,7 +39,7 @@ func (c Chan) Eval(g *G, task *Task, env *Env) (Val, E) {
   return c, nil
 }
 
-func (c Chan) Expand(g *G, task *Task, env *Env) (Val, E) {
+func (c Chan) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   return c, nil
 }
 

@@ -47,6 +47,10 @@ func (q Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
   return qv, nil
 }
 
+func (q Quote) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
+  return q, nil
+}
+
 func (q Quote) Is(g *G, rhs Val) bool {
   return q == rhs
 }
