@@ -100,8 +100,10 @@
 (let (foo (macro (x) x))
   (test (= (expand '(foo 42)) 42)))
 
-(let (foo (macro (x) '(foo %x)))
-  (test (= (expand '(foo 42)) '(foo 42))))
-  
+(let (foo (macro (x) x)
+      bar (macro (x) '(foo %x)))
+  (test (= (expand '(bar 42) 1) '(foo 42)))
+  (test (= (expand '(bar 42) 2) 42)))
+
 (load "iter.gf")
 (load "task.gf")

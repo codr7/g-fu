@@ -57,7 +57,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     le = env
   }
 
-  for i := 0; i < len(bs); i += 2 {
+  for i := 0; i+1 < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
     if _, ok := kf.(*Sym); !ok {
