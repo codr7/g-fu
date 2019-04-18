@@ -1,7 +1,11 @@
+* use sort.Search for Env
+** bench
 * expand macros all the way in EvalString
 ** add bool Result to Expand
 ** add macro.Expand(, n) func
 *** cut expand fun
+* scan func/macro/let/task bodies for Sym's
+** only dup/clone used syms when extending env
 * optimize vec splats
 ** don't allocate new vec if no splats
 * use type switch where applicable
