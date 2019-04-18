@@ -166,8 +166,8 @@ func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   if len(as) == 1 {
     n, e = as[0].Eval(g, task, env)
   } else {
-    id = as[0].(*Sym)
-    n, e = as[1].Eval(g, task, env)
+    n, e = as[0].Eval(g, task, env)
+    id = as[1].(*Sym)
   }
 
   if e != nil {
@@ -345,6 +345,22 @@ func int_lt_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     rhs := a.(Int)
 
     if rhs <= lhs {
+      return &g.F, nil
+    }
+
+    lhs = rhs
+  }
+
+  return &g.T, nil
+}
+
+func int_gt_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  lhs := args[0].(Int)
+
+  for _, a := range args[1:] {
+    rhs := a.(Int)
+
+    if rhs >= lhs {
       return &g.F, nil
     }
 
@@ -568,6 +584,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "==", is_imp, ASplat("vals"))
 
   e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
+  e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 

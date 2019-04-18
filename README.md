@@ -66,6 +66,32 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
 'bar
 ```
 
+The `for`-loop builds on top of `while`, and comes with the added twist of allowing either a bare counter or an argument list with an optional variable name.
+
+```
+(let for (macro (args body..)
+  (let v? (= (type args) Vec)
+       i (if (and v? (> (len args) 1)) (pop args) (g-sym))
+       n (g-sym))
+  '(let (%i 0 %n %(if v? (pop args) args))
+     (while (< %i %n)
+       %body..
+       (inc %i)))))  
+```
+```
+  (for 3 (dump 'hi))
+
+hi
+hi
+hi
+
+  (for (3 i) (dump i))
+
+0
+1
+2
+```
+
 ### Tasks
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 

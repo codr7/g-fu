@@ -11,5 +11,5 @@
   (test (= i 7)))
 
 (let (i 0)
-  (for (j 7) (inc i j))
+  (for (7 j) (inc i j))
   (test (= i 21)))
