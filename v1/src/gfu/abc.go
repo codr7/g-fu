@@ -266,6 +266,10 @@ func clone_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Clone(g)
 }
 
+func type_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args[0].Type(g), nil
+}
+
 func eval_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   v = args[0]
   
@@ -551,7 +555,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddFun(g, "dup", dup_imp, A("val"))
   e.AddFun(g, "clone", clone_imp, A("val"))
-
+  e.AddFun(g, "type", type_imp, A("val"))
   e.AddFun(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))

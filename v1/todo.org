@@ -35,3 +35,10 @@
   '(loop
      (if %cond _, break)
      %body..)))
+
+(let g-for (macro (args body..)
+  (let va? (=, type args, Vec) i (g-sym) n (g-sym))
+  '(let (%i 0 %n %arg)
+     (while (< %i %n)
+       %body..
+       (inc %i)))))

@@ -10,9 +10,11 @@
      (if %cond _ (break))
      %body..)))
 
-(let g-for (macro (arg body..)
-  (let i (g-sym) n (g-sym))
-  '(let (%i 0 %n %arg)
+(let g-for (macro (args body..)
+  (let v? (= (type args) Vec)
+       i (if v? (pop args) (g-sym))
+       n (g-sym))
+  '(let (%i 0 %n %(if v? (pop args) args))
      (while (< %i %n)
        %body..
        (inc %i)))))
