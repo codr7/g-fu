@@ -162,7 +162,7 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
       break
     }
 
-    if _, ok := it.(Splat); ok {
+    if _, ok := it.(*Splat); ok {
       out = it.Splat(g, out)
     } else {
       if _, ok := it.(Vec); ok {
@@ -251,7 +251,7 @@ func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
 
 func (v Vec) Splat(g *G, out Vec) Vec {
   for _, it := range v {
-    if _, ok := it.(Splat); ok {
+    if _, ok := it.(*Splat); ok {
       out = it.Splat(g, out)
     } else {
       if _, ok := it.(Vec); ok {

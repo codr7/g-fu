@@ -9,18 +9,19 @@ type Splat struct {
   Wrap
 }
 
-func NewSplat(g *G, val Val) (s Splat) {
+func NewSplat(g *G, val Val) *Splat {
+  s := new(Splat)
   s.Wrap.Init(&g.SplatType, s, val)
   return s
 }
 
-func (s Splat) Dump(out *strings.Builder) {
+func (s *Splat) Dump(out *strings.Builder) {
   s.val.Dump(out)
   out.WriteString("..")
 }
 
-func (s Splat) Eq(g *G, rhs Val) bool {
-  rs, ok := rhs.(Splat)
+func (s *Splat) Eq(g *G, rhs Val) bool {
+  rs, ok := rhs.(*Splat)
 
   if !ok {
     return false
@@ -29,39 +30,31 @@ func (s Splat) Eq(g *G, rhs Val) bool {
   return s.val.Eq(g, rs.val)
 }
 
-func (s Splat) Eval(g *G, task *Task, env *Env) (Val, E) {
-  var e E
-  s.val, e = s.val.Eval(g, task, env)
-
-  if e != nil {
+func (s *Splat) Eval(g *G, task *Task, env *Env) (v Val, e E) {
+  if v, e = s.val.Eval(g, task, env); e != nil {
     return nil, e
   }
 
-  return s, nil
+  return NewSplat(g, v), nil
 }
 
-func (s Splat) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
-  var e E
-  
-  if s.val, e = s.val.Expand(g, task, env, depth); e != nil {
+func (s *Splat) Expand(g *G, task *Task, env *Env, depth Int) (v Val, e E) {
+  if v, e = s.val.Expand(g, task, env, depth); e != nil {
     return nil, e
   }
 
-  return s, nil
+  return NewSplat(g, v), nil
 }
 
-func (s Splat) Quote(g *G, task *Task, env *Env) (Val, E) {
-  var e E
-  s.val, e = s.val.Quote(g, task, env)
-
-  if e != nil {
+func (s *Splat) Quote(g *G, task *Task, env *Env) (v Val, e E) {
+  if v, e = s.val.Quote(g, task, env); e != nil {
     return nil, e
   }
 
-  return s, nil
+  return NewSplat(g, v), nil
 }
 
-func (s Splat) Splat(g *G, out Vec) Vec {
+func (s *Splat) Splat(g *G, out Vec) Vec {
   v := s.val
 
   if _, ok := v.(Vec); !ok {

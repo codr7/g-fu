@@ -173,7 +173,7 @@ func ParseArgs(g *G, task *Task, env *Env, in Vec) ([]Arg, E) {
           return nil, e
         }
       }
-    } else if sv, ok := v.(Splat); ok {
+    } else if sv, ok := v.(*Splat); ok {
       a.arg_type = ARG_SPLAT
       a.id = sv.val.(*Sym)
     } else {

@@ -1,7 +1,3 @@
-* expand macros
-** fix splat expand nil bug
-** disable expand & cmp perf
-** commit
 * add Val.ExtendEnv(src, dst, clone bool)
 ** call down recursively and update Sym's
 ** use instead of dup/clone
