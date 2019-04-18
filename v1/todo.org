@@ -6,6 +6,8 @@
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
+* finish iter.g-for
+** add opt var
 * transducers
 
 (>> (filter odd?) (map (fun (x) (x 42 +))))
