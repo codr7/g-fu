@@ -66,7 +66,7 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
 'bar
 ```
 
-A `for`-loop may be built on top of `while`, the following one comes with the added twist of allowing either a bare counter or an argument list with optional variable name.
+A `for`-loop may be built on top of `while`, the following example comes with the added twist of allowing either a bare counter or an argument list with optional variable name.
 
 ```
 (let for (macro (args body..)
@@ -125,7 +125,7 @@ _
 _
 ```
 
-`if` may be implemented using `and`/`or` to select branch, the else-branch is optional.
+`if` may be implemented using `and`/`or` to select branch, the following example makes the else-branch optional.
 
 ```
 (let if (macro (cond x (y _))
