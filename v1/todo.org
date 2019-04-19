@@ -1,4 +1,5 @@
-* coro
+* add switch macro
+* build/coro.gf
 * optimize vec splats
 ** don't allocate new vec if no splats
 ** add splat bench

@@ -2,4 +2,4 @@
             (if, < n 2,
               n,
               (+, fib (- n 1), fib (- n 2)))))
-  (dump, bench 10 (for 10 (fib 20))))
+  (dump, bench 10 (for 10, fib 20)))
