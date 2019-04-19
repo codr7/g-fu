@@ -1,3 +1,4 @@
+* coro
 * optimize vec splats
 ** don't allocate new vec if no splats
 ** add splat bench

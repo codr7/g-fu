@@ -8,24 +8,6 @@ type Env struct {
   vars []Var
 }
 
-/*
-func (env *Env) Clone(g *G, dst *Env) (*Env, E)  {
-  env.Dup(g, dst)
-  var e E
-  
-  for i, _ := range dst.vars {
-    v := &dst.vars[i]
-    v.env = dst
-    
-    if v.Val, e = v.Val.Clone(g); e != nil {
-      return nil, e
-    }
-  }
-
-  return dst, nil
-}
-*/
-
 func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
   src := env.vars
   dst.vars = make([]Var, len(src))
