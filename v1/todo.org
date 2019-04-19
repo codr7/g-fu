@@ -5,5 +5,3 @@
 ** https://tour.golang.org/methods/16
 ** grep "\.("
 * transducers
-
-(>> (filter odd?) (map (fun (x) (x 42 +))))
