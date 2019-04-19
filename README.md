@@ -105,7 +105,7 @@ T
 F
 ```
 
-Values may be combined using `or`/`and`; only used values are evaluated, comparisons are performed using boolean representations while preserving original values.
+Values may be combined using `or`/`and`. Unused values are not evaluated, comparisons are performed using boolean representations while preserving original values.
 
 ```
   (or 0 42)
