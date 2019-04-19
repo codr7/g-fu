@@ -10,6 +10,7 @@
 * build/coro.gf
 * optimize vec splats
 ** don't allocate new vec if no splats
+** add vec.ContainsSplat()
 ** add splat bench
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
