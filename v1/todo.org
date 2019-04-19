@@ -1,4 +1,3 @@
-* figure out why test/all doesn't work with iter-for
 * peel off Env struct
 ** use type alias
 ** grep *Env
