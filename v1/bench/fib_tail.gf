@@ -1,3 +1,5 @@
+(load "../lib/iter.gf")
+
 (let (fib (fun (n a b)
             (if n 
               (if (= n 1)
