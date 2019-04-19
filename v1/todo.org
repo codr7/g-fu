@@ -1,11 +1,5 @@
-* add val.Iter method
-** add Iter type
-*** func(g *G, task *Task, env *Env) (Val, E)
-** add iter fun
-** implement splat/pop
-* add map-macro
-** use iters
-* switch for-macro to use (iter)
+* figure out why test/all doesn't work with iter-for
+* add map-transducer
 * expand readme
 * finish switch macro
 ** use map
@@ -16,4 +10,3 @@
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
-* transducers
