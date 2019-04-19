@@ -16,6 +16,7 @@ type Val interface {
   Eq(*G, Val) bool
   Eval(*G, *Task, *Env) (Val, E)
   Expand(*G, *Task, *Env, Int) (Val, E)
+  Extenv(*G, *Env, *Env, bool) E
   Is(*G, Val) bool
   Len(*G) (Int, E)
   Pop(*G) (Val, Val, E)
@@ -62,6 +63,10 @@ func (v BasicVal) Eval(g *G, task *Task, env *Env) (Val, E) {
 
 func (v BasicVal) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   return v.imp, nil
+}
+
+func (v BasicVal) Extenv(g *G, src, dst *Env, clone bool) E {
+  return nil
 }
 
 func (v BasicVal) Is(g *G, rhs Val) bool {

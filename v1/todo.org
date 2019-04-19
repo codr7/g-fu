@@ -1,8 +1,6 @@
-* add Val.ExtendEnv(src, dst, clone bool)
-** call down recursively and update Sym's
-** use instead of dup/clone
 * optimize vec splats
 ** don't allocate new vec if no splats
+** add splat bench
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("

@@ -48,6 +48,10 @@ func (i Int) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   return i, nil
 }
 
+func (i Int) Extenv(g *G, src, dst *Env, clone bool) E {
+  return nil
+}
+
 func (i Int) Is(g *G, rhs Val) bool {
   return i == rhs
 }

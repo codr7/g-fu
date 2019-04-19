@@ -32,6 +32,26 @@ func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
   return env.Get(g, s)
 }
 
+func (s *Sym) Extenv(g *G, src, dst *Env, clone bool) E {
+  if i, dv := dst.Find(s); dv == nil {
+    if _, sv := src.Find(s); sv != nil {
+      dv = dst.Insert(i, s)
+
+      if clone {
+        var e E
+        
+        if dv.Val, e = sv.Val.Clone(g); e != nil {
+          return e
+        }
+      } else {
+        *dv = *sv
+      }
+    }
+  }
+
+  return nil
+}
+
 func (g *G) GSym(prefix string) *Sym {
   var name string
   tag := g.NextSymTag()

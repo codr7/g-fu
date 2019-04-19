@@ -121,13 +121,13 @@ func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
     return v, v.ExpandVec(g, task, env, depth-1)
   }
   
-  out, e := m.ExpandCall(g, task, env, v[1:])
+  be, out, e := m.ExpandCall(g, task, env, v[1:])
 
   if depth == 1 || e != nil {
     return out, e
   }
 
-  return out.Expand(g, task, env, depth-1)
+  return out.Expand(g, task, be, depth-1)
 }
 
 func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
@@ -181,6 +181,16 @@ func (v Vec) ExpandVec(g *G, task *Task, env *Env, depth Int) E {
     var e E
 
     if v[i], e = it.Expand(g, task, env, depth); e != nil {
+      return e
+    }
+  }
+
+  return nil
+}
+
+func (v Vec) Extenv(g *G, src, dst *Env, clone bool) E {
+  for _, it := range v {
+    if e := it.Extenv(g, src, dst, clone); e != nil {
       return e
     }
   }

@@ -43,6 +43,10 @@ func (c Chan) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   return c, nil
 }
 
+func (c Chan) Extenv(g *G, src, dst *Env, clone bool) E {
+  return nil
+}
+
 func (c Chan) Is(g *G, rhs Val) bool {
   return c == rhs
 }

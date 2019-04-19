@@ -52,9 +52,12 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   if is_scope {
     le = new(Env)
-    env.Dup(g, le)
   } else {
     le = env
+  }
+
+  if e := args.Extenv(g, env, le, false); e != nil {
+    return nil, e
   }
 
   for i := 0; i+1 < len(bs); i += 2 {
@@ -66,7 +69,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
     k := kf.(*Sym)
     v, e := vf.Eval(g, task, le)
-
+    
     if e != nil {
       return nil, e
     }
@@ -474,7 +477,11 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   t := NewTask(g, inbox, safe, args[1:])
-  t.Start(g, env)
+
+  if e := t.Start(g, env); e != nil {
+    return nil, e
+  }
+  
   return t, nil
 }
 

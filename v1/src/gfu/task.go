@@ -45,13 +45,11 @@ func (t *Task) Dump(out *strings.Builder) {
   fmt.Fprintf(out, "(Task %v)", (chan Val)(t.Inbox))
 }
 
-func (t *Task) Start(g *G, env *Env) {
+func (t *Task) Start(g *G, env *Env) E {
   var te Env
   
-  if t.safe {
-    env.Clone(g, &te)
-  } else {
-    env.Dup(g, &te)
+  if e := t.body.Extenv(g, env, &te, t.safe); e != nil {
+    return e
   }
 
   go func() {
@@ -66,6 +64,8 @@ func (t *Task) Start(g *G, env *Env) {
     t.cond.Broadcast()
     t.mutex.Unlock()
   }()
+
+  return nil
 }
 
 func (t *Task) Wait() Val {

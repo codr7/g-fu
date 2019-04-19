@@ -44,7 +44,11 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   var be Env
-  f.env.Dup(g, &be)
+
+  if e = f.body.Extenv(g, f.env, &be, false); e != nil {
+    return nil, e
+  }
+
   var v Val
 recall:
   f.arg_list.LetVars(g, &be, avs)

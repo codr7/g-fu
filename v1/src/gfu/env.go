@@ -1,13 +1,14 @@
 package gfu
 
 import (
-//"log"
+  //"log"
 )
 
 type Env struct {
   vars []Var
 }
 
+/*
 func (env *Env) Clone(g *G, dst *Env) (*Env, E)  {
   env.Dup(g, dst)
   var e E
@@ -23,6 +24,7 @@ func (env *Env) Clone(g *G, dst *Env) (*Env, E)  {
 
   return dst, nil
 }
+*/
 
 func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
   src := env.vars

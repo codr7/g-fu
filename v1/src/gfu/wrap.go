@@ -49,6 +49,10 @@ func (w *Wrap) Eq(g *G, rhs Val) bool {
   return ok && w.val.Eq(g, rw.val)
 }
 
+func (w *Wrap) Extenv(g *G, src, dst *Env, clone bool) E {
+  return w.val.Extenv(g, src, dst, clone)
+}
+
 func (w *Wrap) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", w.imp_type)
 }
