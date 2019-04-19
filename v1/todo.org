@@ -1,5 +1,10 @@
 * figure out why test/all doesn't work with iter-for
+* peel off Env struct
+** use type alias
+** grep *Env
+** return slice from Let/Insert/Extenv
 * add map-transducer
+* add (~ x y z) to compose/thread funs
 * expand readme
 * finish switch macro
 ** use map

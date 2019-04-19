@@ -1,3 +1,5 @@
+(load "../lib/cond.gf")
+
 (test (bool 42))
 (test (not (vec)))
 

@@ -113,7 +113,6 @@ Values may be combined using `or`/`and`. Unused values are not evaluated, compar
 42
 
   (or 0 F)
-
 _
 
   (and '(1 2) '(3 4))
@@ -121,23 +120,17 @@ _
 (3 4)
 
   (and '(1 2) F)
-
 _
 ```
 
-`if` may be implemented using `and`/`or` to select branch, the following example makes the else-branch optional.
+`if` may be used to branch on a condition.
 
-```
-(let if (macro (cond x (y _))
-  '(or (and %cond %x) %y)))
-```
 ```
   (if 42 'foo 'bar)
 
 'foo
 
-  (if "" 'foo)
-  
+  (if "" 'foo)  
 _
 ```
 
