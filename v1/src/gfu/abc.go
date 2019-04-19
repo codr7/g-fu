@@ -274,13 +274,7 @@ func type_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func eval_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  v = args[0]
-  
-  if v, e = v.Expand(g, task, env, -1); e != nil {
-    return nil, e
-  }
-
-  return v.Eval(g, task, env)
+  return args[0].Eval(g, task, env)
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {

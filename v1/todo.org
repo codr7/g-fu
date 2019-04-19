@@ -1,4 +1,13 @@
-* add switch macro
+* add val.Iter method
+** add Iter type
+*** func(g *G, task *Task, env *Env) (Val, E)
+** add iter fun
+** implement splat/pop
+* add map-macro
+** use iters
+* switch for-macro to use (iter)
+* finish switch macro
+** use map
 * build/coro.gf
 * optimize vec splats
 ** don't allocate new vec if no splats

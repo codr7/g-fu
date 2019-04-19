@@ -10,7 +10,7 @@
      (if %cond _ (break))
      %body..)))
 
-(let for (macro (args body..)
+(let g-for (macro (args body..)
   (let v? (= (type args) Vec)
        i (if (and v? (> (len args) 1)) (pop args) (g-sym))
        n (g-sym))

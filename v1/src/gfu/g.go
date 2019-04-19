@@ -61,10 +61,6 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
     out = vs
   }
 
-  if e := out.ExpandVec(g, task, env, -1); e != nil {
-    return nil, e
-  }
-
   return out.EvalExpr(g, &g.MainTask, env)
 }
 
