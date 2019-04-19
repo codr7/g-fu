@@ -6,6 +6,7 @@
 * add map-macro
 ** use iters
 * switch for-macro to use (iter)
+* expand readme
 * finish switch macro
 ** use map
 * build/coro.gf
