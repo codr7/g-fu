@@ -1,17 +1,9 @@
-* peel off Env struct
-** use type alias
-** grep *Env
-** return slice from Let/Insert/Extenv
 * add map-transducer
 * add (~ x y z) to compose/thread funs
 * expand readme
 * finish switch macro
 ** use map
 * build/coro.gf
-* optimize vec splats
-** don't allocate new vec if no splats
-** add vec.ContainsSplat()
-** add splat bench
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
