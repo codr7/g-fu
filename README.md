@@ -92,6 +92,55 @@ hi
 2
 ```
 
+### Conditions
+Every value in g-fu has a boolean representation that may be retrieved using `bool`.
+
+```
+  (bool 42)
+
+T
+
+  (bool "")
+
+F
+```
+
+Values may be combined using `or`/`and`; only used values are evaluated, comparisons are performed using boolean representations while preserving original values.
+
+```
+  (or 0 42)
+
+42
+
+  (or 0 F)
+
+_
+
+  (and '(1 2) '(3 4))
+
+(3 4)
+
+  (and '(1 2) '())
+
+_
+```
+
+`if` uses `and`/`or` to select branch, else is optional.
+
+```
+(let if (macro (cond x (y _))
+  '(or (and %cond %x) %y)))
+```
+```
+  (if 42 'foo 'bar)
+
+'foo
+
+  (if "" 'foo)
+  
+_
+```
+
 ### Tasks
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 

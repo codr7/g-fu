@@ -120,7 +120,7 @@ func and_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
 
     if !v.Bool(g) {
-      return &g.F, nil
+      return &g.NIL, nil
     }
   }
 
@@ -140,7 +140,7 @@ func or_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
   }
 
-  return &g.F, nil
+  return &g.NIL, nil
 }
 
 func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

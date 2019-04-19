@@ -6,12 +6,6 @@
 
 (test (= (_ foo bar baz) _))
 
-(test (bool 42))
-(test (not (vec)))
-
-(test (= (and T 42) 42))
-(test (= (or 42 T _) 42))
-
 (let (x 35)
   (test (= (inc x 7) 42))
   (test (= x 42)))
@@ -107,5 +101,6 @@
   (test (= (expand '(bar 42) 1) '(foo 42)))
   (test (= (expand '(bar 42) 2) 42)))
 
+(load "cond.gf")
 (load "iter.gf")
 (load "task.gf")
