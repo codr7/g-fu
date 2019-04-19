@@ -59,13 +59,13 @@
   (test (= (foo) 42))
   (test (= (foo 7) 7)))
 
-(let (foo (macro () ''bar))
+(let (foo (mac () ''bar))
   (test (= (foo) 'bar)))
 
-(let (foo 42 bar (macro () 'foo))
+(let (foo 42 bar (mac () 'foo))
   (test (= (bar) 42)))
 
-(let (foo (macro (x) '(+ %x 7)))
+(let (foo (mac (x) '(+ %x 7)))
   (test (= (foo 35) 42)))
 
 (let (fib (fun n
@@ -93,11 +93,11 @@
 
 (test (= (expand '(foo 42)) '(foo 42)))
 
-(let (foo (macro (x) x))
+(let (foo (mac (x) x))
   (test (= (expand '(foo 42)) 42)))
 
-(let (foo (macro (x) x)
-      bar (macro (x) '(foo %x)))
+(let (foo (mac (x) x)
+      bar (mac (x) '(foo %x)))
   (test (= (expand '(bar 42) 1) '(foo 42)))
   (test (= (expand '(bar 42) 2) 42)))
 

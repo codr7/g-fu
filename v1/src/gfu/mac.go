@@ -5,7 +5,7 @@ import (
   "strings"
 )
 
-type Macro struct {
+type Mac struct {
   BasicVal
   
   env      *Env
@@ -13,19 +13,19 @@ type Macro struct {
   body     Vec
 }
 
-func NewMacro(g *G, env *Env, args []Arg) *Macro {
-  return new(Macro).Init(g, env, args)
+func NewMac(g *G, env *Env, args []Arg) *Mac {
+  return new(Mac).Init(g, env, args)
 }
 
-func (m *Macro) Init(g *G, env *Env, args []Arg) *Macro {
-  m.BasicVal.Init(&g.MacroType, m)
+func (m *Mac) Init(g *G, env *Env, args []Arg) *Mac {
+  m.BasicVal.Init(&g.MacType, m)
 
   m.env = env
   m.arg_list.Init(g, args)
   return m
 }
 
-func (m *Macro) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   avs := make(Vec, len(args))
   var e E
 
@@ -55,7 +55,7 @@ func (m *Macro) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
-func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {  
+func (m *Mac) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {  
   if v, e = m.ExpandCall(g, task, env, args); e != nil {
     return nil, e
   }
@@ -73,8 +73,8 @@ func (m *Macro) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   return v.Eval(g, task, &be)
 }
 
-func (m *Macro) Dump(out *strings.Builder) {
-  out.WriteString("(macro (")
+func (m *Mac) Dump(out *strings.Builder) {
+  out.WriteString("(mac (")
 
   for i, a := range m.arg_list.items {
     if i > 0 {

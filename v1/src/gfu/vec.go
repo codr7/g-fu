@@ -115,7 +115,7 @@ func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
     return v, nil
   }
   
-  m, ok := mv.Val.(*Macro)
+  m, ok := mv.Val.(*Mac)
 
   if !ok {
     return v, v.ExpandVec(g, task, env, depth-1)

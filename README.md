@@ -30,7 +30,7 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
   (load "lib/iter.gf")
 ```
 ```
-  (let while (macro (cond body..)
+  (let while (mac (cond body..)
     '(loop
        (if %cond _ (break))
        %body..)))
@@ -52,10 +52,10 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
 `loop` supports exiting with a result using `break` within its body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to avoid capturing the calling environment.
 
 ```
-  (let loop (macro (body..)
+  (let loop (mac (body..)
     (let done? (g-sym) result (g-sym))
   
-    '(let (break (macro (args..) '(recall T %args..)))
+    '(let (break (mac (args..) '(recall T %args..)))
        ((fun ((%done? F) %result..)
           (if %done? %result.. (do %body.. (recall))))))))
 ```
@@ -69,7 +69,7 @@ The macros presented below may be `load`-ed as part of the [iter](https://github
 A `for`-loop may be built on top of `while`, the following example comes with the added twist of allowing either a bare counter or an argument list with optional variable name.
 
 ```
-(let for (macro (args body..)
+(let for (mac (args body..)
   (let v? (= (type args) Vec)
        i (if (and v? (> (len args) 1)) (pop args) (g-sym))
        n (g-sym))

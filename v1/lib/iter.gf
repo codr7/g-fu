@@ -1,16 +1,16 @@
-(let loop (macro (body..)
+(let loop (mac (body..)
   (let done? (g-sym) result (g-sym))
   
-  '(let (break (macro (args..) '(recall T %args..)))
+  '(let (break (mac (args..) '(recall T %args..)))
      ((fun ((%done? F) %result..)
         (if %done? %result.. (do %body.. (recall))))))))
 
-(let while (macro (cond body..)
+(let while (mac (cond body..)
   '(loop
      (if %cond _ (break))
      %body..)))
 
-(let for (macro (args body..)
+(let for (mac (args body..)
   (let v? (= (type args) Vec)
        i (if (and v? (> (len args) 1)) (pop args) (g-sym))
        n (g-sym))

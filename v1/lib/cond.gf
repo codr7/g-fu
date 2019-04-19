@@ -1,3 +1,3 @@
-(let switch (macro (cond alts..)
+(let switch (mac (cond alts..)
      'foo
   ))

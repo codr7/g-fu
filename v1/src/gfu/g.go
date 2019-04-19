@@ -19,7 +19,7 @@ type G struct {
   RootEnv  Env
 
   MetaType,
-  ChanType, FalseType, FunType, IntType, MacroType, NilType, PrimType,
+  ChanType, FalseType, FunType, IntType, MacType, NilType, PrimType,
   QuoteType, SplatType, SpliceType, StrType, SymType, TaskType, TrueType, VecType Type
 
   NIL Nil

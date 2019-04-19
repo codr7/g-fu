@@ -24,7 +24,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return f, nil
 }
 
-func macro_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   avs := ParsePrimArgs(g, args[0])
   as, e := ParseArgs(g, task, env, avs)
 
@@ -32,7 +32,7 @@ func macro_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
 
-  m := NewMacro(g, env, as)
+  m := NewMac(g, env, as)
   m.body = args[1:]
   return m, nil
 }
@@ -538,7 +538,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int")
-  e.AddType(g, &g.MacroType, "Macro")
+  e.AddType(g, &g.MacType, "Mac")
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
@@ -556,7 +556,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, A("args"), ASplat("body"))
-  e.AddPrim(g, "macro", macro_imp, A("args"), ASplat("body"))
+  e.AddPrim(g, "mac", mac_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
   e.AddPrim(g, "or", or_imp, ASplat("conds"))
