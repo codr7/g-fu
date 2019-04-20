@@ -22,9 +22,9 @@ Press Return twice to evaluate.
 ```
 
 ### Macros
-One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
-
 Non-primitive definitions presented below may be `load`-ed as part of the [iter](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf) library.
+
+One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
 
 ```
   (load "lib/iter.gf")
@@ -94,9 +94,9 @@ hi
 ```
 
 ### Conditions
-Every value has a boolean representation that may be retrieved using `bool`.
-
 Non-primitive definitions presented below may be `load`-ed as part of the [cond](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf) library.
+
+Every value has a boolean representation that may be retrieved using `bool`.
 
 ```
   (bool 42)
