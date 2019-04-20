@@ -73,10 +73,11 @@ A `for`-loop may be built on top of `while`, the following example comes with th
   (let v? (= (type args) Vec)
        i (if (and v? (> (len args) 1)) (pop args) (g-sym))
        n (g-sym))
+       
   '(let (%i 0 %n %(if v? (pop args) args))
      (while (< %i %n)
        %body..
-       (inc %i)))))  
+       (inc %i)))))
 ```
 ```
   (for 3 (dump 'hi))
@@ -129,6 +130,11 @@ _
   (if 42 'foo 'bar)
 
 'foo
+```
+
+The else-branch is optional.
+
+```
 
   (if "" 'foo)  
 _

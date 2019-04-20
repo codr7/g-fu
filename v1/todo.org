@@ -1,7 +1,6 @@
 * add cat
 ** iter.gf
 ** https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/cat
-
 * finish switch macro
 ** iter.gf
 ** use map/fold
