@@ -17,7 +17,7 @@
 (let (v '(1 2 3 4 5)
       t1 (keep (fun (x) (< x 4)))
       t2 (map (fun (x) (+ x 42)))
-      ts (@ t2 t1))
+      ts (@ t1 t2))
   (test (= (fold v (t1 +) 0) 6))
   (test (= (fold v (t2 push) _) '(43 44 45 46 47)))
   (test (= (fold v (ts push) _) '(43 44 45))))

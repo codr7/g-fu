@@ -38,4 +38,4 @@
 
 (let @ (fun (fs..)
   (fun (in)
-    (fold fs (fun (acc x) (x acc)) in))))
+    (fold (reverse fs) (fun (acc x) (x acc)) in))))

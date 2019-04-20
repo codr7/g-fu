@@ -2,6 +2,7 @@
 ** vec, int, str, chan
 ** add Char type (rune)
 ** switch reduce/fold to use iters
+** switch vec reverse to use iter
 * fold readme
 * expand readme
 * rewrite and/or using if-fold
