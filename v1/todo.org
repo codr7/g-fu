@@ -1,25 +1,13 @@
-* finish switch macro
-** iter.gf
-** use map/fold
-** test/readme
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
 ** switch reduce/fold to use iters
 * fold readme
 * expand readme
+* rewrite and/or using if-fold
+** lib/cond.gf
 * build/coro.gf
 * dlambda
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
-
-
-(let @ (mac (forms..)
-  (let in (g-sym))
-  
-  '(fun (%in)
-     %(fold forms
-            (fun (acc x)
-              (vec (head x) acc (tail x)..))
-            in))))

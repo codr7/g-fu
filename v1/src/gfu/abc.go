@@ -490,6 +490,25 @@ func tail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v[1:], nil
 }
 
+func cons_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var tail Vec
+
+  switch a := args[1].(type) {
+  case Vec:
+    tail = a
+  case *Nil:
+    break
+  default:
+    return nil, g.E("Invalid cons target: %v", args[1].Type(g))
+  }
+  
+  return append(Vec{args[0]}, tail...), nil
+}
+
+func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return args[0].(Vec).Reverse(), nil
+}
+
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
   as := ParsePrimArgs(g, args[0])
@@ -651,6 +670,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
   e.AddFun(g, "head", head_imp, A("vec"))
   e.AddFun(g, "tail", tail_imp, A("vec"))
+  e.AddFun(g, "cons", cons_imp, A("val"), A("vec"))
+  e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   e.AddFun(g, "this-task", task_this_imp)

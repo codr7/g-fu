@@ -94,7 +94,7 @@ hi
 ```
 
 ### Conditions
-Every value in g-fu has a boolean representation that may be retrieved using `bool`.
+Every value has a boolean representation that may be retrieved using `bool`.
 
 ```
   (bool 42)
@@ -106,7 +106,7 @@ T
 F
 ```
 
-Values may be combined using `or`/`and`. Unused values are not evaluated, comparisons are performed using boolean representations while preserving original values.
+Values may be combined using `or`/`and`. Unused values are not evaluated, and comparisons are performed using boolean representations while preserving the original values.
 
 ```
   (or 0 42)
@@ -138,6 +138,28 @@ The else-branch is optional.
 
   (if "" 'foo)  
 _
+```
+
+`switch` may be used to combine multiple branches. The specified value is injected into each condition and the trailing expression returned if the condition is true.
+
+```
+  (switch 2
+    ((= 1) 'foo)
+    ((= 2) 'bar)
+    ((< 3) 'baz))
+
+'bar
+```
+
+Unless a value is specified, conditions are evaluated as is.
+
+```
+  (switch _
+    (F 'foo)
+    (T 'bar)
+    (T 'baz))
+
+'bar
 ```
 
 ### Tasks

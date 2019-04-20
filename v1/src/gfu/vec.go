@@ -260,6 +260,14 @@ func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
   return out, nil
 }
 
+func(v Vec) Reverse() Vec {
+  for i, j := 0, len(v)-1; i < j; i, j = i+1, j-1 {
+    v[i], v[j] = v[j], v[i]
+  }
+
+  return v
+}
+
 func (v Vec) Splat(g *G, out Vec) Vec {  
   for _, it := range v {
     if _, ok := it.(*Splat); ok {
