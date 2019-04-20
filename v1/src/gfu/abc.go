@@ -611,7 +611,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), AOpt("acc", nil))
+  e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), A("acc"))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))
 
   e.AddFun(g, "bool", bool_imp, A("val"))

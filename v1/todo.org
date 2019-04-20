@@ -1,11 +1,10 @@
-* add separate fun taking red to keep/map
-** switch @ to fun
-** update test/bench
 * add cat
+** iter.gf
 ** https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/cat
 
 * finish switch macro
-** use map
+** iter.gf
+** use map/fold
 * fold readme
 * expand readme
 * build/coro.gf
@@ -13,3 +12,13 @@
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
+
+
+(let @ (mac (forms..)
+  (let in (g-sym))
+  
+  '(fun (%in)
+     %(fold forms
+            (fun (acc x)
+              (vec (head x) acc (tail x)..))
+            in))))

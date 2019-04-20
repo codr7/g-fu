@@ -19,21 +19,18 @@
        %body..
        (inc %i)))))
 
-(let map (fun (red f)
-  (fun (acc val)
-    (red acc (f val)))))
+(let map (fun (f)
+  (fun (rf)
+    (fun (acc val)
+      (rf acc (f val))))))
 
-(let keep (fun (red f)
-  (fun (acc val)
-    (if (f val)
-      (red acc val)
-      acc))))
+(let keep (fun (f)
+  (fun (rf)
+    (fun (acc val)
+      (if (f val)
+        (rf acc val)
+        acc)))))
 
-(let @ (mac (forms..)
-  (let in (g-sym))
-  
-  '(fun (%in)
-     %(fold forms
-            (fun (acc x)
-              (vec (head x) acc (tail x)..))
-            in))))
+(let @ (fun (fs..)
+  (fun (in)
+    (fold fs (fun (acc x) (x acc)) in))))
