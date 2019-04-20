@@ -3,10 +3,7 @@
 * expand readme
 * fold readme
 * build/coro.gf
+* dlambda
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
-
-(fun (g-99) 
-  (map (keep g-99 (fun (x) (< x 4))) 
-       (fun (x) (+ x 42))))
