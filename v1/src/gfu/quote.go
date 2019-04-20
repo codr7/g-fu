@@ -44,20 +44,8 @@ func (q *Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
   return qv, nil
 }
 
-func (q *Quote) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
-  return q, nil
-}
-
 func (q *Quote) Is(g *G, rhs Val) bool {
   return q == rhs
-}
-
-func (q *Quote) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return q, nil
-}
-
-func (q *Quote) Splat(g *G, out Vec) Vec {
-  return append(out, q)
 }
 
 func (_ Quote) Type(g *G) *Type {

@@ -42,10 +42,6 @@ func (s *Splice) Quote(g *G, task *Task, env *Env) (Val, E) {
   return s.val.Eval(g, task, env)
 }
 
-func (s *Splice) Splat(g *G, out Vec) Vec {
-  return append(out, s)
-}
-
 func (_ Splice) Type(g *G) *Type {
   return &g.SpliceType
 }

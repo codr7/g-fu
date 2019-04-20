@@ -1,4 +1,3 @@
-* go through wraps and remove dup methods
 * add (~ x y z) to chain map/filter
 ** inject arg/result on call
 * expand readme
