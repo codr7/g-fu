@@ -293,12 +293,12 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   in := args[0].(Vec)
-  fun := args[1].(*Fun)
+  f := args[1].(*Fun)
   var acc Val = args[2]
   var e E
   
   for _, it := range in {
-    if acc, e = fun.CallArgs(g, task, env, Vec{acc, it}); e != nil {
+    if acc, e = f.CallArgs(g, task, env, Vec{acc, it}); e != nil {
       return nil, e
     }
   }
