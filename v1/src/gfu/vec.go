@@ -150,9 +150,10 @@ func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
 
 func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
   var out Vec
-
+  var e E
+  
   for _, it := range v {
-    it, e := it.Eval(g, task, env)
+    it, e = it.Eval(g, task, env)
 
     if e != nil {
       return nil, e
@@ -259,7 +260,7 @@ func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
   return out, nil
 }
 
-func (v Vec) Splat(g *G, out Vec) Vec {
+func (v Vec) Splat(g *G, out Vec) Vec {  
   for _, it := range v {
     if _, ok := it.(*Splat); ok {
       out = it.Splat(g, out)

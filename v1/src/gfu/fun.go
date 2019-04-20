@@ -28,19 +28,15 @@ func (f *Fun) Init(g *G, env *Env, args []Arg) *Fun {
   return f
 }
 
-func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  avs, e := args.EvalVec(g, task, env)
-
-  if e != nil {
-    return nil, g.E("Args eval failed: %v", e)
-  }
-
-  if e := f.arg_list.Check(g, avs); e != nil {
+func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var e E
+  
+  if e = f.arg_list.Check(g, args); e != nil {
     return nil, e
   }
 
   if f.imp != nil {
-    return f.imp(g, task, env, f.arg_list.Fill(g, avs))
+    return f.imp(g, task, env, f.arg_list.Fill(g, args))
   }
 
   var be Env
@@ -51,7 +47,7 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   var v Val
 recall:
-  f.arg_list.LetVars(g, &be, avs)
+  f.arg_list.LetVars(g, &be, args)
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
     task.recall_args = nil
@@ -60,12 +56,22 @@ recall:
   }
 
   if task.recall {
-    avs, task.recall_args = task.recall_args, nil
+    args, task.recall_args = task.recall_args, nil
     task.recall = false
     goto recall
   }
 
   return v, e
+}
+
+func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  args, e := args.EvalVec(g, task, env)
+
+  if e != nil {
+    return nil, g.E("Args eval failed: %v", e)
+  }
+
+  return f.CallArgs(g, task, env, args)
 }
 
 func (f *Fun) Dump(out *strings.Builder) {
@@ -80,8 +86,6 @@ func (f *Fun) Dump(out *strings.Builder) {
   }
 
   if f.imp == nil {
-    fmt.Fprintf(out, ") %v)", f.imp)
-  } else {
     out.WriteString(") ")
 
     for i, bv := range f.body {
@@ -93,6 +97,8 @@ func (f *Fun) Dump(out *strings.Builder) {
     }
 
     out.WriteRune(')')
+  } else {
+    fmt.Fprintf(out, ") %v)", f.imp)
   }
 }
 

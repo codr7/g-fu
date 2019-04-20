@@ -15,10 +15,6 @@ func NewSplice(g *G, val Val) *Splice {
   return s
 }
 
-func (s *Splice) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return s, nil
-}
-
 func (s *Splice) Dump(out *strings.Builder) {
   out.WriteRune('%')
   s.val.Dump(out)

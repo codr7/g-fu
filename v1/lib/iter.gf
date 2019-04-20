@@ -18,3 +18,13 @@
      (while (< %i %n)
        %body..
        (inc %i)))))
+
+(let map (fun (red f)
+  (fun (acc val)
+    (red acc (f val)))))
+
+(let filter (fun (red f)
+  (fun (acc val)
+    (if (f val)
+      (red acc val)
+      acc))))

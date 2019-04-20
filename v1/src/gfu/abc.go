@@ -291,6 +291,21 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
+func reduce_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  in := args[0].(Vec)
+  fun := args[1].(*Fun)
+  var acc Val = args[2]
+  var e E
+  
+  for _, it := range in {
+    if acc, e = fun.CallArgs(g, task, env, Vec{acc, it}); e != nil {
+      return nil, e
+    }
+  }
+  
+  return acc, nil
+}
+
 func g_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.GSym(""), nil
 }
@@ -576,6 +591,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
+  e.AddFun(g, "reduce", reduce_imp, A("in"), A("fun"), A("acc"))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))
 
   e.AddFun(g, "bool", bool_imp, A("val"))

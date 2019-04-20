@@ -15,10 +15,6 @@ func NewQuote(g *G, val Val) *Quote {
   return q
 }
 
-func (q *Quote) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return q, nil
-}
-
 func (q *Quote) Dump(out *strings.Builder) {
   out.WriteRune('\'')
   q.val.Dump(out)
