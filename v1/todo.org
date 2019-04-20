@@ -1,7 +1,11 @@
+* add separate fun taking red to keep/map
+** switch @ to fun
+** update test/bench
+* add cat
+** https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/cat
+
 * finish switch macro
 ** use map
-** add cat
-*** https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/cat
 * fold readme
 * expand readme
 * build/coro.gf
