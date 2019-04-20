@@ -1,7 +1,9 @@
 * finish switch macro
 ** use map
-* expand readme
+** add cat
+*** https://clojure.github.io/clojure/clojure.core-api.html#clojure.core/cat
 * fold readme
+* expand readme
 * build/coro.gf
 * dlambda
 * use type switch where applicable
