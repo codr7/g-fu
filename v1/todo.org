@@ -1,6 +1,11 @@
 * finish switch macro
 ** iter.gf
 ** use map/fold
+** test/readme
+* add Iter
+** vec, int, str, chan
+** add Char type (rune)
+** switch reduce/fold to use iters
 * fold readme
 * expand readme
 * build/coro.gf

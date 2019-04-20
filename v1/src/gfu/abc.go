@@ -293,13 +293,20 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   in := args[0].(Vec)
-  f := args[1].(*Fun)
+  target := args[1]
   var acc Val = args[2]
   var e E
   
   for _, it := range in {
-    if acc, e = f.CallArgs(g, task, env, Vec{acc, it}); e != nil {
-      return nil, e
+    switch t := target.(type) {
+    case *Fun:
+      if acc, e = t.CallArgs(g, task, env, Vec{acc, it}); e != nil {
+        return nil, e
+      }
+    default:
+      if acc, e = t.Call(g, task, env, Vec{acc, it}); e != nil {
+        return nil, e
+      }
     }
   }
   
@@ -411,16 +418,27 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  id := args[0].(*Sym)
+  place := args[0]
   vs, e := args[1:].EvalVec(g, task, env)
 
   if e != nil {
     return nil, e
   }
+
+  switch p := place.(type) {
+  case *Sym:
+    id := args[0].(*Sym)
   
-  return env.Update(g, id, func(v Val) (Val, E) {
-    return v.Push(g, vs...)
-  })
+    return env.Update(g, id, func(v Val) (Val, E) {
+      return v.Push(g, vs...)
+    })
+  case *Nil, Vec:
+    return p.Push(g, vs...)
+  default:
+    break
+  }
+
+  return nil, g.E("Invalid push place: %v", place)
 }
 
 func pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

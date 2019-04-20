@@ -23,4 +23,4 @@
   (test (= (fold v (ts push) _) '(43 44 45))))
 
 (let (v '((1 2) (3 4) (5)))
-  (test (= (fold v (cat (fun (acc x) (push acc x))) _) '(1 2 3 4 5))))
+  (test (= (fold v (cat push) _) '(1 2 3 4 5))))
