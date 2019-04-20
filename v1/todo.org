@@ -1,9 +1,12 @@
-* add (~ x y z) to chain map/filter
-** inject arg/result on call
-* expand readme
 * finish switch macro
 ** use map
+* expand readme
+* fold readme
 * build/coro.gf
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
+
+(fun (g-99) 
+  (map (keep g-99 (fun (x) (< x 4))) 
+       (fun (x) (+ x 42))))

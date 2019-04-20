@@ -23,8 +23,17 @@
   (fun (acc val)
     (red acc (f val)))))
 
-(let filter (fun (red f)
+(let keep (fun (red f)
   (fun (acc val)
     (if (f val)
       (red acc val)
       acc))))
+
+(let @ (mac (forms..)
+  (let in (g-sym))
+  
+  '(fun (%in)
+     %(fold forms
+            (fun (acc x)
+              (vec (head x) acc (tail x)..))
+            in))))

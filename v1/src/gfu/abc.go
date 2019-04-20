@@ -291,7 +291,7 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
-func reduce_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   in := args[0].(Vec)
   fun := args[1].(*Fun)
   var acc Val = args[2]
@@ -452,6 +452,26 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].(Vec).Peek(g), nil
 }
 
+func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  v := args[0].(Vec)
+
+  if len(v) == 0 {
+    return &g.NIL, nil
+  }
+
+  return v[0], nil
+}
+
+func tail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  v := args[0].(Vec)
+  
+  if len(v) < 2 {
+    return &g.NIL, nil
+  }
+  
+  return v[1:], nil
+}
+
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
   as := ParsePrimArgs(g, args[0])
@@ -591,7 +611,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "reduce", reduce_imp, A("in"), A("fun"), A("acc"))
+  e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), AOpt("acc", nil))
   e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))
 
   e.AddFun(g, "bool", bool_imp, A("val"))
@@ -611,6 +631,8 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
+  e.AddFun(g, "head", head_imp, A("vec"))
+  e.AddFun(g, "tail", tail_imp, A("vec"))
 
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   e.AddFun(g, "this-task", task_this_imp)
