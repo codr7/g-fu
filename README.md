@@ -142,7 +142,7 @@ The else-branch is optional.
 _
 ```
 
-`switch` may be used to combine multiple branches. The specified value is injected into each condition and the trailing expression returned if the condition is true.
+`switch` may be used to combine multiple branches. The provided value is injected into each condition and the trailing expression returned if the condition is true.
 
 ```
   (switch 2
@@ -153,7 +153,7 @@ _
 'bar
 ```
 
-Unless a value is specified, conditions are evaluated as is.
+When no value is provided, conditions are evaluated as is.
 
 ```
   (switch _
