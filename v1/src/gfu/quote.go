@@ -48,6 +48,20 @@ func (q *Quote) Is(g *G, rhs Val) bool {
   return q == rhs
 }
 
+func (q *Quote) Quote(g *G, task *Task, env *Env) (Val, E) {
+  if _, ok := q.val.(*Splice); !ok {
+    return q, nil
+  }
+  
+  var e E
+
+  if q.val, e = q.val.Quote(g, task, env); e != nil {
+    return nil, e
+  }
+  
+  return q, nil
+}
+
 func (_ Quote) Type(g *G) *Type {
   return &g.QuoteType
 }

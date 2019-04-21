@@ -471,23 +471,41 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0].(Vec)
+  v := args[0]
 
-  if len(v) == 0 {
+  switch v := v.(type) { 
+  case Vec:
+    if len(v) == 0 {
+      return &g.NIL, nil
+    }
+
+    return v[0], nil
+  case *Nil:
     return &g.NIL, nil
+  default:
+    break
   }
 
-  return v[0], nil
+  return nil, g.E("Invalid head target: %v", v)
 }
 
 func tail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0].(Vec)
+  v := args[0]
   
-  if len(v) < 2 {
+  switch v := v.(type) { 
+  case Vec:
+    if len(v) < 2 {
+      return &g.NIL, nil
+    }
+  
+    return v[1:], nil
+  case *Nil:
     return &g.NIL, nil
+  default:
+    break
   }
-  
-  return v[1:], nil
+
+  return nil, g.E("Invalid tail target: %v", v) 
 }
 
 func cons_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
