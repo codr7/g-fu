@@ -16,6 +16,12 @@
   'bar))
 
 (test (=
+  (switch 2
+    ((= 1) 'foo)
+    (T 'bar))
+  'bar))
+
+(test (=
   (switch _
     (F 'foo)
     (T 'bar)

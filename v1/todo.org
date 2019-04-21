@@ -1,5 +1,5 @@
-* add default case to switch/dlambda
-** _ when val is provided
+* add dlambda to lib
+** test
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
