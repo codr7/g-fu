@@ -155,6 +155,18 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   })
 }
 
+func dec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  d, e := args[1].Eval(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+
+  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
+    return v.(Int) - d.(Int), nil
+  })
+}
+
 func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var id *Sym
   var n Val
@@ -243,6 +255,10 @@ func bench_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   g.Debug = true
   return &g.NIL, nil
+}
+
+func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return nil, g.E(string(args[0].(Str)))
 }
 
 func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -652,11 +668,13 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "or", or_imp, ASplat("conds"))
   e.AddPrim(g, "and", and_imp, ASplat("conds"))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
+  e.AddPrim(g, "dec", dec_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "for", for_imp, A("nreps"), ASplat("body"))
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 
   e.AddFun(g, "debug", debug_imp) 
+  e.AddFun(g, "fail", fail_imp, A("reason"))
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
   e.AddFun(g, "load", load_imp, A("path"))
   

@@ -68,7 +68,7 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   args, e := args.EvalVec(g, task, env)
 
   if e != nil {
-    return nil, g.E("Args eval failed: %v", e)
+    return nil, e
   }
 
   return f.CallArgs(g, task, env, args)

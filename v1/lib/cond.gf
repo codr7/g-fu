@@ -1,5 +1,3 @@
-(load "iter.gf")
-
 (let switch (mac (val alts..)
   (let v? (not (= val '_)))
   

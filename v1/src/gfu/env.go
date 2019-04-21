@@ -94,11 +94,8 @@ func (v *Var) Init(env *Env, key *Sym) *Var {
 
 func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
   var e E
-
-  if v.Val, e = f(v.Val); e != nil {
-    return nil, e
-  }
-
+  uv := v
+  
   if v.env != env {
     if v.ext_var == nil {
       _, v.ext_var = v.env.Find(v.key)
@@ -108,6 +105,14 @@ func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
       return nil, g.E("Missing ext var: %v", v.key)
     }
 
+    uv = v.ext_var
+  }
+
+  if v.Val, e = f(uv.Val); e != nil {
+    return nil, e
+  }
+
+  if v.env != env {
     v.ext_var.Val = v.Val
   }
 

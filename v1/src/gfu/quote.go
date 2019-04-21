@@ -52,14 +52,15 @@ func (q *Quote) Quote(g *G, task *Task, env *Env) (Val, E) {
   if _, ok := q.val.(*Splice); !ok {
     return q, nil
   }
-  
+
+  var v Val
   var e E
 
-  if q.val, e = q.val.Quote(g, task, env); e != nil {
+  if v, e = q.val.Quote(g, task, env); e != nil {
     return nil, e
   }
   
-  return q, nil
+  return NewQuote(g, v), nil
 }
 
 func (_ Quote) Type(g *G) *Type {

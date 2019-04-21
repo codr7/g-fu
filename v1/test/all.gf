@@ -101,6 +101,8 @@
   (test (= (expand '(bar 42) 1) '(foo 42)))
   (test (= (expand '(bar 42) 2) 42)))
 
+(load "../lib/core.gf")
 (load "cond.gf")
 (load "iter.gf")
+(load "fos.gf")
 (load "task.gf")
