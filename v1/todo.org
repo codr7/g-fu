@@ -1,9 +1,5 @@
-* fix dlambda
-** keep splats
-*** main fun args
-*** msg body
 * add default case to switch/dlambda
-** use _ when val is provided
+** _ when val is provided
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)

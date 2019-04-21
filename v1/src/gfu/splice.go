@@ -39,6 +39,20 @@ func (s *Splice) Is(g *G, rhs Val) bool {
 }
 
 func (s *Splice) Quote(g *G, task *Task, env *Env) (Val, E) {
+  if v, ok := s.val.(Vec); ok {
+    if len(v) == 1 {
+      if sv, ok := v[0].(*Splat); ok {
+        var e E
+
+        if sv.val, e = sv.val.Eval(g, task, env); e != nil {
+          return nil, e
+        }
+
+        return sv, nil
+      }
+    }
+  }
+  
   return s.val.Eval(g, task, env)
 }
 

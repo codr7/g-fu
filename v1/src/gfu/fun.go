@@ -81,8 +81,8 @@ func (f *Fun) Dump(out *strings.Builder) {
     if i > 0 {
       out.WriteRune(' ')
     }
-
-    out.WriteString(a.id.name)
+    
+    out.WriteString(a.String())
   }
 
   if f.imp == nil {

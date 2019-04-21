@@ -57,9 +57,14 @@ func (s *Splat) Quote(g *G, task *Task, env *Env) (v Val, e E) {
 func (s *Splat) Splat(g *G, out Vec) Vec {
   v := s.val
 
-  if _, ok := v.(Vec); !ok {
-    return append(out, s)
+  switch v := v.(type) {
+  case Vec:
+    return v.Splat(g, out)
+  case *Nil:
+    return out
+  default:
+    break
   }
 
-  return v.Splat(g, out)
+  return append(out, s)
 }
