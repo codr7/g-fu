@@ -4,6 +4,8 @@
 *** add test
 * call extenv on macro/fun definition
 ** dup on call
+* add fo-fun super arg
+** forward last switch case if != _
 * plambda
 ** https://letoverlambda.com/index.cl/guest/chap6.html
 * add Iter
