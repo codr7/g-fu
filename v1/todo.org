@@ -3,8 +3,12 @@
 ** add Char type (rune)
 ** switch reduce/fold to use iters
 ** switch vec reverse to use iter
+* call extenv on macro/fun definition
+** dup on call
 * fold readme
 * expand readme
+* implement Fun/Macro Clone
+** clone envs
 * rewrite and/or using if-fold
 ** lib/cond.gf
 * build/coro.gf
