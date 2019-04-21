@@ -18,7 +18,7 @@
 
 (test (== 'foo 'foo))
 (test (= ''foo ''foo))
-(test (not (= (g-sym) (g-sym))))
+(test (not (= (new-sym) (new-sym))))
 
 (test (= (len "") 0))
 (test (= (len "foo") 3))

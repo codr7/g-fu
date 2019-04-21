@@ -53,7 +53,7 @@ One of the most common macro examples is the `while`-loop. The example below def
 
 ```
   (let loop (mac (body..)
-    (let done? (g-sym) result (g-sym))
+    (let done? (new-sym) result (new-sym))
   
     '(let (break (mac (args..) '(recall T %args..)))
        ((fun ((%done? F) %result..)
@@ -71,8 +71,8 @@ A `for`-loop may be built on top of `while`, the following example comes with th
 ```
 (let for (mac (args body..)
   (let v? (= (type args) Vec)
-       i (if (and v? (> (len args) 1)) (pop args) (g-sym))
-       n (g-sym))
+       i (if (and v? (> (len args) 1)) (pop args) (new-sym))
+       n (new-sym))
        
   '(let (%i 0 %n %(if v? (pop args) args))
      (while (< %i %n)

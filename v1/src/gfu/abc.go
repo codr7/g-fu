@@ -329,8 +329,8 @@ func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return acc, nil
 }
 
-func g_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.GSym(""), nil
+func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return g.NewSym(string(args[0].(Str))), nil
 }
 
 func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -685,7 +685,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(-1)))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), A("acc"))
-  e.AddFun(g, "g-sym", g_sym_imp, AOpt("prefix", nil))
+  e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
 
   e.AddFun(g, "bool", bool_imp, A("val"))
   e.AddFun(g, "not", not_imp, A("val"))

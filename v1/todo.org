@@ -1,5 +1,7 @@
-* add lets test
-** alet
+* change Env to store *Var
+** replaces ext_var
+** testfos.gf
+*** add test
 * call extenv on macro/fun definition
 ** dup on call
 * add Iter

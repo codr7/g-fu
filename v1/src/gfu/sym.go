@@ -52,14 +52,14 @@ func (s *Sym) Extenv(g *G, src, dst *Env, clone bool) E {
   return nil
 }
 
-func (g *G) GSym(prefix string) *Sym {
+func (g *G) NewSym(prefix string) *Sym {
   var name string
   tag := g.NextSymTag()
 
   if len(prefix) > 0 {
-    name = fmt.Sprintf("g-%v-%v", prefix, tag)
+    name = fmt.Sprintf("%v-%v", prefix, tag)
   } else {
-    name = fmt.Sprintf("g-%v", tag)
+    name = fmt.Sprintf("sym-%v", tag)
   }
 
   s := NewSym(g, tag, name)

@@ -1,5 +1,5 @@
-(let funs (mac (defs..)
-  (let args (g-sym))
+(let fo-fun (mac (defs..)
+  (let args (new-sym))
   
   '(fun (%(args..))
      (switch (head %args)
@@ -12,8 +12,7 @@
               _)..
        (T (fail "Unknown message"))))))
 
-(let lets (mac (vars body..)
-  '(let (self _ %vars..)
-     (let self %(pop body))
+(let fo-let (mac (vars body..)
+  '(let (self _ self %(pop body) %vars..)
      %body..
      (fun (args..) (self args..)))))

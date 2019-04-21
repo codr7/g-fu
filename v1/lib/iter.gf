@@ -1,5 +1,5 @@
 (let loop (mac (body..)
-  (let done? (g-sym) result (g-sym))
+  (let done? (new-sym) result (new-sym))
   
   '(let (break (mac (args..) '(recall T %args..)))
      ((fun ((%done? F) %result..)
@@ -12,8 +12,8 @@
 
 (let for (mac (args body..)
   (let v? (= (type args) Vec)
-       i (if (and v? (> (len args) 1)) (pop args) (g-sym))
-       n (g-sym))
+       i (if (and v? (> (len args) 1)) (pop args) (new-sym))
+       n (new-sym))
        
   '(let (%i 0 %n %(if v? (pop args) args))
      (while (< %i %n)

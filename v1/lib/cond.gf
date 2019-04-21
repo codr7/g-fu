@@ -6,6 +6,6 @@
           (let c (head alt) v? (and v? (not (= c 'T))))
           
           '(if %(if v? '(%(head c) %val %(tail c)..) c)
-             (do %(tail alt))
+             (do %(tail alt)..)
              %acc))
         _)))
