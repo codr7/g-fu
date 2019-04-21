@@ -4,6 +4,8 @@
 *** add test
 * call extenv on macro/fun definition
 ** dup on call
+* plambda
+** https://letoverlambda.com/index.cl/guest/chap6.html
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
@@ -16,7 +18,6 @@
 * rewrite and/or using if-fold
 ** lib/cond.gf
 * build/coro.gf
-* dlambda
 * use type switch where applicable
 ** https://tour.golang.org/methods/16
 ** grep "\.("
