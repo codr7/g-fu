@@ -90,7 +90,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return rv, nil
 }
 
-func set_env_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func set_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
   
   for i := 0; i+1 < len(args); i += 2 {
@@ -650,7 +650,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "fun", fun_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "mac", mac_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
-  e.AddPrim(g, "set-env", set_env_imp, ASplat("args"))
+  e.AddPrim(g, "set", set_imp, ASplat("args"))
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
   e.AddPrim(g, "or", or_imp, ASplat("conds"))
   e.AddPrim(g, "and", and_imp, ASplat("conds"))

@@ -1,4 +1,3 @@
-* rename set-env to set
 * replace task.recall/_args with Recall type
 ** pass as error and trap in fun call
 * implement dec in terms of inc in core.gf

@@ -13,6 +13,7 @@
        (T (fail "Unknown message"))))))
 
 (let fo-let (mac (vars body..)
-  '(let (self _ self %(pop body) %vars..)
+  '(let (self _ %vars..)
+     (set self %(pop body))
      %body..
      (fun (args..) (self args..)))))
