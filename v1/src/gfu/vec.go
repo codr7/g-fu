@@ -139,10 +139,6 @@ func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
     if out, e = it.Eval(g, task, env); e != nil {
       return nil, e
     }
-
-    if task.recall {
-      break
-    }
   }
 
   return out, nil
@@ -157,10 +153,6 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
 
     if e != nil {
       return nil, e
-    }
-
-    if task.recall {
-      break
     }
 
     if _, ok := it.(*Splat); ok {

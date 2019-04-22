@@ -50,15 +50,12 @@ recall:
   f.arg_list.LetVars(g, &be, args)
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
-    task.recall_args = nil
-    task.recall = false
+    if r, ok := e.(*Recall); ok {
+      args = r.args
+      goto recall
+    }
+    
     return nil, e
-  }
-
-  if task.recall {
-    args, task.recall_args = task.recall_args, nil
-    task.recall = false
-    goto recall
   }
 
   return v, e
@@ -107,4 +104,28 @@ func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
   f.imp = imp
   env.Let(g.Sym(id), f)
   return nil
+}
+
+type Recall struct {
+  args Vec
+}
+
+func NewRecall(args Vec) *Recall {
+  r := new(Recall)
+  r.args = args
+  return r
+}
+
+func (r *Recall) Dump(out *strings.Builder) {
+  out.WriteString("(recall")
+
+  for _, a := range r.args {
+    a.Dump(out)
+  }
+  
+  out.WriteRune(')')
+}
+
+func (r *Recall) String() string {
+  return DumpString(r)
 }

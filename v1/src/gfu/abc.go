@@ -272,13 +272,7 @@ func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
 }
 
 func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  if task.recall {
-    return nil, g.E("Recall already in progress")
-  }
-
-  task.recall = true
-  task.recall_args = args
-  return &g.NIL, nil
+  return &g.NIL, NewRecall(args)
 }
 
 func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

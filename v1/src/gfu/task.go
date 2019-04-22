@@ -15,9 +15,7 @@ type Task struct {
   mutex        sync.Mutex
   cond         *sync.Cond
   done,
-  recall,
   safe         bool
-  recall_args  Vec
   result       Val
 }
 
