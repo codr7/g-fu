@@ -5,10 +5,9 @@
 * rewrite and/or using if-fold
 ** lib/cond.gf
 ** bench
-* add fo-fun super arg
-** forward last switch case if != _
-* plambda
-** https://letoverlambda.com/index.cl/guest/chap6.html
+* add fo-fun default case
+** use _ as id
+** call with args when no msg matches
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
@@ -20,5 +19,4 @@
 ** clone envs
 * build/coro.gf
 * use type switch where applicable
-** https://tour.golang.org/methods/16
 ** grep "\.("
