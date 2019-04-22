@@ -1,9 +1,8 @@
-* replace task.recall/_args with Recall type
-** pass as error and trap in fun call
-* implement dec in terms of inc in core.gf
 * rewrite and/or using if-fold
 ** lib/cond.gf
 ** bench
+* replace task.recall/_args with Recall type
+** pass as error and trap in fun call
 * add fo-fun default case
 ** use _ as id
 ** call with args when no msg matches

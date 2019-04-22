@@ -179,18 +179,6 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   })
 }
 
-func dec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  d, e := args[1].Eval(g, task, env)
-
-  if e != nil {
-    return nil, e
-  }
-
-  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    return v.(Int) - d.(Int), nil
-  })
-}
-
 func test_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   for _, in := range args {
     v, e := in.Eval(g, task, env)
@@ -655,7 +643,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "or", or_imp, ASplat("conds"))
   e.AddPrim(g, "and", and_imp, ASplat("conds"))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
-  e.AddPrim(g, "dec", dec_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 
