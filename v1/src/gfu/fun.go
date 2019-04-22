@@ -50,7 +50,7 @@ recall:
   f.arg_list.LetVars(g, &be, args)
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
-    if r, ok := e.(*Recall); ok {
+    if r, ok := e.(Recall); ok {
       args = r.args
       goto recall
     }
@@ -110,13 +110,12 @@ type Recall struct {
   args Vec
 }
 
-func NewRecall(args Vec) *Recall {
-  r := new(Recall)
+func NewRecall(args Vec) (r Recall) {
   r.args = args
   return r
 }
 
-func (r *Recall) Dump(out *strings.Builder) {
+func (r Recall) Dump(out *strings.Builder) {
   out.WriteString("(recall")
 
   for _, a := range r.args {
@@ -126,6 +125,6 @@ func (r *Recall) Dump(out *strings.Builder) {
   out.WriteRune(')')
 }
 
-func (r *Recall) String() string {
+func (r Recall) String() string {
   return DumpString(r)
 }
