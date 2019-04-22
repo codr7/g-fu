@@ -2,6 +2,8 @@
 ** dup on call
 * add fo-fun super arg
 ** forward last switch case if != _
+* replace task.recall/_args with Recall type
+** pass as error and trap in fun call
 * plambda
 ** https://letoverlambda.com/index.cl/guest/chap6.html
 * add Iter
