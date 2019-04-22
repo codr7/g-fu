@@ -191,44 +191,6 @@ func dec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   })
 }
 
-func for_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var id *Sym
-  var n Val
-  var e E
-
-  as := ParsePrimArgs(g, args[0])
-
-  if as == nil {
-    return nil, g.E("Invalid for args: %v", as)
-  }
-
-  if len(as) == 1 {
-    n, e = as[0].Eval(g, task, env)
-  } else {
-    n, e = as[0].Eval(g, task, env)
-    id = as[1].(*Sym)
-  }
-
-  if e != nil {
-    return nil, e
-  }
-
-  b := args[1:]
-  var v Val = &g.NIL
-
-  for i := Int(0); i < n.(Int); i++ {
-    if id != nil {
-      env.Let(id, i)
-    }
-
-    if v, e = b.EvalExpr(g, task, env); e != nil {
-      return nil, e
-    }
-  }
-
-  return v, nil
-}
-
 func test_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   for _, in := range args {
     v, e := in.Eval(g, task, env)
@@ -694,7 +656,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "and", and_imp, ASplat("conds"))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "dec", dec_imp, A("var"), AOpt("delta", Int(1)))
-  e.AddPrim(g, "for", for_imp, A("nreps"), ASplat("body"))
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 

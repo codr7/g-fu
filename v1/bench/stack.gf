@@ -1,4 +1,4 @@
-(_ "../lib/iter.gf")
+(load "../lib/iter.gf")
 
 (dump, bench 10
   (let, s _,

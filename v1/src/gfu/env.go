@@ -65,8 +65,12 @@ func (e *Env) InsertVar(i int, v *Var) {
 }
 
 func (e *Env) Let(key *Sym, val Val) {
-  if i, found := e.Find(key); found == nil || found.env != e {
+  if i, found := e.Find(key); found == nil {
     e.Insert(i, key).Val = val
+  } else if found.env != e {
+    v := new(Var).Init(e, key)
+    v.Val = val
+    e.vars[i] = v
   } else {
     found.Val = val
   }
