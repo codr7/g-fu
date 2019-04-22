@@ -8,7 +8,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.8
+g-fu v1.9
 
 Press Return twice to evaluate.
 

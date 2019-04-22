@@ -10,3 +10,9 @@
 (fo-let ()
   (test (= self 42))
   42)
+
+(let (fo (fo-let _
+           (fo-fun
+             (patch (new) (set-env self new)))))
+  (fo 'patch (fun (x) x))
+  (test (= (fo 42) 42)))

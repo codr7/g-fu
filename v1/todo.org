@@ -1,7 +1,5 @@
-* change Env to store *Var
-** replaces ext_var
-** testfos.gf
-*** add test
+* remove for-prim
+** bench
 * call extenv on macro/fun definition
 ** dup on call
 * add fo-fun super arg

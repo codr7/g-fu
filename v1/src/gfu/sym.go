@@ -35,16 +35,15 @@ func (s *Sym) Eval(g *G, task *Task, env *Env) (Val, E) {
 func (s *Sym) Extenv(g *G, src, dst *Env, clone bool) E {
   if i, dv := dst.Find(s); dv == nil {
     if _, sv := src.Find(s); sv != nil {
-      dv = dst.Insert(i, s)
-
       if clone {
+        dv = dst.Insert(i, sv.key)
         var e E
         
         if dv.Val, e = sv.Val.Clone(g); e != nil {
           return e
         }
       } else {
-        *dv = *sv
+        dst.InsertVar(i, sv)
       }
     }
   }

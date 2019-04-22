@@ -5,12 +5,12 @@ import (
 )
 
 type Env struct {
-  vars []Var
+  vars []*Var
 }
 
 func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
   src := env.vars
-  dst.vars = make([]Var, len(src))
+  dst.vars = make([]*Var, len(src))
   copy(dst.vars, src)
   return dst, nil
 }
@@ -21,7 +21,7 @@ func (e *Env) Find(key *Sym) (int, *Var) {
 
   for min < max {
     i := (max + min) / 2
-    v := &vs[i]
+    v := vs[i]
 
     switch key.tag.Cmp(v.key.tag) {
     case -1:
@@ -47,26 +47,41 @@ func (e *Env) Get(g *G, key *Sym) (Val, E) {
 }
 
 func (e *Env) Insert(i int, key *Sym) *Var {
-  var v Var
-  vs := append(e.vars, v)
-  e.vars = vs
+  v := new(Var).Init(e, key)
+  e.InsertVar(i, v)
+  return v
+}
 
+func (e *Env) InsertVar(i int, v *Var) {
+  vs := e.vars
+  vs = append(vs, v)
+  
   if i < len(vs)-1 {
     copy(vs[i+1:], vs[i:])
+    vs[i] = v
   }
 
-  return vs[i].Init(e, key)
+  e.vars = vs
 }
 
 func (e *Env) Let(key *Sym, val Val) {
-  i, found := e.Find(key)
-
-  if found == nil {
+  if i, found := e.Find(key); found == nil || found.env != e {
     e.Insert(i, key).Val = val
   } else {
-    found.env = e
     found.Val = val
   }
+}
+
+func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {
+  _, found := e.Find(key)
+
+  if found == nil {
+    return nil, g.E("Unknown var: %v", key)
+  }
+
+  var prev Val
+  prev, found.Val = found.Val, val
+  return prev, nil
 }
 
 func (e *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
@@ -81,7 +96,6 @@ func (e *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
 
 type Var struct {
   env     *Env
-  ext_var *Var
   key     *Sym
   Val     Val
 }
@@ -94,26 +108,9 @@ func (v *Var) Init(env *Env, key *Sym) *Var {
 
 func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
   var e E
-  uv := v
-  
-  if v.env != env {
-    if v.ext_var == nil {
-      _, v.ext_var = v.env.Find(v.key)
-    }
 
-    if v.ext_var == nil {
-      return nil, g.E("Missing ext var: %v", v.key)
-    }
-
-    uv = v.ext_var
-  }
-
-  if v.Val, e = f(uv.Val); e != nil {
+  if v.Val, e = f(v.Val); e != nil {
     return nil, e
-  }
-
-  if v.env != env {
-    v.ext_var.Val = v.Val
   }
 
   return v.Val, nil
