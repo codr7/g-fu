@@ -158,6 +158,12 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
   s := g.Sym(buf.String())
 
   if v := g.FindConst(s); v != nil {
+    var e E
+    
+    if v, e = v.Clone(g); e != nil {
+      return nil, e
+    }
+    
     return append(out, v), nil
   }
 
