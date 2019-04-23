@@ -132,41 +132,6 @@ func if_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
-func and_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var e E
-  var v Val = &g.NIL
-
-  for _, in := range args {
-    v, e = in.Eval(g, task, env)
-
-    if e != nil {
-      return nil, e
-    }
-
-    if !v.Bool(g) {
-      return &g.NIL, nil
-    }
-  }
-
-  return v, nil
-}
-
-func or_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  for _, in := range args {
-    v, e := in.Eval(g, task, env)
-
-    if e != nil {
-      return nil, e
-    }
-
-    if v.Bool(g) {
-      return v, nil
-    }
-  }
-
-  return &g.NIL, nil
-}
-
 func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   d, e := args[1].Eval(g, task, env)
 
@@ -634,8 +599,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddPrim(g, "set", set_imp, ASplat("args"))
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
-  e.AddPrim(g, "or", or_imp, ASplat("conds"))
-  e.AddPrim(g, "and", and_imp, ASplat("conds"))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))

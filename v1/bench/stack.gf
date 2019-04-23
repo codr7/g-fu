@@ -1,3 +1,4 @@
+(load "../lib/core.gf")
 (load "../lib/iter.gf")
 
 (dump, bench 10

@@ -1,12 +1,12 @@
+* add fo-fun default case
+** use _ as id
+** call with args if no match
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
 ** switch reduce/fold to use iters
 ** switch vec reverse to use iter
 
-* add fo-fun default case
-** use _ as id
-** call with args when no msg matches
 * fold readme
 * expand readme
 * implement Fun/Macro Clone
