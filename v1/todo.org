@@ -1,6 +1,14 @@
 * add fo-fun default case
 ** use _ as id
 ** call with args if no match
+* add str fmt
+** add Fmt type
+** trigger in ReadStr if non-escaped %
+** use Read to get expr
+** store as Vec
+** eval/print in Eval
+** use to add msg id in fo-fun fail
+** convert test-prim to macro
 * add Iter
 ** vec, int, str, chan
 ** add Char type (rune)
