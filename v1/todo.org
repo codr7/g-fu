@@ -1,3 +1,8 @@
+* convert _/T/F to consts
+** add Const type
+** keep separate map in G
+** replace in Expand
+** remove quotes in lib
 * add fo-fun default case
 ** use _ as id
 ** call with args if no match
