@@ -1,5 +1,7 @@
 * test fo-fun default case
 ** use T as id
+* add class macro based on fo-let/fun
+** call to instantiate
 * add str fmt
 ** add Fmt type
 ** trigger in ReadStr if non-escaped %
