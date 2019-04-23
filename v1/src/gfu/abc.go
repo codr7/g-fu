@@ -274,14 +274,6 @@ func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.F, nil
 }
 
-func not_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  if b := args[0].Bool(g); b {
-    return &g.F, nil
-  }
-
-  return &g.T, nil
-}
-
 func eq_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   v := args[0]
 
@@ -618,13 +610,13 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
 
   e.AddFun(g, "bool", bool_imp, A("val"))
-  e.AddFun(g, "not", not_imp, A("val"))
 
   e.AddFun(g, "=", eq_imp, ASplat("vals"))
   e.AddFun(g, "==", is_imp, ASplat("vals"))
 
   e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
   e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
+  
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 

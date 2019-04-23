@@ -1,5 +1,7 @@
 (debug)
 
+(load "../lib/core.gf")
+
 (test (= (type 42) Int))
 
 (test (= (-, + 1 2, + 3 4) -4))
@@ -101,7 +103,6 @@
   (test (= (expand '(bar 42) 1) '(foo 42)))
   (test (= (expand '(bar 42) 2) 42)))
 
-(load "../lib/core.gf")
 (load "cond.gf")
 (load "iter.gf")
 (load "fos.gf")
