@@ -2,7 +2,7 @@
 
 (load "../lib/core.gf")
 
-(test (= (nop foo bar baz) _))
+(test (= (NOP foo bar baz) _))
 
 (test (= (type 42) Int))
 
