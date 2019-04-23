@@ -1,10 +1,7 @@
-(let switch (mac (val alts..)
-  (let v? (not (= val '_)))
-  
+(let switch (mac (alts..)
   (fold (reverse alts)
         (fun (acc alt)
-          (let c (head alt) p? (and v? (not (= c 'T))))
-          '(if %(if p? '(%(head c) %val %(tail c)..) c)
+          '(if %(head alt)
              (do %(tail alt)..)
              %acc))
         _)))

@@ -100,7 +100,3 @@ func (v BasicVal) Type(g *G) *Type {
 func (v BasicVal) String() string {
   return DumpString(v.imp)
 }
-
-func (env *Env) AddVal(g *G, id string, val Val) {
-  env.Let(g.Sym(id), val)
-}

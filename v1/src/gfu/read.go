@@ -155,7 +155,13 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
     }
   }
 
-  return append(out, g.Sym(buf.String())), nil
+  s := g.Sym(buf.String())
+
+  if v := g.FindConst(s); v != nil {
+    return append(out, v), nil
+  }
+
+  return append(out, s), nil
 }
 
 func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E) {

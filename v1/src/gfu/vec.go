@@ -71,13 +71,7 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
     return &g.NIL, nil
   }
 
-  f := v[0]
-
-  if s, ok := f.(*Sym); ok && s == g.nil_sym {
-    return &g.NIL, nil
-  }
-
-  fv, e := f.Eval(g, task, env)
+  fv, e := v[0].Eval(g, task, env)
 
   if e != nil {
     return nil, e
@@ -112,7 +106,7 @@ func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
   _, mv := env.Find(id)
   
   if mv == nil {
-    return v, nil
+    return v, v.ExpandVec(g, task, env, depth-1)
   }
   
   m, ok := mv.Val.(*Mac)

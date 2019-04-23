@@ -2,11 +2,13 @@
   (let args (new-sym))
   
   '(fun (%(args..))
-     (switch (head %args)
+     (let id (head %args))
+     
+     (switch
        %(fold defs
               (fun (acc d)
                 (let imp (tail d))
-                (push acc '((= '%(head d))
+                (push acc '((= id '%(head d))
                             ((fun (%(head imp)..) %(tail imp)..)
                              (splat (tail %args))))))
               _)..

@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   "io/ioutil"
   //"log"
   "path/filepath"
@@ -8,23 +9,33 @@ import (
   "sync"
 )
 
-type G struct {
-  syms    sync.Map
-  nsyms   uint64
-  nil_sym *Sym
-  load_path string
-  
+type G struct {  
   Debug    bool
   MainTask Task
   RootEnv  Env
 
   MetaType,
-  ChanType, FalseType, FunType, IntType, MacType, NilType, PrimType,
-  QuoteType, SplatType, SpliceType, StrType, SymType, TaskType, TrueType, VecType Type
+  ChanType,
+  FalseType, FunType,
+  IntType,
+  MacType,
+  NilType,
+  PrimType,
+  QuoteType,
+  SplatType, SpliceType, StrType, SymType,
+  TaskType, TrueType,
+  VecType Type
 
   NIL Nil
   T   True
   F   False
+
+  syms,
+  consts  sync.Map
+  nsyms   uint64
+  
+  nil_sym *Sym
+  load_path string
 }
 
 func NewG() (*G, E) {
@@ -79,4 +90,20 @@ func (g *G) Load(task *Task, env *Env, path string) (Val, E) {
   v, e := g.EvalString(task, env, pos, string(s))
   g.load_path = prev_path
   return v, e
+}
+
+func (g *G) AddConst(id string, val Val) {
+  if _, dup := g.consts.LoadOrStore(g.Sym(id), val); dup {
+    panic(fmt.Sprintf("Dup const: %v", id))
+  }
+}
+
+func (g *G) FindConst(id *Sym) Val {
+  v, ok := g.consts.Load(id)
+
+  if !ok {
+    return nil
+  }
+
+  return v.(Val)
 }

@@ -581,9 +581,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.TrueType, "True")
   e.AddType(g, &g.VecType, "Vec")
 
-  e.AddVal(g, "_", g.NIL.Init(g))
-  e.AddVal(g, "T", g.T.Init(g))
-  e.AddVal(g, "F", g.F.Init(g))
+  g.AddConst("_", g.NIL.Init(g))
+  g.AddConst("T", g.T.Init(g))
+  g.AddConst("F", g.F.Init(g))
 
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, A("args"), ASplat("body"))

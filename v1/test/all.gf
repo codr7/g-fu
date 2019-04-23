@@ -2,11 +2,11 @@
 
 (load "../lib/core.gf")
 
+(test (= (nop foo bar baz) _))
+
 (test (= (type 42) Int))
 
 (test (= (-, + 1 2, + 3 4) -4))
-
-(test (= (_ foo bar baz) _))
 
 (let (x 35)
   (test (= (inc x 7) 42))
@@ -48,7 +48,7 @@
 
 (test (= (do 1 2 3) 3))
 
-(test (= ((fun _ 42)) 42))
+(test (= ((fun () 42)) 42))
 (test (= ((fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))

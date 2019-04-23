@@ -2,6 +2,8 @@
   (fun (in)
     (fold (reverse fs) (fun (acc x) (x acc)) in))))
 
+(let nop (mac (args..)))
+
 (let not (fun (val)
   (if val F T)))
 

@@ -3,15 +3,15 @@
   (test (= (len c) 1))
   (test (= (pop c) 42)))
 
-(let (t (task _ 'foo))
+(let (t (task () 'foo))
   (test (= (wait t) 'foo)))
 
-(let (t1 (task _ 35)
-      t2 (task _ 7))
+(let (t1 (task () 35)
+      t2 (task () 7))
   (test (= (+ (wait t1 t2)..) 42)))
 
 (let (v 42
-      t (task _ (inc v)))
+      t (task () (inc v)))
   (test (= (wait t) 43))
   (test (= v 42)))
 

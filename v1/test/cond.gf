@@ -9,20 +9,7 @@
 (test (= (or 0 F) _))
 
 (test (=
-  (switch 2
-    ((= 1) 'foo)
-    ((= 2) 'bar)
-    ((< 3) 'baz))
-  'bar))
-
-(test (=
-  (switch 2
-    ((= 1) 'foo)
-    (T 'bar))
-  'bar))
-
-(test (=
-  (switch _
+  (switch
     (F 'foo)
     (T 'bar)
     (T 'baz))
