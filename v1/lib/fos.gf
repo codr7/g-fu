@@ -19,3 +19,17 @@
      (set self %(pop body))
      %body..
      (fun (args..) (self args..)))))
+
+(let class (mac (id supers slots methods..)
+  '(let %id
+     (let-self ()
+       (dispatch
+         (id () '%id)
+         (slots () '%slots)
+         (methods () '%methods)
+         (new ()
+           (let-self %(fold slots
+                            (fun (acc x)
+                              (if (== (type x) Vec) (push acc x..) (push acc x _)))
+                            _)
+             (dispatch %methods..))))))))

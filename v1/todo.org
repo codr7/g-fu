@@ -1,6 +1,5 @@
-* finish constructor
-** testclass.gf
-** let-self/dispatch %slots/%methods
+* add constructor slot args
+** splat into (set) form if provided
 * add super support
 ** extend slots/methods with supers
 ** add Foo/bar to super method conds

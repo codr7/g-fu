@@ -1,18 +1,18 @@
 (load "../lib/fos.gf")
 
-(let (n 0 fo (dispatch
-              (inc ((d 1)) (inc n d))
-              (dec ((d 1)) (dec n d))))
-  (test (= (fo 'inc 4) 4))
-  (test (= (fo 'dec) 3))
+(let (n 0 d (dispatch
+              (inc ((delta 1)) (inc n delta))
+              (dec ((delta 1)) (dec n delta))))
+  (test (= (d 'inc 4) 4))
+  (test (= (d 'dec) 3))
   (test (= n 3)))
 
 (let-self ()
   (test (= self 42))
   42)
 
-(let (fo (let-self ()
+(let (s (let-self ()
            (dispatch
              (patch (new) (set self new)))))
-  (fo 'patch (fun (x) x))
-  (test (= (fo 42) 42)))
+  (s 'patch (fun (x) x))
+  (test (= (s 42) 42)))
