@@ -1,11 +1,12 @@
 * rename fo-let/fun to let-self/dispatch
+** lib/test
 * finish constructor
 ** testclass.gf
 ** fo-let/fo-fun using %slots/%methods
 * add super support
 ** extend slots/methods with supers
-** how to call super method?
-* test fo-fun default case
+** create Foo/bar methods for supers
+* test dispatch default case
 ** use T as id
 * ---
 * cache extended Fun/Macro env

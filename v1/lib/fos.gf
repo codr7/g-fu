@@ -1,4 +1,4 @@
-(let fo-fun (mac (defs..)
+(let dispatch (mac (defs..)
   (let args (new-sym) id (new-sym))
   
   '(fun (%(args..))
@@ -14,7 +14,7 @@
               _)..
        (T (fail "Unknown message"))))))
 
-(let fo-let (mac (vars body..)
+(let let-self (mac (vars body..)
   '(let (self _ %vars..)
      (set self %(pop body))
      %body..
