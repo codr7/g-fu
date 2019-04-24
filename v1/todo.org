@@ -1,5 +1,5 @@
 * fix unknown class id
-** wich env is the expansion is running in
+** check let Extenv call
 ** testclass.gf
 * test fo-fun default case
 ** use T as id
