@@ -39,20 +39,18 @@ func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   bsf := args[0]
-  var bs Vec
-  _, is_scope := bsf.(Vec)
+  bs, is_scope := bsf.(Vec)
   var le *Env
-
+  
   if is_scope {
-    bs = bsf.(Vec)
     le = new(Env)
+
+    if e := args.Extenv(g, env, le, false); e != nil {
+      return nil, e
+    }
   } else {
     bs = args
     le = env
-  }
-
-  if e := args.Extenv(g, env, le, false); e != nil {
-    return nil, e
   }
 
   for i := 0; i+1 < len(bs); i += 2 {
@@ -70,6 +68,10 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
 
     le.Let(k, v)
+
+    if k.name == "Foo" {
+      //panic("let_imp: Foo")
+    }
   }
 
   if !is_scope {

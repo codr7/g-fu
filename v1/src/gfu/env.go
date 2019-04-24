@@ -2,6 +2,7 @@ package gfu
 
 import (
   //"log"
+  "strings"
 )
 
 type Env struct {
@@ -108,6 +109,16 @@ func (v *Var) Init(env *Env, key *Sym) *Var {
   v.env = env
   v.key = key
   return v
+}
+
+func (v *Var) Dump(out *strings.Builder) {
+  out.WriteString(v.key.name)
+  out.WriteString(": ")
+  v.Val.Dump(out)
+}
+
+func (v *Var) String() string {
+  return DumpString(v)
 }
 
 func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {

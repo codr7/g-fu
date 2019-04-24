@@ -1,13 +1,13 @@
-* fix unknown class id
-** check let Extenv call
-** testclass.gf
+* rename fo-let/fun to let-self/dispatch
 * finish constructor
+** testclass.gf
 ** fo-let/fo-fun using %slots/%methods
 * add super support
 ** extend slots/methods with supers
 ** how to call super method?
 * test fo-fun default case
 ** use T as id
+* ---
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
 * add str fmt

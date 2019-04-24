@@ -46,13 +46,7 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
 
-  var v Val
-
-  if v, e = m.body.EvalExpr(g, task, &be); e != nil {
-    return nil, e
-  }
-
-  return v, nil
+  return m.body.EvalExpr(g, task, &be)
 }
 
 func (m *Mac) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {  
@@ -60,17 +54,11 @@ func (m *Mac) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
     return nil, e
   }
 
-  var be Env
-
-  if e = v.Extenv(g, m.env, &be, false); e != nil {
+  if e = v.Extenv(g, m.env, env, false); e != nil {
     return nil, e
   }
 
-  if e = v.Extenv(g, env, &be, false); e != nil {
-    return nil, e
-  }
-
-  return v.Eval(g, task, &be)
+  return v.Eval(g, task, env)
 }
 
 func (m *Mac) Dump(out *strings.Builder) {
