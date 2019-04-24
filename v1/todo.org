@@ -8,8 +8,8 @@
 ** how to call super method?
 * test fo-fun default case
 ** use T as id
-* add class macro based on fo-let/fun
-** call to instantiate
+* cache extended Fun/Macro env
+** use instead of Extenv if set
 * add str fmt
 ** add Fmt type
 ** trigger in ReadStr if non-escaped %
