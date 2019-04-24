@@ -93,15 +93,15 @@
 (let (foo (vec 35 7))
   (test (= (eval '(+ %foo..)) 42)))
 
-(test (= (expand '(foo 42)) '(foo 42)))
+(test (= (expand -1 '(foo 42)) '(foo 42)))
 
 (let (foo (mac (x) x))
-  (test (= (expand '(foo 42)) 42)))
+  (test (= (expand -1 '(foo 42)) 42)))
 
 (let (foo (mac (x) x)
       bar (mac (x) '(foo %x)))
-  (test (= (expand '(bar 42) 1) '(foo 42)))
-  (test (= (expand '(bar 42) 2) 42)))
+  (test (= (expand 1 '(bar 42)) '(foo 42)))
+  (test (= (expand 2 '(bar 42)) 42)))
 
 (load "cond.gf")
 (load "iter.gf")

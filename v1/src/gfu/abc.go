@@ -224,7 +224,7 @@ func eval_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  return args[0].Expand(g, task, env, args[1].(Int))
+  return args[1].Expand(g, task, env, args[0].(Int))
 }
 
 func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -595,7 +595,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "clone", clone_imp, A("val"))
   e.AddFun(g, "type", type_imp, A("val"))
   e.AddFun(g, "eval", eval_imp, A("expr"))
-  e.AddFun(g, "expand", expand_imp, A("expr"), AOpt("n", Int(1)))
+  e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), A("acc"))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
