@@ -13,6 +13,6 @@
 
 (let (s (let-self ()
            (dispatch
-             (patch (new) (set self new)))))
+             (patch (new) (set 'self new)))))
   (s 'patch (fun (x) x))
   (test (= (s 42) 42)))

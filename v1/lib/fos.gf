@@ -16,7 +16,7 @@
 
 (let let-self (mac (vars body..)
   '(let (self _ %vars..)
-     (set self %(pop body))
+     (set 'self %(pop body))
      %body..
      (fun (args..) (self args..)))))
 
