@@ -41,18 +41,13 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   bsf := args[0]
   var bs Vec
   _, is_scope := bsf.(Vec)
-
-  if is_scope {
-    bs = bsf.(Vec)
-  } else {
-    bs = args
-  }
-
   var le *Env
 
   if is_scope {
+    bs = bsf.(Vec)
     le = new(Env)
   } else {
+    bs = args
     le = env
   }
 
