@@ -1,6 +1,11 @@
 * fix unknown class id
 ** check let Extenv call
 ** testclass.gf
+* finish constructor
+** fo-let/fo-fun using %slots/%methods
+* add super support
+** extend slots/methods with supers
+** how to call super method?
 * test fo-fun default case
 ** use T as id
 * add class macro based on fo-let/fun
