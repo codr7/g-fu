@@ -1,11 +1,11 @@
 * add super support
 ** extend slots/methods with supers
 ** add Foo/bar to super method conds
-* test dispatch default case
-** use T as id
+** testgui.gf
 * ---
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
+* change inc fun to support int target
 * add str fmt
 ** add Fmt type
 ** trigger in ReadStr if non-escaped %
