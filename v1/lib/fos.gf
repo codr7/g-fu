@@ -1,14 +1,14 @@
 (let fo-fun (mac (defs..)
-  (let args (new-sym))
+  (let args (new-sym) id (new-sym))
   
   '(fun (%(args..))
-     (let id (head %args))
+     (let %id (head %args))
      
      (switch
        %(fold defs
               (fun (acc d)
-                (let imp (tail d))
-                (push acc '((= id '%(head d))
+                (let did (head d) imp (tail d))
+                (push acc '(%(if (= did T) T '(= %id '%did))
                             ((fun (%(head imp)..) %(tail imp)..)
                              (splat (tail %args))))))
               _)..

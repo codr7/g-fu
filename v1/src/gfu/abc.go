@@ -52,12 +52,12 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   if is_scope {
     le = new(Env)
+
+    if e := args.Extenv(g, env, le, false); e != nil {
+      return nil, e
+    }
   } else {
     le = env
-  }
-
-  if e := args.Extenv(g, env, le, false); e != nil {
-    return nil, e
   }
 
   for i := 0; i+1 < len(bs); i += 2 {

@@ -1,3 +1,6 @@
+* fix unknown class id
+** wich env is the expansion is running in
+** testclass.gf
 * test fo-fun default case
 ** use T as id
 * add class macro based on fo-let/fun

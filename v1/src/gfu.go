@@ -36,18 +36,19 @@ func main() {
   }
 
   args := flag.Args()
+  env := g.NewEnv()
 
   if len(args) == 0 {
     fmt.Printf("g-fu v1.9\n\nPress Return twice to evaluate.\n\n  ")
     in := bufio.NewScanner(os.Stdin)
     var buf strings.Builder
-
+    
     for in.Scan() {
       line := in.Text()
 
       if len(line) == 0 {
         if buf.Len() > 0 {
-          v, e := g.EvalString(&g.MainTask, g.NewEnv(), gfu.INIT_POS, buf.String())
+          v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, buf.String())
 
           if e == nil {
             fmt.Printf("\r%v\n", v)
@@ -70,7 +71,7 @@ func main() {
     }
   } else {
     for _, a := range args {
-      if _, e := g.Load(&g.MainTask, g.NewEnv(), a); e != nil {
+      if _, e := g.Load(&g.MainTask, env, a); e != nil {
         log.Fatal(e)
       }
     }
