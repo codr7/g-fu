@@ -198,7 +198,7 @@ The implementation described here is not very type safe, all objects look more o
 
 And that's about it for now.<br/>
 
-As you have probably guessed by now, the sky is the limit. I consider the functionality described here to be critical for a useful object system, and that includes convenient ways of hooking into the system to add additional layers of functionality.<br/>
+As you have probably guessed, the sky is the limit. I consider the functionality described here to be critical for a useful object system, and that includes convenient ways of hooking into the system to add additional layers of functionality.<br/>
 
 Until next time,<br/>
 c7
