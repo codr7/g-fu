@@ -21,7 +21,7 @@ func (i Int) Bool(g *G) bool {
 }
 
 func (i Int) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return i, nil
+  return nil, g.E("Call not supported: Int")
 }
 
 func (i Int) Clone(g *G) (Val, E) {

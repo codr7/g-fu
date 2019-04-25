@@ -4,6 +4,8 @@
 ** use for-loop instead of fold in Button.click
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
+* remove BasicVal.imp_type
+** use imp.Type() instead
 * change @ to ~
 ** add @ with red as first arg
 ** debug map/cat case from fos/super-slots

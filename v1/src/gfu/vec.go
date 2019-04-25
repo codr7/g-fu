@@ -12,7 +12,7 @@ func (v Vec) Bool(g *G) bool {
 }
 
 func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return v, nil
+  return nil, g.E("Call not supported: Vec")
 }
 
 func (v Vec) Clone(g *G) (Val, E) {

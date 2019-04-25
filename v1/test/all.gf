@@ -81,6 +81,8 @@
               (+, fib (- n 1), fib (- n 2)))))
   (test, = (fib 20) 6765))
 
+(NOP
+
 (let (fib (fun (n a b)
             (if n 
               (if (= n 1)
@@ -112,3 +114,4 @@
 (load "iter.gf")
 (load "fos.gf")
 (load "task.gf")
+)

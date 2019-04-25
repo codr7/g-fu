@@ -243,6 +243,10 @@ func (g *G) ReadRest(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
     body = vs
   }
 
+  if len(body) == 1 {
+    return append(out, body[0]), nil
+  }
+  
   return append(out, body), nil
 }
 

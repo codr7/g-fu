@@ -12,7 +12,7 @@ func (s Str) Bool(g *G) bool {
 }
 
 func (s Str) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return s, nil
+  return nil, g.E("Call not supported: Str")
 }
 
 func (s Str) Clone(g *G) (Val, E) {

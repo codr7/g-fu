@@ -16,7 +16,7 @@ func (c Chan) Bool(g *G) bool {
 }
 
 func (c Chan) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return c, nil
+  return nil, g.E("Call not supported: Chan")
 }
 
 func (c Chan) Clone(g *G) (Val, E) {

@@ -101,7 +101,7 @@ func (l *ArgList) Check(g *G, args Vec) E {
   nargs := len(args)
 
   if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
-    return g.E("Arg mismatch")
+    return g.E("Arg mismatch: %v %v", l.items, args)
   }
 
   return nil

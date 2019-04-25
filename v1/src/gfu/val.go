@@ -44,7 +44,7 @@ func (_ BasicVal) Bool(g *G) bool {
 }
 
 func (v BasicVal) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return v.imp, nil
+  return nil, g.E("Call not supported: ", v.imp_type)
 }
 
 func (v BasicVal) Clone(g *G) (Val, E) {
