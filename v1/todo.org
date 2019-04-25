@@ -1,18 +1,7 @@
-* add super methods in new-object
-** add type.Print method
-*** implement for sym/str
-** testgui.gf
-* add str(vals..) fun
-** call print to buf
-** use for dispatch error
-* add catch-all to dispatch example
-** add say fun
-** print args
 * add Iter
 ** vec, int
 ** switch for/fold to use iters
 ** use for-loop instead of fold in Button.click
-* ---
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
 * switch vec reverse to use iter
