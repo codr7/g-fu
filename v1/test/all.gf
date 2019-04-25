@@ -39,6 +39,10 @@
   (test (= (find-key v 'baz) 3))
   (test (= (find-key v 'qux) _)))
 
+(let (v '(foo 1 bar 2 baz 3))
+  (test (= (pop-key v 'bar) 2))
+  (test (= v '(foo 1 baz 3))))
+
 (let (v _)
   (push v 'foo 'bar 'baz)
   (test (= (len v) 3))

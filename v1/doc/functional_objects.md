@@ -162,21 +162,26 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 ```
 (let super-slots (fun (supers)
   (fold supers (fun (acc s) (push acc (s 'slots)..)))))
+````
 
+````
 (let super-methods (fun (supers)
   (fold supers
         (fun (acc s)
           (fold (s 'methods)
                 (fun (acc m)
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
+```
 
+```
 (let new-object (fun (supers slots methods args)
   (eval '(let-self %(fold (append (super-slots supers) slots..)
                           (fun (acc x)
                             (if (= (type x) Vec)
-                              (let (id (head x) v (find-key args id))
+                              (let (id (head x) v (pop-key args id))
                                 (if (= v _) (push acc x..) (push acc id v)))
-                              (push acc x (find-key args x)))))
+                              (push acc x (pop-key args x)))))
+    %(and args (fail (str "Unused args: " args)))
     (dispatch
       %methods..
       %(super-methods supers)..)))))

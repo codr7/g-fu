@@ -28,6 +28,10 @@ func (v Vec) Clone(g *G) (Val, E) {
   return out, nil
 }
 
+func (v Vec) Delete(i int) Vec {
+  return append(v[:i], v[i+1:]...)
+}
+
 func (v Vec) Dump(out *strings.Builder) {
   out.WriteRune('(')
 

@@ -453,6 +453,49 @@ func find_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
+func pop_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  in, k := args[0], args[1]
+  var e E
+  
+  if k, e = k.Eval(g, task, env); e != nil {
+    return nil, e
+  }
+  
+  var out Val = &g.NIL
+  
+  switch in := in.(type) {
+  case *Sym:
+    if _, e = env.Update(g, in, func(in Val) (Val, E) {
+      inv := in.(Vec)
+      
+      for i := 0; i < len(inv)-1; {
+        vk, ok := inv[i].(*Sym);
+
+        if !ok {
+          return nil, g.E("Invalid key: %v", vk.Type(g))
+        }
+        
+        if vk == k {
+          inv = inv.Delete(i)
+          out = inv[i]
+          inv = inv.Delete(i)
+          break
+        } else {
+          i += 2
+        }
+      }
+      
+      return inv, nil
+    }); e != nil {
+      return nil, e
+    }
+  default:
+    return nil, g.E("Invalid pop-key place: %v", in)
+  }
+  
+  return out, nil
+}
+
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   v := args[0]
 
@@ -672,7 +715,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
   e.AddFun(g, "append", vec_append_imp, A("vec"), ASplat("Vals"))
-  e.AddFun(g, "find-key", find_key_imp, A("in"), A("val"))
+  e.AddFun(g, "find-key", find_key_imp, A("in"), A("key"))
+  e.AddPrim(g, "pop-key", pop_key_imp, A("in"), A("key"))
   e.AddFun(g, "head", head_imp, A("vec"))
   e.AddFun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "cons", cons_imp, A("val"), A("vec"))
