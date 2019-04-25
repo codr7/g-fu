@@ -176,7 +176,7 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
       %(super-methods supers)..)))))
 ```
 
-The task of collecting super slots makes a good match for transducers. `@` takes a reducing function as first argument and propagates it through the specified transformation pipeline, `map` followed by `cat` in the following example.
+The task of collecting super slots makes a good match for [transducers](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf). `@` takes a reducing function as first argument and propagates it through the specified transformation pipeline, `map` followed by `cat` in the following example.
 
 ```
 (let super-slots (fun (supers)
