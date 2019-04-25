@@ -30,10 +30,10 @@
                        (fun (acc s)
                          (fold (s 'methods)
                                (fun (acc m)
-                                 (push acc m)
                                  (push acc
+                                       m
                                        '(%(sym (s 'id) '/ (head m))
-                                         %(tail m)..)))))))
+                                          %(tail m)..)))))))
   
   (eval '(let-self %(fold (push s-slots slots..)
                           (fun (acc x)

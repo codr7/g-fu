@@ -1,3 +1,6 @@
+* add (find-key vec key)
+** use to check args for default vals in new-method
+* add fail-calls for missing fields in testgui.gf
 * add Iter
 ** vec, int
 ** switch for/fold to use iters
@@ -10,16 +13,6 @@
 * add str iter
 ** add char type (rune)
 * change inc fun to support int target
-* add str fmt
-** add Fmt type
-** trigger in ReadStr if non-escaped %
-** use Read to get expr
-** store as Vec
-** eval/print in Eval
-** use to add msg id in fo-fun fail
-** convert test-prim to macro
-* fold readme
-* expand readme
 * implement Fun/Macro Clone
 ** clone envs
 * build/coro.gf
