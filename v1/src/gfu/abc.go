@@ -68,10 +68,6 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
 
     le.Let(k, v)
-
-    if k.name == "Foo" {
-      //panic("let_imp: Foo")
-    }
   }
 
   if !is_scope {
@@ -221,11 +217,13 @@ func type_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func eval_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {  
   var e E
-  if args, e = args.EvalVec(g, task, env); e != nil {
+  v := args[0]
+  
+  if v, e = v.Eval(g, task, env); e != nil {
       return nil, e
   }
 
-  return args[0].Eval(g, task, env)
+  return v.Eval(g, task, env)
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {

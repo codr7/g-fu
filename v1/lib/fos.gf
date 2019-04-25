@@ -20,6 +20,18 @@
      %body..
      (fun (args..) (self args..)))))
 
+(let new-object (fun (supers slots methods args)
+  (let ss (fold supers (fun (acc s) (push acc (s 'slots)..)) slots))
+  
+  (eval '(let-self %(fold ss
+                          (fun (acc x)
+                            (if (== (type x) Vec)
+                              (push acc x..)
+                              (push acc x _)))
+                          _)
+    %(and args '(set '%args..))
+    (dispatch %methods..)))))
+
 (let class (mac (id supers slots methods..)
   '(let %id
      (let-self ()
@@ -28,11 +40,4 @@
          (slots () '%slots)
          (methods () '%methods)
          (new (args..)
-           (let-self %(fold slots
-                            (fun (acc x)
-                              (if (== (type x) Vec)
-                                (push acc x..)
-                                (push acc x _)))
-                            _)
-             (and args (set args..))
-             (dispatch %methods..))))))))
+           (new-object (vec %supers..) '%slots '%methods args)))))))
