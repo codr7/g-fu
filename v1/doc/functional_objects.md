@@ -38,7 +38,7 @@ Button resize
 Button click
 ```
 
-Included below is a recipe for a minimal viable single-dispatch object system in 50 LOC using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation may be loaded by evaluating `(load "lib/all.gf")` from the release root.
+Included below is a recipe for a minimal viable single-dispatch object system in 50 lines using only closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation may be loaded by evaluating `(load "lib/all.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -95,14 +95,13 @@ The following exmple uses `let` to create a new environment containing a slot an
 Trapped: 1 2 3
 ```
 
-Expanding The call allows visually inspecting the generated code.
+Calls may be expanded to visually inspect the generated code.
 
 ```
-(dump (expand 1 '(dispatch
-                  (inc ((delta 1)) (inc n delta))
-                  (dec ((delta 1)) (dec n delta)))))
-```
-```
+  (dump (expand 1 '(dispatch
+                    (inc ((delta 1)) (inc n delta))
+                    (dec ((delta 1)) (dec n delta)))))
+
 (fun (sym-135..)
   (let sym-136 (head sym-135))
   (switch
@@ -131,7 +130,7 @@ Expanding The call allows visually inspecting the generated code.
 42
 ```
 
-The following example creates a self-aware `dispatch` with a `patch`-method that may be used to intercept method calls, in this case returning `42` when called without arguments.
+The following example creates a self-aware `dispatch` with a `patch`-method that may be used to hook into method dispatch and/or install a different environment. In this case we're installing an intercepting function that returns 42 when called without arguments and delegates anything else to the original dispatch table.
 
 ```
 (let (s (let-self ()
@@ -160,7 +159,7 @@ Classes, or object factories; may be created using the `class`-macro. Classes ar
            (new-object (vec %supers..) '%slots '%methods args)))))))
 ```
 
-g-fu uses `eval` for creating new objects without requiring a central class registry and eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
+g-fu uses `eval` for creating new objects without requiring a central class registry and to enable eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
 
 ```
 (let new-object (fun (supers slots methods args)
@@ -193,3 +192,10 @@ Two dispatch entries are generated for each super method, one regualar and one q
                 (fun (acc m)
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```
+
+And that's about it for now.<br/>
+
+As you have probably guessed by now, the sky is the limit. I consider the functionality described here to be critical for a useful object system, and that includes convenient ways of hooking into the system to add additional layers of functionality.<br/>
+
+Until next time,<br/>
+c7
