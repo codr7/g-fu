@@ -20,18 +20,26 @@
        %body..
        (inc %i)))))
 
-(let map (fun (f)
-  (fun (rf)
+(let map (fun (f (rf _))
+  (if rf
     (fun (acc val)
-      (rf acc (f val))))))
+      (rf acc (f val)))
+    (fun (rf)
+      (fun (acc val)
+        (rf acc (f val)))))))
 
 (let cat (fun (rf)
   (fun (acc val)
     (push acc val..))))
 
-(let keep (fun (f)
-  (fun (rf)
+(let keep (fun (f (rf _))
+  (if rf
     (fun (acc val)
       (if (f val)
         (rf acc val)
-        acc)))))
+        acc))
+    (fun (rf)
+      (fun (acc val)
+        (if (f val)
+          (rf acc val)
+          acc))))))

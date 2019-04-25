@@ -22,5 +22,9 @@
   (test (= (fold v (t2 push)) '(43 44 45 46 47)))
   (test (= (fold v ts) '(43 44 45))))
 
+(let (v '(1 2 3 4 5)
+      t (map (fun (x) (+ x 42)) push))
+  (test (= (fold v ts) '(43 44 45 46 47))))
+
 (let (v '((1 2) (3 4) (5)))
   (test (= (fold v (cat push)) '(1 2 3 4 5))))
