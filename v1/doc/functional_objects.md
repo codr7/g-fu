@@ -98,9 +98,9 @@ Trapped: 1 2 3
 Calls may be expanded to visually inspect the generated code.
 
 ```
-  (dump (expand 1 '(dispatch
-                    (inc ((delta 1)) (inc n delta))
-                    (dec ((delta 1)) (dec n delta)))))
+  (expand 1 '(dispatch
+               (inc ((delta 1)) (inc n delta))
+               (dec ((delta 1)) (dec n delta))))
 
 (fun (sym-135..)
   (let sym-136 (head sym-135))
