@@ -82,7 +82,7 @@ The following exmple uses `let` to create a new environment containing a slot an
   (let (n 0 d (dispatch
                 (inc ((delta 1)) (inc n delta))
                 (dec ((delta 1)) (dec n delta))
-                (T (args..) (say "Method not found: " args))))
+                (T (args..) (say "Trapped: " args))))
     (say (d 'inc 42))
     (say (d 'inc))
     (say (d 'dec))
@@ -91,7 +91,7 @@ The following exmple uses `let` to create a new environment containing a slot an
 42
 43
 42
-Method not found: 1 2 3
+Trapped: 1 2 3
 ```
 
 Expanding The call allows visually inspecting the generated code.
@@ -159,26 +159,25 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 ```
 
 ```
+(let super-slots (fun (supers)
+  (fold supers (fun (acc s) (push acc (s 'slots)..)))))
+
+(let super-methods (fun (supers)
+  (fold supers
+        (fun (acc s)
+          (fold (s 'methods)
+                (fun (acc m)
+                  (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
+
 (let new-object (fun (supers slots methods args)
-  (let s-slots (fold supers (fun (acc s) (push acc (s 'slots)..)))
-       s-methods (fold supers
-                       (fun (acc s)
-                         (fold (s 'methods)
-                               (fun (acc m)
-                                 (push acc
-                                       m
-                                       '(%(sym (s 'id) '/ (head m))
-                                          %(tail m)..)))))))
-  
-  (eval '(let-self %(fold (push s-slots slots..)
+  (eval '(let-self %(fold (append (super-slots supers) slots..)
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (push acc x..)
-                              (push acc x _)))
-                          _)
+                              (push acc x _))))
     %(and args '(set '%args..))
     
     (dispatch
       %methods..
-      %s-methods..)))))
+      %(super-methods supers)..)))))
 ```

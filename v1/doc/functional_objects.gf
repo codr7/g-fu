@@ -24,28 +24,27 @@
      %body..
      (fun (args..) (self args..)))))
 
+(let super-slots (fun (supers)
+  (fold supers (fun (acc s) (push acc (s 'slots)..)))))
+
+(let super-methods (fun (supers)
+  (fold supers
+        (fun (acc s)
+          (fold (s 'methods)
+                (fun (acc m)
+                  (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
+
 (let new-object (fun (supers slots methods args)
-  (let s-slots (fold supers (fun (acc s) (push acc (s 'slots)..)))
-       s-methods (fold supers
-                       (fun (acc s)
-                         (fold (s 'methods)
-                               (fun (acc m)
-                                 (push acc
-                                       m
-                                       '(%(sym (s 'id) '/ (head m))
-                                          %(tail m)..)))))))
-  
-  (eval '(let-self %(fold (push s-slots slots..)
+  (eval '(let-self %(fold (append (super-slots supers) slots..)
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (push acc x..)
-                              (push acc x _)))
-                          _)
+                              (push acc x _))))
     %(and args '(set '%args..))
     
     (dispatch
       %methods..
-      %s-methods..)))))
+      %(super-methods supers)..)))))
 
 (let class (mac (id supers slots methods..)
   '(let %id

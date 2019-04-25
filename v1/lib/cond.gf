@@ -3,5 +3,4 @@
         (fun (acc alt)
           '(if %(head alt)
              (do %(tail alt)..)
-             %acc))
-        _)))
+             %acc)))))

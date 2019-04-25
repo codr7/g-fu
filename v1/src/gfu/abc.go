@@ -437,6 +437,10 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].(Vec).Peek(g), nil
 }
 
+func vec_append_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return append(args[0].(Vec), args[1:]...), nil
+}
+
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   v := args[0]
 
@@ -655,6 +659,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
+  e.AddFun(g, "append", vec_append_imp, A("vec"), ASplat("Vals"))
   e.AddFun(g, "head", head_imp, A("vec"))
   e.AddFun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "cons", cons_imp, A("val"), A("vec"))
