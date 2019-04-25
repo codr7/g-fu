@@ -174,10 +174,18 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
     (dispatch
       %methods..
       %(super-methods supers)..)))))
+```
 
+The task of collecting super slots makes a good match for transducers. `@` takes a reducing function as first argument and propagates it through the specified transformation pipeline, `map` followed by `cat` in the following example.
+
+```
 (let super-slots (fun (supers)
-  (fold supers (fun (acc s) (push acc (s 'slots)..)))))
+  (fold supers (@ push (map (fun (s) (s 'slots))) cat))))
+```
 
+Two dispatch entries are generated for each super method, one regualar and one qualified with the super class name.
+
+```
 (let super-methods (fun (supers)
   (fold supers
         (fun (acc s)

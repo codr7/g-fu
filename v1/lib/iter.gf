@@ -27,7 +27,7 @@
 
 (let cat (fun (rf)
   (fun (acc val)
-    (fold val rf acc))))
+    (push acc val..))))
 
 (let keep (fun (f)
   (fun (rf)

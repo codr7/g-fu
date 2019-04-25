@@ -1,6 +1,5 @@
-(let @ (fun (fs..)
-  (fun (in)
-    (fold (reverse fs) (fun (acc x) (x acc)) in))))
+(let @ (fun (rf fs..)
+  (fold (reverse fs) (fun (acc x) (x acc)) rf)))
 
 (let NOP (mac (args..)))
 
