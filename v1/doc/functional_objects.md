@@ -38,7 +38,7 @@ Button resize
 Button click
 ```
 
-This document contains a recipe for a minimal viable object system using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation of these ideas may be loaded by evaluating `(load "lib/all.gf")` from the release root.
+This document contains a recipe for a minimal viable single-dispatch object system in 50 LOC using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation may be loaded by evaluating `(load "lib/all.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git

@@ -4,6 +4,10 @@
 ** use for-loop instead of fold in Button.click
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
+* change @ to ~
+** add @ with red as first arg
+** debug map/cat case from fos/super-slots
+** update tests
 * switch vec reverse to use iter
 * switch vec_append to get iter for items
 * add chan iter
