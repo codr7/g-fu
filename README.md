@@ -16,7 +16,7 @@ Press Return twice to evaluate.
               (if (< n 2)
                 n
                 (+ (fib (- n 1)) (fib (- n 2))))))
-    (dump (fib 20)))
+    (fib 20))
 
 6765
 ```
