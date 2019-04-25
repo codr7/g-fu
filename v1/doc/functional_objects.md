@@ -16,7 +16,7 @@
     ((label "") on-click)
 
     (resize (dx dy)
-      (dump "Button resize")
+      (say "Button resize")
       (self 'Widget/resize dx dy))
 
     (on-click (f)
@@ -26,15 +26,15 @@
       (fold on-click (fun (acc f) (f self)))))
 
   (let (b (Button 'new 'width 100 'height 50 'label "Click me"))
-    (dump (b 'move 20 10))
-    (dump (b 'resize 100 0))
-    (b 'on-click (fun (b) (dump "Button click")))
+    (say (b 'move 20 10))
+    (say (b 'resize 100 0))
+    (b 'on-click (fun (b) (say "Button click")))
     (b 'click))
 
-(20 10)
-"Button resize"
-(200 50)
-"Button click"
+20 10
+Button resize
+200 50
+Button click
 ```
 
 This document contains a recipe for a minimal viable object system using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation of these ideas may be loaded by evaluating `(load "doc/functional_objects.gf")` from the release root.
@@ -83,9 +83,9 @@ The following exmple uses `let` to create a new environment containing a slot an
                 (inc ((delta 1)) (inc n delta))
                 (dec ((delta 1)) (dec n delta))
                 (T (args..) (say "Method not found: " args))))
-    (dump (d 'inc 42))
-    (dump (d 'inc))
-    (dump (d 'dec))
+    (say (d 'inc 42))
+    (say (d 'inc))
+    (say (d 'dec))
     (d 1 2 3))
 
 42
@@ -124,7 +124,7 @@ Expanding The call allows visually inspecting the generated code.
 ```
 ```
   (let-self ()
-    (dump self)
+    (say self)
     42)
 
 42
@@ -139,7 +139,7 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
   (s 'patch (fun (args..)
     (if args (s args..) 42)))
     
-  (dump (s)))
+  (say (s)))
 
 42
 ```
