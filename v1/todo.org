@@ -1,3 +1,4 @@
+* add class tests
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
 * remove BasicVal.imp_type
