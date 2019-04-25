@@ -1,5 +1,8 @@
 * add super methods in new-object
-** add Foo/bar to switch conds
+** add sym method
+** add type.Print method
+*** default dump
+*** implement for sym/str
 ** testgui.gf
 * add Iter
 ** vec, int
@@ -9,6 +12,7 @@
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
 * switch vec reverse to use iter
+* switch vec_append to get iter for items
 * add chan iter
 * add str iter
 ** add char type (rune)

@@ -44,11 +44,7 @@ _
 ```
 
 ### Syntax
-Messing around with syntax is always polarizing, 60 years old syntax even more so. I'll just note that there was a time before Common Lisp and Scheme when this kind of exploration was common, and we're barely scratching the surface.
-
-g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil` and `..` to splat (which replaces `@` in macros). `%` will eventually be used for other kinds of splicing as well, strings being one; `_` is both easier to type and recognize than `nil`/`'()`; and `..` may be used to splat any sequence anywhere. `,` has been repurposed as a less nested [syntax](https://github.com/codr7/g-fu/blob/master/v1/bench/stack.gf) for separating arguments.
-
-With that out of the way, let's have a look at the implementation.
+g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`. With that out of the way, let's have a look at the implementation.
 
 ### Dispatching Methods
 From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming anything about object storage.
@@ -57,7 +53,7 @@ From one angle, a closure is essentially a single method object that uses its en
 (let dispatch (mac (defs..)
   (let args (new-sym) id (new-sym))
   
-  '(fun (%(args..))
+  '(fun (%args..)
      (let %id (head %args))
      
      (switch

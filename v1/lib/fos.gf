@@ -1,7 +1,7 @@
 (let dispatch (mac (defs..)
   (let args (new-sym) id (new-sym))
   
-  '(fun (%(args..))
+  '(fun (%args..)
      (let %id (head %args))
      
      (switch
