@@ -34,6 +34,11 @@
 (test (= '(1 %(vec 2 3)..) (vec 1 2 3)))
 (test (= (+ (vec 1 2 3)..) 6))
 
+(let (v '(foo 1 bar 2 baz 3))
+  (test (= (find-key v 'foo) 1))
+  (test (= (find-key v 'baz) 3))
+  (test (= (find-key v 'qux) _)))
+
 (let (v _)
   (push v 'foo 'bar 'baz)
   (test (= (len v) 3))

@@ -38,10 +38,9 @@
   (eval '(let-self %(fold (append (super-slots supers) slots..)
                           (fun (acc x)
                             (if (= (type x) Vec)
-                              (push acc x..)
-                              (push acc x _))))
-    %(and args '(set '%args..))
-    
+                              (let (id (head x) v (find-key args id))
+                                (if (= v _) (push acc x..) (push acc id v)))
+                              (push acc x (find-key args x)))))
     (dispatch
       %methods..
       %(super-methods supers)..)))))

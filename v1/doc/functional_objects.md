@@ -2,7 +2,8 @@
 
 ```
   (class Widget ()
-    ((left 0) (top 0) width height)
+    ((left 0) (top 0)
+     (width (fail "Missing width")) (height (fail "Missing height")))
   
     (move (dx dy)
       (vec (inc left dx)
@@ -37,7 +38,7 @@ Button resize
 Button click
 ```
 
-This document contains a recipe for a minimal viable object system using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation of these ideas may be loaded by evaluating `(load "doc/functional_objects.gf")` from the release root.
+This document contains a recipe for a minimal viable object system using nothing but closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation of these ideas may be loaded by evaluating `(load "lib/all.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -48,7 +49,7 @@ g-fu v1.9
 
 Press Return twice to evaluate.
 
-  (load "doc/functional_objects.gf")
+  (load "lib/all.gf")
 _
 ```
 
@@ -173,10 +174,9 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
   (eval '(let-self %(fold (append (super-slots supers) slots..)
                           (fun (acc x)
                             (if (= (type x) Vec)
-                              (push acc x..)
-                              (push acc x _))))
-    %(and args '(set '%args..))
-    
+                              (let (id (head x) v (find-key args id))
+                                (if (= v _) (push acc x..) (push acc id v)))
+                              (push acc x (find-key args x)))))
     (dispatch
       %methods..
       %(super-methods supers)..)))))

@@ -1,6 +1,3 @@
-* add (find-key vec key)
-** use to check args for default vals in new-method
-* add fail-calls for missing fields in testgui.gf
 * add Iter
 ** vec, int
 ** switch for/fold to use iters
