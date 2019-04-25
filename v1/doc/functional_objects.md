@@ -134,8 +134,8 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 
 ```
 (let (s (let-self ()
-           (dispatch
-             (patch (new) (set 'self new)))))
+          (dispatch
+            (patch (new) (set 'self new)))))
   (s 'patch (fun (args..)
     (if args (s args..) 42)))
     
@@ -170,6 +170,7 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
                                 (if (= v _) (push acc x..) (push acc id v)))
                               (push acc x (pop-key args x)))))
     %(and args (fail (str "Unused args: " args)))
+    
     (dispatch
       %methods..
       %(super-methods supers)..)))))
