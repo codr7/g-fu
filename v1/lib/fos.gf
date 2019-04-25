@@ -25,7 +25,7 @@
   
   (eval '(let-self %(fold ss
                           (fun (acc x)
-                            (if (== (type x) Vec)
+                            (if (= (type x) Vec)
                               (push acc x..)
                               (push acc x _)))
                           _)

@@ -1,6 +1,5 @@
-* add super support
-** add super methods in new-object
-*** add Foo/bar to switch conds
+* add super methods in new-object
+** add Foo/bar to switch conds
 ** testgui.gf
 * add Iter
 ** vec, int
