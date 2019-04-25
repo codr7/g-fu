@@ -146,6 +146,7 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 ```
 
 ### Classification
+Classes, or object factories; may be created using the `class`-macro. Classes are implemented as self-aware dispatchers, the constructor is just another method.
 
 ```
 (let class (mac (id supers slots methods..)
@@ -159,19 +160,7 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
            (new-object (vec %supers..) '%slots '%methods args)))))))
 ```
 
-```
-(let super-slots (fun (supers)
-  (fold supers (fun (acc s) (push acc (s 'slots)..)))))
-````
-
-````
-(let super-methods (fun (supers)
-  (fold supers
-        (fun (acc s)
-          (fold (s 'methods)
-                (fun (acc m)
-                  (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
-```
+g-fu uses `eval` for creating new objects without requiring a central class registry and eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
 
 ```
 (let new-object (fun (supers slots methods args)
@@ -185,4 +174,14 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
     (dispatch
       %methods..
       %(super-methods supers)..)))))
+
+(let super-slots (fun (supers)
+  (fold supers (fun (acc s) (push acc (s 'slots)..)))))
+
+(let super-methods (fun (supers)
+  (fold supers
+        (fun (acc s)
+          (fold (s 'methods)
+                (fun (acc m)
+                  (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```
