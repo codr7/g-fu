@@ -1,3 +1,5 @@
+* add counter bench
+** n/inc/dec
 * add class tests
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
