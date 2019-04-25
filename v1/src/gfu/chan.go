@@ -65,6 +65,10 @@ func (c Chan) Pop(g *G) (Val, Val, E) {
   return v, c, nil
 }
 
+func (c Chan) Print(out *strings.Builder) {
+  c.Dump(out)
+}
+
 func (c Chan) Push(g *G, its...Val) (Val, E) {
   for _, v := range its {
     c <- v

@@ -231,6 +231,16 @@ func (v Vec) Pop(g *G) (Val, Val, E) {
   return v[n-1], v[:n-1], nil
 }
 
+func (v Vec) Print(out *strings.Builder) {
+  for i, iv := range v {
+    if i > 0 {
+      out.WriteRune(' ')
+    }
+    
+    iv.Print(out)
+  }
+}
+
 func (v Vec) Quote(g *G, task *Task, env *Env) (Val, E) {
   var e E
   out := make(Vec, len(v))

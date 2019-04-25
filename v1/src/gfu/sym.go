@@ -51,6 +51,10 @@ func (s *Sym) Extenv(g *G, src, dst *Env, clone bool) E {
   return nil
 }
 
+func (s *Sym) Print(out *strings.Builder) {
+  out.WriteString(s.name)
+}
+
 func (g *G) NewSym(prefix string) *Sym {
   var name string
   tag := g.NextSymTag()

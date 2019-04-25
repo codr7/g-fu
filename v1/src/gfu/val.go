@@ -3,6 +3,7 @@ package gfu
 import (
   "fmt"
   //"log"
+  "strings"
 )
 
 type Val interface {
@@ -20,6 +21,7 @@ type Val interface {
   Is(*G, Val) bool
   Len(*G) (Int, E)
   Pop(*G) (Val, Val, E)
+  Print(*strings.Builder)
   Push(*G, ...Val) (Val, E)
   Quote(*G, *Task, *Env) (Val, E)
   Splat(*G, Vec) Vec
@@ -79,6 +81,10 @@ func (v BasicVal) Len(g *G) (Int, E) {
 
 func (v BasicVal) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", v.imp_type)
+}
+
+func (v BasicVal) Print(out *strings.Builder) {
+  v.imp.Dump(out)
 }
 
 func (v BasicVal) Push(g *G, its...Val) (Val, E) {

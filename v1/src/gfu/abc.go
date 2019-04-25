@@ -199,6 +199,18 @@ func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
+func say_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var out strings.Builder
+
+  for _, v := range args {
+    v.Print(&out)
+  }
+
+  out.WriteRune('\n')
+  os.Stdout.WriteString(out.String())
+  return &g.NIL, nil
+}
+
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Load(task, env, string(args[0].(Str)))
 }
@@ -258,6 +270,26 @@ func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.NewSym(string(args[0].(Str))), nil
+}
+
+func sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var out strings.Builder
+
+  for _, a := range args {
+    a.Print(&out);
+  }
+  
+  return g.Sym(out.String()), nil
+}
+
+func str_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var out strings.Builder
+
+  for _, a := range args {
+    a.Print(&out);
+  }
+  
+  return Str(out.String()), nil
 }
 
 func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -592,6 +624,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "debug", debug_imp) 
   e.AddFun(g, "fail", fail_imp, A("reason"))
   e.AddFun(g, "dump", dump_imp, ASplat("vals"))
+  e.AddFun(g, "say", say_imp, ASplat("vals"))
   e.AddFun(g, "load", load_imp, A("path"))
   
   e.AddFun(g, "dup", dup_imp, A("val"))
@@ -602,6 +635,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), AOpt("acc", nil))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
+  e.AddFun(g, "sym", sym_imp, ASplat("args"))
+  e.AddFun(g, "str", str_imp, ASplat("args"))
 
   e.AddFun(g, "bool", bool_imp, A("val"))
 

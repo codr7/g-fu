@@ -64,6 +64,10 @@ func (_ Int) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: Int")
 }
 
+func (i Int) Print(out *strings.Builder) {
+  i.Dump(out)
+}
+
 func (_ Int) Push(g *G, its...Val) (Val, E) {
   return nil, g.E("Push not supported: Int")
 }

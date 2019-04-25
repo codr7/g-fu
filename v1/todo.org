@@ -1,9 +1,13 @@
 * add super methods in new-object
-** add sym method
 ** add type.Print method
-*** default dump
 *** implement for sym/str
 ** testgui.gf
+* add str(vals..) fun
+** call print to buf
+** use for dispatch error
+* add catch-all to dispatch example
+** add say fun
+** print args
 * add Iter
 ** vec, int
 ** switch for/fold to use iters
