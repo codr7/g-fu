@@ -201,9 +201,6 @@ Two dispatch entries are generated for each super method, one regualar and one q
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```
 
-### Typing
-The implementation described here is not very type safe, all objects look more or less the same from the outside. This sad state of affairs is caused by g-fu's immaturity more than anything else. The plan is to eventually support specifying the type of any expression or function argument inline, and infer as much as possible from there.<br/>
-
 And that's about it for now.<br/>
 
 As you have probably guessed, the sky is the limit. I consider the functionality described here to be critical for a useful object system, and that includes convenient ways of hooking into the system to add additional layers of functionality.<br/>
