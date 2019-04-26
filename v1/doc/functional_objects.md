@@ -190,7 +190,7 @@ The task of collecting super slots makes a good match for [transducers](https://
   (fold supers _ (@ push (map (fun (s) (s 'slots))) cat))))
 ```
 
-Two dispatch entries are generated for each super method, one regualar and one qualified with the super class name.
+Two dispatch entries are generated for each super method, one regular and one qualified with the super class name.
 
 ```
 (let super-methods (fun (supers)
