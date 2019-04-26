@@ -1,5 +1,7 @@
 ## Functional Objects
 
+Included below is a recipe for a minimal viable single-dispatch object system in 50 lines using only closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
+
 ```
   (class Widget ()
     ((left 0) (top 0)
@@ -38,7 +40,7 @@ Button resize
 Button click
 ```
 
-Included below is a recipe for a minimal viable single-dispatch object system in 50 lines using only closures and macros. The code has its origin in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go. A full implementation may be loaded by evaluating `(load "lib/all.gf")` from the release root.
+A full implementation may be loaded by evaluating `(load "lib/all.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
