@@ -9,6 +9,7 @@ type Mac struct {
   BasicVal
   
   env      *Env
+  env_cache Env
   arg_list ArgList
   body     Vec
 }
@@ -40,12 +41,18 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   var be Env
-  m.arg_list.LetVars(g, &be, args)
 
-  if e = m.body.Extenv(g, m.env, &be, false); e != nil {
-    return nil, e
+  if m.env_cache.vars == nil {
+    if e = m.body.Extenv(g, m.env, &be, false); e != nil {
+      return nil, e
+    }
+
+    be.Dup(g, &m.env_cache)
+  } else {
+    m.env_cache.Dup(g, &be)
   }
-
+  
+  m.arg_list.LetVars(g, &be, args)
   return m.body.EvalExpr(g, task, &be)
 }
 

@@ -12,6 +12,7 @@ type Fun struct {
   BasicVal
   
   env      *Env
+  env_cache Env
   arg_list ArgList
   body     Vec
   imp      FunImp
@@ -41,8 +42,14 @@ func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   var be Env
 
-  if e = f.body.Extenv(g, f.env, &be, false); e != nil {
-    return nil, e
+  if f.env_cache.vars == nil {
+    if e = f.body.Extenv(g, f.env, &be, false); e != nil {
+      return nil, e
+    }
+
+    be.Dup(g, &f.env_cache)
+  } else {
+    f.env_cache.Dup(g, &be)
   }
 
   var v Val

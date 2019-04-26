@@ -1,7 +1,4 @@
-* cache extended Fun/Macro env
-** use instead of Extenv if set
-* remove BasicVal.imp_type
-** use imp.Type() instead
+* change inc fun to support int target
 * add class tests
 * add Iter
 ** vec, int
@@ -9,12 +6,10 @@
 ** use for-loop instead of fold in Button.click
 * switch vec reverse to use iter
 * switch vec_append to get iter for items
-* add chan iter
-* add str iter
-** add char type (rune)
-* change inc fun to support int target
 * implement Fun/Macro Clone
 ** clone envs
 * build/coro.gf
-* use type switch where applicable
-** grep "\.("
+* add chan iter
+* add str iter
+** add char type (rune)
+
