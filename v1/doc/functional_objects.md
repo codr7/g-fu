@@ -170,7 +170,7 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
 
 ```
 (let new-object (fun (supers slots methods args)
-  (eval '(let-self %(fold (append (super-slots supers) slots..) _
+  (eval '(let-self %(fold (push (super-slots supers) slots..) _
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (let (id (head x) v (pop-key args id))

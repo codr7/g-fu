@@ -35,7 +35,7 @@
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 
 (let new-object (fun (supers slots methods args)
-  (eval '(let-self %(fold (append (super-slots supers) slots..) _
+  (eval '(let-self %(fold (push (super-slots supers) slots..) _
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (let (id (head x) v (pop-key args id))

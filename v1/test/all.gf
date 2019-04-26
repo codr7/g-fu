@@ -43,6 +43,9 @@
   (test (= (pop-key v 'bar) 2))
   (test (= v '(foo 1 baz 3))))
 
+(test (= (push _ 1 2 3) '(1 2 3)))
+(test (= (push '(1 2) 3) '(1 2 3)))
+
 (let (v _)
   (push v 'foo 'bar 'baz)
   (test (= (len v) 3))
