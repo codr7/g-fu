@@ -1,5 +1,8 @@
 (let @ (fun (rf fs..)
-  (fold (reverse fs) (fun (acc x) (x acc)) rf)))
+  (if (= rf _)
+    (fun (rf)
+      (fold (reverse fs) (fun (acc x) (x acc)) rf))
+    (fold (reverse fs) (fun (acc x) (x acc)) rf))))
 
 (let NOP (mac (args..)))
 

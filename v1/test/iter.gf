@@ -28,3 +28,6 @@
 
 (let (v '((1 2) (3 4) (5)))
   (test (= (fold v (cat push)) '(1 2 3 4 5))))
+
+(test (= (@ 41 (fun (x) (inc x))) 42))
+(test (= ((@ _ (fun (x) (inc x))) 41) 42))
