@@ -436,7 +436,13 @@ func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func vec_append_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return append(args[0].(Vec), args[1:]...), nil
+  var v Vec
+
+  if a, ok := args[0].(Vec); ok {
+    v = a
+  }
+  
+  return append(v, args[1:]...), nil
 }
 
 func find_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

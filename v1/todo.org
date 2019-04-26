@@ -1,11 +1,8 @@
-* add counter bench
-** n/inc/dec
-* add class tests
 * cache extended Fun/Macro env
 ** use instead of Extenv if set
 * remove BasicVal.imp_type
 ** use imp.Type() instead
-* --
+* add class tests
 * add Iter
 ** vec, int
 ** switch for/fold to use iters
