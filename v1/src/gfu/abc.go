@@ -247,19 +247,17 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  in := args[0].(Vec)
-  target := args[1]
-  var acc Val = args[2]
+  in, acc, red := args[0].(Vec), args[1], args[2]
   var e E
   
   for _, it := range in {
-    switch t := target.(type) {
+    switch f := red.(type) {
     case *Fun:
-      if acc, e = t.CallArgs(g, task, env, Vec{acc, it}); e != nil {
+      if acc, e = f.CallArgs(g, task, env, Vec{acc, it}); e != nil {
         return nil, e
       }
     default:
-      if acc, e = t.Call(g, task, env, Vec{acc, it}); e != nil {
+      if acc, e = f.Call(g, task, env, Vec{acc, it}); e != nil {
         return nil, e
       }
     }
@@ -692,7 +690,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "fold", fold_imp, A("in"), A("fun"), AOpt("acc", nil))
+  e.AddFun(g, "fold", fold_imp, A("in"), A("init"), A("fun"))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
   e.AddFun(g, "sym", sym_imp, ASplat("args"))
   e.AddFun(g, "str", str_imp, ASplat("args"))

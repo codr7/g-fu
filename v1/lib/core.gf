@@ -1,10 +1,7 @@
-(let @ (fun (rf fs..)
-  (if (= rf _)
-    (fun (rf)
-      (fold (reverse fs) (fun (acc x) (x acc)) rf))
-    (fold (reverse fs) (fun (acc x) (x acc)) rf))))
-
 (let NOP (mac (args..)))
+
+(let ~ (fun (fs..)
+  (fold (reverse fs) _ (fun (acc x) (x acc)))))
 
 (let not (fun (val)
   (if val F T)))

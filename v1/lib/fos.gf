@@ -5,7 +5,7 @@
      (let %id (head %args))
      
      (switch
-       %(fold defs
+       %(fold defs _
               (fun (acc d)
                 (let did (head d) imp (tail d))
                 (push acc
@@ -25,17 +25,17 @@
      (fun (args..) (self args..)))))
 
 (let super-slots (fun (supers)
-  (fold supers (@ push (map (fun (s) (s 'slots))) cat))))
+  (fold supers _ (@ push (map (fun (s) (s 'slots))) cat))))
 
 (let super-methods (fun (supers)
-  (fold supers
+  (fold supers _
         (fun (acc s)
-          (fold (s 'methods)
+          (fold (s 'methods) _
                 (fun (acc m)
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 
 (let new-object (fun (supers slots methods args)
-  (eval '(let-self %(fold (append (super-slots supers) slots..)
+  (eval '(let-self %(fold (append (super-slots supers) slots..) _
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (let (id (head x) v (pop-key args id))

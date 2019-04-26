@@ -20,6 +20,12 @@
        %body..
        (inc %i)))))
 
+(let @ (fun (rf fs..)
+  (if (= rf _)
+    (fun (rf)
+      (fold (reverse fs) rf (fun (acc x) (x acc))))
+    (fold (reverse fs) rf (fun (acc x) (x acc))))))
+
 (let map (fun (f (rf _))
   (if rf
     (fun (acc val)

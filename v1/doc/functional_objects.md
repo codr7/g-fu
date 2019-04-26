@@ -27,7 +27,7 @@ This document describes the implementation of a minimal viable single-dispatch o
       (push on-click f))
 
     (click ()
-      (fold on-click (fun (acc f) (f self)))))
+      (fold on-click _ (fun (acc f) (f self)))))
 
   (let (b (Button 'new 'width 100 'height 50 'label "Click me"))
     (say (b 'move 20 10))
@@ -70,7 +70,7 @@ From one angle, a closure is essentially a single method object that uses its en
        (let %id (head %args))
      
        (switch
-         %(fold defs
+         %(fold defs _
                 (fun (acc d)
                   (let did (head d) imp (tail d))
                   (push acc
@@ -170,7 +170,7 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
 
 ```
 (let new-object (fun (supers slots methods args)
-  (eval '(let-self %(fold (append (super-slots supers) slots..)
+  (eval '(let-self %(fold (append (super-slots supers) slots..) _
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (let (id (head x) v (pop-key args id))
@@ -187,16 +187,16 @@ The task of collecting super slots makes a good match for [transducers](https://
 
 ```
 (let super-slots (fun (supers)
-  (fold supers (@ push (map (fun (s) (s 'slots))) cat))))
+  (fold supers _ (@ push (map (fun (s) (s 'slots))) cat))))
 ```
 
 Two dispatch entries are generated for each super method, one regualar and one qualified with the super class name.
 
 ```
 (let super-methods (fun (supers)
-  (fold supers
+  (fold supers _
         (fun (acc s)
-          (fold (s 'methods)
+          (fold (s 'methods) _
                 (fun (acc m)
                   (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```

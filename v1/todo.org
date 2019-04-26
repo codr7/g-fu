@@ -1,4 +1,3 @@
-* move fold init val to before red-fn
 * add counter bench
 ** n/inc/dec
 * add class tests
