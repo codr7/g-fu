@@ -16,7 +16,7 @@
                         '((= %id '%did)
                            ((fun (%(head imp)..) %(tail imp)..)
                             (splat (tail %args))))))))..
-       (T (fail (str "Unknown message: " %id)))))))
+       (T (fail (str "Unknown method: " %id)))))))
 
 (let let-self (mac (vars body..)
   '(let (self _ %vars..)

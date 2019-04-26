@@ -60,21 +60,25 @@ g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to
 From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming anything about object storage.
 
 ```
-(let dispatch (mac (defs..)
-  (let args (new-sym) id (new-sym))
+  (let dispatch (mac (defs..)
+    (let args (new-sym) id (new-sym))
   
-  '(fun (%args..)
-     (let %id (head %args))
+    '(fun (%args..)
+       (let %id (head %args))
      
-     (switch
-       %(fold defs
-              (fun (acc d)
-                (let did (head d) imp (tail d))
-                (push acc '(%(if (= did T) T '(= %id '%did))
-                            ((fun (%(head imp)..) %(tail imp)..)
-                             (splat (tail %args))))))
-              _)..
-       (T (fail "Unknown message"))))))
+       (switch
+         %(fold defs
+                (fun (acc d)
+                  (let did (head d) imp (tail d))
+                  (push acc
+                        (if (= did T)
+                          '(T
+                             ((fun (%(head imp)..) %(tail imp)..)
+                               %args..))
+                          '((= %id '%did)
+                             ((fun (%(head imp)..) %(tail imp)..)
+                              (splat (tail %args))))))))..
+         (T (fail (str "Unknown method: " %id)))))))
 ```
 
 The following exmple uses `let` to create a new environment containing a slot and `dispatch` to wrap it in a protocol. Calls to non-existing methods may be trapped by declaring a `T` method.
