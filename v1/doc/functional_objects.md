@@ -106,14 +106,14 @@ Calls may be expanded to visually inspect the generated code.
                (inc ((delta 1)) (inc n delta))
                (dec ((delta 1)) (dec n delta))))
 
-(fun (sym-135..)
-  (let sym-136 (head sym-135))
-  (switch
-    ((= sym-136 'inc)
-      ((fun ((delta 1)) (inc n delta)) (splat (tail sym-135))))
-    ((= sym-136 'dec)
-      ((fun ((delta 1)) (dec n delta)) (splat (tail sym-135))))
-    (T (fail "Unknown message"))))
+(fun (sym-143..)
+  (let sym-144 (head sym-143))
+    (switch
+      ((= sym-144 'inc)
+        ((fun ((delta 1)) (inc n delta)) (splat (tail sym-143))))
+      ((= sym-144 'dec)
+        ((fun ((delta 1)) (dec n delta)) (splat (tail sym-143))))
+      (T (fail (str "Unknown method: " sym-144)))))
 ```
 
 ### Self
