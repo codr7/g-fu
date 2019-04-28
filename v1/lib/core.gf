@@ -1,9 +1,16 @@
 (let NOP (mac (args..)))
 
+(let _? (fun (x) (= x _)))
+
+(let fold (fun (in acc fn)
+  (let rec (fun (in acc fn)
+    (let v (pop in))
+    (if (_? v) acc (recall in (fn acc v) fn))))
+
+  (rec (iter in) acc fn)))
+
 (let ~ (fun (fs..)
   (fold (reverse fs) _ (fun (acc x) (x acc)))))
-
-(let _? (fun (x) (= x _)))
 
 (let not (fun (val)
   (if val F T)))

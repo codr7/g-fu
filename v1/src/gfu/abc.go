@@ -81,11 +81,10 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return rv, nil
 }
 
-func set_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var e E
-
+func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   for i := 0; i+1 < len(args); i += 2 {
-    k, v := args[i], args[i+1]
+    var k Val
+    k, v = args[i], args[i+1]
 
     if _, ok := k.(*Sym); !ok {
       return nil, g.E("Invalid set key: %v", k)
@@ -96,7 +95,7 @@ func set_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
   }
 
-  return &g.NIL, nil
+  return v, nil
 }
 
 func if_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -242,26 +241,6 @@ func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
 
 func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, NewRecall(args)
-}
-
-func fold_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  in, acc, red := args[0].(Vec), args[1], args[2]
-  var e E
-  
-  for _, it := range in {
-    switch f := red.(type) {
-    case *Fun:
-      if acc, e = f.CallArgs(g, task, env, Vec{acc, it}); e != nil {
-        return nil, e
-      }
-    default:
-      if acc, e = f.Call(g, task, env, Vec{acc, it}); e != nil {
-        return nil, e
-      }
-    }
-  }
-  
-  return acc, nil
 }
 
 func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -727,7 +706,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "fold", fold_imp, A("in"), A("init"), A("fun"))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
   e.AddFun(g, "sym", sym_imp, ASplat("args"))
   e.AddFun(g, "str", str_imp, ASplat("args"))
