@@ -1,5 +1,8 @@
-* update README for-loop
-** add iters
+* add continue support in loop + test
+* move readme macros to doc
+** update for loop
+* add iter readme
+* ---
 * change inc fun to support int target
 * add Vec support to pop-key like pop
 * switch fold to use iter
