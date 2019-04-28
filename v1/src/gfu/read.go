@@ -77,8 +77,6 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
       break
     case '(':
       return g.ReadVec(pos, in, out)
-    case ',':
-      return g.ReadRest(pos, in, out)
     case '\'':
       return g.ReadQuote(pos, in, out, end)
     case '.':
@@ -142,7 +140,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E
     }
 
     if unicode.IsSpace(c) ||
-      c == '.' || c == '%' || c == '(' || c == ')' || c == ',' {
+      c == '.' || c == '%' || c == '(' || c == ')' {
       if e := g.Unread(pos, in, c); e != nil {
         return nil, e
       }
@@ -224,30 +222,6 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, 
   }
 
   return append(out, NewQuote(g, vs[0])), nil
-}
-
-func (g *G) ReadRest(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-  var body Vec
-    
-  for {
-    vs, e := g.Read(pos, in, body, ",)")
-
-    if e != nil {
-      return nil, e
-    }
-
-    if vs == nil {
-      break
-    }
-
-    body = vs
-  }
-
-  if len(body) == 1 {
-    return append(out, body[0]), nil
-  }
-  
-  return append(out, body), nil
 }
 
 func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {

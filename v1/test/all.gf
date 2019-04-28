@@ -6,7 +6,7 @@
 
 (test (= (type 42) Int))
 
-(test (= (-, + 1 2, + 3 4) -4))
+(test (= (- (+ 1 2) (+ 3 4)) -4))
 
 (let (x 35)
   (test (= (inc x 7) 42))
@@ -83,10 +83,10 @@
   (test (= (foo 35) 42)))
 
 (let (fib (fun n
-            (if, < n 2,
-              n,
-              (+, fib (- n 1), fib (- n 2)))))
-  (test, = (fib 20) 6765))
+            (if (< n 2)
+              n
+              (+ (fib (- n 1)) (fib (- n 2))))))
+  (test (= (fib 20) 6765)))
 
 (let (fib (fun (n a b)
             (if n 
