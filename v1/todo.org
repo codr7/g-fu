@@ -1,3 +1,5 @@
+* switch fold to use for
+** drop prim
 * add continue support in loop + test
 * move readme macros to doc
 ** update for loop
@@ -5,18 +7,19 @@
 * ---
 * change inc fun to support int target
 * add Vec support to pop-key like pop
-* switch fold to use iter
 * remove ParsePrimArgs
 ** still needed?
 * remove AddFun/Fun.imp
 ** convert existing to g-fu or prim
 *** eval args
 ** add body-arg to NewFun()
+* generate x?-prim in AddConst
+** use Eq
+** replaces _? in lib/core.gf
 * add class tests
 * switch vec reverse to use iter
 * implement Fun/Macro Clone
 ** clone envs
-* build/coro.gf
 * add chan iter
 * add str iter
 ** add char type (rune)
