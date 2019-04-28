@@ -23,6 +23,14 @@ func (c Chan) Clone(g *G) (Val, E) {
   return c, nil
 }
 
+func (c Chan) Drop(g *G, n Int) (Val, E) {
+  for i := Int(0); i < n; i++ {
+    <- c
+  }
+
+  return c, nil
+}
+
 func (c Chan) Dup(g *G) (Val, E) {
   return c, nil
 }
@@ -49,6 +57,10 @@ func (c Chan) Extenv(g *G, src, dst *Env, clone bool) E {
 
 func (c Chan) Is(g *G, rhs Val) bool {
   return c == rhs
+}
+
+func (c Chan) Iter(g *G) (Val, E) {
+  return nil, g.E("Iter not implemented")
 }
 
 func (c Chan) Len(g *G) (Int, E) {
@@ -81,8 +93,8 @@ func (c Chan) Quote(g *G, task *Task, env *Env) (Val, E) {
   return c, nil
 }
 
-func (c Chan) Splat(g *G, out Vec) Vec {
-  return append(out, c)
+func (c Chan) Splat(g *G, out Vec) (Vec, E) {
+  return append(out, c), nil
 }
 
 func (c Chan) String() string {

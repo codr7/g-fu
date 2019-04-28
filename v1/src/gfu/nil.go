@@ -38,7 +38,7 @@ func (_ *Nil) Push(g *G, its...Val) (Val, E) {
   return Vec(its), nil
 }
 
-func (_ *Nil) Splat(g *G, out Vec) Vec {
-  return out
+func (_ *Nil) Splat(g *G, out Vec) (Vec, E) {
+  return out, nil
 }
 

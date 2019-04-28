@@ -1,15 +1,22 @@
-* change inc fun to support int target
-* add class tests
-* add Iter
-** vec, int
+* finish Iter
+** add VecIter
+** test
+** commit
 ** switch for/fold to use iters
 ** use for-loop instead of fold in Button.click
+* ---
+* remove ParsePrimArgs
+** still needed?
+* remove AddFun/Fun.imp
+** convert existing to g-fu or prim
+*** eval args
+** add body-arg to NewFun()
+* change inc fun to support int target
+* add class tests
 * switch vec reverse to use iter
-* switch vec_append to get iter for items
 * implement Fun/Macro Clone
 ** clone envs
 * build/coro.gf
 * add chan iter
 * add str iter
 ** add char type (rune)
-

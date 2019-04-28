@@ -17,7 +17,7 @@ type G struct {
   MetaType,
   ChanType,
   FalseType, FunType,
-  IntType,
+  IntType, IterType,
   MacType,
   NilType,
   PrimType,

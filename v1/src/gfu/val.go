@@ -13,18 +13,20 @@ type Val interface {
   Bool(*G) bool
   Call(*G, *Task, *Env, Vec) (Val, E)
   Clone(*G) (Val, E)
+  Drop(g *G, n Int) (Val, E)
   Dup(*G) (Val, E)
   Eq(*G, Val) bool
   Eval(*G, *Task, *Env) (Val, E)
   Expand(*G, *Task, *Env, Int) (Val, E)
   Extenv(*G, *Env, *Env, bool) E
   Is(*G, Val) bool
+  Iter(*G) (Val, E)
   Len(*G) (Int, E)
-  Pop(*G) (Val, Val, E)
+  Pop(*G) (Val, E)
   Print(*strings.Builder)
   Push(*G, ...Val) (Val, E)
   Quote(*G, *Task, *Env) (Val, E)
-  Splat(*G, Vec) Vec
+  Splat(*G, Vec) (Vec, E)
   Type(*G) *Type
 }
 
@@ -51,6 +53,16 @@ func (v BasicVal) Clone(g *G) (Val, E) {
   return v.imp.Dup(g)
 }
 
+func (v BasicVal) Drop(g *G, n Int) (out Val, e E) {
+  for i := Int(0); i < n; i++ {
+    if _, out, e = v.imp.Pop(g); e != nil {
+      return nil, e
+    }
+  }
+
+  return out, nil
+}
+
 func (v BasicVal) Dup(g *G) (Val, E) {
   return v.imp, nil
 }
@@ -75,11 +87,15 @@ func (v BasicVal) Is(g *G, rhs Val) bool {
   return v.imp == rhs
 }
 
+func (v BasicVal) Iter(g *G) (Val, E) {
+  return nil, g.E("Iter not supported: %v", v.imp_type)
+}
+
 func (v BasicVal) Len(g *G) (Int, E) {
   return -1, g.E("Len not supported: %v", v.imp_type)
 }
 
-func (v BasicVal) Pop(g *G) (Val, Val, E) {
+func (v BasicVal) Pop(g *G) (Val, E) {
   return nil, nil, g.E("Pop not supported: %v", v.imp_type)
 }
 
@@ -95,8 +111,8 @@ func (v BasicVal) Quote(g *G, task *Task, env *Env) (Val, E) {
   return v.imp, nil
 }
 
-func (v BasicVal) Splat(g *G, out Vec) Vec {
-  return append(out, v.imp)
+func (v BasicVal) Splat(g *G, out Vec) (Vec, E) {
+  return append(out, v.imp), nil
 }
 
 func (v BasicVal) Type(g *G) *Type {

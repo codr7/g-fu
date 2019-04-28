@@ -19,6 +19,16 @@ func (s Str) Clone(g *G) (Val, E) {
   return s, nil
 }
 
+func (s Str) Drop(g *G, n Int) (Val, E) {
+  sl := Int(len(s))
+  
+  if sl < n {
+    return nil, g.E("Nothing to drop")
+  }
+
+  return s[:sl-n], nil
+}
+
 func (s Str) Dup(g *G) (Val, E) {
   return s, nil
 }
@@ -50,6 +60,10 @@ func (s Str) Is(g *G, rhs Val) bool {
   return s.Eq(g, rhs)
 }
 
+func (s Str) Iter(g *G) (Val, E) {
+  return nil, g.E("Iter not implemented")
+}
+
 func (s Str) Len(g *G) (Int, E) {
   return Int(len(s)), nil
 }
@@ -70,8 +84,8 @@ func (s Str) Quote(g *G, task *Task, env *Env) (Val, E) {
   return s, nil
 }
 
-func (s Str) Splat(g *G, out Vec) Vec {
-  return append(out, s)
+func (s Str) Splat(g *G, out Vec) (Vec, E) {
+  return append(out, s), nil
 }
 
 func (s Str) String() string {

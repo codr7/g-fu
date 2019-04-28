@@ -12,8 +12,7 @@ func do_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  avs := ParsePrimArgs(g, args[0])
-  as, e := ParseArgs(g, task, env, avs)
+  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[0]))
 
   if e != nil {
     return nil, e
@@ -25,8 +24,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  avs := ParsePrimArgs(g, args[0])
-  as, e := ParseArgs(g, task, env, avs)
+  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[0]))
 
   if e != nil {
     return nil, e
@@ -382,6 +380,20 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var e E
+
+  if args, e = args.EvalVec(g, task, env); e != nil {
+    return nil, e
+  }
+
+  if len(args) == 1 {
+    return args[0].Iter(g)
+  }
+  
+  return args.Iter(g)
+}
+
 func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   place := args[0]
   vs, e := args[1:].EvalVec(g, task, env)
@@ -406,19 +418,37 @@ func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var it Val
-
-  env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    var rest Val
-    var e E
-    
-    if it, rest, e = v.Pop(g); e != nil {
+  place := args[0]
+  
+  switch p := place.(type) {
+  case *Sym:  
+    env.Update(g, p, func(v Val) (Val, E) {
+      var rest Val
+      var e E
+      
+      if it, rest, e = v.Pop(g); e != nil {
+        return nil, e
+      }
+      
+      return rest, nil
+    })
+  default:
+    if place, e = place.Eval(g, task, env); e != nil {
       return nil, e
     }
-    
-    return rest, nil
-  })
+  }
 
-  return it, nil
+  return place.Pop(g)
+}
+
+func drop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  var e E
+
+  if args, e = args.EvalVec(g, task, env); e != nil {
+    return nil, e
+  }
+
+  return args[0].Drop(g, args[1].(Int))
 }
 
 func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -646,6 +676,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int")
+  e.AddType(g, &g.IterType, "Iter")
   e.AddType(g, &g.MacType, "Mac")
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
@@ -700,8 +731,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 
+  e.AddPrim(g, "iter", iter_imp, ASplat("vals"))
   e.AddPrim(g, "push", push_imp, A("sink"), ASplat("vals"))
   e.AddPrim(g, "pop", pop_imp, A("seq"))
+  e.AddPrim(g, "drop", drop_imp, A("n"))
   e.AddFun(g, "len", len_imp, A("seq"))
 
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))

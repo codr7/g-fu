@@ -54,17 +54,17 @@ func (s *Splat) Quote(g *G, task *Task, env *Env) (v Val, e E) {
   return NewSplat(g, v), nil
 }
 
-func (s *Splat) Splat(g *G, out Vec) Vec {
+func (s *Splat) Splat(g *G, out Vec) (Vec, E) {
   v := s.val
 
   switch v := v.(type) {
   case Vec:
     return v.Splat(g, out)
   case *Nil:
-    return out
+    return out, nil
   default:
     break
   }
 
-  return append(out, s)
+  return append(out, s), nil
 }

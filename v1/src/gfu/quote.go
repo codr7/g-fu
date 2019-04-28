@@ -38,7 +38,9 @@ func (q *Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
   }
 
   if v, ok := qv.(Vec); ok {
-    qv = v.Splat(g, nil)
+    if qv, e = v.Splat(g, nil); e != nil {
+      return nil, e
+    }
   }
 
   return qv, nil

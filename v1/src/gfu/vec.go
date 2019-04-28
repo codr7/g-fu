@@ -32,6 +32,16 @@ func (v Vec) Delete(i int) Vec {
   return append(v[:i], v[i+1:]...)
 }
 
+func (v Vec) Drop(g *G, n Int) (Val, E) {
+  vl := Int(len(v))
+  
+  if vl < n {
+    return nil, g.E("Nothing to drop")
+  }
+
+  return v[:vl-n], nil
+}
+
 func (v Vec) Dump(out *strings.Builder) {
   out.WriteRune('(')
 
@@ -154,10 +164,14 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
     }
 
     if _, ok := it.(*Splat); ok {
-      out = it.Splat(g, out)
+      if out, e = it.Splat(g, out); e != nil {
+        return nil, e
+      }
     } else {
       if _, ok := it.(Vec); ok {
-        it = it.Splat(g, nil)
+        if it, e = it.Splat(g, nil); e != nil {
+          return nil, e
+        }
       }
 
       out = append(out, it)
@@ -205,6 +219,10 @@ func (v Vec) Is(g *G, rhs Val) bool {
   }
 
   return true
+}
+
+func (v Vec) Iter(g *G) (Val, E) {
+  return nil, g.E("Iter not implemented")
 }
 
 func (v Vec) Len(g *G) (Int, E) {
@@ -268,20 +286,26 @@ func(v Vec) Reverse() Vec {
   return v
 }
 
-func (v Vec) Splat(g *G, out Vec) Vec {  
+func (v Vec) Splat(g *G, out Vec) (Vec, E) {
+  var e E
+  
   for _, it := range v {
     if _, ok := it.(*Splat); ok {
-      out = it.Splat(g, out)
+      if out, e = it.Splat(g, out); e != nil {
+        return nil, e
+      }
     } else {
       if _, ok := it.(Vec); ok {
-        it = it.Splat(g, nil)
+        if it, e = it.Splat(g, nil); e != nil {
+          return nil, e
+        }
       }
 
       out = append(out, it)
     }
   }
 
-  return out
+  return out, nil
 }
 
 func (v Vec) String() string {
