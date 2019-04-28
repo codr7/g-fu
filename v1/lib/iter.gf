@@ -10,8 +10,6 @@
      (if %cond _ (break))
      %body..)))
 
-(let _? (fun (x) (= x _)))
-
 (let for (mac (args body..)
   (let v? (= (type args) Vec)
        in (new-sym)
@@ -24,7 +22,7 @@
        %body..))))
 
 (let @ (fun (rf fs..)
-  (if (= rf _)
+  (if (_? rf)
     (fun (rf)
       (fold (reverse fs) rf (fun (acc x) (x acc))))
     (fold (reverse fs) rf (fun (acc x) (x acc))))))

@@ -3,6 +3,8 @@
 (let ~ (fun (fs..)
   (fold (reverse fs) _ (fun (acc x) (x acc)))))
 
+(let _? (fun (x) (= x _)))
+
 (let not (fun (val)
   (if val F T)))
 

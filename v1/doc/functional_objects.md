@@ -174,7 +174,7 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
                           (fun (acc x)
                             (if (= (type x) Vec)
                               (let (id (head x) v (pop-key args id))
-                                (if (= v _) (push acc x..) (push acc id v)))
+                                (if (_? v) (push acc x..) (push acc id v)))
                               (push acc x (pop-key args x)))))
     %(and args (fail (str "Unused args: " args)))
     
