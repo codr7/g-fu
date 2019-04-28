@@ -1,3 +1,5 @@
+* update README for-loop
+** add iters
 * change inc fun to support int target
 * add Vec support to pop-key like pop
 * switch fold to use iter

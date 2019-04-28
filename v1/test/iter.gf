@@ -18,6 +18,12 @@
   (for (v i) (inc n i))
   (test (= n 6)))
 
+(let (v '(1 2 3 4 5) n 0)
+  (drop v)
+  (test (= v '(1 2 3 4)))
+  (drop v 2)
+  (test (= v '(1 2))))
+
 (let (v '(1 2 3 4 5)
       t1 (keep (fun (x) (< x 4)))
       t2 (map (fun (x) (+ x 42)))

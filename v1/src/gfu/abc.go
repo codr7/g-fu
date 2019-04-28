@@ -744,10 +744,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 
   e.AddPrim(g, "iter", iter_imp, ASplat("vals"))
-  e.AddPrim(g, "push", push_imp, A("sink"), ASplat("vals"))
-  e.AddPrim(g, "pop", pop_imp, A("seq"))
-  e.AddPrim(g, "drop", drop_imp, A("n"))
-  e.AddFun(g, "len", len_imp, A("seq"))
+  e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
+  e.AddPrim(g, "pop", pop_imp, A("in"))
+  e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
+  e.AddFun(g, "len", len_imp, A("in"))
 
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
