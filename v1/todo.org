@@ -12,6 +12,8 @@
 ** use Eq
 ** replaces _? in lib/core.gf
 * convert test prim to g-fu
+* return last val from (let) like (set)
+** add test
 * add class tests
 * switch vec reverse to use iter
 * implement Fun/Macro Clone
