@@ -14,6 +14,10 @@
   (for (7 j) (inc i j))
   (test (= i 21)))
 
+(let (v '(1 2 3) n 0)
+  (for (v i) (inc n i))
+  (test (= n 6)))
+
 (let (v '(1 2 3 4 5)
       t1 (keep (fun (x) (< x 4)))
       t2 (map (fun (x) (+ x 42)))
@@ -24,7 +28,7 @@
 
 (let (v '(1 2 3 4 5)
       t (map (fun (x) (+ x 42)) push))
-  (test (= (fold v _ ts) '(43 44 45 46 47))))
+  (test (= (fold v _ t) '(43 44 45 46 47))))
 
 (let (v '((1 2) (3 4) (5)))
   (test (= (fold v _ (cat push)) '(1 2 3 4 5))))

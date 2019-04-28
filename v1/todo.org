@@ -1,19 +1,12 @@
-* finish Iter
-** add place support to drop fun like pop
-** add VecIter
-** test
-** commit
-** switch for/fold to use iters
-** use for-loop instead of fold in Button.click
-* ---
+* change inc fun to support int target
+* add Vec support to pop-key like pop
+* switch fold to use iter
 * remove ParsePrimArgs
 ** still needed?
 * remove AddFun/Fun.imp
 ** convert existing to g-fu or prim
 *** eval args
 ** add body-arg to NewFun()
-* change inc fun to support int target
-* add Vec support to pop-key like pop
 * add class tests
 * switch vec reverse to use iter
 * implement Fun/Macro Clone

@@ -10,15 +10,18 @@
      (if %cond _ (break))
      %body..)))
 
+(let _? (fun (x) (= x _)))
+
 (let for (mac (args body..)
   (let v? (= (type args) Vec)
-       i (if (and v? (> (len args) 1)) (pop args) (new-sym))
-       n (new-sym))
+       in (new-sym)
+       out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
        
-  '(let (%i 0 %n %(if v? (pop args) args))
-     (while (< %i %n)
-       %body..
-       (inc %i)))))
+  '(let (%in (iter %(if v? (pop args) args)))
+     (loop
+       (let %out (pop %in))
+       (if (_? %out) (break))
+       %body..))))
 
 (let @ (fun (rf fs..)
   (if (= rf _)

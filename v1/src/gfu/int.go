@@ -132,7 +132,7 @@ func (i *IntIter) Eq(g *G, rhs Val) bool {
 
 func (i *IntIter) Pop(g *G) (Val, Val, E) {
   if i.pos >= i.max {
-    return nil, nil, g.E("Nothing to pop")
+    return &g.NIL, i, nil
   }
 
   v := i.pos

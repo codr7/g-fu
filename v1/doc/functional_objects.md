@@ -27,7 +27,7 @@ This document describes the implementation of a minimal viable single-dispatch o
       (push on-click f))
 
     (click ()
-      (fold on-click _ (fun (acc f) (f self)))))
+      (for (on-click f) (f self))))
 
   (let (b (Button 'new 'width 100 'height 50 'label "Click me"))
     (say (b 'move 20 10))

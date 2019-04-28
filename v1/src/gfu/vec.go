@@ -228,7 +228,7 @@ func (v Vec) Is(g *G, rhs Val) bool {
 }
 
 func (v Vec) Iter(g *G) (Val, E) {
-  return nil, g.E("Iter not implemented")
+  return new(VecIter).Init(g, v), nil
 }
 
 func (v Vec) Len(g *G) (Int, E) {
@@ -333,7 +333,7 @@ func (i *VecIter) Bool(g *G) bool {
 }
 
 func (i *VecIter) Drop(g *G, n Int) (Val, E) {
-if Int(len(i.in)) - i.pos < n {
+  if Int(len(i.in)) - i.pos < n {
     return nil, g.E("Nothing to drop")
   }
 
@@ -353,10 +353,10 @@ func (i *VecIter) Eq(g *G, rhs Val) bool {
 
 func (i *VecIter) Pop(g *G) (Val, Val, E) {
   if i.pos >= Int(len(i.in)) {
-    return nil, nil, g.E("Nothing to pop")
+    return &g.NIL, i, nil
   }
 
-  v := i.pos
+  v := i.in[i.pos]
   i.pos++
   return v, i, nil
 }
