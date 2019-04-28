@@ -83,8 +83,7 @@ _
 ### Iterating ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf))
 All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
 
-#### The `loop`
-The most fundamental kind of loop provided is called `loop`, and that's what it will do until exited using `break` or external means such as `recall` or `fail`
+The most fundamental kind of loop is called simply `loop`; and that's exactly what it does, until exited using `break` or external means such as `recall` or `fail`
 
 ```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
@@ -93,7 +92,6 @@ The most fundamental kind of loop provided is called `loop`, and that's what it 
 'bar
 ```
 
-#### The `while`-loop
 The `while`-loop keeps iterating until the specified condition is false.
 
 ```
@@ -106,7 +104,6 @@ The `while`-loop keeps iterating until the specified condition is false.
 3
 ```
 
-#### The `for`-loop
 The `for`-loop accepts any iterable value and an optional variable name, and runs one iteration for each popped value.
 
 ```
