@@ -22,7 +22,7 @@ type Val interface {
   Is(*G, Val) bool
   Iter(*G) (Val, E)
   Len(*G) (Int, E)
-  Pop(*G) (Val, E)
+  Pop(*G) (Val, Val, E)
   Print(*strings.Builder)
   Push(*G, ...Val) (Val, E)
   Quote(*G, *Task, *Env) (Val, E)
@@ -95,7 +95,7 @@ func (v BasicVal) Len(g *G) (Int, E) {
   return -1, g.E("Len not supported: %v", v.imp_type)
 }
 
-func (v BasicVal) Pop(g *G) (Val, E) {
+func (v BasicVal) Pop(g *G) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", v.imp_type)
 }
 

@@ -1,4 +1,5 @@
 * finish Iter
+** add place support to drop fun like pop
 ** add VecIter
 ** test
 ** commit

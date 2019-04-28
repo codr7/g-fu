@@ -417,28 +417,32 @@ func push_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var it Val
-  place := args[0]
+  var it, rest Val
+  place := args[0]  
+  var e E
   
   switch p := place.(type) {
   case *Sym:  
     env.Update(g, p, func(v Val) (Val, E) {
-      var rest Val
-      var e E
-      
       if it, rest, e = v.Pop(g); e != nil {
         return nil, e
       }
       
       return rest, nil
     })
+
+    return it, nil
   default:
     if place, e = place.Eval(g, task, env); e != nil {
       return nil, e
     }
-  }
 
-  return place.Pop(g)
+    if it, rest, e = place.Pop(g); e != nil {
+      return nil, e
+    }
+    
+    return NewSplat(g, Vec{it, rest}), nil
+  }
 }
 
 func drop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
