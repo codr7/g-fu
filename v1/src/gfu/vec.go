@@ -7,6 +7,12 @@ import (
 
 type Vec []Val
 
+type VecIter struct {
+  BasicIter
+  in Vec
+  pos Int
+}
+
 func (v Vec) Bool(g *G) bool {
   return len(v) > 0
 }
@@ -314,4 +320,47 @@ func (v Vec) String() string {
 
 func (v Vec) Type(g *G) *Type {
   return &g.VecType
+}
+
+func (i *VecIter) Init(g *G, in Vec) *VecIter {
+  i.BasicVal.Init(&g.IterType, i)
+  i.in = in
+  return i
+}
+
+func (i *VecIter) Bool(g *G) bool {
+  return i.pos < Int(len(i.in))
+}
+
+func (i *VecIter) Drop(g *G, n Int) (Val, E) {
+if Int(len(i.in)) - i.pos < n {
+    return nil, g.E("Nothing to drop")
+  }
+
+  i.pos += n
+  return i, nil
+}
+
+func (i *VecIter) Dup(g *G) (Val, E) {
+  out := *i
+  return &out, nil
+}
+
+func (i *VecIter) Eq(g *G, rhs Val) bool {
+  ri, ok := rhs.(*VecIter)
+  return ok && ri.in.Eq(g, i.in) && ri.pos == i.pos
+}
+
+func (i *VecIter) Pop(g *G) (Val, Val, E) {
+  if i.pos >= Int(len(i.in)) {
+    return nil, nil, g.E("Nothing to pop")
+  }
+
+  v := i.pos
+  i.pos++
+  return v, i, nil
+}
+
+func (i *VecIter) Splat(g *G, out Vec) (Vec, E) {
+  return append(out, i.in[i.pos:]), nil
 }

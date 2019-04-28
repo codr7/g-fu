@@ -13,6 +13,7 @@
 *** eval args
 ** add body-arg to NewFun()
 * change inc fun to support int target
+* add Vec support to pop-key like pop
 * add class tests
 * switch vec reverse to use iter
 * implement Fun/Macro Clone

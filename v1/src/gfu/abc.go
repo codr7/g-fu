@@ -439,20 +439,28 @@ func pop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
     if it, rest, e = place.Pop(g); e != nil {
       return nil, e
-    }
-    
-    return NewSplat(g, Vec{it, rest}), nil
+    }    
   }
+
+  return NewSplat(g, Vec{it, rest}), nil
 }
 
 func drop_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  place := args[0]
   var e E
 
-  if args, e = args.EvalVec(g, task, env); e != nil {
-    return nil, e
+  switch p := place.(type) {
+  case *Sym:  
+    return env.Update(g, p, func(v Val) (Val, E) {
+      return v.Drop(g, args[1].(Int))
+    })
+  default:
+    if place, e = place.Eval(g, task, env); e != nil {
+      return nil, e
+    }
   }
 
-  return args[0].Drop(g, args[1].(Int))
+  return place.Drop(g, args[1].(Int))
 }
 
 func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
