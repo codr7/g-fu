@@ -1,3 +1,4 @@
+* switch fold args
 * add continue support in loop + test
 * move readme macros to doc
 ** update for loop
@@ -14,6 +15,7 @@
 * generate x?-prim in AddConst
 ** use Eq
 ** replaces _? in lib/core.gf
+* convert test prim to g-fu
 * add class tests
 * switch vec reverse to use iter
 * implement Fun/Macro Clone
