@@ -107,18 +107,18 @@ The `while`-loop keeps iterating until the specified condition is false.
 ```
 
 #### The `for`-loop
-The `for`-loop accepts any iterable value and an optional variable name, and run one iteration for each popped value.
+The `for`-loop accepts any iterable value and an optional variable name, and runs one iteration for each popped value.
 
 ```
-  (for (3 i) (dump i))
+  (for 3 (dump 'foo))
 
-0
-1
-2
+'foo
+'foo
+'foo
 ```
 
 ```
-  (for ('(foo bar baz) i) (dump i))
+  (for ('(foo bar baz) v) (dump v))
 
 'foo
 'bar
