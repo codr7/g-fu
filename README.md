@@ -21,80 +21,7 @@ Press Return twice to evaluate.
 6765
 ```
 
-### Macros
-Non-primitive definitions presented below may be `load`-ed as part of the [iter](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf) library.
-
-One of the most common macro examples is the `while`-loop. The example below defines it in terms of a more general `loop`-macro, which will follow shortly. Note that g-fu uses `%` as opposed to `,` for interpolating values, `_` in place of `nil` and `..` to splat.
-
-```
-  (load "lib/iter.gf")
-```
-```
-  (let while (mac (cond body..)
-    '(loop
-       (if %cond _ (break))
-       %body..)))
-```
-```
-  (let (i 0)
-    (while (< i 7)
-      (dump (inc i))))
-
-1
-2
-3
-4
-5
-6
-7
-```
-
-`loop` supports exiting with a result using `break` within its body, which is trapped by a nested macro. Most of the hard work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to avoid capturing the calling environment.
-
-```
-  (let loop (mac (body..)
-    (let done? (new-sym) result (new-sym))
-  
-    '(let (break (mac (args..) '(recall T %args..)))
-       ((fun ((%done? F) %result..)
-          (if %done? %result.. (do %body.. (recall))))))))
-```
-```
-  (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
-
-'foo
-'bar
-```
-
-A `for`-loop may be built on top of `while`, the following example comes with the added twist of allowing either a bare counter or an argument list with optional variable name.
-
-```
-(let for (mac (args body..)
-  (let v? (= (type args) Vec)
-       i (if (and v? (> (len args) 1)) (pop args) (new-sym))
-       n (new-sym))
-       
-  '(let (%i 0 %n %(if v? (pop args) args))
-     (while (< %i %n)
-       %body..
-       (inc %i)))))
-```
-```
-  (for 3 (dump 'hi))
-
-hi
-hi
-hi
-
-  (for (3 i) (dump i))
-
-0
-1
-2
-```
-
-### Conditions
-Non-primitive definitions presented below may be `load`-ed as part of the [cond](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf) library.
+### Branching ([lib/cond.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf))
 
 Every value has a boolean representation that may be retrieved using `bool`.
 
@@ -153,7 +80,52 @@ _
 'bar
 ```
 
-### Tasks
+### Iterating ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf))
+All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
+
+#### The `loop`
+The most fundamental kind of loop provided is called `loop`, and that's what it will do until exited using `break` or external means such as `recall` or `fail`
+
+```
+  (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
+
+'foo
+'bar
+```
+
+#### The `while`-loop
+The `while`-loop keeps iterating until the specified condition is false.
+
+```
+  (let (i 0)
+    (while (< i 3)
+      (dump (inc i))))
+
+1
+2
+3
+```
+
+#### The `for`-loop
+The `for`-loop accepts any iterable value and an optional variable name, and run one iteration for each popped value.
+
+```
+  (for (3 i) (dump i))
+
+0
+1
+2
+```
+
+```
+  (for ('(foo bar baz) i) (dump i))
+
+'foo
+'bar
+'baz
+```
+
+### Multitasking
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```

@@ -1,7 +1,8 @@
 (let loop (mac (body..)
   (let done? (new-sym) result (new-sym))
   
-  '(let (break (mac (args..) '(recall T %args..)))
+  '(let (break (mac (args..) '(recall T %args..))
+         continue (mac () '(recall)))
      ((fun ((%done? F) %result..)
         (if %done? %result.. (do %body.. (recall))))))))
 

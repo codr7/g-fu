@@ -247,8 +247,8 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
     return nil, g.ReadE(*pos, "Missing splat value")
   }
 
-  out[i-1] = NewSplat(g, out[i-1])
-  return out, nil
+  v := out[i-1]
+  return append(out[:i-1], NewSplat(g, v)), nil
 }
 
 func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {

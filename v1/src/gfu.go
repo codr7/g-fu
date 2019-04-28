@@ -53,7 +53,7 @@ func main() {
           if e == nil {
             fmt.Printf("\r%v\n", v)
           } else {
-            fmt.Printf("\r%v\n", e)
+            fmt.Printf("\rval: %v\n", e)
           }
         }
 

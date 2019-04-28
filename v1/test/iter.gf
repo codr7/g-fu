@@ -3,6 +3,11 @@
 (test (= (loop (break 'foo)) 'foo))
 
 (let (i 0)
+  (test
+    (= (loop (inc i) (if (= i 42) (break 'done) (continue))) 'done)
+    (= 42 i))) 
+
+(let (i 0)
   (while (< (inc i) 7))
   (test (= i 7)))
 
@@ -28,9 +33,10 @@
       t1 (keep (fun (x) (< x 4)))
       t2 (map (fun (x) (+ x 42)))
       ts (@ push t1 t2))
-  (test (= (fold v 0 (t1 +)) 6))
-  (test (= (fold v _ (t2 push)) '(43 44 45 46 47)))
-  (test (= (fold v _ ts) '(43 44 45))))
+  (test
+    (= (fold v 0 (t1 +)) 6)
+    (= (fold v _ (t2 push)) '(43 44 45 46 47))
+    (= (fold v _ ts) '(43 44 45))))
 
 (let (v '(1 2 3 4 5)
       t (map (fun (x) (+ x 42)) push))
