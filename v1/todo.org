@@ -1,4 +1,3 @@
-* switch fold args
 * add continue support in loop + test
 * move readme macros to doc
 ** update for loop
