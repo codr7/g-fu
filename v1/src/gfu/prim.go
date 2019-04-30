@@ -42,7 +42,7 @@ func (env *Env) AddPrim(g *G, id string, imp PrimImp, args ...Arg) E {
 }
 
 func ParsePrimArgs(g *G, args Val) Vec {
-  if s, ok := args.(*Sym); ok && s == g.nil_sym {
+  if args == &g.NIL {
     return nil
   } else if v, ok := args.(Vec); ok {
     if len(v) == 0 {
