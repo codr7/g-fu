@@ -1,5 +1,4 @@
-* convert iter to Fun
-* add div/mod/odd?/even?/exp
+* add div/mod
 ** add even?
 *** (z? (mod x 2))
 *** add math.gf with z?

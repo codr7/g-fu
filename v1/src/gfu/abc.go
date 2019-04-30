@@ -370,12 +370,6 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var e E
-
-  if args, e = args.EvalVec(g, task, env); e != nil {
-    return nil, e
-  }
-
   if len(args) == 1 {
     return args[0].Iter(g)
   }
@@ -727,7 +721,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
 
-  e.AddPrim(g, "iter", iter_imp, ASplat("vals"))
+  e.AddFun(g, "iter", iter_imp, ASplat("vals"))
   e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
   e.AddPrim(g, "pop", pop_imp, A("in"))
   e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
