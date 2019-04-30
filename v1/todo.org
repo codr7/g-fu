@@ -2,8 +2,6 @@
 ** convert existing to g-fu or prim
 *** eval args
 ** add body-arg to NewFun()
-* generate X? prims for types like AddConst
-** update lib
 * convert test prim to g-fu
 * return last val from (let) like (set)
 * add class tests
