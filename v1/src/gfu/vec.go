@@ -259,6 +259,27 @@ func (v Vec) Pop(g *G) (Val, Val, E) {
   return v[n-1], v[:n-1], nil
 }
 
+func (v Vec) PopKey(g *G, key *Sym) (Val, Val, E) {
+  for i := 0; i < len(v); {
+    k, ok := v[i].(*Sym);
+    
+    if !ok {
+      return nil, nil, g.E("Invalid key: %v", v[i].Type(g))
+    }
+        
+    if k == key {
+      v = v.Delete(i)
+      val := v[i]
+      v = v.Delete(i)
+      return val, v, nil
+    } else {
+      i += 2
+    }
+  }
+      
+  return &g.NIL, v, nil
+}
+
 func (v Vec) Print(out *strings.Builder) {
   for i, iv := range v {
     if i > 0 {

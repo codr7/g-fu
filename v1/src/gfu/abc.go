@@ -484,39 +484,35 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
   
-  var out Val = &g.NIL
-  
-  switch in := in.(type) {
-  case *Sym:
-    if _, e = env.Update(g, in, func(in Val) (Val, E) {
-      inv := in.(Vec)
-      
-      for i := 0; i < len(inv)-1; {
-        vk, ok := inv[i].(*Sym);
+  if id, ok := in.(*Sym); ok {
+    var v Val
 
-        if !ok {
-          return nil, g.E("Invalid key: %v", vk.Type(g))
-        }
-        
-        if vk == k {
-          inv = inv.Delete(i)
-          out = inv[i]
-          inv = inv.Delete(i)
-          break
-        } else {
-          i += 2
-        }
-      }
+    if _, e = env.Update(g, id, func(in Val) (Val, E) {
+      var out Val
       
-      return inv, nil
+      if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
+        return nil, e
+      }
+
+      return out, nil
     }); e != nil {
       return nil, e
     }
-  default:
-    return nil, g.E("Invalid pop-key place: %v", in)
+
+    return v, nil
+  }
+
+  if in, e = in.Eval(g, task, env); e != nil {
+    return nil, e
+  }
+
+  var v, out Val
+  
+  if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
+    return nil, e
   }
   
-  return out, nil
+  return NewSplat(g, Vec{v, out}), nil
 }
 
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

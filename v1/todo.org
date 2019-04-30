@@ -1,4 +1,3 @@
-* add value-support to pop-key like pop
 * remove AddFun/Fun.imp
 ** convert existing to g-fu or prim
 *** eval args

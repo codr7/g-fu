@@ -46,6 +46,8 @@
   (test (= (pop-key v 'bar) 2))
   (test (= v '(foo 1 baz 3))))
 
+(test (= (vec (pop-key '(foo 1 bar 2 baz 3) 'bar)) '(2 (foo 1 baz 3))))
+
 (test (= (push _ 1 2 3) '(1 2 3)))
 (test (= (push '(1 2) 3) '(1 2 3)))
 
