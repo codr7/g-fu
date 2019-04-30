@@ -1,7 +1,7 @@
 ## Functional Objects
 
-### Intro 
-This document describes the implementation of a minimal viable single-dispatch object system using only closures and macros in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
+### Intro
+This document describes the implementation of a minimal viable single-dispatch object system using closures and macros in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
 
 ```
   (class Widget ()
@@ -57,7 +57,7 @@ _
 ```
 
 ### Syntax
-g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`. With that out of the way, let's have a look at the implementation.
+g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`.
 
 ### Dispatch
 From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming anything about object storage.

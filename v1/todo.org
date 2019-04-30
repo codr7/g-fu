@@ -9,8 +9,8 @@
 ** replaces _? in lib/core.gf
 * convert test prim to g-fu
 * return last val from (let) like (set)
-** add test
 * add class tests
+** testgui.gf
 * switch vec reverse to use iter
 * implement Fun/Macro Clone
 ** clone envs
