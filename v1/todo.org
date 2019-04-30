@@ -1,8 +1,3 @@
-* convert test prim to g-fu
-* convert let prim to g-fu
-** wrap ids in lambda and call with vals if scoped
-** wrap input in (set) otherwise
-** return last val like (set)
 * add class tests
 ** testgui.gf
 * switch vec reverse to use iter
