@@ -1,5 +1,4 @@
-* change inc fun to support int target
-* add Vec support to pop-key like pop
+* add value-support to pop-key like pop
 * remove AddFun/Fun.imp
 ** convert existing to g-fu or prim
 *** eval args

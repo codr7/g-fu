@@ -123,9 +123,19 @@ func inc_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, e
   }
 
-  return env.Update(g, args[0].(*Sym), func(v Val) (Val, E) {
-    return v.(Int) + d.(Int), nil
-  })
+  p := args[0]
+  
+  if id, ok := p.(*Sym); ok {
+    return env.Update(g, id, func(v Val) (Val, E) {
+      return v.(Int) + d.(Int), nil
+    })
+  }
+
+  if p, e = p.Eval(g, task, env); e != nil {
+    return nil, e
+  }
+  
+  return p.(Int)+d.(Int), nil
 }
 
 func test_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
