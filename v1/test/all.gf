@@ -1,6 +1,6 @@
 (debug)
 
-(load "../lib/core.gf")
+(load "../lib/all.gf")
 
 (test (= (NOP foo bar baz) _))
 

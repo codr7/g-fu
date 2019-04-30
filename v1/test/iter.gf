@@ -1,5 +1,3 @@
-(load "../lib/iter.gf")
-
 (test (= (loop (break 'foo)) 'foo))
 
 (let (i 0)

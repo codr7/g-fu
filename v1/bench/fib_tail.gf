@@ -1,5 +1,4 @@
-(load "../lib/core.gf")
-(load "../lib/iter.gf")
+(load "../lib/all.gf")
 
 (let (fib (fun (n a b)
             (if n 
