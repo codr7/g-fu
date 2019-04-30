@@ -124,6 +124,7 @@
   (test (= (expand 2 '(bar 42)) 42)))
 
 (load "cond.gf")
+(load "math.gf")
 (load "iter.gf")
 (load "fos.gf")
 (load "task.gf")

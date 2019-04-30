@@ -1,4 +1,4 @@
-* add div/mod
+* add div/mod to math lib
 ** add even?
 *** (z? (mod x 2))
 *** add math.gf with z?
