@@ -92,10 +92,26 @@ func (g *G) Load(task *Task, env *Env, path string) (Val, E) {
   return v, e
 }
 
-func (g *G) AddConst(id string, val Val) {
+func (e *Env) AddConst(g *G, id string, val Val) E {
   if _, dup := g.consts.LoadOrStore(g.Sym(id), val); dup {
-    panic(fmt.Sprintf("Dup const: %v", id))
+    return g.E("Dup const: %v", id)
   }
+
+  imp := func(g *G, task *Task, env *Env, args Vec) (Val, E) {
+    v, e := args[0].Eval(g, task, env)
+
+    if e != nil {
+      return nil, e
+    }
+    
+    if val.Is(g, v) {
+      return &g.T, nil
+    }
+
+    return &g.F, nil
+  }
+
+  return e.AddPrim(g, fmt.Sprintf("%v?", id), imp, A("val"))
 }
 
 func (g *G) FindConst(id *Sym) Val {

@@ -1,7 +1,5 @@
 (let NOP (mac (args..)))
 
-(let _? (fun (x) (= x _)))
-
 (let fold (fun (in acc fn)
   (let rec (fun (in acc fn)
     (let v (pop in))
