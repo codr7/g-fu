@@ -5,6 +5,8 @@
 ** add odd?
 *** (not (even? x))
 ** add exp from sicp
+* copy fib_tail to math
+** move test to test/math
 * convert test prim to g-fu
 * return last val from (let) like (set)
 * add class tests
