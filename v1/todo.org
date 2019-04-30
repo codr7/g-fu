@@ -1,9 +1,6 @@
-* add div/mod to math lib
-** add odd?
-*** (not (even? x))
-** add exp from sicp
-* copy fib_tail to math
-** move test to test/math
+* add (exp) from sicp to math.gf
+* copy fib_tail to math.gf
+** move test
 * convert test prim to g-fu
 * return last val from (let) like (set)
 * add class tests
