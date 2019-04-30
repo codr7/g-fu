@@ -278,11 +278,7 @@ func str_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  if b := args[0].Bool(g); b {
-    return &g.T, nil
-  }
-
-  return &g.F, nil
+  return g.Bool(args[0].Bool(g)), nil
 }
 
 func eq_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
