@@ -365,6 +365,20 @@ func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func int_mul_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  v := args[0].(Int)
+
+  if len(args) == 1 {
+    return Int(v * v), nil
+  }
+
+  for _, iv := range args[1:] {
+    v *= iv.(Int)
+  }
+
+  return v, nil
+}
+
 func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   if len(args) == 1 {
     return args[0].Iter(g)
@@ -716,6 +730,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddFun(g, "+", int_add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
+  e.AddFun(g, "*", int_mul_imp, ASplat("vals"))
 
   e.AddFun(g, "iter", iter_imp, ASplat("vals"))
   e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
