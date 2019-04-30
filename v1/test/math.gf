@@ -8,6 +8,8 @@
 (test (odd? 21))
 (test (not (odd? 42)))
 
+(test (= (gcd 14 21) 7))
+
 (let (f (fun n
           (if (< n 2)
             n

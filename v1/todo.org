@@ -1,6 +1,3 @@
-* add (exp) from sicp to math.gf
-* copy fib_tail to math.gf
-** move test
 * convert test prim to g-fu
 * return last val from (let) like (set)
 * add class tests

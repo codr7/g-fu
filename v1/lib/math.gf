@@ -8,6 +8,11 @@
     ((even? n) (* (exp base (div n 2))))
     (T (* base (exp base (- n 1)))))))
 
+(let gcd (fun (a b)
+  (if b
+    (recall b (mod a b))
+    a)))
+
 (let fib (fun (n (a 0) (b 1))
   (if n 
     (if (= n 1)
