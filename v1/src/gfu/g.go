@@ -104,7 +104,7 @@ func (e *Env) AddConst(g *G, id string, val Val) E {
       return nil, e
     }
     
-    if val.Is(g, v) {
+    if val.Eq(g, v) {
       return &g.T, nil
     }
 
