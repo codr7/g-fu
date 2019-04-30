@@ -60,7 +60,7 @@ The most fundamental loop is called `loop`. It supports skipping to the start of
 ```
 
 ### for
-The `for`-loop accepts any iterable and an optional variable name, and runs one iteration for each value. Like `while`, it is based on `loop`.
+The `for`-loop accepts any iterable and an optional variable name, and runs one iteration for each value until the iterator returns `_`. Like `while`, it is based on `loop`.
 
 ```
   (let for (mac (args body..)
