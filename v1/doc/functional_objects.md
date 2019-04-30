@@ -74,7 +74,7 @@ From one angle, a closure is essentially a single method object that uses its en
                 (fun (acc d)
                   (let did (head d) imp (tail d))
                   (push acc
-                        (if (= did T)
+                        (if (T? did)
                           '(T
                              ((fun (%(head imp)..) %(tail imp)..)
                                %args..))

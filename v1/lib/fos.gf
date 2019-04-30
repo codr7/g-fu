@@ -9,7 +9,7 @@
               (fun (acc d)
                 (let did (head d) imp (tail d))
                 (push acc
-                      (if (= did T)
+                      (if (T? did)
                         '(T
                            ((fun (%(head imp)..) %(tail imp)..)
                              %args..))

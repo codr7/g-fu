@@ -4,6 +4,9 @@
 
 (test (= (NOP foo bar baz) _))
 
+(test (T? T))
+(test (not (T? F)))
+
 (test (= (type 42) Int))
 
 (test (= (- (+ 1 2) (+ 3 4)) -4))
