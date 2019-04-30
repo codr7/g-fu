@@ -1,5 +1,4 @@
-(load "../lib/core.gf")
-(load "../lib/iter.gf")
+(load "../lib/all.gf")
 
 (dump (bench 10 (for 100000)))
 
