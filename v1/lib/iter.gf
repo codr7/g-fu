@@ -28,7 +28,7 @@
       (fold (reverse fs) rf (fun (acc x) (x acc))))
     (fold (reverse fs) rf (fun (acc x) (x acc))))))
 
-(let map (fun (f (rf _))
+(let map-r (fun (f (rf _))
   (if rf
     (fun (acc val)
       (rf acc (f val)))
@@ -36,11 +36,15 @@
       (fun (acc val)
         (rf acc (f val)))))))
 
-(let cat (fun (rf)
-  (fun (acc val)
-    (push acc val..))))
+(let cat-r (fun ((rf _))
+  (if rf
+    (fun (acc val)
+      (rf acc val..))
+    (fun (rf)
+      (fun (acc val)
+        (rf acc val..))))))
 
-(let keep (fun (f (rf _))
+(let filt-r (fun (f (rf _))
   (if rf
     (fun (acc val)
       (if (f val)

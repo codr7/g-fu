@@ -25,7 +25,7 @@
      (fun (args..) (self args..)))))
 
 (let super-slots (fun (supers)
-  (fold supers _ (@ push (map (fun (s) (s 'slots))) cat))))
+  (fold supers _ (@ push (map-r (fun (s) (s 'slots))) cat-r))))
 
 (let super-methods (fun (supers)
   (fold supers _
