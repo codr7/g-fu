@@ -32,30 +32,29 @@
       (tr (reverse fs) rf (fun (acc x) (x acc))))
     (tr (reverse fs) rf (fun (acc x) (x acc)))))
 
+(mac tr-fun (rf args body..)
+  '(if (_? %rf)
+     (fun (%rf)
+       (fun %args
+         %body..))
+     (fun %args
+       %body..)))
+
+(fun tpipe (f)
+  (fun (acc val)
+    (f val)
+    acc))
+
 (fun tmap (f (rf _))
-  (if rf
-    (fun (acc val)
-      (rf acc (f val)))
-    (fun (rf)
-      (fun (acc val)
-        (rf acc (f val))))))
+  (tr-fun rf (acc val)
+    (rf acc (f val))))
 
 (fun tcat ((rf _))
-  (if rf
-    (fun (acc val)
-      (rf acc val..))
-    (fun (rf)
-      (fun (acc val)
-        (rf acc val..)))))
+  (tr-fun rf (acc val)
+    (rf acc val..)))
 
 (fun tfilt (f (rf _))
-  (if rf
-    (fun (acc val)
-      (if (f val)
-        (rf acc val)
-        acc))
-    (fun (rf)
-      (fun (acc val)
-        (if (f val)
-          (rf acc val)
-          acc)))))
+  (tr-fun rf (acc val)
+    (if (f val)
+      (rf acc val)
+      acc)))
