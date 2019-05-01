@@ -22,29 +22,29 @@
        (if (_? %out) (break))
        %body..))))
 
-(let @ (fun (rf fs..)
+(fun @ (rf fs..)
   (if (_? rf)
     (fun (rf)
       (tr (reverse fs) rf (fun (acc x) (x acc))))
-    (tr (reverse fs) rf (fun (acc x) (x acc))))))
+    (tr (reverse fs) rf (fun (acc x) (x acc)))))
 
-(let tmap (fun (f (rf _))
+(fun tmap (f (rf _))
   (if rf
     (fun (acc val)
       (rf acc (f val)))
     (fun (rf)
       (fun (acc val)
-        (rf acc (f val)))))))
+        (rf acc (f val))))))
 
-(let tcat (fun ((rf _))
+(fun tcat ((rf _))
   (if rf
     (fun (acc val)
       (rf acc val..))
     (fun (rf)
       (fun (acc val)
-        (rf acc val..))))))
+        (rf acc val..)))))
 
-(let tfilt (fun (f (rf _))
+(fun tfilt (f (rf _))
   (if rf
     (fun (acc val)
       (if (f val)
@@ -54,4 +54,4 @@
       (fun (acc val)
         (if (f val)
           (rf acc val)
-          acc))))))
+          acc)))))

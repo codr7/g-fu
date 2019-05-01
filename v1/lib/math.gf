@@ -1,21 +1,23 @@
-(let z? (fun (n) (= n 0)))
-(let even? (fun (n) (z? (mod n 2))))
-(let odd? (fun (n) (not (even? n))))
+(fun z? (n) (= n 0))
 
-(let exp (fun (base n)
+(fun even? (n) (z? (mod n 2)))
+
+(fun odd? (n) (not (even? n)))
+
+(fun exp (base n)
   (switch
     ((z? n) 1)
     ((even? n) (* (exp base (div n 2))))
-    (T (* base (exp base (- n 1)))))))
+    (T (* base (exp base (- n 1))))))
 
-(let gcd (fun (a b)
+(fun gcd (a b)
   (if b
     (recall b (mod a b))
-    a)))
+    a))
 
-(let fib (fun (n (a 0) (b 1))
+(fun fib (n (a 0) (b 1))
   (if n 
     (if (= n 1)
       b
       (recall (- n 1) b (+ a b)))
-    a)))
+    a))

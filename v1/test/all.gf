@@ -73,11 +73,8 @@
 (test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
 
-(let (foo (fun ((x)) x))
-  (test (= (foo) _))
-  (test (= (foo 42) 42)))
-
-(let (foo (fun ((x 42)) x))
+(let _
+  (fun foo ((x 42)) x)
   (test (= (foo) 42))
   (test (= (foo 7) 7)))
 

@@ -12,14 +12,22 @@ func do_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[0]))
+  i := 0
+  id, ok := args[0].(*Sym)
+  
+  if ok {
+    i++
+  }
+  
+  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
 
   if e != nil {
     return nil, e
   }
 
-  f := NewFun(g, env, as)
-  f.body = args[1:]
+  i++
+  f := NewFun(g, env, id, as)
+  f.body = args[i:]
   return f, nil
 }
 
@@ -701,7 +709,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "F", g.F.Init(g))
 
   e.AddPrim(g, "do", do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", fun_imp, A("args"), ASplat("body"))
+  e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
   e.AddPrim(g, "mac", mac_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "set", set_imp, ASplat("args"))

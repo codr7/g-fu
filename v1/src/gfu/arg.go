@@ -165,13 +165,15 @@ func ParseArgs(g *G, task *Task, env *Env, in Vec) ([]Arg, E) {
     if id, ok := v.(*Sym); ok {
       a.id = id
     } else if vv, ok := v.(Vec); ok {
+      if len(vv) < 2 {
+        return nil, g.E("Invalid arg: %v", vv)
+      }
+      
       a.arg_type = ARG_OPT
       a.id = vv[0].(*Sym)
 
-      if len(vv) > 1 {
-        if a.opt_val, e = vv[1].Eval(g, task, env); e != nil {
-          return nil, e
-        }
+      if a.opt_val, e = vv[1].Eval(g, task, env); e != nil {
+        return nil, e
       }
     } else if sv, ok := v.(*Splat); ok {
       a.arg_type = ARG_SPLAT

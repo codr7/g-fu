@@ -170,7 +170,7 @@ Classes, or object factories; may be created using the `class`-macro. Classes ar
 g-fu uses `eval` for creating new objects without requiring a central class registry and to enable eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
 
 ```
-(let new-object (fun (supers slots methods args)
+(fun new-object (supers slots methods args)
   (eval '(let-self %(tr (push (super-slots supers) slots..) _
                         (fun (acc x)
                           (if (= (type x) Vec)
@@ -181,20 +181,20 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
     
     (dispatch
       %methods..
-      %(super-methods supers)..)))))
+      %(super-methods supers)..))))
 ```
 
 The task of collecting super slots makes a good match for [transducers](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf). `@` takes a reducing function as first argument and propagates it through the specified transformation pipeline, `tmap` followed by `tcat` in the following example.
 
 ```
-(let super-slots (fun (supers)
-  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat))))
+(fun super-slots (supers)
+  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat)))
 ```
 
 Two dispatch entries are generated for each super method, one regular and one qualified with the super class name.
 
 ```
-(let super-methods (fun (supers)
+(fun super-methods (supers)
   (tr supers _
       (fun (acc s)
         (tr (s 'methods) _

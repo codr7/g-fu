@@ -11,6 +11,7 @@ type FunImp func(*G, *Task, *Env, Vec) (Val, E)
 type Fun struct {
   BasicVal
   
+  id       *Sym
   env      *Env
   env_cache Env
   arg_list ArgList
@@ -18,12 +19,18 @@ type Fun struct {
   imp      FunImp
 }
 
-func NewFun(g *G, env *Env, args []Arg) *Fun {
-  return new(Fun).Init(g, env, args)
+func NewFun(g *G, env *Env, id *Sym, args []Arg) *Fun {
+  return new(Fun).Init(g, env, id, args)
 }
 
-func (f *Fun) Init(g *G, env *Env, args []Arg) *Fun {
+func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) *Fun {
   f.BasicVal.Init(&g.FunType, f)
+
+  if id != nil {
+    f.id = id
+    env.Let(id, f)
+  }
+  
   f.env = env
   f.arg_list.Init(g, args)
   return f
@@ -79,7 +86,11 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (f *Fun) Dump(out *strings.Builder) {
-  out.WriteString("(fun (")
+  if id := f.id; id == nil {
+    out.WriteString("(fun (")
+  } else {
+    fmt.Fprintf(out, "(fun %v (", f.id)
+  }
 
   for i, a := range f.arg_list.items {
     if i > 0 {
@@ -90,13 +101,10 @@ func (f *Fun) Dump(out *strings.Builder) {
   }
 
   if f.imp == nil {
-    out.WriteString(") ")
+    out.WriteString(")")
 
-    for i, bv := range f.body {
-      if i > 0 {
-        out.WriteRune(' ')
-      }
-
+    for _, bv := range f.body {
+      out.WriteRune(' ')
       bv.Dump(out)
     }
 
@@ -107,9 +115,8 @@ func (f *Fun) Dump(out *strings.Builder) {
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
-  f := NewFun(g, env, args)
+  f := NewFun(g, env, g.Sym(id), args)
   f.imp = imp
-  env.Let(g.Sym(id), f)
   return nil
 }
 

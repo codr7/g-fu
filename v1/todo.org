@@ -2,12 +2,10 @@
 ** use for tmap/tcat etc.
 ** add tpipe that just runs action and returns original value
 * ---
-* add Fun id
-** switch Fun to take id like (class)
+* add Mac id like Fun
 ** update dump
 ** Let in current env
 ** update code
-* add Mac id like Fun
 * add Task id like Fun
 * ---
 * block dup Let

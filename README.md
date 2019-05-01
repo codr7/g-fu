@@ -12,10 +12,11 @@ g-fu v1.10
 
 Press Return twice to evaluate.
 
-  (let (fib (fun (n)
-              (if (< n 2)
-                n
-                (+ (fib (- n 1)) (fib (- n 2))))))
+  (let _
+    (fun fib (n)
+      (if (< n 2)
+        n
+        (+ (fib (- n 1)) (fib (- n 2)))))
     (fib 20))
 
 6765

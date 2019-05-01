@@ -24,17 +24,17 @@
      %body..
      (fun (args..) (self args..)))))
 
-(let super-slots (fun (supers)
-  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat))))
+(fun super-slots (supers)
+  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat)))
 
-(let super-methods (fun (supers)
+(fun super-methods (supers)
   (tr supers _
       (fun (acc s)
         (tr (s 'methods) _
             (fun (acc m)
-              (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
+              (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..)))))))
 
-(let new-object (fun (supers slots methods args)
+(fun new-object (supers slots methods args)
   (eval '(let-self %(tr (push (super-slots supers) slots..) _
                         (fun (acc x)
                           (if (= (type x) Vec)
@@ -44,7 +44,7 @@
     %(and args (fail (str "Unused args: " args)))
     (dispatch
       %methods..
-      %(super-methods supers)..)))))
+      %(super-methods supers)..))))
 
 (let class (mac (id supers slots methods..)
   '(let %id
