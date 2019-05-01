@@ -127,8 +127,9 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
-  (let (t1 (task () (dump 'foo) 'bar)
-        t2 (task () (dump 'baz) 'qux))
+  (let _
+    (task t1 () (dump 'foo) 'bar)
+    (task t2 () (dump 'baz) 'qux)
     (dump (wait t1 t2)))
 
 baz
@@ -139,8 +140,8 @@ foo
 The defining environment is cloned by default to prevent data races.
 
 ```
-  (let (v 42
-        t (task () (inc v)))
+  (let (v 42)
+    (task t () (inc v))
     (dump (wait t))
     (dump v))
 
@@ -164,9 +165,11 @@ Channels are optionally buffered, thread-safe pipes. `chan` may be used to creat
 Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task `t`, which then replies `'foo` and finally returns `'bar`
 
 ```
-  (let (t (task ()
-            (post (fetch) 'foo)
-            'bar))
+  (let _
+    (task t ()
+      (post (fetch) 'foo)
+      'bar)
+      
     (post t (this-task))
     (dump (fetch))
     (dump (wait t)))

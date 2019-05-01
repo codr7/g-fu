@@ -609,11 +609,18 @@ func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var e E
-  as := ParsePrimArgs(g, args[0])
+  id, ok := args[0].(*Sym)
+  i := 0
+  
+  if ok {    
+    i++
+  }
+  
+  as := ParsePrimArgs(g, args[i])
   nargs := len(as)
   var inbox Chan
   safe := true
+  var e E
   
   if as == nil {
     inbox = NewChan(0)
@@ -641,9 +648,10 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
   }
 
-  t := NewTask(g, inbox, safe, args[1:])
+  i++
+  t := NewTask(g, env, id, inbox, safe, args[i:])
 
-  if e := t.Start(g, env); e != nil {
+  if e = t.Start(g, env); e != nil {
     return nil, e
   }
   

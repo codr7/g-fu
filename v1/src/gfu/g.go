@@ -44,7 +44,7 @@ func NewG() (*G, E) {
 
 func (g *G) Init() (*G, E) {
   g.nil_sym = g.Sym("_")
-  g.MainTask.Init(g, NewChan(0), true, nil)
+  g.MainTask.Init(g, &g.RootEnv, g.Sym("main-task"), NewChan(0), true, nil)
   return g, nil
 }
 

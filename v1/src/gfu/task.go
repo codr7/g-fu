@@ -11,6 +11,7 @@ type Task struct {
   BasicVal
   Inbox Chan
   
+  id           *Sym
   body         Vec
   mutex        sync.Mutex
   cond         *sync.Cond
@@ -19,16 +20,22 @@ type Task struct {
   result       Val
 }
 
-func NewTask(g *G, inbox Chan, safe bool, body Vec) *Task {
-  return new(Task).Init(g, inbox, safe, body)
+func NewTask(g *G, env *Env, id *Sym, inbox Chan, safe bool, body Vec) *Task {
+  return new(Task).Init(g, env, id, inbox, safe, body)
 }
 
-func (t *Task) Init(g *G, inbox Chan, safe bool, body Vec) *Task {
+func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, safe bool, body Vec) *Task {
   t.BasicVal.Init(&g.TaskType, t)
-  t.Inbox = inbox
+
+  if id != nil {
+    t.id = id
+    env.Let(id, t)
+  }
+  
   t.safe = safe
   t.body = body
   t.cond = sync.NewCond(&t.mutex)
+  t.Inbox = inbox
   return t
 }
 
