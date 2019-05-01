@@ -32,16 +32,16 @@
       t2 (map-r (fun (x) (+ x 42)))
       ts (@ push t1 t2))
   (test
-    (= (fold v 0 (t1 +)) 6)
-    (= (fold v _ (t2 push)) '(43 44 45 46 47))
-    (= (fold v _ ts) '(43 44 45))))
+    (= (tr v 0 (t1 +)) 6)
+    (= (tr v _ (t2 push)) '(43 44 45 46 47))
+    (= (tr v _ ts) '(43 44 45))))
 
 (let (v '(1 2 3 4 5)
       t (map-r (fun (x) (+ x 42)) push))
-  (test (= (fold v _ t) '(43 44 45 46 47))))
+  (test (= (tr v _ t) '(43 44 45 46 47))))
 
 (let (v '((1 2) (3 4) (5)))
-  (test (= (fold v _ (cat-r push)) '(1 2 3 4 5))))
+  (test (= (tr v _ (cat-r push)) '(1 2 3 4 5))))
 
 (test (= (@ 41 (fun (x) (inc x))) 42))
 (test (= ((@ _ (fun (x) (inc x))) 41) 42))

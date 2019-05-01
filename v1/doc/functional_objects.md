@@ -60,7 +60,7 @@ _
 g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`.
 
 ### Dispatch
-From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming anything about object storage.
+From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming or dictating anything concerning object storage. `tr` is the standard tool for transforming sequences in g-fu; it takes an input, initial result and transformer.
 
 ```
   (let dispatch (mac (defs..)
@@ -70,17 +70,18 @@ From one angle, a closure is essentially a single method object that uses its en
        (let %id (head %args))
      
        (switch
-         %(fold defs _
-                (fun (acc d)
-                  (let did (head d) imp (tail d))
-                  (push acc
-                        (if (T? did)
-                          '(T
-                             ((fun (%(head imp)..) %(tail imp)..)
-                               %args..))
-                          '((= %id '%did)
-                             ((fun (%(head imp)..) %(tail imp)..)
-                              (splat (tail %args))))))))..
+         %(tr defs _
+              (fun (acc d)
+                (let did (head d) imp (tail d))
+                (push acc
+                      (if (T? did)
+                        '(T
+                           ((fun (%(head imp)..) %(tail imp)..)
+                             %args..))
+                        '((= %id '%did)
+                           ((fun (%(head imp)..) %(tail imp)..)
+                            (splat (tail %args))))))))..
+                            
          (T (fail (str "Unknown method: " %id)))))))
 ```
 
@@ -170,12 +171,12 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
 
 ```
 (let new-object (fun (supers slots methods args)
-  (eval '(let-self %(fold (push (super-slots supers) slots..) _
-                          (fun (acc x)
-                            (if (= (type x) Vec)
-                              (let (id (head x) v (pop-key args id))
-                                (if (_? v) (push acc x..) (push acc id v)))
-                              (push acc x (pop-key args x)))))
+  (eval '(let-self %(tr (push (super-slots supers) slots..) _
+                        (fun (acc x)
+                          (if (= (type x) Vec)
+                            (let (id (head x) v (pop-key args id))
+                              (if (_? v) (push acc x..) (push acc id v)))
+                            (push acc x (pop-key args x)))))
     %(and args (fail (str "Unused args: " args)))
     
     (dispatch
@@ -183,22 +184,22 @@ g-fu uses `eval` for creating new objects without requiring a central class regi
       %(super-methods supers)..)))))
 ```
 
-The task of collecting super slots makes a good match for [transducers](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf). `@` takes a reducing function as first argument and propagates it through the specified transformation pipeline, `map` followed by `cat` in the following example.
+The task of collecting super slots makes a good match for [transducers](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf). `@` takes a reducing function as first argument and propagates it through the specified pipeline, `map` followed by `cat` in the following example.
 
 ```
 (let super-slots (fun (supers)
-  (fold supers _ (@ push (map (fun (s) (s 'slots))) cat))))
+  (tr supers _ (@ push (map-r (fun (s) (s 'slots))) cat-r))))
 ```
 
 Two dispatch entries are generated for each super method, one regular and one qualified with the super class name.
 
 ```
 (let super-methods (fun (supers)
-  (fold supers _
-        (fun (acc s)
-          (fold (s 'methods) _
-                (fun (acc m)
-                  (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
+  (tr supers _
+      (fun (acc s)
+        (tr (s 'methods) _
+            (fun (acc m)
+              (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```
 
 And that's about it for now.<br/>

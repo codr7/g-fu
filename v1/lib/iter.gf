@@ -25,8 +25,8 @@
 (let @ (fun (rf fs..)
   (if (_? rf)
     (fun (rf)
-      (fold (reverse fs) rf (fun (acc x) (x acc))))
-    (fold (reverse fs) rf (fun (acc x) (x acc))))))
+      (tr (reverse fs) rf (fun (acc x) (x acc))))
+    (tr (reverse fs) rf (fun (acc x) (x acc))))))
 
 (let map-r (fun (f (rf _))
   (if rf
