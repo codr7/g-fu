@@ -5,7 +5,7 @@ import (
   "strings"
 )
 
-type Str string
+type Str []rune
 
 func (s Str) Bool(g *G) bool {
   return len(s) > 0
@@ -41,7 +41,7 @@ func (s Str) Dump(out *strings.Builder) {
 
 func (s Str) Eq(g *G, rhs Val) bool {
   rs, ok := rhs.(Str)
-  return ok && rs == s
+  return ok && string(rs) == string(s)
 }
 
 func (s Str) Eval(g *G, task *Task, env *Env) (Val, E) {

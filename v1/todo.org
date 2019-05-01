@@ -1,7 +1,6 @@
+* switch vec reverse to use iter
 * add class tests
 ** testgui.gf
-* switch vec reverse to use iter
-* switch Str-alias to []rune?
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
