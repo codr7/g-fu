@@ -11,11 +11,12 @@
               (push acc
                     (if (T? did)
                       '(T
-                         ((fun (%(head imp)..) %(tail imp)..)
-                           %args..))
+                         (call (fun (%(head imp)..) %(tail imp)..)
+                               %args..))
                       '((= %id '%did)
-                         ((fun (%(head imp)..) %(tail imp)..)
-                          (splat (tail %args))))))))..
+                         (call (fun (%(head imp)..) %(tail imp)..)
+                               (splat (tail %args))))))))..
+                               
        (T (fail (str "Unknown method: " %id))))))
 
 (mac let-self (vars body..)

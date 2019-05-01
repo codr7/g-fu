@@ -91,13 +91,19 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
     return &g.NIL, nil
   }
 
-  fv, e := v[0].Eval(g, task, env)
+  fid, ok := v[0].(*Sym)
 
+  if !ok {
+    return nil, g.E("Invalid call target: %v", v[0])
+  }
+
+  f, e := env.Get(g, fid) 
+  
   if e != nil {
     return nil, e
   }
 
-  result, e := fv.Call(g, task, env, v[1:])
+  result, e := f.Call(g, task, env, v[1:])
 
   if e != nil {
     return nil, e

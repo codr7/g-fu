@@ -51,6 +51,16 @@ func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return m, nil
 }
 
+func call_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  t, e := args[0].Eval(g, task, env)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  return t.Call(g, task, env, args[1:])
+}
+
 func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   bsf := args[0]
   bs, is_scope := bsf.(Vec)
@@ -719,6 +729,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
   e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "set", set_imp, ASplat("args"))
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))

@@ -77,11 +77,11 @@ From one angle, a closure is essentially a single method object that uses its en
               (push acc
                     (if (T? did)
                       '(T
-                         ((fun (%(head imp)..) %(tail imp)..)
-                           %args..))
+                         (call (fun (%(head imp)..) %(tail imp)..)
+                               %args..))
                       '((= %id '%did)
-                         ((fun (%(head imp)..) %(tail imp)..)
-                          (splat (tail %args))))))))..
+                         (call (fun (%(head imp)..) %(tail imp)..)
+                               (splat (tail %args))))))))..
                             
        (T (fail (str "Unknown method: " %id))))))
 ```
@@ -113,12 +113,16 @@ Calls may be expanded to visually inspect the generated code.
 
 (fun (sym-143..)
   (let sym-144 (head sym-143))
-    (switch
-      ((= sym-144 'inc)
-        ((fun ((delta 1)) (inc n delta)) (splat (tail sym-143))))
-      ((= sym-144 'dec)
-        ((fun ((delta 1)) (dec n delta)) (splat (tail sym-143))))
-      (T (fail (str "Unknown method: " sym-144)))))
+  
+  (switch
+    ((= sym-144 'inc)
+      (call (fun ((delta 1)) (inc n delta))
+            (splat (tail sym-143))))
+    ((= sym-144 'dec)
+      (call (fun ((delta 1)) (dec n delta))
+            (splat (tail sym-143))))
+              
+    (T (fail (str "Unknown method: " sym-144)))))
 ```
 
 ### Self

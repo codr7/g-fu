@@ -5,8 +5,10 @@
      (mac break (args..) '(recall T %args..))
      (mac continue () '(recall))
      
-     ((fun ((%done? F) %result..)
-        (if %done? %result.. (do %body.. (recall)))))))
+     (call (fun ((%done? F) %result..)
+             (if %done?
+               %result..
+               (do %body.. (recall)))))))
 
 (mac while (cond body..)
   '(loop

@@ -44,4 +44,4 @@
   (test (= (tr v _ (tcat push)) '(1 2 3 4 5))))
 
 (test (= (@ 41 (fun (x) (inc x))) 42))
-(test (= ((@ _ (fun (x) (inc x))) 41) 42))
+(test (= (call (@ _ (fun (x) (inc x))) 41) 42))

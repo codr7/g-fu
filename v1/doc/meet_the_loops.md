@@ -51,10 +51,10 @@ The most fundamental loop is called `loop`. It supports skipping to the start of
      (mac break (args..) '(recall T %args..))
      (mac continue () '(recall))
      
-     ((fun ((%done? F) %result..)
-        (if %done?
-          %result..
-          (do %body.. (recall)))))))
+     (call (fun ((%done? F) %result..)
+             (if %done?
+               %result..
+               (do %body.. (recall)))))))
 ```
 ```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))

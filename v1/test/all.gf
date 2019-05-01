@@ -68,10 +68,10 @@
 
 (test (= (do 1 2 3) 3))
 
-(test (= ((fun () 42)) 42))
-(test (= ((fun (xs..) xs) 1 2 3) (vec 1 2 3)))
-(test (= ((fun (xs..) (+ xs..)) 1 2 3) 6))
-(test (= (let (x 35) ((fun (y) (+ x y)) 7)) 42))
+(test (= (call (fun () 42)) 42))
+(test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))
+(test (= (call (fun (xs..) (+ xs..)) 1 2 3) 6))
+(test (= (let (x 35) (call (fun (y) (+ x y)) 7)) 42))
 
 (let _
   (fun foo ((x 42)) x)
