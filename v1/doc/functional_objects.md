@@ -17,7 +17,7 @@ This document describes the implementation of a minimal viable single-dispatch o
            (inc height dy))))
 
   (class Button (Widget)
-    ((label "") on-click)
+    (on-click)
 
     (resize (dx dy)
       (say "Button resize")
@@ -29,7 +29,7 @@ This document describes the implementation of a minimal viable single-dispatch o
     (click ()
       (for (on-click f) (f self))))
 
-  (let (b (Button 'new 'width 100 'height 50 'label "Click me"))
+  (let (b (Button 'new 'width 100 'height 50))
     (say (b 'move 20 10))
     (say (b 'resize 100 0))
     (b 'on-click (fun (b) (say "Button click")))
