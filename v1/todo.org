@@ -1,4 +1,4 @@
-* eval fun id in defining env
+* testhang.gf
 * ---
 * add Mac id like Fun
 ** update dump
