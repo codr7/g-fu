@@ -38,6 +38,12 @@ func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   bsf := args[0]
   bs, is_scope := bsf.(Vec)
+
+  if bsf == &g.NIL {
+    bs = nil
+    is_scope = true
+  }
+  
   var le *Env
   
   if is_scope {
