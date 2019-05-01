@@ -77,6 +77,8 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
       break
     case '(':
       return g.ReadVec(pos, in, out)
+    case ')':
+      return nil, g.ReadE(*pos, "Unexpected input: )")
     case '\'':
       return g.ReadQuote(pos, in, out, end)
     case '.':
