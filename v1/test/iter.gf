@@ -28,8 +28,8 @@
   (test (= v '(1 2))))
 
 (let (v '(1 2 3 4 5)
-      t1 (filt-r (fun (x) (< x 4)))
-      t2 (map-r (fun (x) (+ x 42)))
+      t1 (tfilt (fun (x) (< x 4)))
+      t2 (tmap (fun (x) (+ x 42)))
       ts (@ push t1 t2))
   (test
     (= (tr v 0 (t1 +)) 6)
@@ -37,11 +37,11 @@
     (= (tr v _ ts) '(43 44 45))))
 
 (let (v '(1 2 3 4 5)
-      t (map-r (fun (x) (+ x 42)) push))
+      t (tmap (fun (x) (+ x 42)) push))
   (test (= (tr v _ t) '(43 44 45 46 47))))
 
 (let (v '((1 2) (3 4) (5)))
-  (test (= (tr v _ (cat-r push)) '(1 2 3 4 5))))
+  (test (= (tr v _ (tcat push)) '(1 2 3 4 5))))
 
 (test (= (@ 41 (fun (x) (inc x))) 42))
 (test (= ((@ _ (fun (x) (inc x))) 41) 42))

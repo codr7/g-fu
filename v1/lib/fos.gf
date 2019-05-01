@@ -25,7 +25,7 @@
      (fun (args..) (self args..)))))
 
 (let super-slots (fun (supers)
-  (tr supers _ (@ push (map-r (fun (s) (s 'slots))) cat-r))))
+  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat))))
 
 (let super-methods (fun (supers)
   (tr supers _

@@ -28,7 +28,7 @@
       (tr (reverse fs) rf (fun (acc x) (x acc))))
     (tr (reverse fs) rf (fun (acc x) (x acc))))))
 
-(let map-r (fun (f (rf _))
+(let tmap (fun (f (rf _))
   (if rf
     (fun (acc val)
       (rf acc (f val)))
@@ -36,7 +36,7 @@
       (fun (acc val)
         (rf acc (f val)))))))
 
-(let cat-r (fun ((rf _))
+(let tcat (fun ((rf _))
   (if rf
     (fun (acc val)
       (rf acc val..))
@@ -44,7 +44,7 @@
       (fun (acc val)
         (rf acc val..))))))
 
-(let filt-r (fun (f (rf _))
+(let tfilt (fun (f (rf _))
   (if rf
     (fun (acc val)
       (if (f val)

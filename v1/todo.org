@@ -1,3 +1,6 @@
+* add tr-fun mac in iter.gf
+** use for tmap/tcat etc.
+** add tpipe that just runs action and returns original value
 * block dup Let
 ** change env.Let to return E on dup
 *** update calls
