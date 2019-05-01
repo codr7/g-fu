@@ -1,15 +1,15 @@
 * add tr-fun mac in iter.gf
 ** use for tmap/tcat etc.
 ** add tpipe that just runs action and returns original value
+* ---
 * add Fun id
 ** switch Fun to take id like (class)
 ** update dump
 ** Let in current env
 ** update code
 * add Mac id like Fun
-* add Push/Pop-support to Fun
-** call with arg in Push
-** call without args in Pop
+* add Task id like Fun
+* ---
 * block dup Let
 ** change env.Let to return E on dup
 *** update calls
