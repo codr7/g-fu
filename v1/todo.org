@@ -1,5 +1,8 @@
 * add class tests
 ** testgui.gf
+* block dup Let
+** change env.Let to return E on dup
+*** update calls
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
