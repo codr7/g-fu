@@ -3,6 +3,7 @@
 * block dup Let
 ** change env.Let to return E on dup
 *** update calls
+** return last value like (set)
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
