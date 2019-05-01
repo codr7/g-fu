@@ -1,4 +1,4 @@
-(let dispatch (mac (defs..)
+(mac dispatch (defs..)
   (let args (new-sym) id (new-sym))
   
   '(fun (%args..)
@@ -16,13 +16,13 @@
                       '((= %id '%did)
                          ((fun (%(head imp)..) %(tail imp)..)
                           (splat (tail %args))))))))..
-       (T (fail (str "Unknown method: " %id)))))))
+       (T (fail (str "Unknown method: " %id))))))
 
-(let let-self (mac (vars body..)
+(mac let-self (vars body..)
   '(let (self _ %vars..)
      (set 'self %(pop body))
      %body..
-     (fun (args..) (self args..)))))
+     (fun (args..) (self args..))))
 
 (fun super-slots (supers)
   (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat)))
@@ -46,7 +46,7 @@
       %methods..
       %(super-methods supers)..))))
 
-(let class (mac (id supers slots methods..)
+(mac class (id supers slots methods..)
   '(let %id
      (let-self ()
        (dispatch
@@ -54,4 +54,4 @@
          (slots () '%slots)
          (methods () '%methods)
          (new (args..)
-           (new-object (vec %supers..) '%slots '%methods args)))))))
+           (new-object (vec %supers..) '%slots '%methods args))))))

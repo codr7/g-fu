@@ -1,11 +1,11 @@
-* add Mac id like Fun
+* switch fun pos eval to env lookup
+** grep ((fun
+* --
+* add Task id like Fun
 ** update dump
 ** Let in current env
 ** update code
-* add Task id like Fun
 * ---
-* switch fun pos eval to env lookup
-** grep ((fun
 * add tr-fun mac in iter.gf
 ** use for tmap/tcat etc.
 ** add tpipe that just runs action and returns original value

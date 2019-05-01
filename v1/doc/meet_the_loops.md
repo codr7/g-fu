@@ -25,10 +25,10 @@ g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to
 First out is the `while`-loop, which keeps iterating until its condition turns false. It is implemented in terms of the more general `loop` macro which will follow shortly.
 
 ```
-  (let while (mac (cond body..)
-    '(loop
-       (if %cond _ (break))
-       %body..)))
+(mac while (cond body..)
+  '(loop
+     (if %cond _ (break))
+     %body..))
 ```
 ```
   (let (i 0)
@@ -44,13 +44,17 @@ First out is the `while`-loop, which keeps iterating until its condition turns f
 The most fundamental loop is called `loop`. It supports skipping to the start of next iteration using `continue` and exiting with a result using `break`. Most of the work is performed by an anonymous, tail-recursive function; fresh argument symbols are created to avoid capturing the calling environment. g-fu supports explicit tail recursion using `recall`, the new call replaces the current one regardless of where it is triggered.
 
 ```
-  (let loop (mac (body..)
-    (let done? (new-sym) result (new-sym))
+(mac loop (body..)
+  (let done? (new-sym) result (new-sym))
   
-    '(let (break (mac (args..) '(recall T %args..))
-           continue (mac () '(recall)))
-       ((fun ((%done? F) %result..)
-          (if %done? %result.. (do %body.. (recall))))))))
+  '(let _
+     (mac break (args..) '(recall T %args..))
+     (mac continue () '(recall))
+     
+     ((fun ((%done? F) %result..)
+        (if %done?
+          %result..
+          (do %body.. (recall)))))))
 ```
 ```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
@@ -63,16 +67,16 @@ The most fundamental loop is called `loop`. It supports skipping to the start of
 The `for`-loop accepts any iterable and an optional variable name, and runs one iteration for each value until the iterator returns `_`. Like `while`, it is based on `loop`.
 
 ```
-  (let for (mac (args body..)
-    (let v? (= (type args) Vec)
-         in (new-sym)
-         out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
+(mac for (args body..)
+  (let v? (= (type args) Vec)
+       in (new-sym)
+       out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
        
-    '(let (%in (iter %(if v? (pop args) args)))
-       (loop
-         (let %out (pop %in))
-         (if (_? %out) (break))
-         %body..))))
+  '(let (%in (iter %(if v? (pop args) args)))
+     (loop
+       (let %out (pop %in))
+       (if (_? %out) (break))
+       %body..)))
 ```
 ```
   (for 3 (dump 'foo))

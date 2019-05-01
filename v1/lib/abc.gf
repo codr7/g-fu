@@ -1,4 +1,4 @@
-(let NOP (mac (args..)))
+(mac NOP (args..))
 
 (fun tr (in acc fn)
   (let rec (fun (in acc fn)
@@ -13,21 +13,21 @@
 (fun not (val)
   (if val F T))
 
-(let and (mac (conds..)
+(mac and (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
     '(if %h %(if tcs (rec tcs) h)))
     
-  (rec conds)))
+  (rec conds))
 
-(let or (mac (conds..)
+(mac or (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
     '(if %h %h %(if tcs (rec tcs))))
     
-  (rec conds)))
+  (rec conds))
   
-(let dec (mac (var (delta 1))
-  '(inc %var (- %delta))))
+(mac dec (var (delta 1))
+  '(inc %var (- %delta)))
 
 (fun splat (args) args..)

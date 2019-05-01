@@ -78,13 +78,16 @@
   (test (= (foo) 42))
   (test (= (foo 7) 7)))
 
-(let (foo (mac () ''bar))
+(let _
+  (mac foo () ''bar)
   (test (= (foo) 'bar)))
 
-(let (foo 42 bar (mac () 'foo))
+(let (foo 42)
+  (mac bar () 'foo)
   (test (= (bar) 42)))
 
-(let (foo (mac (x) '(+ %x 7)))
+(let _
+  (mac foo (x) '(+ %x 7))
   (test (= (foo 35) 42)))
 
 (let (foo 42)
@@ -98,11 +101,13 @@
 
 (test (= (expand -1 '(foo 42)) '(foo 42)))
 
-(let (foo (mac (x) x))
+(let _
+  (mac foo (x) x)
   (test (= (expand -1 '(foo 42)) 42)))
 
-(let (foo (mac (x) x)
-      bar (mac (x) '(foo %x)))
+(let _
+  (mac foo (x) x)
+  (mac bar (x) '(foo %x))
   (test (= (expand 1 '(bar 42)) '(foo 42)))
   (test (= (expand 2 '(bar 42)) 42)))
   

@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   //"log"
   "strings"
 )
@@ -8,18 +9,24 @@ import (
 type Mac struct {
   BasicVal
   
+  id       *Sym
   env      *Env
   env_cache Env
   arg_list ArgList
   body     Vec
 }
 
-func NewMac(g *G, env *Env, args []Arg) *Mac {
-  return new(Mac).Init(g, env, args)
+func NewMac(g *G, env *Env, id *Sym, args []Arg) *Mac {
+  return new(Mac).Init(g, env, id, args)
 }
 
-func (m *Mac) Init(g *G, env *Env, args []Arg) *Mac {
+func (m *Mac) Init(g *G, env *Env, id *Sym, args []Arg) *Mac {
   m.BasicVal.Init(&g.MacType, m)
+
+  if id != nil {
+    m.id = id
+    env.Let(id, m)
+  }
 
   m.env = env
   m.arg_list.Init(g, args)
@@ -69,8 +76,12 @@ func (m *Mac) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
 }
 
 func (m *Mac) Dump(out *strings.Builder) {
-  out.WriteString("(mac (")
-
+  if id := m.id; id == nil {
+    out.WriteString("(mac (")
+  } else {
+    fmt.Fprintf(out, "(mac %v (", m.id)
+  }
+  
   for i, a := range m.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
@@ -79,13 +90,9 @@ func (m *Mac) Dump(out *strings.Builder) {
     out.WriteString(a.id.name)
   }
 
-  out.WriteString(") ")
+  out.WriteString(")")
 
-  for i, bv := range m.body {
-    if i > 0 {
-      out.WriteRune(' ')
-    }
-
+  for _, bv := range m.body {
     bv.Dump(out)
   }
 

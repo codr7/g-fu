@@ -4,31 +4,32 @@
 This document describes the implementation of a minimal viable single-dispatch object system using closures and macros in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
 
 ```
-  (class Widget ()
-    ((left 0) (top 0)
-     (width (fail "Missing width")) (height (fail "Missing height")))
+(class Widget ()
+  ((left 0) (top 0)
+   (width (fail "Missing width")) (height (fail "Missing height")))
   
-    (move (dx dy)
-      (vec (inc left dx)
-           (inc top dy)))
+  (move (dx dy)
+    (vec (inc left dx)
+         (inc top dy)))
 
-    (resize (dx dy)
-      (vec (inc width dx)
-           (inc height dy))))
+  (resize (dx dy)
+    (vec (inc width dx)
+         (inc height dy))))
 
-  (class Button (Widget)
-    (on-click)
+(class Button (Widget)
+  (on-click)
 
-    (resize (dx dy)
-      (say "Button resize")
-      (self 'Widget/resize dx dy))
+  (resize (dx dy)
+    (say "Button resize")
+    (self 'Widget/resize dx dy))
 
-    (on-click (f)
-      (push on-click f))
+  (on-click (f)
+    (push on-click f))
 
-    (click ()
-      (for (on-click f) (f self))))
-
+  (click ()
+    (for (on-click f) (f self))))
+```
+```
   (let (b (Button 'new 'width 100 'height 50))
     (say (b 'move 20 10))
     (say (b 'resize 100 0))
@@ -63,26 +64,26 @@ g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to
 From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming or dictating anything concerning object storage. `tr` is the standard tool for transforming sequences in g-fu; it takes an input, initial result and transformer.
 
 ```
-  (let dispatch (mac (defs..)
-    (let args (new-sym) id (new-sym))
+(mac dispatch (defs..)
+  (let args (new-sym) id (new-sym))
   
-    '(fun (%args..)
-       (let %id (head %args))
+  '(fun (%args..)
+     (let %id (head %args))
      
-       (switch
-         %(tr defs _
-              (fun (acc d)
-                (let did (head d) imp (tail d))
-                (push acc
-                      (if (T? did)
-                        '(T
-                           ((fun (%(head imp)..) %(tail imp)..)
-                             %args..))
-                        '((= %id '%did)
-                           ((fun (%(head imp)..) %(tail imp)..)
-                            (splat (tail %args))))))))..
+     (switch
+       %(tr defs _
+            (fun (acc d)
+              (let did (head d) imp (tail d))
+              (push acc
+                    (if (T? did)
+                      '(T
+                         ((fun (%(head imp)..) %(tail imp)..)
+                           %args..))
+                      '((= %id '%did)
+                         ((fun (%(head imp)..) %(tail imp)..)
+                          (splat (tail %args))))))))..
                             
-         (T (fail (str "Unknown method: " %id)))))))
+       (T (fail (str "Unknown method: " %id))))))
 ```
 
 The following exmple uses `let` to create a new environment containing a slot and `dispatch` to wrap it in a protocol. Calls to non-existing methods may be trapped by declaring a `T` method.
@@ -124,11 +125,11 @@ Calls may be expanded to visually inspect the generated code.
 `dispatch` is a useful tool in itself, but there comes a time when `self` needs to be accessed from the inside, to delegate etc. `let-self` expands to a new environment with `self` bound to the result of evaluating the last form in its body.
 
 ```
-(let let-self (mac (vars body..)
+(mac let-self (vars body..)
   '(let (self _ %vars..)
      (set 'self %(pop body))
      %body..
-     (fun (args..) (self args..)))))
+     (fun (args..) (self args..))))
 ```
 ```
   (let-self ()
@@ -156,7 +157,7 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 Classes, or object factories; may be created using the `class`-macro. Classes are implemented as self-aware dispatchers, the constructor is just another method.
 
 ```
-(let class (mac (id supers slots methods..)
+(mac class (id supers slots methods..)
   '(let %id
      (let-self ()
        (dispatch
@@ -164,7 +165,7 @@ Classes, or object factories; may be created using the `class`-macro. Classes ar
          (slots () '%slots)
          (methods () '%methods)
          (new (args..)
-           (new-object (vec %supers..) '%slots '%methods args)))))))
+           (new-object (vec %supers..) '%slots '%methods args))))))
 ```
 
 g-fu uses `eval` for creating new objects without requiring a central class registry and to enable eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
