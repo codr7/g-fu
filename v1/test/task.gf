@@ -18,7 +18,7 @@
   (test (= v 42)))
 
 (let _
-  (task t (0 F)
+  (task t (0)
     (post (fetch) 'foo)
     'bar)
     

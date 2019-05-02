@@ -83,6 +83,12 @@ func (c Chan) Print(out *strings.Builder) {
 
 func (c Chan) Push(g *G, its...Val) (Val, E) {
   for _, v := range its {
+    var e E
+    
+    if v, e = v.Clone(g); e != nil {
+      return nil, e
+    }
+
     c <- v
   }
 

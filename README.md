@@ -184,7 +184,7 @@ Button click
 ```
 
 ### Multitasking
-Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a task id and channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
+Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which takes an optional task id and channel or buffer size, and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
   (let _
@@ -197,7 +197,7 @@ foo
 (bar qux)
 ```
 
-The defining environment is cloned by default to prevent data races.
+The defining environment is cloned.
 
 ```
   (let (v 42)
@@ -209,7 +209,7 @@ The defining environment is cloned by default to prevent data races.
 ```
 
 #### Channels
-Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values. Values sent over channels are cloned by default to prevent data races.
+Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values.
 
 ```
   (let (c (chan 1))
@@ -221,7 +221,7 @@ Channels are optionally buffered, thread-safe pipes. `chan` may be used to creat
 42
 ```
 
-Unbuffered channels are useful for synchronizing tasks. The following example starts with the main task (which is unbuffered by default) `post`-ing itself to the newly started task `t`, which then replies `'foo` and finally returns `'bar`
+Unbuffered channels are useful for synchronizing tasks. The following example starts with the unbuffered main task `post`-ing itself to the newly started task `t`, which replies `'foo` and returns `'bar`
 
 ```
   (let _

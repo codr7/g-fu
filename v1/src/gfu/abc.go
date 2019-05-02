@@ -629,9 +629,7 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
   
   as := ParsePrimArgs(g, args[i])
-  nargs := len(as)
   var inbox Chan
-  safe := true
   var e E
   
   if as == nil {
@@ -650,18 +648,10 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     } else {
       return nil, g.E("Invalid task args: %v", as)
     }
-
-    if nargs > 1 {
-      if a, e = as[1].Eval(g, task, env); e != nil {
-        return nil, e
-      }
-
-      safe = a.Bool(g)
-    }
   }
 
   i++
-  t, e := NewTask(g, env, id, inbox, safe, args[i:])
+  t, e := NewTask(g, env, id, inbox, args[i:])
 
   if e != nil {
     return nil, e
@@ -680,20 +670,7 @@ func task_this_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   t := args[0].(*Task)
-  var e E
-  
-  if task.safe || t.safe {
-    for _, v := range args[1:] {
-      if v, e = v.Clone(g); e != nil {
-        return nil, e
-      }
-      
-      t.Inbox.Push(g, v)
-    }
-  } else {
-    t.Inbox.Push(g, args[1:]...)
-  }
-  
+  t.Inbox.Push(g, args[1:]...)
   return t, nil
 }
 

@@ -15,16 +15,15 @@ type Task struct {
   body         Vec
   mutex        sync.Mutex
   cond         *sync.Cond
-  done,
-  safe         bool
+  done         bool
   result       Val
 }
 
-func NewTask(g *G, env *Env, id *Sym, inbox Chan, safe bool, body Vec) (*Task, E) {
-  return new(Task).Init(g, env, id, inbox, safe, body)
+func NewTask(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
+  return new(Task).Init(g, env, id, inbox, body)
 }
 
-func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, safe bool, body Vec) (*Task, E) {
+func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
   t.BasicVal.Init(&g.TaskType, t)
 
   if id != nil {
@@ -35,7 +34,6 @@ func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, safe bool, body Vec) (*
     }
   }
   
-  t.safe = safe
   t.body = body
   t.cond = sync.NewCond(&t.mutex)
   t.Inbox = inbox
@@ -56,7 +54,7 @@ func (t *Task) Dump(out *strings.Builder) {
 func (t *Task) Start(g *G, env *Env) E {
   var te Env
   
-  if e := t.body.Extenv(g, env, &te, t.safe); e != nil {
+  if e := t.body.Extenv(g, env, &te, true); e != nil {
     return e
   }
 
