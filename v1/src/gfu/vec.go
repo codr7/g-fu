@@ -113,7 +113,9 @@ func (v Vec) Eval(g *G, task *Task, env *Env) (Val, E) {
 }
 
 func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
-  if len(v) == 0 {
+  n := len(v)
+  
+  if n == 0 {
     return &g.NIL, nil
   }
 
@@ -129,6 +131,14 @@ func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
     return v, nil
   }
 
+  if id == g.Sym("do") && n < 3 {
+    if n == 1 {
+      return &g.NIL, nil
+    }
+
+    return v[1].Expand(g, task, env, depth)
+  }
+  
   _, mv := env.Find(id)
   
   if mv == nil {
