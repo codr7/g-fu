@@ -1,7 +1,7 @@
 ![Logo](logo.png)
   
 ### Intro
-g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with support for quasi-quotation and macros, lambdas, tail-call optimization, opt-/varargs, threads and channels; all weighing in at 2 kloc.
+g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, threads and channels; weighing in at 3 kloc.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -22,6 +22,12 @@ Press Return twice to evaluate.
 
 6765
 ```
+
+### Goals
+The primary goal is to provide a fully integrated, practical Lisp in Go. Practical as a complement to Go; which means a clean implementation that composes well with Go is more important than raw performance and Lisp dogmatics, among other things.
+
+### Status
+The initial [release](https://github.com/codr7/g-fu/tree/master/v1) is more or less ready for action, and supports all examples in this document. Once it stabilizes, work begins on v2; which will focus on compilation to an internal representation more suitable for evaluation.
 
 ### Syntax
 g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
