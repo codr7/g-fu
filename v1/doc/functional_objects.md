@@ -158,7 +158,7 @@ The following example creates a self-aware `dispatch` with a `patch`-method that
 ```
 
 ### Classification
-Classes, or object factories; may be created using the `class`-macro. Classes are implemented as self-aware dispatchers, the constructor is just another method.
+Classes may be created using the `class`-macro. Classes are implemented as self-aware dispatchers, the constructor is just another method.
 
 ```
 (mac class (id supers slots methods..)
@@ -172,7 +172,7 @@ Classes, or object factories; may be created using the `class`-macro. Classes ar
            (new-object (vec %supers..) '%slots '%methods args))))))
 ```
 
-g-fu uses `eval` for creating new objects without requiring a central class registry and to enable eventually supporting lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
+`eval` is used to create new objects to avoid requiring a central class registry and support lexically scoped class types. Super slots are prepended to the object's bindings, and super methods appended to the dispatch table. Super methods additionally support fully qualified names to allow delegation within overrides. Slot values passed to the constructor override init-forms.
 
 ```
 (fun new-object (supers slots methods args)
