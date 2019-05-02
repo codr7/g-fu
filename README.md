@@ -18,7 +18,7 @@ Press Return twice to evaluate.
       (+ (fib (- n 1)) (fib (- n 2)))))
 ```
 ```
-  (fib 20))
+  (fib 20)
 
 6765
 ```
