@@ -24,10 +24,10 @@ Press Return twice to evaluate.
 ```
 
 ### Goals
-The primary goal is to provide a fully integrated, practical Lisp in Go. Practical as a complement to Go; which means a clean implementation that composes well with Go is more important than raw performance and Lisp dogmatics, among other things.
+The primary goal is to provide a fully integrated, practical Lisp in Go. Practical as a complement to Go; which means a clean implementation that composes well with Go is more important than raw performance, among other things.
 
 ### Status
-The initial [release](https://github.com/codr7/g-fu/tree/master/v1) is more or less ready for action, and supports all examples in this document. Once it stabilizes, work begins on v2; which will focus on compilation to an internal representation more suitable for evaluation.
+The initial [release](https://github.com/codr7/g-fu/tree/master/v1) is more or less ready for action, and supports all examples in this document. Once it stabilizes; work begins on v2, which will focus on compilation to an internal representation optimized for evaluation.
 
 ### Syntax
 g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
