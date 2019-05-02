@@ -4,9 +4,7 @@
   (test (= (len c) 1))
   (test (= (pop c) 42)))
 
-(let _
-  (task t () 'foo)  
-  (test (= (wait t) 'foo)))
+(test (= (wait (task () 'foo)) 'foo))
 
 (let _
   (task t1 () 35)

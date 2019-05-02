@@ -3,7 +3,7 @@
 *** update calls
 ** return last value like (set)
 ** add bindings to readme
-* add tpipe @-test
+* tpipe @-test
 ** put tpipe first
 * add tflat
 ** recursive tcat

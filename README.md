@@ -124,7 +124,7 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 ```
 
 ### Multitasking
-Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
+Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which optionally takes a task id and channel or buffer size argument and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
   (let _
@@ -141,8 +141,7 @@ The defining environment is cloned by default to prevent data races.
 
 ```
   (let (v 42)
-    (task t () (inc v))
-    (dump (wait t))
+    (dump (wait (task () (inc v))))
     (dump v))
 
 43
