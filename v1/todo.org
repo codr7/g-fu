@@ -1,6 +1,4 @@
-* change (let) to return last value like (set)
 * add Binding readme
-* ---
 * tpipe @-test
 ** put tpipe first
 * add tflat

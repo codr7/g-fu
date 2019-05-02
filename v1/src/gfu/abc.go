@@ -71,10 +71,10 @@ func call_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t.Call(g, task, env, args[1:])
 }
 
-func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func let_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   bsf := args[0]
   bs, is_scope := bsf.(Vec)
-
+  
   if bsf == &g.NIL {
     bs = nil
     is_scope = true
@@ -93,6 +93,8 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     le = env
   }
 
+  v = &g.NIL
+  
   for i := 0; i+1 < len(bs); i += 2 {
     kf, vf := bs[i], bs[i+1]
 
@@ -101,7 +103,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     }
 
     k := kf.(*Sym)
-    v, e := vf.Eval(g, task, le)
+    v, e = vf.Eval(g, task, le)
     
     if e != nil {
       return nil, e
@@ -113,7 +115,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   if !is_scope {
-    return &g.NIL, nil
+    return v, nil
   }
 
   rv, e := args[1:].EvalExpr(g, task, le)

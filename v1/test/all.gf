@@ -14,6 +14,8 @@
 (test (= (inc 41) 42))
 (test (= (dec 43) 42))
 
+(test (= (let foo 1 baz 2) 2))
+
 (let (x 35)
   (test (= (inc x 7) 42))
   (test (= x 42)))
