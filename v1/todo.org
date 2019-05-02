@@ -2,8 +2,12 @@
 ** put tpipe first
 * add tflat
 ** recursive tcat
+* add tsep
+** put separator between items
+* add macros to readme
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
 * add str iter
 ** add char type (rune)
+* add iters to readme

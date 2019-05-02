@@ -94,11 +94,11 @@ All identifiers except constants like `_`/`T`/`F` live in the same namespace. Ne
 ```
   (let (foo 'outer)
     (let (foo 'inner)
-      (dump foo))
-    (dump foo))
+      (say foo))
+    (say foo))
 
-'inner
-'outer
+inner
+outer
 ```
 
 And when called without arguments, it creates the specified bindings in the current environment.
@@ -106,11 +106,9 @@ And when called without arguments, it creates the specified bindings in the curr
 ```
   (let (foo 1)
     (let bar 2 baz (+ bar 1))
-    (dump foo bar baz))
+    (say foo bar baz))
 
-1
-2
-3
+123
 ```
 
 Shadowing is not allowed within the same environment.
@@ -126,11 +124,43 @@ Error: Dup binding: foo 1
 
 ```
   (let (foo 1)
-    (let (bar 2)
+    (let _
       (set 'foo 3))
-    (dump foo))
+    (say foo))
 
 3
+```
+
+### Functions
+Functions are created using `fun`; which accepts an optional name to bind in the current environment, a list of arguments and a body; and returns the function.
+
+```
+  (let _
+    (fun say-hello (x) (say "Hello " x))
+    (dump say-hello)
+    (say-hello "World"))
+
+(fun say-hello (x) (say "Hello " x))
+Hello World
+```
+
+Arguments may be defined as optional by specifying a default value.
+
+```
+  (let _
+    (fun say-hello ((x "World")) (say "Hello " x))
+    (say-hello))
+
+Hello World
+```
+Arguments suffixed with `..` consume any number of remaining arguments.
+
+```
+  (let _
+    (fun say-hello (xs..) (say "Hello " xs))
+    (say-hello 'Moe 'Larry 'Curly))
+
+Hello Moe Larry Curly
 ```
 
 ### Iterators
@@ -142,10 +172,10 @@ All loops support exiting with a result using `(break ...)` and skipping to the 
 The most fundamental loop is called `loop`, and that's exactly what it does until exited using `break` or external means such as `recall` and `fail`.
 
 ```
-  (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
+  (say (loop (say 'foo) (break 'bar) (say 'baz)))
 
-'foo
-'bar
+foo
+bar
 ```
 
 The `while`-loop keeps iterating until the specified condition turns false.
@@ -153,7 +183,7 @@ The `while`-loop keeps iterating until the specified condition turns false.
 ```
   (let (i 0)
     (while (< i 3)
-      (dump (inc i))))
+      (say (inc i))))
 
 1
 2
@@ -163,19 +193,19 @@ The `while`-loop keeps iterating until the specified condition turns false.
 The `for`-loop accepts any iterable and an optional variable name, and runs one iteration for each value.
 
 ```
-  (for 3 (dump 'foo))
+  (for 3 (say 'foo))
 
-'foo
-'foo
-'foo
+foo
+foo
+foo
 ```
 
 ```
-  (for ('(foo bar baz) v) (dump v))
+  (for ('(foo bar baz) v) (say v))
 
-'foo
-'bar
-'baz
+foo
+bar
+baz
 ```
 
 ### Classes
@@ -237,21 +267,21 @@ Tasks are first class, preemptive green threads (or goroutines) that run in sepa
 
 ```
   (let _
-    (task t1 () (dump 'foo) 'bar)
-    (task t2 () (dump 'baz) 'qux)
-    (dump (wait t1 t2)))
+    (task t1 () (say 'foo) 'bar)
+    (task t2 () (say 'baz) 'qux)
+    (say (wait t1 t2)))
 
 baz
 foo
-(bar qux)
+bar qux
 ```
 
 The defining environment is cloned.
 
 ```
   (let (v 42)
-    (dump (wait (task () (inc v))))
-    (dump v))
+    (say (wait (task () (inc v))))
+    (say v))
 
 43
 42
@@ -263,8 +293,8 @@ Channels are optionally buffered, thread-safe pipes. `chan` may be used to creat
 ```
   (let (c (chan 1))
     (push c 42)
-    (dump (len c))
-    (dump (pop c)))
+    (say (len c))
+    (say (pop c)))
 
 1
 42
@@ -279,8 +309,8 @@ Unbuffered channels are useful for synchronizing tasks. The following example st
       'bar)
       
     (post t (this-task))
-    (dump (fetch))
-    (dump (wait t)))
+    (say (fetch))
+    (say (wait t)))
 
 foo
 bar
