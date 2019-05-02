@@ -23,7 +23,8 @@ Press Return twice to evaluate.
 6765
 ```
 
-### Branching ([lib/cond.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf))
+### Branching
+
 ```(load "lib/cond.gf")```
 
 Every value has a boolean representation that may be retrieved using `bool`.
@@ -83,7 +84,8 @@ _
 'bar
 ```
 
-### Iteration ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf))
+### Iteration
+
 ```(load "lib/iter.gf")```
 
 All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
@@ -127,7 +129,8 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 'baz
 ```
 
-### Classification ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/fos.gf))
+### Classification
+
 ```(load "lib/fos.gf")```
 
 g-fu doesn't know anything about classes and objects; but a minimal, single-dispatch object system is included in the standard library.
