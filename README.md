@@ -133,7 +133,7 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 
 ```(load "lib/fos.gf")```
 
-g-fu doesn't know anything about classes and objects; but a minimal, single-dispatch object system is included in the standard library.
+A minimal, single-dispatch object system is included in the standard library.
 
 New classes may be defined using `class`; which accepts a list of super classes, slots and methods.
 
