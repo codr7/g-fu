@@ -1,8 +1,5 @@
-* block dup Let
-** change env.Let to return E on dup
-*** update calls
-** return last value like (set)
-** add bindings to readme
+* change (let) to return last value like (set)
+* add Binding readme
 * tpipe @-test
 ** put tpipe first
 * add tflat

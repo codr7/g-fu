@@ -62,9 +62,9 @@ func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
     f.env_cache.Dup(g, &be)
   }
 
-  var v Val
 recall:
   f.arg_list.LetVars(g, &be, args)
+  var v Val
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
     if r, ok := e.(Recall); ok {
