@@ -24,6 +24,7 @@ Press Return twice to evaluate.
 ```
 
 ### Branching ([lib/cond.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf))
+```(load "lib/iter.gf")```
 
 Every value has a boolean representation that may be retrieved using `bool`.
 
@@ -82,10 +83,13 @@ _
 'bar
 ```
 
-### Iterating ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf))
+### Iteration ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/iter.gf))
+```(load "lib/iter.gf")```
+
 All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
 
 The most fundamental loop is called `loop`, and that's exactly what it does until exited using `break` or external means such as `recall` and `fail`.
+
 ```
   (dump (loop (dump 'foo) (break 'bar) (dump 'baz)))
 
@@ -121,6 +125,59 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 'foo
 'bar
 'baz
+```
+
+### Classification ([lib/iter.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/fos.gf))
+```(load "lib/fos.gf")```
+
+g-fu doesn't know anything about classes and objects; but a minimal, single-dispatch object system is included in the standard library.
+
+New classes may be defined using `class`; which accepts a list of super classes, slots and methods.
+
+```
+(class Widget ()
+  ((left 0) (top 0)
+   (width (fail "Missing width")) (height (fail "Missing height")))
+  
+  (move (dx dy)
+    (vec (inc left dx)
+         (inc top dy)))
+
+  (resize (dx dy)
+    (vec (inc width dx)
+         (inc height dy))))
+```
+
+Any number of super classes may be specified as long as they don't use the same slot names. Slots have optional default values that are evaluated on instantiation. Methods may be overridden and may refer to super class methods using fully qualified names.
+
+```
+(class Button (Widget)
+  (on-click)
+
+  (resize (dx dy)
+    (say "Button resize")
+    (self 'Widget/resize dx dy))
+
+  (on-click (f)
+    (push on-click f))
+
+  (click ()
+    (for (on-click f) (f self))))
+```
+
+Methods exist in a separate namespace and may be invoked by calling the object and passing the name as first argument.
+
+```
+  (let (b (Button 'new 'width 100 'height 50))
+    (say (b 'move 20 10))
+    (say (b 'resize 100 0))
+    (b 'on-click (fun (b) (say "Button click")))
+    (b 'click))
+
+20 10
+Button resize
+200 50
+Button click
 ```
 
 ### Multitasking
