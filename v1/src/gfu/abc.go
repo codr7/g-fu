@@ -26,7 +26,12 @@ func fun_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   i++
-  f := NewFun(g, env, id, as)
+  f, e := NewFun(g, env, id, as)
+
+  if e != nil {
+    return nil, e
+  }
+  
   f.body = args[i:]
   return f, nil
 }
@@ -46,7 +51,12 @@ func mac_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   i++
-  m := NewMac(g, env, id, as)
+  m, e := NewMac(g, env, id, as)
+
+  if e != nil {
+    return nil, e
+  }
+  
   m.body = args[i:]
   return m, nil
 }
@@ -97,7 +107,9 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
       return nil, e
     }
 
-    le.Let(k, v)
+    if e = le.Let(g, k, v); e != nil {
+      return nil, e
+    }
   }
 
   if !is_scope {
@@ -649,8 +661,12 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   }
 
   i++
-  t := NewTask(g, env, id, inbox, safe, args[i:])
+  t, e := NewTask(g, env, id, inbox, safe, args[i:])
 
+  if e != nil {
+    return nil, e
+  }
+  
   if e = t.Start(g, env); e != nil {
     return nil, e
   }

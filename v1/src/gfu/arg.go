@@ -131,7 +131,7 @@ func (a Arg) OptVal(g *G) Val {
   return v
 }
 
-func (l *ArgList) LetVars(g *G, env *Env, args Vec) {
+func (l *ArgList) LetVars(g *G, env *Env, args Vec) E {
   nargs := len(args)
 
   for i, a := range l.items {
@@ -143,16 +143,27 @@ func (l *ArgList) LetVars(g *G, env *Env, args Vec) {
         copy(v, args[i:])
       }
 
-      env.Let(a.id, v)
+      if e := env.Let(g, a.id, v); e != nil {
+        return e
+      }
+      
       break
     }
 
+    var v Val
+
     if i < nargs {
-      env.Let(a.id, args[i])
+      v = args[i]
     } else {
-      env.Let(a.id, a.OptVal(g))
+      v = a.OptVal(g)
+    }
+
+    if e := env.Let(g, a.id, v); e != nil {
+      return e
     }
   }
+
+  return nil
 }
 
 func ParseArgs(g *G, task *Task, env *Env, in Vec) ([]Arg, E) {

@@ -1,5 +1,3 @@
-(load "../lib/fos.gf")
-
 (let (n 0 d (dispatch
               (inc ((delta 1)) (inc n delta))
               (dec ((delta 1)) (dec n delta))))

@@ -36,9 +36,8 @@ func (p *Prim) Dump(out *strings.Builder) {
 }
 
 func (env *Env) AddPrim(g *G, id string, imp PrimImp, args ...Arg) E {
-  ids := g.Sym(id)
-  env.Let(ids, NewPrim(g, ids, imp, args))
-  return nil
+  s := g.Sym(id)
+  return env.Let(g, s, NewPrim(g, s, imp, args))
 }
 
 func ParsePrimArgs(g *G, args Val) Vec {

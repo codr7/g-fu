@@ -19,21 +19,24 @@ type Fun struct {
   imp      FunImp
 }
 
-func NewFun(g *G, env *Env, id *Sym, args []Arg) *Fun {
+func NewFun(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
   return new(Fun).Init(g, env, id, args)
 }
 
-func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) *Fun {
+func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
   f.BasicVal.Init(&g.FunType, f)
 
   if id != nil {
     f.id = id
-    env.Let(id, f)
+
+    if e := env.Let(g, id, f); e != nil {
+      return nil, e
+    }
   }
   
   f.env = env
   f.arg_list.Init(g, args)
-  return f
+  return f, nil
 }
 
 func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -65,6 +68,8 @@ recall:
 
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
     if r, ok := e.(Recall); ok {
+      be.Clear()
+      f.env_cache.Dup(g, &be)
       args = r.args
       goto recall
     }
@@ -115,7 +120,12 @@ func (f *Fun) Dump(out *strings.Builder) {
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
-  f := NewFun(g, env, g.Sym(id), args)
+  f, e := NewFun(g, env, g.Sym(id), args)
+
+  if e != nil {
+    return e
+  }
+  
   f.imp = imp
   return nil
 }

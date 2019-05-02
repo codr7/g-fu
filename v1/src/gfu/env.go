@@ -9,6 +9,10 @@ type Env struct {
   vars []*Var
 }
 
+func (env *Env) Clear() {
+  env.vars = nil
+}
+
 func (env *Env) Dup(g *G, dst *Env) (*Env, E) {
   src := env.vars
   dst.vars = make([]*Var, len(src))
@@ -65,7 +69,7 @@ func (e *Env) InsertVar(i int, v *Var) {
   e.vars = vs
 }
 
-func (e *Env) Let(key *Sym, val Val) {
+func (e *Env) Let(g *G, key *Sym, val Val) E {
   if i, found := e.Find(key); found == nil {
     e.Insert(i, key).Val = val
   } else if found.env != e {
@@ -73,8 +77,10 @@ func (e *Env) Let(key *Sym, val Val) {
     v.Val = val
     e.vars[i] = v
   } else {
-    found.Val = val
+    return g.E("Dup binding: %v (%v)", key, found.Val)
   }
+
+  return nil
 }
 
 func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {

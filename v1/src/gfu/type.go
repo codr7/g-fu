@@ -23,7 +23,7 @@ func (t *Type) Id() *Sym {
   return t.id
 }
 
-func (e *Env) AddType(g *G, t *Type, id string) {
+func (e *Env) AddType(g *G, t *Type, id string) E {
   t.Init(g, g.Sym(id))
-  e.Let(t.Id(), t)
+  return e.Let(g, t.Id(), t)
 }

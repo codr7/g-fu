@@ -16,21 +16,24 @@ type Mac struct {
   body     Vec
 }
 
-func NewMac(g *G, env *Env, id *Sym, args []Arg) *Mac {
+func NewMac(g *G, env *Env, id *Sym, args []Arg) (*Mac, E) {
   return new(Mac).Init(g, env, id, args)
 }
 
-func (m *Mac) Init(g *G, env *Env, id *Sym, args []Arg) *Mac {
+func (m *Mac) Init(g *G, env *Env, id *Sym, args []Arg) (*Mac, E) {
   m.BasicVal.Init(&g.MacType, m)
 
   if id != nil {
     m.id = id
-    env.Let(id, m)
+    
+    if e := env.Let(g, id, m); e != nil {
+      return nil, e
+    }
   }
 
   m.env = env
   m.arg_list.Init(g, args)
-  return m
+  return m, nil
 }
 
 func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
