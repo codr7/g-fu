@@ -1,5 +1,5 @@
 ![Logo](logo.png)
-
+  
 ### Intro
 g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with support for quasi-quotation and macros, lambdas, tail-call optimization, opt-/varargs, threads and channels; all weighing in at 2 kloc.
 
@@ -24,7 +24,7 @@ Press Return twice to evaluate.
 ```
 
 ### Branching ([lib/cond.gf](https://github.com/codr7/g-fu/blob/master/v1/lib/cond.gf))
-```(load "lib/iter.gf")```
+```(load "lib/cond.gf")```
 
 Every value has a boolean representation that may be retrieved using `bool`.
 
