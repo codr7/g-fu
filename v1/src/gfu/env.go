@@ -77,7 +77,7 @@ func (e *Env) Let(g *G, key *Sym, val Val) E {
     v.Val = val
     e.vars[i] = v
   } else {
-    return g.E("Dup binding: %v (%v)", key, found.Val)
+    return g.E("Dup binding: %v %v", key, found.Val)
   }
 
   return nil

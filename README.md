@@ -23,8 +23,10 @@ Press Return twice to evaluate.
 6765
 ```
 
-### Branching
+### Syntax
+g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
 
+### Conditions
 ```(load "lib/cond.gf")```
 
 Every value has a boolean representation that may be retrieved using `bool`.
@@ -84,7 +86,54 @@ _
 'bar
 ```
 
-### Iteration
+### Bindings
+All identifiers except constants like `_`/`T`/`F` live in the same namespace. New bindings may be created using `let`.
+
+`let` comes in two flavors. When called with arguments, it creates bindings and evaluates its body in a fresh environment.
+
+```
+  (let (foo 'outer)
+    (let (foo 'inner)
+      (dump foo))
+    (dump foo))
+
+'inner
+'outer
+```
+
+And when called without arguments, it creates the specified bindings in the current environment.
+
+```
+  (let (foo 1)
+    (let bar 2 baz (+ bar 1))
+    (dump foo bar baz))
+
+1
+2
+3
+```
+
+Shadowing is not allowed within the same environment.
+
+```
+  (let (foo 1)
+    (let foo 2))
+
+Error: Dup binding: foo 1
+```
+
+`set` may be used to change the value of existing bindings.
+
+```
+  (let (foo 1)
+    (let (bar 2)
+      (set 'foo 3))
+    (dump foo))
+
+3
+```
+
+### Iterators
 
 ```(load "lib/iter.gf")```
 
@@ -129,7 +178,7 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 'baz
 ```
 
-### Classification
+### Classes
 
 ```(load "lib/fos.gf")```
 
@@ -183,7 +232,7 @@ Button resize
 Button click
 ```
 
-### Multitasking
+### Tasks
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which takes an optional task id and channel or buffer size, and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
@@ -237,7 +286,7 @@ foo
 bar
 ```
 
-### Profiling
+### Profiles
 CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_tail.prof` in the following example.
 
 ```

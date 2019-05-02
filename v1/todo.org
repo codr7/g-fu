@@ -1,4 +1,3 @@
-* add Binding readme
 * tpipe @-test
 ** put tpipe first
 * add tflat
