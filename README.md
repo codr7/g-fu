@@ -183,8 +183,6 @@ The following example implements a simple counter as a closure.
 ```
 
 ### Macros
-Macros are without a doubt one of the most misunderstood features of Lisp, one reason is that most languages don't even get close to offering anything of comparable expressive power. As a result; much energy has been spent on inventing "safe" alternatives, so called hygenic macros; and not so much on exploring possibilities.
-
 From a distance, macros look much like functions. They are defined the same way, accept arguments and return results. The difference is that macros have to deal with two dimensions, expansion time and evaluation time. As a consequence, macro arguments are not automatically evaluated. What is eventually evaluated is the result of expanding the macro.
 
 The following example defines a macro called `foo` that expands to it's argument.
