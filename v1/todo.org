@@ -1,6 +1,6 @@
 * add thread macro (~)
-** add opt var name
-** bind to first arg and pass to fns
+** inject first arg into remaining
+** add/use (vec!) to allow bare ids
 * tpipe t@-test
 ** put tpipe first
 * add tflat
