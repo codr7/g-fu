@@ -4,7 +4,6 @@
 ** recursive tcat
 * add tsep
 ** put separator between items
-* add macros to readme
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter

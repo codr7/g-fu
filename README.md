@@ -159,6 +159,7 @@ Arguments may be defined as optional by specifying a default value.
 
 Hello World
 ```
+
 Arguments suffixed with `..` consume any number of remaining arguments.
 
 ```
@@ -169,8 +170,59 @@ Arguments suffixed with `..` consume any number of remaining arguments.
 Hello Moe Larry Curly
 ```
 
-### Iterators
+The following example implements a simple counter as a closure.
 
+```
+  (let (i 0
+        c (fun ((d 1)) (inc i d)))
+    (say (c 1))
+    (say (c 2)))
+
+1
+3
+```
+
+### Macros
+Macros are without a doubt one of the most misunderstood features of Lisp, one reason is that most languages don't even get close to offering anything of comparable expressive power. As a result; much energy has been spent on inventing "safe" alternatives, so called hygenic macros; and not so much on exploring possibilities.
+
+From a distance, macros look much like functions. They are defined the same way, accept arguments and return results. The difference is that macros have to deal with two dimensions, expansion time and evaluation time. As a consequence, macro arguments are not automatically evaluated. What is eventually evaluated is the result of expanding the macro.
+
+The following example defines a macro called `foo` that expands to it's argument.
+
+```
+  (let _
+    (mac foo (x) x)
+    (foo 42))
+
+42
+```
+
+Raising the bar one notch, the `call`-macro below expands into code calling the specified target with arguments. `expand` may be used to expand any macro call to the specified depth.
+
+```
+  (let _
+    (mac call (x args..) '(%x %args..))
+    (dump (expand 1 '(call + 35 7)))
+    (call + 35 7))
+
+(+ 35 7)
+42
+```
+
+The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local trampoline to enable expressing the algorithm in tail recursive form.
+
+```
+(mac and (conds..)
+  (fun rec (cs)
+    (let h (head cs) tcs (tail cs))
+    '(if %h %(if tcs (recall tcs) h)))
+    
+  (rec conds))
+```
+
+The entire object system described [below](https://github.com/codr7/g-fu#classes), is implemented using nothing but macros and closures.
+
+### Iterators
 ```(load "lib/iter.gf")```
 
 All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
@@ -215,7 +267,6 @@ baz
 ```
 
 ### Classes
-
 ```(load "lib/fos.gf")```
 
 A minimal, single-dispatch object system is included in the standard library.

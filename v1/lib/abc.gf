@@ -16,14 +16,14 @@
 (mac and (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %(if tcs (rec tcs) h)))
+    '(if %h %(if tcs (recall tcs) h)))
     
   (rec conds))
 
 (mac or (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %h %(if tcs (rec tcs))))
+    '(if %h %h %(if tcs (recall tcs))))
     
   (rec conds))
   
