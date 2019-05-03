@@ -1,3 +1,6 @@
+* remove @
+** rename ~ to @
+** add thread macro ~
 * tpipe @-test
 ** put tpipe first
 * add tflat
