@@ -1,5 +1,3 @@
-* fix @-macro
-** testcomp.gf vs. lib/fos.gf
 * add thread macro (~)
 ** add opt var name
 ** bind to first arg and pass to fns
