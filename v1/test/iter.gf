@@ -30,7 +30,7 @@
 (let (v '(1 2 3 4 5)
       t1 (tfilt (fun (x) (< x 4)))
       t2 (tmap (fun (x) (+ x 42)))
-      ts (@ push t1 t2))
+      ts (t@ push t1 t2))
   (test
     (= (tr v 0 (t1 +)) 6)
     (= (tr v _ (t2 push)) '(43 44 45 46 47))
@@ -47,6 +47,4 @@
   (tr 3 _ (tpipe (fun (x) (push out (+ x 1)))))
   (test (= out '(1 2 3))))
 
-(test (= (@ 41 (fun (x) (inc x))) 42))
-
-(test (= (call (@ _ (fun (x) (inc x))) 41) 42))
+(test (= (t@ 41 (fun (x) (inc x))) 42))

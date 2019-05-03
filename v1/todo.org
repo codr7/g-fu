@@ -1,7 +1,5 @@
-* remove @
-** rename ~ to @
-** add thread macro ~
-* tpipe @-test
+* add thread macro ~
+* tpipe t@-test
 ** put tpipe first
 * add tflat
 ** recursive tcat

@@ -7,7 +7,7 @@
 
   (rec (iter in) acc fn))
 
-(fun ~ (f1 fs..)
+(fun @ (f1 fs..)
   (fun (args..)
     (tr fs (f1 args..) (fun (acc x) (x acc)))))
 

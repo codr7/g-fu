@@ -70,7 +70,7 @@
 
 (test (= (do 1 2 3) 3))
 
-(test (= (call (~ (fun (x) (+ x 1)) (fun (x) (+ x 2))) 39) 42))
+(test (= (call (@ (fun (x) (+ x 1)) (fun (x) (* x 2))) 20) 42))
 
 (test (= (call (fun () 42)) 42))
 (test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))

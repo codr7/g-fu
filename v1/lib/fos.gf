@@ -26,7 +26,7 @@
      (fun (args..) (self args..))))
 
 (fun super-slots (supers)
-  (tr supers _ (@ push (tmap (fun (s) (s 'slots))) tcat)))
+  (tr supers _ (t@ push (tmap (fun (s) (s 'slots))) tcat)))
 
 (fun super-methods (supers)
   (tr supers _
