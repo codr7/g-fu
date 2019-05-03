@@ -33,12 +33,11 @@
     (tr (reverse fs) rf (fun (acc x) (x acc)))))
 
 (mac tr-fun (rf args body..)
+  (let f '(fun %args %body..))
+  
   '(if (_? %rf)
-     (fun (%rf)
-       (fun %args
-         %body..))
-     (fun %args
-       %body..)))
+     (fun (%rf) %f)
+     %f))
 
 (fun tpipe (f)
   (fun (acc val)
