@@ -70,6 +70,8 @@
 
 (test (= (do 1 2 3) 3))
 
+(test (= (call (~ (fun (x) (+ x 1)) (fun (x) (+ x 2))) 39) 42))
+
 (test (= (call (fun () 42)) 42))
 (test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= (call (fun (xs..) (+ xs..)) 1 2 3) 6))
@@ -110,7 +112,8 @@
 (let _
   (mac foo (x) x)
   (mac bar (x) '(foo %x))
-  (test (= (expand 1 '(bar 42)) 42)))
+  (test (= (expand 1 '(bar 42)) '(foo 42)))
+  (test (= (expand 2 '(bar 42)) 42)))
   
 (load "cond.gf")
 (load "math.gf")

@@ -7,8 +7,9 @@
 
   (rec (iter in) acc fn))
 
-(fun ~ (fs..)
-  (tr (reverse fs) _ (fun (acc x) (x acc))))
+(fun ~ (f1 fs..)
+  (fun (args..)
+    (tr fs (f1 args..) (fun (acc x) (x acc)))))
 
 (fun not (val)
   (if val F T))

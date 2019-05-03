@@ -28,8 +28,7 @@
 
 (fun @ (rf fs..)
   (if (_? rf)
-    (fun (rf)
-      (tr (reverse fs) rf (fun (acc x) (x acc))))
+    (~ fs..)
     (tr (reverse fs) rf (fun (acc x) (x acc)))))
 
 (mac tr-fun (rf args body..)
