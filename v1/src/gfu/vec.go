@@ -157,7 +157,7 @@ func (v Vec) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
     return out, e
   }
 
-  return out.Expand(g, task, env, depth)
+  return out.Expand(g, task, env, depth-1)
 }
 
 func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {

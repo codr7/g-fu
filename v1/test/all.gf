@@ -110,8 +110,7 @@
 (let _
   (mac foo (x) x)
   (mac bar (x) '(foo %x))
-  (test (= (expand 1 '(bar 42)) '(foo 42)))
-  (test (= (expand 2 '(bar 42)) 42)))
+  (test (= (expand 1 '(bar 42)) 42)))
   
 (load "cond.gf")
 (load "math.gf")
