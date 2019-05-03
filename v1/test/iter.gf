@@ -30,11 +30,13 @@
 (let (v '(1 2 3 4 5)
       t1 (tfilt (fun (x) (< x 4)))
       t2 (tmap (fun (x) (+ x 42)))
-      ts (t@ push t1 t2))
+      ts (t@ push t1 t2)
+      rts (t@@ push (vec t1 t2)..))
   (test
     (= (tr v 0 (t1 +)) 6)
     (= (tr v _ (t2 push)) '(43 44 45 46 47))
-    (= (tr v _ ts) '(43 44 45))))
+    (= (tr v _ ts) '(43 44 45))
+    (= (tr v _ rts) '(43 44 45))))
 
 (let (v '(1 2 3 4 5)
       t (tmap (fun (x) (+ x 42)) push))

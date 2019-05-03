@@ -72,6 +72,10 @@
 
 (test (= (call (@ (fun (x) (+ x 1)) (fun (x) (* x 2))) 20) 42))
 
+(let (fs (vec (fun (x) (+ x 1))
+              (fun (x) (* x 2))))
+  (test (= (call (@@ fs..) 20) 42)))
+
 (test (= (call (fun () 42)) 42))
 (test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= (call (fun (xs..) (+ xs..)) 1 2 3) 6))

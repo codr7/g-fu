@@ -29,6 +29,9 @@
 (mac t@ (rf fs..)
   '(call (@ %(reverse fs)..) %rf))
 
+(fun t@@ (rf fs..)
+  (call (@@ (reverse fs)..) rf))
+
 (mac tr-fun (rf args body..)
   (let f '(fun %args %body..))
   

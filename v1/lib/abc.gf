@@ -11,6 +11,10 @@
   '(fun (args..)
      %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))
 
+(fun @@ (f1 fs..)
+  (fun (args..)
+    (tr fs (f1 args..) (fun (acc x) (x acc)))))
+  
 (fun not (val)
   (if val F T))
 
