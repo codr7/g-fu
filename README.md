@@ -1,4 +1,4 @@
-![Logo](logo.png)
+![Logo](../logo.png)
   
 ### Intro
 g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, threads and channels; weighing in at 3 kloc.
@@ -215,7 +215,7 @@ The next example is taken straight from the [standard library](https://github.co
 (mac and (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %(if tcs (recall tcs) h)))
+    '(if %h %(if tcs (rec tcs) h)))
     
   (rec conds))
 ```
