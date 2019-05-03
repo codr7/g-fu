@@ -209,7 +209,7 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 42
 ```
 
-The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local trampoline to enable expressing the algorithm in tail recursive form.
+The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local recursive function to generate its expansion.
 
 ```
 (mac and (conds..)

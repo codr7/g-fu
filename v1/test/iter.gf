@@ -48,4 +48,5 @@
   (test (= out '(1 2 3))))
 
 (test (= (@ 41 (fun (x) (inc x))) 42))
+
 (test (= (call (@ _ (fun (x) (inc x))) 41) 42))

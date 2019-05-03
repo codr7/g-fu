@@ -3,7 +3,7 @@
 (fun tr (in acc fn)
   (fun rec (in acc fn)
     (let v (pop in))
-    (if (_? v) acc (recall in (fn acc v) fn)))
+    (if (_? v) acc (rec in (fn acc v) fn)))
 
   (rec (iter in) acc fn))
 
@@ -16,14 +16,14 @@
 (mac and (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %(if tcs (recall tcs) h)))
+    '(if %h %(if tcs (rec tcs) h)))
     
   (rec conds))
 
 (mac or (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %h %(if tcs (recall tcs))))
+    '(if %h %h %(if tcs (rec tcs))))
     
   (rec conds))
   
