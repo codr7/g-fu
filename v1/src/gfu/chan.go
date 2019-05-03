@@ -1,112 +1,112 @@
 package gfu
 
 import (
-  "fmt"
-  "strings"
+	"fmt"
+	"strings"
 )
 
 type Chan chan Val
 
 func NewChan(buf Int) Chan {
-  return make(Chan, buf)
+	return make(Chan, buf)
 }
 
 func (c Chan) Bool(g *G) bool {
-  return len(c) != 0
+	return len(c) != 0
 }
 
 func (c Chan) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.E("Call not supported: Chan")
+	return nil, g.E("Call not supported: Chan")
 }
 
 func (c Chan) Clone(g *G) (Val, E) {
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Drop(g *G, n Int) (Val, E) {
-  for i := Int(0); i < n; i++ {
-    <- c
-  }
+	for i := Int(0); i < n; i++ {
+		<-c
+	}
 
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Dup(g *G) (Val, E) {
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Dump(out *strings.Builder) {
-  fmt.Fprintf(out, "(Chan %v)", (chan Val)(c))
+	fmt.Fprintf(out, "(Chan %v)", (chan Val)(c))
 }
 
 func (c Chan) Eq(g *G, rhs Val) bool {
-  return c.Is(g, rhs)
+	return c.Is(g, rhs)
 }
 
 func (c Chan) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Extenv(g *G, src, dst *Env, clone bool) E {
-  return nil
+	return nil
 }
 
 func (c Chan) Is(g *G, rhs Val) bool {
-  return c == rhs
+	return c == rhs
 }
 
 func (c Chan) Iter(g *G) (Val, E) {
-  return nil, g.E("Iter not implemented")
+	return nil, g.E("Iter not implemented")
 }
 
 func (c Chan) Len(g *G) (Int, E) {
-  return Int(len(c)), nil
+	return Int(len(c)), nil
 }
 
 func (c Chan) Pop(g *G) (Val, Val, E) {
-  v := <- c
+	v := <-c
 
-  if v == nil {
-    v = &g.NIL
-  }
+	if v == nil {
+		v = &g.NIL
+	}
 
-  return v, c, nil
+	return v, c, nil
 }
 
 func (c Chan) Print(out *strings.Builder) {
-  c.Dump(out)
+	c.Dump(out)
 }
 
-func (c Chan) Push(g *G, its...Val) (Val, E) {
-  for _, v := range its {
-    var e E
-    
-    if v, e = v.Clone(g); e != nil {
-      return nil, e
-    }
+func (c Chan) Push(g *G, its ...Val) (Val, E) {
+	for _, v := range its {
+		var e E
 
-    c <- v
-  }
+		if v, e = v.Clone(g); e != nil {
+			return nil, e
+		}
 
-  return c, nil
+		c <- v
+	}
+
+	return c, nil
 }
 
 func (c Chan) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return c, nil
+	return c, nil
 }
 
 func (c Chan) Splat(g *G, out Vec) (Vec, E) {
-  return append(out, c), nil
+	return append(out, c), nil
 }
 
 func (c Chan) String() string {
-  return DumpString(c)
+	return DumpString(c)
 }
 
 func (c Chan) Type(g *G) *Type {
-  return &g.ChanType
+	return &g.ChanType
 }

@@ -1,80 +1,80 @@
 package main
 
 import (
-  "bufio"
-  "flag"
-  "fmt"
-  "log"
-  "os"
-  "runtime/pprof"
-  "strings"
+	"bufio"
+	"flag"
+	"fmt"
+	"log"
+	"os"
+	"runtime/pprof"
+	"strings"
 
-  "./gfu"
+	"./gfu"
 )
 
 var prof = flag.String("prof", "", "Write CPU profile to specified file")
 
 func main() {
-  g, e := gfu.NewG()
+	g, e := gfu.NewG()
 
-  if e != nil {
-    log.Fatal(e)
-  }
+	if e != nil {
+		log.Fatal(e)
+	}
 
-  g.RootEnv.InitAbc(g)
-  g.RootEnv.InitMath(g)
-  flag.Parse()
+	g.RootEnv.InitAbc(g)
+	g.RootEnv.InitMath(g)
+	flag.Parse()
 
-  if *prof != "" {
-    f, e := os.Create(*prof)
+	if *prof != "" {
+		f, e := os.Create(*prof)
 
-    if e != nil {
-      log.Fatal(e)
-    }
+		if e != nil {
+			log.Fatal(e)
+		}
 
-    pprof.StartCPUProfile(f)
-    defer pprof.StopCPUProfile()
-  }
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 
-  args := flag.Args()
-  env := g.NewEnv()
+	args := flag.Args()
+	env := g.NewEnv()
 
-  if len(args) == 0 {
-    fmt.Printf("g-fu v1.11\n\nPress Return twice to evaluate.\n\n  ")
-    in := bufio.NewScanner(os.Stdin)
-    var buf strings.Builder
-    
-    for in.Scan() {
-      line := in.Text()
+	if len(args) == 0 {
+		fmt.Printf("g-fu v1.11\n\nPress Return twice to evaluate.\n\n  ")
+		in := bufio.NewScanner(os.Stdin)
+		var buf strings.Builder
 
-      if len(line) == 0 {
-        if buf.Len() > 0 {
-          v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, buf.String())
+		for in.Scan() {
+			line := in.Text()
 
-          if e == nil {
-            fmt.Printf("\r%v\n", v)
-          } else {
-            fmt.Printf("\r%v\n", e)
-          }
-        }
+			if len(line) == 0 {
+				if buf.Len() > 0 {
+					v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, buf.String())
 
-        buf.Reset()
-      } else {
-        buf.WriteString(line)
-        buf.WriteRune('\n')
-      }
+					if e == nil {
+						fmt.Printf("\r%v\n", v)
+					} else {
+						fmt.Printf("\r%v\n", e)
+					}
+				}
 
-      fmt.Printf("  ")
-    }
+				buf.Reset()
+			} else {
+				buf.WriteString(line)
+				buf.WriteRune('\n')
+			}
 
-    if e := in.Err(); e != nil {
-      log.Fatal(e)
-    }
-  } else {
-    for _, a := range args {
-      if _, e := g.Load(&g.MainTask, env, a); e != nil {
-        log.Fatal(e)
-      }
-    }
-  }
+			fmt.Printf("  ")
+		}
+
+		if e := in.Err(); e != nil {
+			log.Fatal(e)
+		}
+	} else {
+		for _, a := range args {
+			if _, e := g.Load(&g.MainTask, env, a); e != nil {
+				log.Fatal(e)
+			}
+		}
+	}
 }

@@ -1,200 +1,200 @@
 package gfu
 
 import (
-  //"log"
-  "strings"
+	//"log"
+	"strings"
 )
 
 type ArgType int
 
 const (
-  ARG_PLAIN ArgType = 0
-  ARG_OPT   ArgType = 1
-  ARG_SPLAT ArgType = 2
+	ARG_PLAIN ArgType = 0
+	ARG_OPT   ArgType = 1
+	ARG_SPLAT ArgType = 2
 )
 
 type Arg struct {
-  arg_type ArgType
-  str_id   string
-  id       *Sym
-  opt_val  Val
+	arg_type ArgType
+	str_id   string
+	id       *Sym
+	opt_val  Val
 }
 
 func (a *Arg) Init(id *Sym) *Arg {
-  a.id = id
-  return a
+	a.id = id
+	return a
 }
 
 func A(id string) (a Arg) {
-  a.str_id = id
-  return a
+	a.str_id = id
+	return a
 }
 
 func AOpt(id string, val Val) (a Arg) {
-  a.str_id = id
-  a.opt_val = val
-  a.arg_type = ARG_OPT
-  return a
+	a.str_id = id
+	a.opt_val = val
+	a.arg_type = ARG_OPT
+	return a
 }
 
 func ASplat(id string) (a Arg) {
-  a.str_id = id
-  a.arg_type = ARG_SPLAT
-  return a
+	a.str_id = id
+	a.arg_type = ARG_SPLAT
+	return a
 }
 
 func (a Arg) String() string {
-  var out strings.Builder
+	var out strings.Builder
 
-  switch a.arg_type {
-  case ARG_OPT:
-    out.WriteRune('(')
-    out.WriteString(a.id.name)
-    a.opt_val.Dump(&out)
-    out.WriteRune(')')
-  case ARG_SPLAT:
-    out.WriteString(a.id.name)
-    out.WriteString("..")
-  default:
-    out.WriteString(a.id.name)
-  }
+	switch a.arg_type {
+	case ARG_OPT:
+		out.WriteRune('(')
+		out.WriteString(a.id.name)
+		a.opt_val.Dump(&out)
+		out.WriteRune(')')
+	case ARG_SPLAT:
+		out.WriteString(a.id.name)
+		out.WriteString("..")
+	default:
+		out.WriteString(a.id.name)
+	}
 
-  return out.String()
+	return out.String()
 }
 
 type ArgList struct {
-  items    []Arg
-  min, max int
+	items    []Arg
+	min, max int
 }
 
 func (l *ArgList) Init(g *G, args []Arg) *ArgList {
-  nargs := len(args)
+	nargs := len(args)
 
-  if nargs == 0 {
-    return l
-  }
+	if nargs == 0 {
+		return l
+	}
 
-  l.items = args
-  l.min, l.max = nargs, nargs
+	l.items = args
+	l.min, l.max = nargs, nargs
 
-  for i, a := range l.items {
-    if a.arg_type == ARG_OPT {
-      l.min--
-    }
+	for i, a := range l.items {
+		if a.arg_type == ARG_OPT {
+			l.min--
+		}
 
-    if a.id == nil {
-      l.items[i].id = g.Sym(a.str_id)
-    }
-  }
+		if a.id == nil {
+			l.items[i].id = g.Sym(a.str_id)
+		}
+	}
 
-  a := l.items[nargs-1]
+	a := l.items[nargs-1]
 
-  if a.arg_type == ARG_SPLAT {
-    l.min--
-    l.max = -1
-  }
+	if a.arg_type == ARG_SPLAT {
+		l.min--
+		l.max = -1
+	}
 
-  return l
+	return l
 }
 
 func (l *ArgList) Check(g *G, args Vec) E {
-  nargs := len(args)
+	nargs := len(args)
 
-  if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
-    return g.E("Arg mismatch: %v %v", l.items, args)
-  }
+	if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
+		return g.E("Arg mismatch: %v %v", l.items, args)
+	}
 
-  return nil
+	return nil
 }
 
 func (l *ArgList) Fill(g *G, args Vec) Vec {
-  for i := len(args); i < len(l.items); i++ {
-    a := l.items[i]
+	for i := len(args); i < len(l.items); i++ {
+		a := l.items[i]
 
-    if a.arg_type != ARG_OPT {
-      break
-    }
+		if a.arg_type != ARG_OPT {
+			break
+		}
 
-    args = append(args, a.OptVal(g))
-  }
+		args = append(args, a.OptVal(g))
+	}
 
-  return args
+	return args
 }
 
 func (a Arg) OptVal(g *G) Val {
-  v := a.opt_val
+	v := a.opt_val
 
-  if v == nil {
-    v = &g.NIL
-  }
+	if v == nil {
+		v = &g.NIL
+	}
 
-  return v
+	return v
 }
 
 func (l *ArgList) LetVars(g *G, env *Env, args Vec) E {
-  nargs := len(args)
+	nargs := len(args)
 
-  for i, a := range l.items {
-    if a.arg_type == ARG_SPLAT {
-      var v Vec
+	for i, a := range l.items {
+		if a.arg_type == ARG_SPLAT {
+			var v Vec
 
-      if i < nargs {
-        v = make(Vec, nargs-i)
-        copy(v, args[i:])
-      }
+			if i < nargs {
+				v = make(Vec, nargs-i)
+				copy(v, args[i:])
+			}
 
-      if e := env.Let(g, a.id, v); e != nil {
-        return e
-      }
-      
-      break
-    }
+			if e := env.Let(g, a.id, v); e != nil {
+				return e
+			}
 
-    var v Val
+			break
+		}
 
-    if i < nargs {
-      v = args[i]
-    } else {
-      v = a.OptVal(g)
-    }
+		var v Val
 
-    if e := env.Let(g, a.id, v); e != nil {
-      return e
-    }
-  }
+		if i < nargs {
+			v = args[i]
+		} else {
+			v = a.OptVal(g)
+		}
 
-  return nil
+		if e := env.Let(g, a.id, v); e != nil {
+			return e
+		}
+	}
+
+	return nil
 }
 
 func ParseArgs(g *G, task *Task, env *Env, in Vec) ([]Arg, E) {
-  var e E
-  var out []Arg
+	var e E
+	var out []Arg
 
-  for _, v := range in {
-    var a Arg
+	for _, v := range in {
+		var a Arg
 
-    if id, ok := v.(*Sym); ok {
-      a.id = id
-    } else if vv, ok := v.(Vec); ok {
-      if len(vv) < 2 {
-        return nil, g.E("Invalid arg: %v", vv)
-      }
-      
-      a.arg_type = ARG_OPT
-      a.id = vv[0].(*Sym)
+		if id, ok := v.(*Sym); ok {
+			a.id = id
+		} else if vv, ok := v.(Vec); ok {
+			if len(vv) < 2 {
+				return nil, g.E("Invalid arg: %v", vv)
+			}
 
-      if a.opt_val, e = vv[1].Eval(g, task, env); e != nil {
-        return nil, e
-      }
-    } else if sv, ok := v.(*Splat); ok {
-      a.arg_type = ARG_SPLAT
-      a.id = sv.val.(*Sym)
-    } else {
-      return nil, g.E("Invalid arg: %v", v)
-    }
+			a.arg_type = ARG_OPT
+			a.id = vv[0].(*Sym)
 
-    out = append(out, a)
-  }
+			if a.opt_val, e = vv[1].Eval(g, task, env); e != nil {
+				return nil, e
+			}
+		} else if sv, ok := v.(*Splat); ok {
+			a.arg_type = ARG_SPLAT
+			a.id = sv.val.(*Sym)
+		} else {
+			return nil, g.E("Invalid arg: %v", v)
+		}
 
-  return out, nil
+		out = append(out, a)
+	}
+
+	return out, nil
 }

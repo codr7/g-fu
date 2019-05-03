@@ -1,9 +1,9 @@
 package gfu
 
 func (g *G) Bool(val bool) Val {
-  if val {
-    return &g.T
-  }
+	if val {
+		return &g.T
+	}
 
-  return &g.F
+	return &g.F
 }
