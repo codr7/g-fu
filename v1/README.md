@@ -215,7 +215,7 @@ The next example is taken straight from the [standard library](https://github.co
 (mac and (conds..)
   (fun rec (cs)
     (let h (head cs) tcs (tail cs))
-    '(if %h %(if tcs (recall tcs) h)))
+    '(if %h %(if tcs (rec tcs) h)))
     
   (rec conds))
 ```
