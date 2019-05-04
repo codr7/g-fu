@@ -1,3 +1,11 @@
+* add Env
+** add Env type
+** add (env)
+*** return current
+** add (env/)
+*** install env & exec body like do
+** enable qualified ids
+*** if id contains / perform double (env/val) lookup
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids
@@ -13,3 +21,14 @@
 * add str iter
 ** add char type (rune)
 * add iters to readme
+
+(let e (let (foo 1 bar 2) (env)))
+
+(env/ e
+  (let baz 3))
+
+(dump e)
+
+(let ee (env/ _ (let qux 42)))
+
+(dump ee)
