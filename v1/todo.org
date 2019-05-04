@@ -1,11 +1,16 @@
 * add Env
 ** add Env type
-** add (env)
+** add (/this)
 *** return current
-** add (env/)
-*** install env & exec body like do
+** add (/let)
+*** clean env
+*** scoped/unscoped like (let)
 ** enable qualified ids
-*** if id contains / perform double (env/val) lookup
+*** if id contains non-suffix / perform double (env/val) lookup
+*** set env as current
+** reimplement Widget/Button test
+* switch @/@@, t@/t@@
+** safe default
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids
@@ -22,13 +27,12 @@
 ** add char type (rune)
 * add iters to readme
 
-(let e (let (foo 1 bar 2) (env)))
+(let e (let (foo 1 bar 2) (/this)))
 
-(env/ e
-  (let baz 3))
+(e/do (let baz 3))
 
 (dump e)
 
-(let ee (env/ _ (let qux 42)))
+(let ee (/let qux 42)))
 
 (dump ee)
