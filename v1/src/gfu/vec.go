@@ -22,16 +22,16 @@ func (v Vec) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (v Vec) Clone(g *G) (Val, E) {
-  out := make(Vec, len(v))
+  dst := make(Vec, len(v))
   var e E
 
   for i, it := range v {
-    if out[i], e = it.Clone(g); e != nil {
+    if dst[i], e = it.Clone(g); e != nil {
       return nil, e
     }
   }
 
-  return out, nil
+  return dst, nil
 }
 
 func (v Vec) Delete(i int) Vec {

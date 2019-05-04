@@ -1,12 +1,18 @@
+* move methods from Val to Type
+** add val args
+** keep Val.Type(G)/Dump()/String()
+** change Val funcs to call through Type()
+** remove BasicVal
+* ---
 * add Env
-** add Env type
-** add (this/)
-*** return current
+** add (this/) fun
+*** return current env
 ** enable qualified ids
 *** if id contains '/', perform double (env/val) lookup
 *** set env as current
 **** start with clean env if no prefix
 ** reimplement Widget/Button test
+* ---
 * switch @/@@, t@/t@@
 ** safe default
 * add thread macro (~)
