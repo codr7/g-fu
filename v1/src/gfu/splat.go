@@ -13,18 +13,17 @@ type SplatType struct {
   BasicWrapType
 }
 
-func NewSplat(g *G, val Val) *Splat {
-  s := new(Splat)
+func NewSplat(g *G, val Val) (s Splat) {
   s.BasicWrap.Init(val)
   return s
 }
 
-func (_ *Splat) Type(g *G) Type {
+func (_ Splat) Type(g *G) Type {
   return &g.SplatType
 }
 
 func (_ *SplatType) Dump(g *G, val Val, out *strings.Builder) E {
-  if e := g.Dump(val.(*Splat).val, out); e != nil {
+  if e := g.Dump(val.(Splat).val, out); e != nil {
     return e
   }
   
@@ -33,7 +32,7 @@ func (_ *SplatType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *SplatType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  if v, e = g.Eval(task, env, val.(*Splat).val); e != nil {
+  if v, e = g.Eval(task, env, val.(Splat).val); e != nil {
     return nil, e
   }
 
@@ -41,7 +40,7 @@ func (_ *SplatType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 }
 
 func (_ *SplatType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val, e E) {
-  if v, e = g.Expand(task, env, val.(*Splat).val, depth); e != nil {
+  if v, e = g.Expand(task, env, val.(Splat).val, depth); e != nil {
     return nil, e
   }
 
@@ -49,7 +48,7 @@ func (_ *SplatType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Va
 }
 
 func (_ *SplatType) Quote(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  if v, e = g.Quote(task, env, val.(*Splat).val); e != nil {
+  if v, e = g.Quote(task, env, val.(Splat).val); e != nil {
     return nil, e
   }
 
@@ -57,7 +56,7 @@ func (_ *SplatType) Quote(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 }
 
 func (_ *SplatType) Splat(g *G, val Val, out Vec) (Vec, E) {
-  s := val.(*Splat)
+  s := val.(Splat)
   v := s.val
 
   switch v := v.(type) {
@@ -72,6 +71,10 @@ func (_ *SplatType) Splat(g *G, val Val, out Vec) (Vec, E) {
   return append(out, s), nil
 }
 
-func (_ *SplatType) Unwrap(val Val) (*BasicWrap, E) {
-  return &val.(*Splat).BasicWrap, nil
+func (_ *SplatType) Unwrap(val Val) (Val, E) {
+  return val.(Splat).val, nil
+}
+
+func (_ *SplatType) Wrap(g *G, val Val) (Val, E) {
+  return NewSplat(g, val), nil
 }

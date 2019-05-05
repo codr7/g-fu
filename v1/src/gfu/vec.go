@@ -49,7 +49,7 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
       return nil, e
     }
 
-    if _, ok := it.(*Splat); ok {
+    if _, ok := it.(Splat); ok {
       if out, e = g.Splat(it, out); e != nil {
         return nil, e
       }
@@ -357,7 +357,7 @@ func (_ *VecType) Splat(g *G, val Val, out Vec) (Vec, E) {
   var e E
 
   for _, it := range val.(Vec) {
-    if _, ok := it.(*Splat); ok {
+    if _, ok := it.(Splat); ok {
       if out, e = g.Splat(it, out); e != nil {
         return nil, e
       }

@@ -37,7 +37,7 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   
   if v, ok := s.val.(Vec); ok {
     if len(v) == 1 {
-      if sv, ok := v[0].(*Splat); ok {
+      if sv, ok := v[0].(Splat); ok {
         var v Val
         var e E
 
@@ -53,6 +53,10 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   return g.Eval(task, env, s.val)
 }
 
-func (_ *SpliceType) Unwrap(val Val) (*BasicWrap, E) {
-  return &val.(*Splice).BasicWrap, nil
+func (_ *SpliceType) Unwrap(val Val) (Val, E) {
+  return val.(*Splice).val, nil
+}
+
+func (_ *SpliceType) Wrap(g *G, val Val) (Val, E) {
+  return NewSplice(g, val), nil
 }

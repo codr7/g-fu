@@ -73,6 +73,10 @@ func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   return NewQuote(g, v), nil
 }
 
-func (_ *QuoteType) Unwrap(val Val) (*BasicWrap, E) {
-  return &val.(*Quote).BasicWrap, nil
+func (_ *QuoteType) Unwrap(val Val) (Val, E) {
+  return val.(*Quote).val, nil
+}
+
+func (_ *QuoteType) Wrap(g *G, val Val) (Val, E) {
+  return NewQuote(g, val), nil
 }
