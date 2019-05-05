@@ -29,12 +29,6 @@
 ** add char type (rune)
 * add iters to readme
 
-(let e (let (foo 1 bar 2) (this/)))
-
+(let e (let (foo 1 bar 2) (this-env)))
 (e/do (let baz 3))
-
-(dump e)
-
-(let ee (/let qux 42)))
-
-(dump ee)
+e
