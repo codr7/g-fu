@@ -13,19 +13,18 @@ type SpliceType struct {
   BasicWrapType
 }
 
-func NewSplice(g *G, val Val) *Splice {
-  s := new(Splice)
+func NewSplice(g *G, val Val) (s Splice) {
   s.BasicWrap.Init(val)
   return s
 }
 
-func (_ *Splice) Type(g *G) Type {
+func (_ Splice) Type(g *G) Type {
   return &g.SpliceType
 }
 
 func (_ *SpliceType) Dump(g *G, val Val, out *strings.Builder) E {
   out.WriteRune('%')
-  return g.Dump(val.(*Splice).val, out)
+  return g.Dump(val.(Splice).val, out)
 }
 
 func (_ *SpliceType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
@@ -33,7 +32,7 @@ func (_ *SpliceType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
 }
 
 func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
-  s := val.(*Splice)
+  s := val.(Splice)
   
   if v, ok := s.val.(Vec); ok {
     if len(v) == 1 {
@@ -54,7 +53,7 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
 }
 
 func (_ *SpliceType) Unwrap(val Val) (Val, E) {
-  return val.(*Splice).val, nil
+  return val.(Splice).val, nil
 }
 
 func (_ *SpliceType) Wrap(g *G, val Val) (Val, E) {

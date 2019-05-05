@@ -59,7 +59,7 @@ func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
 func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   q := val.(*Quote)
   
-  if _, ok := q.val.(*Splice); !ok {
+  if _, ok := q.val.(Splice); !ok {
     return q, nil
   }
 
