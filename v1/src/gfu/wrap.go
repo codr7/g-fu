@@ -5,58 +5,105 @@ import (
   "strings"
 )
 
-type Wrap struct {
-  BasicVal
+type BasicWrap struct {
   val Val
 }
 
-func (w *Wrap) Init(imp_type *Type, imp Val, val Val) *Wrap {
-  w.BasicVal.Init(imp_type, imp)
+type WrapType interface {
+  Type
+  Unwrap(Val) (*BasicWrap, E)
+}
+
+type BasicWrapType struct {
+  BasicType
+}
+
+func (g *G) Unwrap(val Val) (*BasicWrap, E) {
+  t := val.Type(g)
+  wt, ok := t.(WrapType)
+
+  if !ok {
+    return nil, g.E("Unwrap not supported: %v", t)
+  }
+  
+  return wt.Unwrap(val)
+}
+
+func (w *BasicWrap) Init(val Val) *BasicWrap {
   w.val = val
   return w
 }
 
-func (w *Wrap) Bool(g *G) bool {
-  return w.val.Bool(g)
+func (_ *BasicWrapType) Bool(g *G, val Val) (bool, E) {
+  w, e := g.Unwrap(val)
+
+  if e != nil {
+    return false, e
+  }
+  
+  return g.Bool(w.val)
 }
 
-func (w *Wrap) Clone(g *G) (Val, E) {
-  var e E
+func (_ *BasicWrapType) Clone(g *G, val Val) (Val, E) {
+  w, e := g.Unwrap(val)
 
-  if w.val, e = w.val.Clone(g); e != nil {
+  if e != nil {
     return nil, e
   }
 
-  return w.imp, nil
-}
-
-func (w *Wrap) Dump(out *strings.Builder) {
-  w.val.Dump(out)
-}
-
-func (w *Wrap) Dup(g *G) (Val, E) {
-  var e E
-
-  if w.val, e = w.val.Dup(g); e != nil {
+  if w.val, e = g.Clone(w.val); e != nil {
     return nil, e
   }
 
-  return w.imp, nil
+  return val, nil
 }
 
-func (w *Wrap) Eq(g *G, rhs Val) bool {
-  rw, ok := rhs.(*Wrap)
-  return ok && w.val.Eq(g, rw.val)
+func (_ *BasicWrapType) Dump(g *G, val Val, out *strings.Builder) E {
+  w, e := g.Unwrap(val)
+
+  if e != nil {
+    return e
+  }  
+
+  return g.Dump(w.val, out)
 }
 
-func (w *Wrap) Extenv(g *G, src, dst *Env, clone bool) E {
-  return w.val.Extenv(g, src, dst, clone)
+func (_ *BasicWrapType) Dup(g *G, val Val) (Val, E) {
+  w, e := g.Unwrap(val)
+
+  if e != nil {
+    return nil, e
+  }  
+
+  if w.val, e = g.Dup(w.val); e != nil {
+    return nil, e
+  }
+
+  return val, nil
 }
 
-func (w *Wrap) Pop(g *G) (Val, Val, E) {
-  return nil, nil, g.E("Pop not supported: %v", w.imp_type)
+func (_ *BasicWrapType) Eq(g *G, lhs, rhs Val) (bool, E) {
+  lw, e := g.Unwrap(lhs)
+
+  if e != nil {
+    return false, e
+  }  
+
+  rw, e := g.Unwrap(rhs)
+
+  if e != nil {
+    return false, e
+  }  
+
+  return g.Eq(lw.val, rw.val)
 }
 
-func (w *Wrap) Push(g *G, its ...Val) (Val, E) {
-  return nil, g.E("Push not supported: %v", w.imp_type)
+func (_ *BasicWrapType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
+  w, e := g.Unwrap(val)
+
+  if e != nil {
+    return e
+  }  
+
+  return g.Extenv(src, dst, w.val, clone)
 }

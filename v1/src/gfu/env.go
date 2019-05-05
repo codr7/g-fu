@@ -7,34 +7,18 @@ import (
 )
 
 type Env struct {
-  BasicVal
   vars []*Var
 }
 
-func (e *Env) Bool(g *G) bool {
-  return len(e.vars) > 0
+type EnvType struct {
+  BasicType
 }
 
 func (e *Env) Clear() {
   e.vars = nil
 }
 
-func (env *Env) Clone(g *G) (Val, E) {
-  src := env.vars
-  dst := new(Env)
-  dst.vars = make([]*Var, len(src))
-  var e E
-  
-  for i, v := range src {
-    if dst.vars[i], e = v.Clone(g, env); e != nil {
-      return nil, e
-    }
-  }
-
-  return dst, nil
-}
-
-func (e *Env) Dump(out *strings.Builder) {
+func (e *Env) Dump(g *G, out *strings.Builder) E {
   out.WriteRune('(')
 
   for i, v := range e.vars {
@@ -42,18 +26,18 @@ func (e *Env) Dump(out *strings.Builder) {
       out.WriteRune(' ')
     }
 
-    fmt.Fprintf(out, "%v: ", v.key)
-    v.Val.Dump(out)
+    fmt.Fprintf(out, "%v:", v.key)
+
+    if e := g.Dump(v.Val, out); e != nil {
+      return e
+    }
   }
 
   out.WriteRune(')')
+  return nil
 }
 
-func (e *Env) Dup(g *G) (Val, E) {
-  return e.DupTo(new(Env)), nil
-}
-
-func (e *Env) DupTo(dst *Env) *Env {
+func (e *Env) Dup(dst *Env) *Env {
   src := e.vars
   dst.vars = make([]*Var, len(src))
   copy(dst.vars, src)
@@ -127,7 +111,7 @@ func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {
   _, found := e.Find(key)
 
   if found == nil {
-    return nil, g.E("Unknown var: %v", key)
+    return nil, g.E("Unknown: %v", key)
   }
 
   var prev Val
@@ -135,14 +119,46 @@ func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {
   return prev, nil
 }
 
+func (e *Env) Type(g *G) Type {
+  return &g.EnvType
+}
+
 func (e *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
   _, found := e.Find(key)
 
   if found == nil {
-    return nil, g.E("Unknown var: %v", key)
+    return nil, g.E("Unknown: %v", key)
   }
 
   return found.Update(g, e, f)
+}
+
+func (_ *EnvType) Bool(g *G, val Val) (bool, E) {
+  return len(val.(*Env).vars) > 0, nil
+}
+
+func (_ *EnvType) Clone(g *G, val Val) (Val, E) {
+  env := val.(*Env)
+  src := env.vars
+  dst := new(Env)
+  dst.vars = make([]*Var, len(src))
+  var e E
+  
+  for i, v := range src {
+    if dst.vars[i], e = v.Clone(g, env); e != nil {
+      return nil, e
+    }
+  }
+
+  return dst, nil
+}
+
+func (_ *EnvType) Dump(g *G, val Val, out *strings.Builder) E {
+  return val.(*Env).Dump(g, out)
+}
+
+func (_ *EnvType) Dup(g *G, val Val) (Val, E) {
+  return val.(*Env).Dup(new(Env)), nil
 }
 
 type Var struct {
@@ -160,21 +176,16 @@ func (v *Var) Init(env *Env, key *Sym) *Var {
 func (v *Var) Clone(g *G, env *Env) (dst *Var, e E) {
   dst = new(Var).Init(env, v.key)
 
-  if dst.Val, e = v.Val.Clone(g); e != nil {
+  if dst.Val, e = g.Clone(v.Val); e != nil {
     return nil, e
   }
 
   return dst, e
 }
 
-func (v *Var) Dump(out *strings.Builder) {
-  out.WriteString(v.key.name)
-  out.WriteString(": ")
-  v.Val.Dump(out)
-}
-
-func (v *Var) String() string {
-  return DumpString(v)
+func (v *Var) Dump(g *G, out *strings.Builder) {
+  fmt.Fprintf(out, "%v:", v.key)
+  g.Dump(v.Val, out)
 }
 
 func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {

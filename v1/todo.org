@@ -1,20 +1,19 @@
-* move methods from Val to Type
-** add val args
-** keep Val.Type(G)/Dump()/String()
-** change Val funcs to call through Type()
-** remove BasicVal
-* ---
 * add Env
-** add (this/) fun
-*** return current env
-** enable qualified ids
-*** if id contains '/', perform double (env/val) lookup
+** add (this-env) fun
+* switch wraps to pass by value
+** return new instead of modify
+* add WrapType.Wrap()
+** use to default imp Eval/Expand/Quote etc.
+* enable env-qualified ids
+*** if id contains '/' followed by more chars, perform double (env/val) lookup
 *** set env as current
-**** start with clean env if no prefix
-** reimplement Widget/Button test
-* ---
-* switch @/@@, t@/t@@
-** safe default
+**** start clean if no prefix
+** reimplement testgui.gf
+*** lib/eos.gf
+* add Pair type
+** pass by value
+** ReadPair x:y
+** add Env iter
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids

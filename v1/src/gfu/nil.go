@@ -6,38 +6,37 @@ import (
 )
 
 type Nil struct {
-  BasicVal
 }
 
-func (n *Nil) Init(g *G) *Nil {
-  n.BasicVal.Init(&g.NilType, n)
-  return n
+type NilType struct {
+  BasicType
 }
 
-func (_ *Nil) Bool(g *G) bool {
-  return false
+func (_ *Nil) Type(g *G) Type {
+  return &g.NilType
 }
 
-func (_ *Nil) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.E("Nil call")
+func (_ *NilType) Bool(g *G, val Val) (bool, E) {
+  return false, nil
 }
 
-func (_ *Nil) Dump(out *strings.Builder) {
+func (_ *NilType) Dump(g *G, val Val, out *strings.Builder) E {
   out.WriteRune('_')
+  return nil
 }
 
-func (_ *Nil) Len(g *G) (Int, E) {
+func (_ *NilType) Len(g *G, val Val) (Int, E) {
   return 0, nil
 }
 
-func (n *Nil) Pop(g *G) (Val, Val, E) {
-  return n, n, nil
+func (_ *NilType) Pop(g *G, val Val) (Val, Val, E) {
+  return val, val, nil
 }
 
-func (_ *Nil) Push(g *G, its ...Val) (Val, E) {
+func (_ *NilType) Push(g *G, val Val, its ...Val) (Val, E) {
   return Vec(its), nil
 }
 
-func (_ *Nil) Splat(g *G, out Vec) (Vec, E) {
+func (_ *NilType) Splat(g *G, val Val, out Vec) (Vec, E) {
   return out, nil
 }

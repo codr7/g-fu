@@ -7,8 +7,6 @@ import (
 )
 
 type Mac struct {
-  BasicVal
-
   id        *Sym
   env       *Env
   env_cache Env
@@ -16,13 +14,15 @@ type Mac struct {
   body      Vec
 }
 
+type MacType struct {
+  BasicType
+}
+
 func NewMac(g *G, env *Env, id *Sym, args []Arg) (*Mac, E) {
   return new(Mac).Init(g, env, id, args)
 }
 
 func (m *Mac) Init(g *G, env *Env, id *Sym, args []Arg) (*Mac, E) {
-  m.BasicVal.Init(&g.MacType, m)
-
   if id != nil {
     m.id = id
 
@@ -41,7 +41,7 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
 
   for i, a := range args {
-    if avs[i], e = a.Quote(g, task, env); e != nil {
+    if avs[i], e = g.Quote(task, env, a); e != nil {
       return nil, e
     }
   }
@@ -53,32 +53,40 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var be Env
 
   if m.env_cache.vars == nil {
-    if e = m.body.Extenv(g, m.env, &be, false); e != nil {
+    if e = g.Extenv(m.env, &be, m.body, false); e != nil {
       return nil, e
     }
 
-    be.DupTo(&m.env_cache)
+    be.Dup(&m.env_cache)
   } else {
-    m.env_cache.DupTo(&be)
+    m.env_cache.Dup(&be)
   }
 
   m.arg_list.LetVars(g, &be, args)
   return m.body.EvalExpr(g, task, &be)
 }
 
-func (m *Mac) Call(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+func (m *Mac) Type(g *G) Type {
+  return &g.MacType
+}
+
+func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec) (v Val, e E) {
+  m := val.(*Mac)
+  
   if v, e = m.ExpandCall(g, task, env, args); e != nil {
     return nil, e
   }
 
-  if e = v.Extenv(g, m.env, env, false); e != nil {
+  if e = g.Extenv(m.env, env, v, false); e != nil {
     return nil, e
   }
 
-  return v.Eval(g, task, env)
+  return g.Eval(task, env, v)
 }
 
-func (m *Mac) Dump(out *strings.Builder) {
+func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {
+  m := val.(*Mac)
+  
   if id := m.id; id == nil {
     out.WriteString("(mac (")
   } else {
@@ -96,8 +104,11 @@ func (m *Mac) Dump(out *strings.Builder) {
   out.WriteString(")")
 
   for _, bv := range m.body {
-    bv.Dump(out)
+    if e := g.Dump(bv, out); e != nil {
+      return e
+    }
   }
 
   out.WriteRune(')')
+  return nil
 }

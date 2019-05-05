@@ -8,9 +8,16 @@ import (
 
 type Int int64
 
+type IntType struct {
+  BasicType
+}
+
 type IntIter struct {
-  BasicIter
   pos, max Int
+}
+
+type IntIterType struct {
+  BasicIterType
 }
 
 func (i Int) Abs() Int {
@@ -21,97 +28,40 @@ func (i Int) Abs() Int {
   return i
 }
 
-func (i Int) Bool(g *G) bool {
-  return i != 0
-}
-
-func (i Int) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.E("Call not supported: Int")
-}
-
-func (i Int) Clone(g *G) (Val, E) {
-  return i, nil
-}
-
-func (_ Int) Drop(g *G, n Int) (Val, E) {
-  return nil, g.E("Drop not supported: Int")
-}
-
-func (i Int) Dup(g *G) (Val, E) {
-  return i, nil
-}
-
-func (i Int) Dump(out *strings.Builder) {
-  fmt.Fprintf(out, "%v", int64(i))
-}
-
-func (i Int) Eq(g *G, rhs Val) bool {
-  return i.Is(g, rhs)
-}
-
-func (i Int) Eval(g *G, task *Task, env *Env) (Val, E) {
-  return i, nil
-}
-
-func (i Int) Expand(g *G, task *Task, env *Env, depth Int) (Val, E) {
-  return i, nil
-}
-
-func (i Int) Extenv(g *G, src, dst *Env, clone bool) E {
-  return nil
-}
-
-func (i Int) Is(g *G, rhs Val) bool {
-  return i == rhs
-}
-
-func (i Int) Iter(g *G) (Val, E) {
-  return new(IntIter).Init(g, i), nil
-}
-
-func (_ Int) Len(g *G) (Int, E) {
-  return -1, g.E("Len not supported: Int")
-}
-
-func (_ Int) Pop(g *G) (Val, Val, E) {
-  return nil, nil, g.E("Pop not supported: Int")
-}
-
-func (i Int) Print(out *strings.Builder) {
-  i.Dump(out)
-}
-
-func (_ Int) Push(g *G, its ...Val) (Val, E) {
-  return nil, g.E("Push not supported: Int")
-}
-
-func (i Int) Quote(g *G, task *Task, env *Env) (Val, E) {
-  return i, nil
-}
-
-func (i Int) Splat(g *G, out Vec) (Vec, E) {
-  return append(out, i), nil
-}
-
-func (i Int) String() string {
-  return DumpString(i)
-}
-
-func (_ Int) Type(g *G) *Type {
+func (_ Int) Type(g *G) Type {
   return &g.IntType
 }
 
+func (_ *IntType) Bool(g *G, val Val) (bool, E) {
+  return val.(Int) != 0, nil
+}
+
+func (_ *IntType) Dump(g *G, val Val, out *strings.Builder) E {
+  fmt.Fprintf(out, "%v", int64(val.(Int)))
+  return nil
+}
+
+func (_ *IntType) Iter(g *G, val Val) (Val, E) {
+  return new(IntIter).Init(g, val.(Int)), nil
+}
+
 func (i *IntIter) Init(g *G, max Int) *IntIter {
-  i.BasicVal.Init(&g.IterType, i)
   i.max = max
   return i
 }
 
-func (i *IntIter) Bool(g *G) bool {
-  return i.pos < i.max
+func (_ *IntIter) Type(g *G) Type {
+  return &g.IntIterType
 }
 
-func (i *IntIter) Drop(g *G, n Int) (Val, E) {
+func (_ *IntIterType) Bool(g *G, val Val) (bool, E) {
+  i := val.(*IntIter)
+  return i.pos < i.max, nil
+}
+
+func (_ *IntIterType) Drop(g *G, val Val, n Int) (Val, E) {
+  i := val.(*IntIter)
+  
   if i.max-i.pos < n {
     return nil, g.E("Nothing to drop")
   }
@@ -120,17 +70,20 @@ func (i *IntIter) Drop(g *G, n Int) (Val, E) {
   return i, nil
 }
 
-func (i *IntIter) Dup(g *G) (Val, E) {
-  out := *i
+func (_ *IntIterType) Dup(g *G, val Val) (Val, E) {
+  out := *val.(*IntIter)
   return &out, nil
 }
 
-func (i *IntIter) Eq(g *G, rhs Val) bool {
+func (_ *IntIterType) Eq(g *G, lhs, rhs Val) (bool, E) {
+  li := lhs.(*IntIter)
   ri, ok := rhs.(*IntIter)
-  return ok && ri.max == i.max && ri.pos == i.pos
+  return ok && ri.max == li.max && ri.pos == li.pos, nil
 }
 
-func (i *IntIter) Pop(g *G) (Val, Val, E) {
+func (_ *IntIterType) Pop(g *G, val Val) (Val, Val, E) {
+  i := val.(*IntIter)
+  
   if i.pos >= i.max {
     return &g.NIL, i, nil
   }
@@ -140,9 +93,11 @@ func (i *IntIter) Pop(g *G) (Val, Val, E) {
   return v, i, nil
 }
 
-func (i *IntIter) Splat(g *G, out Vec) (Vec, E) {
+func (_ *IntIterType) Splat(g *G, val Val, out Vec) (Vec, E) {
+  i := val.(*IntIter)
+
   for {
-    v, _, e := i.Pop(g)
+    v, _, e := g.Pop(i)
 
     if e != nil {
       return nil, e

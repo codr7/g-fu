@@ -14,18 +14,25 @@ type G struct {
   MainTask Task
   RootEnv  Env
 
-  MetaType,
-  ChanType,
-  EnvType,
-  FalseType, FunType,
-  IntType, IterType,
-  MacType,
-  NilType,
-  PrimType,
-  QuoteType,
-  SplatType, SpliceType, StrType, SymType,
-  TaskType, TrueType,
-  VecType Type
+  MetaType MetaType
+  ChanType ChanType
+  EnvType EnvType
+  FalseType FalseType
+  FunType FunType
+  IntType IntType
+  IntIterType IntIterType
+  MacType MacType
+  NilType NilType
+  PrimType PrimType
+  QuoteType QuoteType
+  SplatType SplatType
+  SpliceType SpliceType
+  StrType StrType
+  SymType SymType
+  TaskType TaskType
+  TrueType TrueType
+  VecType VecType
+  VecIterType VecIterType
 
   NIL Nil
   T   True
@@ -51,7 +58,7 @@ func (g *G) Init() (*G, E) {
 
 func (g *G) NewEnv() *Env {
   var env Env
-  g.RootEnv.DupTo(&env)
+  g.RootEnv.Dup(&env)
   return &env
 }
 
@@ -104,20 +111,20 @@ func (e *Env) AddConst(g *G, id string, val Val) E {
   }
 
   imp := func(g *G, task *Task, env *Env, args Vec) (Val, E) {
-    v, e := args[0].Eval(g, task, env)
+    ok, e := g.Eq(val, args[0])
 
     if e != nil {
       return nil, e
     }
-
-    if val.Eq(g, v) {
-      return &g.T, nil
+    
+    if !ok {
+      return &g.F, nil
     }
 
-    return &g.F, nil
+    return &g.T, nil
   }
 
-  return e.AddPrim(g, fmt.Sprintf("%v?", id), imp, A("val"))
+  return e.AddFun(g, fmt.Sprintf("%v?", id), imp, A("val"))
 }
 
 func (g *G) FindConst(id *Sym) Val {

@@ -1,70 +1,78 @@
 package gfu
 
 import (
-	//"log"
-	"strings"
+  //"log"
+  "strings"
 )
 
 type Quote struct {
-	Wrap
+  BasicWrap
+}
+
+type QuoteType struct {
+  BasicWrapType
 }
 
 func NewQuote(g *G, val Val) *Quote {
-	q := new(Quote)
-	q.Wrap.Init(&g.QuoteType, q, val)
-	return q
+  q := new(Quote)
+  q.BasicWrap.Init(val)
+  return q
 }
 
-func (q *Quote) Dump(out *strings.Builder) {
-	out.WriteRune('\'')
-	q.val.Dump(out)
+func (_ *Quote) Type(g *G) Type {
+  return &g.QuoteType
 }
 
-func (q *Quote) Eq(g *G, rhs Val) bool {
-	rq, ok := rhs.(*Quote)
-
-	if !ok {
-		return false
-	}
-
-	return q.val.Eq(g, rq.val)
+func (_ *QuoteType) Dump(g *G, val Val, out *strings.Builder) E {
+  out.WriteRune('\'')
+  return g.Dump(val.(*Quote).val, out)
 }
 
-func (q *Quote) Eval(g *G, task *Task, env *Env) (Val, E) {
-	qv, e := q.val.Quote(g, task, env)
+func (_ *QuoteType) Eq(g *G, lhs, rhs Val) (bool, E) {
+  lq := lhs.(*Quote)
+  rq, ok := rhs.(*Quote)
 
-	if e != nil {
-		return nil, e
-	}
-
-	if v, ok := qv.(Vec); ok {
-		if qv, e = v.Splat(g, nil); e != nil {
-			return nil, e
-		}
-	}
-
-	return qv, nil
+  if !ok {
+    return false, nil
+  }
+  
+  return g.Eq(lq.val, rq.val)
 }
 
-func (q *Quote) Is(g *G, rhs Val) bool {
-	return q == rhs
+func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
+  q := val.(*Quote)
+  qv, e := g.Quote(task, env, q.val)
+
+  if e != nil {
+    return nil, e
+  }
+
+  if v, ok := qv.(Vec); ok {
+    if qv, e = g.Splat(v, nil); e != nil {
+      return nil, e
+    }
+  }
+
+  return qv, nil
 }
 
-func (q *Quote) Quote(g *G, task *Task, env *Env) (Val, E) {
-	if _, ok := q.val.(*Splice); !ok {
-		return q, nil
-	}
+func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
+  q := val.(*Quote)
+  
+  if _, ok := q.val.(*Splice); !ok {
+    return q, nil
+  }
 
-	var v Val
-	var e E
+  var v Val
+  var e E
 
-	if v, e = q.val.Quote(g, task, env); e != nil {
-		return nil, e
-	}
+  if v, e = g.Quote(task, env, q.val); e != nil {
+    return nil, e
+  }
 
-	return NewQuote(g, v), nil
+  return NewQuote(g, v), nil
 }
 
-func (_ Quote) Type(g *G) *Type {
-	return &g.QuoteType
+func (_ *QuoteType) Unwrap(val Val) (*BasicWrap, E) {
+  return &val.(*Quote).BasicWrap, nil
 }

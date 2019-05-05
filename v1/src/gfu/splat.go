@@ -1,70 +1,77 @@
 package gfu
 
 import (
-	//"log"
-	"strings"
+  //"log"
+  "strings"
 )
 
 type Splat struct {
-	Wrap
+  BasicWrap
+}
+
+type SplatType struct {
+  BasicWrapType
 }
 
 func NewSplat(g *G, val Val) *Splat {
-	s := new(Splat)
-	s.Wrap.Init(&g.SplatType, s, val)
-	return s
+  s := new(Splat)
+  s.BasicWrap.Init(val)
+  return s
 }
 
-func (s *Splat) Dump(out *strings.Builder) {
-	s.val.Dump(out)
-	out.WriteString("..")
+func (_ *Splat) Type(g *G) Type {
+  return &g.SplatType
 }
 
-func (s *Splat) Eq(g *G, rhs Val) bool {
-	rs, ok := rhs.(*Splat)
-
-	if !ok {
-		return false
-	}
-
-	return s.val.Eq(g, rs.val)
+func (_ *SplatType) Dump(g *G, val Val, out *strings.Builder) E {
+  if e := g.Dump(val.(*Splat).val, out); e != nil {
+    return e
+  }
+  
+  out.WriteString("..")
+  return nil
 }
 
-func (s *Splat) Eval(g *G, task *Task, env *Env) (v Val, e E) {
-	if v, e = s.val.Eval(g, task, env); e != nil {
-		return nil, e
-	}
+func (_ *SplatType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
+  if v, e = g.Eval(task, env, val.(*Splat).val); e != nil {
+    return nil, e
+  }
 
-	return NewSplat(g, v), nil
+  return NewSplat(g, v), nil
 }
 
-func (s *Splat) Expand(g *G, task *Task, env *Env, depth Int) (v Val, e E) {
-	if v, e = s.val.Expand(g, task, env, depth); e != nil {
-		return nil, e
-	}
+func (_ *SplatType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val, e E) {
+  if v, e = g.Expand(task, env, val.(*Splat).val, depth); e != nil {
+    return nil, e
+  }
 
-	return NewSplat(g, v), nil
+  return NewSplat(g, v), nil
 }
 
-func (s *Splat) Quote(g *G, task *Task, env *Env) (v Val, e E) {
-	if v, e = s.val.Quote(g, task, env); e != nil {
-		return nil, e
-	}
+func (_ *SplatType) Quote(g *G, task *Task, env *Env, val Val) (v Val, e E) {
+  if v, e = g.Quote(task, env, val.(*Splat).val); e != nil {
+    return nil, e
+  }
 
-	return NewSplat(g, v), nil
+  return NewSplat(g, v), nil
 }
 
-func (s *Splat) Splat(g *G, out Vec) (Vec, E) {
-	v := s.val
+func (_ *SplatType) Splat(g *G, val Val, out Vec) (Vec, E) {
+  s := val.(*Splat)
+  v := s.val
 
-	switch v := v.(type) {
-	case Vec:
-		return v.Splat(g, out)
-	case *Nil:
-		return out, nil
-	default:
-		break
-	}
+  switch v := v.(type) {
+  case Vec:
+    return g.Splat(v, out)
+  case *Nil:
+    return out, nil
+  default:
+    break
+  }
 
-	return append(out, s), nil
+  return append(out, s), nil
+}
+
+func (_ *SplatType) Unwrap(val Val) (*BasicWrap, E) {
+  return &val.(*Splat).BasicWrap, nil
 }

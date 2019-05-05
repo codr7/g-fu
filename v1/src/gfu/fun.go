@@ -9,8 +9,6 @@ import (
 type FunImp func(*G, *Task, *Env, Vec) (Val, E)
 
 type Fun struct {
-  BasicVal
-
   id        *Sym
   env       *Env
   env_cache Env
@@ -19,13 +17,15 @@ type Fun struct {
   imp       FunImp
 }
 
+type FunType struct {
+  BasicType
+}
+
 func NewFun(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
   return new(Fun).Init(g, env, id, args)
 }
 
 func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
-  f.BasicVal.Init(&g.FunType, f)
-
   if id != nil {
     f.id = id
 
@@ -53,13 +53,13 @@ func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var be Env
 
   if f.env_cache.vars == nil {
-    if e = f.body.Extenv(g, f.env, &be, false); e != nil {
+    if e = g.Extenv(f.env, &be, f.body, false); e != nil {
       return nil, e
     }
 
-    be.DupTo(&f.env_cache)
+    be.Dup(&f.env_cache)
   } else {
-    f.env_cache.DupTo(&be)
+    f.env_cache.Dup(&be)
   }
 
 recall:
@@ -69,7 +69,7 @@ recall:
   if v, e = f.body.EvalExpr(g, task, &be); e != nil {
     if r, ok := e.(Recall); ok {
       be.Clear()
-      f.env_cache.DupTo(&be)
+      f.env_cache.Dup(&be)
       args = r.args
       goto recall
     }
@@ -80,7 +80,12 @@ recall:
   return v, e
 }
 
-func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func (f *Fun) Type(g *G) Type {
+  return &g.FunType
+}
+
+func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) {
+  f := val.(*Fun)
   args, e := args.EvalVec(g, task, env)
 
   if e != nil {
@@ -90,7 +95,9 @@ func (f *Fun) Call(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return f.CallArgs(g, task, env, args)
 }
 
-func (f *Fun) Dump(out *strings.Builder) {
+func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
+  f := val.(*Fun)
+  
   if id := f.id; id == nil {
     out.WriteString("(fun (")
   } else {
@@ -102,7 +109,9 @@ func (f *Fun) Dump(out *strings.Builder) {
       out.WriteRune(' ')
     }
 
-    out.WriteString(a.String())
+    if e := a.Dump(g, out); e != nil {
+      return e
+    }
   }
 
   if f.imp == nil {
@@ -110,13 +119,18 @@ func (f *Fun) Dump(out *strings.Builder) {
 
     for _, bv := range f.body {
       out.WriteRune(' ')
-      bv.Dump(out)
+
+      if e := g.Dump(bv, out); e != nil {
+        return e
+      }
     }
 
     out.WriteRune(')')
   } else {
     fmt.Fprintf(out, ") %v)", f.imp)
   }
+
+  return nil
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
@@ -139,16 +153,16 @@ func NewRecall(args Vec) (r Recall) {
   return r
 }
 
-func (r Recall) Dump(out *strings.Builder) {
+func (r Recall) Dump(g *G, out *strings.Builder) {
   out.WriteString("(recall")
 
   for _, a := range r.args {
-    a.Dump(out)
+    g.Dump(a, out)
   }
 
   out.WriteRune(')')
 }
 
 func (r Recall) String() string {
-  return DumpString(r)
+  return "Recall"
 }

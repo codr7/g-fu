@@ -1,23 +1,26 @@
 package gfu
 
 import (
-	//"log"
-	"strings"
+  //"log"
+  "strings"
 )
 
 type False struct {
-	BasicVal
 }
 
-func (f *False) Init(g *G) *False {
-	f.BasicVal.Init(&g.FalseType, f)
-	return f
+type FalseType struct {
+  BasicType
 }
 
-func (_ *False) Bool(g *G) bool {
-	return false
+func (_ *False) Type(g *G) Type {
+  return &g.FalseType
 }
 
-func (_ *False) Dump(out *strings.Builder) {
-	out.WriteRune('F')
+func (_ *FalseType) Bool(g *G, val Val) (bool, E) {
+  return false, nil
+}
+
+func (_ *FalseType) Dump(g *G, val Val, out *strings.Builder) E {
+  out.WriteRune('F')
+  return nil
 }
