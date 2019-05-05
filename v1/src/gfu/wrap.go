@@ -19,15 +19,19 @@ type BasicWrapType struct {
   BasicType
 }
 
-func (g *G) Unwrap(val Val) Val {
+func (g *G) Unwrap(val Val, silent bool) (Val, E) {
   t := val.Type(g)
   wt, ok := t.(WrapType)
 
   if !ok {
-    return nil
+    if !silent {
+      return nil, g.E("Unwrap not supported: %v", t)
+    }
+    
+    return nil, nil
   }
   
-  return wt.Unwrap(val)
+  return wt.Unwrap(val), nil
 }
 
 func (g *G) Wrap(typ Type, val Val) (Val, E) {
@@ -46,20 +50,20 @@ func (w *BasicWrap) Init(val Val) *BasicWrap {
 }
 
 func (_ *BasicWrapType) Bool(g *G, val Val) (bool, E) {
-  v := g.Unwrap(val)
+  v, e := g.Unwrap(val, false)
 
-  if v == nil {
-    return false, g.E("Unwrap not supported: %v", val.Type(g))
+  if e != nil {
+    return false, e
   }
   
   return g.Bool(v)
 }
 
-func (_ *BasicWrapType) Clone(g *G, val Val) (v Val, e E) {
-  v = g.Unwrap(val)
+func (_ *BasicWrapType) Clone(g *G, val Val) (Val, E) {
+  v, e := g.Unwrap(val, false)
   
-  if v == nil {
-    return nil, g.E("Unwrap not supported: %v", val.Type(g))
+  if e != nil {
+    return nil, e
   }
 
   if v, e = g.Clone(v); e != nil {
@@ -70,20 +74,20 @@ func (_ *BasicWrapType) Clone(g *G, val Val) (v Val, e E) {
 }
 
 func (_ *BasicWrapType) Dump(g *G, val Val, out *strings.Builder) E {
-  v := g.Unwrap(val)
+  v, e := g.Unwrap(val, false)
 
-  if v == nil {
-    return g.E("Unwrap not supported: %v", val.Type(g))
+  if e != nil {
+    return e
   }
 
   return g.Dump(v, out)
 }
 
-func (_ *BasicWrapType) Dup(g *G, val Val) (v Val, e E) {
-  v = g.Unwrap(val)
+func (_ *BasicWrapType) Dup(g *G, val Val) (Val, E) {
+  v, e := g.Unwrap(val, false)
   
-  if v == nil {
-    return nil, g.E("Unwrap not supported: %v", val.Type(g))
+  if e != nil {
+    return nil, e
   }
 
   if v, e = g.Dup(v); e != nil {
@@ -94,13 +98,13 @@ func (_ *BasicWrapType) Dup(g *G, val Val) (v Val, e E) {
 }
 
 func (_ *BasicWrapType) Eq(g *G, lhs, rhs Val) (bool, E) {
-  lv := g.Unwrap(lhs)
+  lv, _ := g.Unwrap(lhs, true)
 
   if lv == nil {
     return false, nil
   }  
 
-  rv := g.Unwrap(rhs)
+  rv, _ := g.Unwrap(rhs, true)
 
   if rv == nil {
     return false, nil
@@ -110,10 +114,10 @@ func (_ *BasicWrapType) Eq(g *G, lhs, rhs Val) (bool, E) {
 }
 
 func (_ *BasicWrapType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  v := g.Unwrap(val)
+  v, e := g.Unwrap(val, false)
 
-  if v == nil {
-    return g.E("Unwrap not supported: %v", val.Type(g))
+  if e != nil {
+    return e
   }
 
   return g.Extenv(src, dst, v, clone)
