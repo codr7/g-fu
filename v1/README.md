@@ -144,7 +144,7 @@ The root environment contains the usual suspects.
 (main-task:(Task 0xc00007c060) Meta:Meta Chan:Meta Env:Meta False:Meta Fun:Meta Int:Meta IntIter:Meta Mac:Meta Nil:Meta Prim:Meta Quote:Meta Splice:Meta Splat:Meta Str:Meta Sym:Meta Task:Meta True:Meta Vec:Meta VecIter:Meta _?:(fun _? (val) n/a) T?:(fun T? (val) n/a) F?:(fun F? (val) n/a) do:(Prim do) fun:(Prim fun) mac:(Prim mac) call:(Prim call) let:(Prim let) set:(fun set (args..) n/a) this-env:(fun this-env () n/a) if:(Prim if) inc:(Prim inc) test:(Prim test) bench:(Prim bench) debug:(fun debug () n/a) fail:(fun fail (reason) n/a) dump:(fun dump (vals..) n/a) say:(fun say (vals..) n/a) load:(fun load (path) n/a) dup:(fun dup (val) n/a) clone:(fun clone (val) n/a) type:(fun type (val) n/a) eval:(Prim eval) expand:(fun expand (n expr) n/a) recall:(fun recall (args..) n/a) new-sym:(fun new-sym ((prefix"")) n/a) sym:(fun sym (args..) n/a) str:(fun str (args..) n/a) bool:(fun bool (val) n/a) =:(fun = (vals..) n/a) ==:(fun == (vals..) n/a) <:(fun < (vals..) n/a) >:(fun > (vals..) n/a) +:(fun + (vals..) n/a) -:(fun - (vals..) n/a) *:(fun * (vals..) n/a) iter:(fun iter (vals..) n/a) push:(Prim push) pop:(Prim pop) drop:(Prim drop) len:(fun len (in) n/a) vec:(fun vec (vals..) n/a) peek:(fun peek (vec) n/a) find-key:(fun find-key (in key) n/a) pop-key:(Prim pop-key) head:(fun head (vec) n/a) tail:(fun tail (vec) n/a) cons:(fun cons (val vec) n/a) reverse:(fun reverse (vec) n/a) task:(Prim task) this-task:(fun this-task () n/a) post:(fun post (task vals..) n/a) fetch:(fun fetch () n/a) wait:(fun wait (tasks..) n/a) chan:(fun chan ((buf0)) n/a) div:(fun div (x y) n/a) mod:(fun mod (x y) n/a))
 ```
 
-New environments capture used bindings by default.
+New environments capture used bindings.
 
 ```
   (let _
