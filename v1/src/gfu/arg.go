@@ -48,6 +48,7 @@ func (a Arg) Dump(g *G, out *strings.Builder) E {
   case ARG_OPT:
     out.WriteRune('(')
     out.WriteString(a.id.name)
+    out.WriteRune(' ')
 
     if e := g.Dump(a.opt_val, out); e != nil {
       return e

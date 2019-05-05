@@ -88,6 +88,12 @@ func (_ *TaskType) Bool(g *G, val Val) (bool, E) {
 }
 
 func (_ *TaskType) Dump(g *G, val Val, out *strings.Builder) E {
-  fmt.Fprintf(out, "(Task %v)", (chan Val)(val.(*Task).Inbox))
+  out.WriteString("(task")
+  
+  if t := val.(*Task); t.id != nil{
+    fmt.Fprintf(out, " %v", t.id)
+  }
+
+  out.WriteString(" n/a)")
   return nil
 }

@@ -40,7 +40,7 @@ func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) 
 }
 
 func (_ *PrimType) Dump(g *G, val Val, out *strings.Builder) E {
-  fmt.Fprintf(out, "(Prim %v)", val.(*Prim).id)
+  fmt.Fprintf(out, "(prim %v)", val.(*Prim).id)
   return nil
 }
 
