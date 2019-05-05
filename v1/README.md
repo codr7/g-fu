@@ -1,7 +1,9 @@
 ![Logo](../logo.png)
   
 ### Intro
-g-fu is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go. The initial [release](https://github.com/codr7/g-fu/tree/master/v1) implements an extensible, tree-walking interpreter with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, threads and channels; weighing in at 3 kloc.
+[g-fu](https://github.com/codr7/g-fu) is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go.
+
+This document describes the initial release; which implements an extensible, tree-walking interpreter with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, threads and channels; weighing in at 3 kloc.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -22,12 +24,6 @@ Press Return twice to evaluate.
 
 6765
 ```
-
-### Goals
-The primary goal is to provide a fully integrated, practical Lisp in Go. Practical as a complement to Go; which means a clean implementation that composes well with Go is more important than raw performance, among other things.
-
-### Status
-The initial [release](https://github.com/codr7/g-fu/tree/master/v1) is more or less ready for action, and supports all examples in this document. Once it stabilizes; work begins on v2, which will focus on compilation to an internal representation optimized for evaluation.
 
 ### Syntax
 g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
@@ -135,6 +131,27 @@ Error: Dup binding: foo 1
     (say foo))
 
 3
+```
+
+### Environments
+Environments are first class, `this-env` may be used to get the current environment.
+
+The root environment contains the usual suspects.
+
+```
+  (this-env)
+  
+(main-task:(Task 0xc00007c060) Meta:Meta Chan:Meta Env:Meta False:Meta Fun:Meta Int:Meta IntIter:Meta Mac:Meta Nil:Meta Prim:Meta Quote:Meta Splice:Meta Splat:Meta Str:Meta Sym:Meta Task:Meta True:Meta Vec:Meta VecIter:Meta _?:(fun _? (val) n/a) T?:(fun T? (val) n/a) F?:(fun F? (val) n/a) do:(Prim do) fun:(Prim fun) mac:(Prim mac) call:(Prim call) let:(Prim let) set:(fun set (args..) n/a) this-env:(fun this-env () n/a) if:(Prim if) inc:(Prim inc) test:(Prim test) bench:(Prim bench) debug:(fun debug () n/a) fail:(fun fail (reason) n/a) dump:(fun dump (vals..) n/a) say:(fun say (vals..) n/a) load:(fun load (path) n/a) dup:(fun dup (val) n/a) clone:(fun clone (val) n/a) type:(fun type (val) n/a) eval:(Prim eval) expand:(fun expand (n expr) n/a) recall:(fun recall (args..) n/a) new-sym:(fun new-sym ((prefix"")) n/a) sym:(fun sym (args..) n/a) str:(fun str (args..) n/a) bool:(fun bool (val) n/a) =:(fun = (vals..) n/a) ==:(fun == (vals..) n/a) <:(fun < (vals..) n/a) >:(fun > (vals..) n/a) +:(fun + (vals..) n/a) -:(fun - (vals..) n/a) *:(fun * (vals..) n/a) iter:(fun iter (vals..) n/a) push:(Prim push) pop:(Prim pop) drop:(Prim drop) len:(fun len (in) n/a) vec:(fun vec (vals..) n/a) peek:(fun peek (vec) n/a) find-key:(fun find-key (in key) n/a) pop-key:(Prim pop-key) head:(fun head (vec) n/a) tail:(fun tail (vec) n/a) cons:(fun cons (val vec) n/a) reverse:(fun reverse (vec) n/a) task:(Prim task) this-task:(fun this-task () n/a) post:(fun post (task vals..) n/a) fetch:(fun fetch () n/a) wait:(fun wait (tasks..) n/a) chan:(fun chan ((buf0)) n/a) div:(fun div (x y) n/a) mod:(fun mod (x y) n/a))
+```
+
+New environments capture used bindings by default.
+
+```
+  (let _
+    (+ 1 2)
+    (this-env))
+
+(this-env:(fun this-env () n/a) +:(fun + (vals..) n/a))
 ```
 
 ### Functions

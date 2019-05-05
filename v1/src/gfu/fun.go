@@ -127,7 +127,7 @@ func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
 
     out.WriteRune(')')
   } else {
-    fmt.Fprintf(out, ") %v)", f.imp)
+    out.WriteString(") n/a)")
   }
 
   return nil

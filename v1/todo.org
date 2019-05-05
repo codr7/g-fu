@@ -1,5 +1,3 @@
-* add Env
-** add (this-env) fun
 * switch wraps to pass by value
 ** return new instead of modify
 * add WrapType.Wrap()
@@ -10,6 +8,7 @@
 **** start clean if no prefix
 ** reimplement testgui.gf
 *** lib/eos.gf
+** readme
 * add Pair type
 ** pass by value
 ** ReadPair x:y
