@@ -52,10 +52,10 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   return g.Eval(task, env, s.val)
 }
 
-func (_ *SpliceType) Unwrap(val Val) (Val, E) {
-  return val.(Splice).val, nil
+func (_ *SpliceType) Unwrap(val Val) Val {
+  return val.(Splice).val
 }
 
-func (_ *SpliceType) Wrap(g *G, val Val) (Val, E) {
-  return NewSplice(g, val), nil
+func (_ *SpliceType) Wrap(g *G, val Val) Val {
+  return NewSplice(g, val)
 }

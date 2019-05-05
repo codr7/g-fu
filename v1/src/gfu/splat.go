@@ -71,10 +71,10 @@ func (_ *SplatType) Splat(g *G, val Val, out Vec) (Vec, E) {
   return append(out, s), nil
 }
 
-func (_ *SplatType) Unwrap(val Val) (Val, E) {
-  return val.(Splat).val, nil
+func (_ *SplatType) Unwrap(val Val) Val {
+  return val.(Splat).val
 }
 
-func (_ *SplatType) Wrap(g *G, val Val) (Val, E) {
-  return NewSplat(g, val), nil
+func (_ *SplatType) Wrap(g *G, val Val) Val {
+  return NewSplat(g, val)
 }

@@ -1,10 +1,12 @@
 package gfu
 
 import (
+  "fmt"
   "strings"
 )
 
 type Type interface {
+  fmt.Stringer
   Val
 
   Init(*G, *Sym) E

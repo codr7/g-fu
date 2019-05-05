@@ -1,7 +1,3 @@
-* switch wraps to pass by value
-** return new instead of modify
-* add WrapType.Wrap()
-** use to default imp Eval/Expand/Quote etc.
 * enable env-qualified ids
 *** if id contains '/' followed by more chars, perform double (env/val) lookup
 *** set env as current

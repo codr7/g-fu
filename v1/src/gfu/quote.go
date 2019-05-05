@@ -13,24 +13,23 @@ type QuoteType struct {
   BasicWrapType
 }
 
-func NewQuote(g *G, val Val) *Quote {
-  q := new(Quote)
+func NewQuote(g *G, val Val) (q Quote) {
   q.BasicWrap.Init(val)
   return q
 }
 
-func (_ *Quote) Type(g *G) Type {
+func (_ Quote) Type(g *G) Type {
   return &g.QuoteType
 }
 
 func (_ *QuoteType) Dump(g *G, val Val, out *strings.Builder) E {
   out.WriteRune('\'')
-  return g.Dump(val.(*Quote).val, out)
+  return g.Dump(val.(Quote).val, out)
 }
 
 func (_ *QuoteType) Eq(g *G, lhs, rhs Val) (bool, E) {
-  lq := lhs.(*Quote)
-  rq, ok := rhs.(*Quote)
+  lq := lhs.(Quote)
+  rq, ok := rhs.(Quote)
 
   if !ok {
     return false, nil
@@ -40,7 +39,7 @@ func (_ *QuoteType) Eq(g *G, lhs, rhs Val) (bool, E) {
 }
 
 func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
-  q := val.(*Quote)
+  q := val.(Quote)
   qv, e := g.Quote(task, env, q.val)
 
   if e != nil {
@@ -57,7 +56,7 @@ func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
 }
 
 func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
-  q := val.(*Quote)
+  q := val.(Quote)
   
   if _, ok := q.val.(Splice); !ok {
     return q, nil
@@ -73,10 +72,10 @@ func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   return NewQuote(g, v), nil
 }
 
-func (_ *QuoteType) Unwrap(val Val) (Val, E) {
-  return val.(*Quote).val, nil
+func (_ *QuoteType) Unwrap(val Val) Val {
+  return val.(Quote).val
 }
 
-func (_ *QuoteType) Wrap(g *G, val Val) (Val, E) {
-  return NewQuote(g, val), nil
+func (_ *QuoteType) Wrap(g *G, val Val) Val {
+  return NewQuote(g, val)
 }
