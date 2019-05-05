@@ -1,7 +1,9 @@
 * enable env-qualified ids
 *** if id contains '/' followed by more chars, perform double (env/val) lookup
-*** set env as current
-**** start clean if no prefix
+**** multi-level
+** change Sym.Extenv to only import prefix
+** add (use foo bar/baz qux) -> foo/bar/baz foo/qux
+*** expand to (let) binding suffixes to qualified eval
 ** reimplement testgui.gf
 *** lib/eos.gf
 ** readme
