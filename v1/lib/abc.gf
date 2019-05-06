@@ -7,6 +7,12 @@
 
   (rec (iter in) acc fn))
 
+(mac use (prefix ids..)
+  '(let %(tr ids _
+             (fun (acc s)
+               (push acc s)
+               (push acc (sym prefix s))))..))
+
 (mac @ (f1 fs..)
   '(fun (args..)
      %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))

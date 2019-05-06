@@ -85,10 +85,6 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   if is_scope {
     le = new(Env)
 
-    if e = le.Extend(g, &g.RootEnv, false, g.Sym("do"), g.Sym("let"), g.Sym("set")); e != nil {
-      return nil, e
-    }
-
     if e = g.Extenv(env, le, args, false); e != nil {
       return nil, e
     }
@@ -320,12 +316,12 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.NewSym(string(args[0].(Str))), nil
+  return g.NewSym(string(args[0].(Str))), nil 
 }
 
 func sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var out strings.Builder
-
+  
   for _, a := range args {
     g.Print(a, &out)
   }

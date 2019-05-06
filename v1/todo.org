@@ -1,13 +1,10 @@
-* add qualified env keys
-** add (use foo bar/baz qux) -> foo/bar/baz foo/qux
-*** expand to (let) binding suffixes to qualified eval
-** reimplement testgui.gf
-*** lib/eos.gf
-** readme
+* reimplement testgui.gf using env
+** lib/eos.gf
 * add Pair type
 ** pass by value
 ** ReadPair x:y
 ** add Env iter
+* finish Env readme
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids

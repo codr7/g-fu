@@ -11,6 +11,7 @@ type Sym struct {
   tag  Tag
   name string
   parts []*Sym
+  root bool
 }
 
 type SymType struct {
@@ -24,12 +25,17 @@ func NewSym(g *G, tag Tag, name string) *Sym {
 func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   s.tag = tag
   s.name = name
-
-  if strings.LastIndex(name, "/") > 0 {
-    for _, p := range strings.Split(s.name, "/") {
-      s.parts  = append(s.parts, g.Sym(p))
+  s.root = name[0] == '/'
+  
+  if strings.IndexRune(name, '/') != -1 {
+    for _, p := range strings.Split(name, "/") {
+      if len(p) > 0 {
+        s.parts  = append(s.parts, g.Sym(p))
+      }
     }
-  } else {
+  }
+
+  if len(s.parts) == 0 {
     s.parts = append(s.parts, s)
   }
   
@@ -38,6 +44,10 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
 
 func (s *Sym) Lookup(g *G, env *Env) (v Val, _ *Env, e E) {
   max := len(s.parts)
+
+  if s.root {
+    env = &g.RootEnv
+  }
   
   for i, p := range s.parts {
     if v, e = env.Get(g, p); e != nil {
@@ -106,7 +116,7 @@ func (g *G) Sym(name string) *Sym {
   if out, found := g.syms.LoadOrStore(name, &s); found {
     return out.(*Sym)
   }
-
+  
   return s.Init(g, g.NextSymTag(), name)
 }
 
