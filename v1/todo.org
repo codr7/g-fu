@@ -1,6 +1,7 @@
 * enable env-qualified ids
 *** if id contains '/' followed by more chars, perform double (env/val) lookup
 **** multi-level
+**** start from root env if no prefix
 ** change Sym.Extenv to only import prefix
 ** add (use foo bar/baz qux) -> foo/bar/baz foo/qux
 *** expand to (let) binding suffixes to qualified eval
