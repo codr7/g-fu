@@ -101,14 +101,6 @@ func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {
     out.WriteString(a.id.name)
   }
 
-  out.WriteString(")")
-
-  for _, bv := range m.body {
-    if e := g.Dump(bv, out); e != nil {
-      return e
-    }
-  }
-
-  out.WriteRune(')')
+  out.WriteString("))")
   return nil
 }

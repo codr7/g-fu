@@ -141,7 +141,7 @@ The root environment contains the usual suspects.
 ```
   (this-env)
 
-(main-task:(task main-task n/a) Meta:Meta Chan:Meta Env:Meta False:Meta Fun:Meta Int:Meta IntIter:Meta Mac:Meta Nil:Meta Prim:Meta Quote:Meta Splice:Meta Splat:Meta Str:Meta Sym:Meta Task:Meta True:Meta Vec:Meta VecIter:Meta _?:(fun _? (val) n/a) T?:(fun T? (val) n/a) F?:(fun F? (val) n/a) do:(prim do) fun:(prim fun) mac:(prim mac) call:(prim call) let:(prim let) set:(fun set (args..) n/a) this-env:(fun this-env () n/a) if:(prim if) inc:(prim inc) test:(prim test) bench:(prim bench) debug:(fun debug () n/a) fail:(fun fail (reason) n/a) dump:(fun dump (vals..) n/a) say:(fun say (vals..) n/a) load:(fun load (path) n/a) dup:(fun dup (val) n/a) clone:(fun clone (val) n/a) type:(fun type (val) n/a) eval:(prim eval) expand:(fun expand (n expr) n/a) recall:(fun recall (args..) n/a) new-sym:(fun new-sym ((prefix "")) n/a) sym:(fun sym (args..) n/a) str:(fun str (args..) n/a) bool:(fun bool (val) n/a) =:(fun = (vals..) n/a) ==:(fun == (vals..) n/a) <:(fun < (vals..) n/a) >:(fun > (vals..) n/a) +:(fun + (vals..) n/a) -:(fun - (vals..) n/a) *:(fun * (vals..) n/a) iter:(fun iter (vals..) n/a) push:(prim push) pop:(prim pop) drop:(prim drop) len:(fun len (in) n/a) vec:(fun vec (vals..) n/a) peek:(fun peek (vec) n/a) find-key:(fun find-key (in key) n/a) pop-key:(prim pop-key) head:(fun head (vec) n/a) tail:(fun tail (vec) n/a) cons:(fun cons (val vec) n/a) reverse:(fun reverse (vec) n/a) task:(prim task) this-task:(fun this-task () n/a) post:(fun post (task vals..) n/a) fetch:(fun fetch () n/a) wait:(fun wait (tasks..) n/a) chan:(fun chan ((buf 0)) n/a) div:(fun div (x y) n/a) mod:(fun mod (x y) n/a))
+(main-task:(task main-task) Meta:Meta Chan:Meta Env:Meta False:Meta Fun:Meta Int:Meta IntIter:Meta Mac:Meta Nil:Meta Prim:Meta Quote:Meta Splice:Meta Splat:Meta Str:Meta Sym:Meta Task:Meta True:Meta Vec:Meta VecIter:Meta _?:(fun _? (val)) T?:(fun T? (val)) F?:(fun F? (val)) do:(prim do (body..)) fun:(prim fun ((id) args body..)) mac:(prim mac ((id) args body..)) call:(prim call (target args..)) let:(prim let (args..)) set:(fun set (args..)) this-env:(fun this-env ()) if:(prim if (cond t (f))) inc:(prim inc (var (delta 1))) test:(prim test (cases..)) bench:(prim bench (nreps body..)) debug:(fun debug ()) fail:(fun fail (reason)) dump:(fun dump (vals..)) say:(fun say (vals..)) load:(fun load (path)) dup:(fun dup (val)) clone:(fun clone (val)) type:(fun type (val)) eval:(prim eval (expr)) expand:(fun expand (n expr)) recall:(fun recall (args..)) new-sym:(fun new-sym ((prefix ""))) sym:(fun sym (args..)) str:(fun str (args..)) bool:(fun bool (val)) =:(fun = (vals..)) ==:(fun == (vals..)) <:(fun < (vals..)) >:(fun > (vals..)) +:(fun + (vals..)) -:(fun - (vals..)) *:(fun * (vals..)) iter:(fun iter (vals..)) push:(prim push (out vals..)) pop:(prim pop (in)) drop:(prim drop (in (n 1))) len:(fun len (in)) vec:(fun vec (vals..)) peek:(fun peek (vec)) find-key:(fun find-key (in key)) pop-key:(prim pop-key (in key)) head:(fun head (vec)) tail:(fun tail (vec)) cons:(fun cons (val vec)) reverse:(fun reverse (vec)) task:(prim task (args body..)) this-task:(fun this-task ()) post:(fun post (task vals..)) fetch:(fun fetch ()) wait:(fun wait (tasks..)) chan:(fun chan ((buf 0))) div:(fun div (x y)) mod:(fun mod (x y)))
 ```
 
 While derived environments capture used bindings.
@@ -149,7 +149,7 @@ While derived environments capture used bindings.
 ```
   (let _ (this-env))
 
-(this-env:(fun this-env () n/a))
+(this-env:(fun this-env ()))
 ```
 
 ### Functions

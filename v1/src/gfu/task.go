@@ -94,6 +94,6 @@ func (_ *TaskType) Dump(g *G, val Val, out *strings.Builder) E {
     fmt.Fprintf(out, " %v", t.id)
   }
 
-  out.WriteString(" n/a)")
+  out.WriteString(")")
   return nil
 }

@@ -114,22 +114,7 @@ func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
     }
   }
 
-  if f.imp == nil {
-    out.WriteString(")")
-
-    for _, bv := range f.body {
-      out.WriteRune(' ')
-
-      if e := g.Dump(bv, out); e != nil {
-        return e
-      }
-    }
-
-    out.WriteRune(')')
-  } else {
-    out.WriteString(") n/a)")
-  }
-
+  out.WriteString("))")
   return nil
 }
 
