@@ -25,7 +25,6 @@ func NewSym(g *G, tag Tag, name string) *Sym {
 func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   s.tag = tag
   s.name = name
-  s.root = name[0] == '/'
   
   if strings.IndexRune(name, '/') != -1 {
     for _, p := range strings.Split(name, "/") {
@@ -45,10 +44,6 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
 func (s *Sym) Lookup(g *G, env *Env) (v Val, _ *Env, e E) {
   max := len(s.parts)
 
-  if s.root {
-    env = &g.RootEnv
-  }
-  
   for i, p := range s.parts {
     if v, e = env.Get(g, p); e != nil {
       return nil, nil, e
