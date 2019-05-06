@@ -1,5 +1,3 @@
-(mac NOP (args..))
-
 (fun tr (in acc fn)
   (fun rec (in acc fn)
     (let v (pop in))
@@ -9,11 +7,10 @@
 
 (mac use (prefix ids..)
   (if (_? prefix)
-    '(do %ids..)
-    '(let %(tr ids _
-               (fun (acc s)
-                 (push acc s)
-                 (push acc (sym prefix s))))..)))
+    '(__ %ids..)
+    '(__ %(tr ids _
+              (fun (acc s)
+                (push acc (sym prefix s))))..)))
 
 (mac @ (f1 fs..)
   '(fun (args..)

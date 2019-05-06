@@ -205,16 +205,20 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return &g.NIL, nil
   }
   
-  fid, ok := v[0].(*Sym)
+  id, ok := v[0].(*Sym)
 
   if !ok {
     return nil, g.E("Invalid call target: %v", v[0])
   }
 
+  if id == g.nop_sym {
+    return &g.NIL, nil
+  }
+  
   var f Val
   var e E
   
-  if f, env, e = fid.Lookup(g, env); e != nil {
+  if f, env, e = id.Lookup(g, env); e != nil {
     return nil, e
   }
 
@@ -236,15 +240,14 @@ func (_ *VecType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (Val, E
   }
 
   idv := v[0]
-
-  if s, ok := idv.(*Sym); ok && s == g.nil_sym {
-    return &g.NIL, nil
-  }
-
   id, ok := idv.(*Sym)
 
   if !ok {
     return v, nil
+  }
+
+  if id == g.nop_sym {
+    return val, nil
   }
 
   if id == g.Sym("do") && n < 3 {

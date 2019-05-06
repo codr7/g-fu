@@ -2,7 +2,7 @@
 
 (load "../lib/all.gf")
 
-(test (= (NOP foo bar baz) _))
+(test (= (__ foo bar baz) _))
 
 (test (T? T))
 (test (not (T? F)))
