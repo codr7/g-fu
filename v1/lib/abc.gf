@@ -6,11 +6,13 @@
   (rec (iter in) acc fn))
 
 (mac use (prefix ids..)
-  (if (_? prefix)
-    '(__ %ids..)
-    '(__ %(tr ids _
+  '(__
+     (use _
+          %(if (_? prefix)
+            ids
+            (tr ids _
               (fun (acc s)
-                (push acc (sym prefix s))))..)))
+              (push acc (sym prefix s)))))..)))
 
 (mac @ (f1 fs..)
   '(fun (args..)
