@@ -34,7 +34,7 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
     }
   }
 
-  if len(s.parts) == 0 {
+  if s.parts == nil {
     s.parts = append(s.parts, s)
   }
   
