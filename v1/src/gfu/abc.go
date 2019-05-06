@@ -85,7 +85,11 @@ func let_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   if is_scope {
     le = new(Env)
 
-    if e := g.Extenv(env, le, args, false); e != nil {
+    if e = le.Extend(g, &g.RootEnv, false, g.Sym("do"), g.Sym("let"), g.Sym("set")); e != nil {
+      return nil, e
+    }
+
+    if e = g.Extenv(env, le, args, false); e != nil {
       return nil, e
     }
   } else {
