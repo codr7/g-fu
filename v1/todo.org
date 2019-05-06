@@ -1,9 +1,3 @@
-* reimplement testgui.gf using env
-** lib/eos.gf
-* add Pair type
-** pass by value
-** ReadPair x:y
-** add Env iter
 * finish Env readme
 * add thread macro (~)
 ** inject first arg into remaining
