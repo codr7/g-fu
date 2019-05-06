@@ -310,13 +310,13 @@ Any number of super classes may be specified as long as they don't use the same 
 
   (resize (dx dy)
     (say "Button resize")
-    (self 'Widget/resize dx dy))
+    (this 'Widget/resize dx dy))
 
   (on-click (f)
     (push on-click f))
 
   (click ()
-    (for (on-click f) (f self))))
+    (for (on-click f) (f this))))
 ```
 
 Methods exist in a separate namespace and may be invoked by calling the object and passing the name as first argument.
