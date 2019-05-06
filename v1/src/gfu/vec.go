@@ -211,9 +211,10 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return nil, g.E("Invalid call target: %v", v[0])
   }
 
-  f, e := env.Get(g, fid)
-
-  if e != nil {
+  var f Val
+  var e E
+  
+  if f, env, e = fid.Lookup(g, env); e != nil {
     return nil, e
   }
 

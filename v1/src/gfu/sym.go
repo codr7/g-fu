@@ -10,6 +10,7 @@ import (
 type Sym struct {
   tag  Tag
   name string
+  parts []*Sym
 }
 
 type SymType struct {
@@ -23,7 +24,38 @@ func NewSym(g *G, tag Tag, name string) *Sym {
 func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   s.tag = tag
   s.name = name
+
+  if strings.LastIndex(name, "/") > 0 {
+    for _, p := range strings.Split(s.name, "/") {
+      s.parts  = append(s.parts, g.Sym(p))
+    }
+  } else {
+    s.parts = append(s.parts, s)
+  }
+  
   return s
+}
+
+func (s *Sym) Lookup(g *G, env *Env) (v Val, _ *Env, e E) {
+  max := len(s.parts)
+  
+  for i, p := range s.parts {
+    if v, e = env.Get(g, p); e != nil {
+      return nil, nil, e
+    }
+
+    if i == max-1 {
+      break
+    }
+    
+    var ok bool
+    
+    if env, ok = v.(*Env); !ok {
+      return nil, nil, g.E("Expected env: %v", v.Type(g))
+    }
+  }
+
+  return v, env, nil
 }
 
 func (s *Sym) String() string {
@@ -40,29 +72,13 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
   return nil
 }
 
-func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
-  return env.Get(g, val.(*Sym))
+func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
+  v, _, e = val.(*Sym).Lookup(g, env)
+  return v, e
 }
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  s := val.(*Sym)
-  
-  if i, dv := dst.Find(s); dv == nil {
-    if _, sv := src.Find(s); sv != nil {
-      if clone {
-        dv = dst.Insert(i, sv.key)
-        var e E
-
-        if dv.Val, e = g.Clone(sv.Val); e != nil {
-          return e
-        }
-      } else {
-        dst.InsertVar(i, sv)
-      }
-    }
-  }
-
-  return nil
+  return dst.Extend(g, src, clone, val.(*Sym).parts[0])
 }
 
 func (s *SymType) Print(g *G, val Val, out *strings.Builder) {

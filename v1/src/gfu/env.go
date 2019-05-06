@@ -44,6 +44,27 @@ func (e *Env) Dup(dst *Env) *Env {
   return dst
 }
 
+func (dst *Env) Extend(g *G, src *Env, clone bool, keys...*Sym) E {
+  for _, k := range keys {
+    if i, dv := dst.Find(k); dv == nil {
+      if _, sv := src.Find(k); sv != nil {
+        if clone {
+          dv = dst.Insert(i, sv.key)
+          var e E
+          
+          if dv.Val, e = g.Clone(sv.Val); e != nil {
+            return e
+          }
+        } else {
+          dst.InsertVar(i, sv)
+        }
+      }
+    }
+  }
+
+  return nil
+}
+
 func (e *Env) Find(key *Sym) (int, *Var) {
   vs := e.vars
   min, max := 0, len(vs)
@@ -91,6 +112,10 @@ func (e *Env) InsertVar(i int, v *Var) {
   }
 
   e.vars = vs
+}
+
+func (e *Env) Len() Int {
+  return Int(len(e.vars))
 }
 
 func (e *Env) Let(g *G, key *Sym, val Val) E {
@@ -159,6 +184,10 @@ func (_ *EnvType) Dump(g *G, val Val, out *strings.Builder) E {
 
 func (_ *EnvType) Dup(g *G, val Val) (Val, E) {
   return val.(*Env).Dup(new(Env)), nil
+}
+
+func (_ *EnvType) Len(g *G, val Val) (Int, E) {
+  return val.(*Env).Len(), nil
 }
 
 type Var struct {

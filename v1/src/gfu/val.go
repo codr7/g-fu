@@ -46,6 +46,10 @@ func (g *G) Expand(task *Task, env *Env, val Val, depth Int) (Val, E) {
 }
 
 func (g *G) Extenv(src, dst *Env, val Val, clone bool) E {
+  if e := dst.Extend(g, src, clone, g.Sym("do"), g.Sym("let"), g.Sym("set")); e != nil {
+    return e
+  }
+  
   return val.Type(g).Extenv(g, src, dst, val, clone)
 }
 

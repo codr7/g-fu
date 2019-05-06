@@ -120,6 +120,7 @@
   (test (= (expand 2 '(bar 42)) 42)))
   
 (load "cond.gf")
+(load "env.gf")
 (load "math.gf")
 (load "iter.gf")
 (load "fos.gf")
