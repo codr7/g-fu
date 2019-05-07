@@ -22,7 +22,7 @@
                   methods '%methods)
 
               (fun new (args..)
-                (use _ do fail let this-env)
+                (use _ do fail let this-class this-env)
                 (eval (new-object slots args))
                 this)
                 

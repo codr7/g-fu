@@ -1,6 +1,4 @@
 * eos.gf
-** fix env dump
-*** print placeholder if val is env
 ** add method support
 *** bind overridden super methods to Type/method
 ** bench
