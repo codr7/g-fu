@@ -28,7 +28,9 @@ func (e *Env) Dump(g *G, out *strings.Builder) E {
 
     fmt.Fprintf(out, "%v:", v.key)
 
-    if e := g.Dump(v.Val, out); e != nil {
+    if v.Val == e {
+      out.WriteString("this-form")
+    } else if e := g.Dump(v.Val, out); e != nil {
       return e
     }
   }
