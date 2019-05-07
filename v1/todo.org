@@ -5,6 +5,8 @@
 *** bind overridden super methods to Type/method
 ** bench
 ** move to lib & add tests
+* add support for anonymous classes
+** fos & eos
 * finish Env readme
 * ---
 * add thread macro (~)
