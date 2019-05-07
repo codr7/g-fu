@@ -49,7 +49,7 @@ func (_ *BasicType) Bool(g *G, val Val) (bool, E) {
 }
 
 func (t *BasicType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) {
-  return nil, g.E("Call not supported: ", t.id)
+  return nil, g.E("Call not supported: %v", t.id)
 }
 
 func (_ *BasicType) Clone(g *G, val Val) (Val, E) {
