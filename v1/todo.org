@@ -1,6 +1,8 @@
 * eos.gf
-** add method support
 ** add super support
+*** call new object for each super
+** add method support
+*** bind overridden super methods to Type/method
 ** bench
 ** move to lib & add tests
 * finish Env readme
