@@ -72,6 +72,10 @@ func call_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func let_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  if len(args) == 0 {
+    return &g.NIL, nil
+  }
+  
   bsf := args[0]
   bs, is_scope := bsf.(Vec)
 
@@ -738,6 +742,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.IntIterType, "IntIter")
   e.AddType(g, &g.MacType, "Mac")
   e.AddType(g, &g.NilType, "Nil")
+  e.AddType(g, &g.NilIterType, "NilIter")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
   e.AddType(g, &g.SpliceType, "Splice")

@@ -1,4 +1,10 @@
+* eos.gf
+** add method support
+** add super support
+** bench
+** move to lib & add tests
 * finish Env readme
+* ---
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids

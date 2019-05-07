@@ -23,6 +23,7 @@ type G struct {
   IntIterType IntIterType
   MacType MacType
   NilType NilType
+  NilIterType NilIterType
   PrimType PrimType
   QuoteType QuoteType
   SplatType SplatType

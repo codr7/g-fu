@@ -84,11 +84,6 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
   s := val.(*Sym).parts[0]
-
-  if s == g.Sym("use") {
-    return nil
-  }
-  
   return dst.Extend(g, src, clone, s)
 }
 
