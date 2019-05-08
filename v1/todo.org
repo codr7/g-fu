@@ -1,4 +1,9 @@
+* add env.Resolve fn
+** add env.Resolve
+** set when creating fun
+** call with id when not found
 * eos.gf
+** add direct-slots/direct-methods
 ** add method support
 *** bind overridden super methods to Type/method
 ** bench
