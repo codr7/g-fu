@@ -1,7 +1,9 @@
 * add env.Resolve fn
 ** add env.Resolve
-** set when creating fun
+** add resolve prim
 ** call with id when not found
+** add clear-env
+*** return env
 * eos.gf
 ** add direct-slots/direct-methods
 ** add method support
@@ -27,3 +29,5 @@
 * add str iter
 ** add char type (rune)
 * add iters to readme
+
+(let _ (fun resolve (id) 42))
