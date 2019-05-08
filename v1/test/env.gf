@@ -9,3 +9,9 @@
 
   (let ee (let _ (use e/ foo))
     (test (= ee/foo 1))))
+
+(let (foo (let (bar 7)
+            (fun resolve (id) 42)
+            (this-env)))
+  (test (= foo/bar 7))
+  (test (= foo/baz 42)))

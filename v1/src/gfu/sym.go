@@ -41,11 +41,11 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) Lookup(g *G, env *Env) (v Val, _ *Env, e E) {
+func (s *Sym) Lookup(g *G, task *Task, env *Env) (v Val, _ *Env, e E) {
   max := len(s.parts)
 
   for i, p := range s.parts {
-    if v, e = env.Get(g, p); e != nil {
+    if v, e = env.Get(g, task, p); e != nil {
       return nil, nil, e
     }
 
@@ -78,7 +78,7 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  v, _, e = val.(*Sym).Lookup(g, env)
+  v, _, e = val.(*Sym).Lookup(g, task, env)
   return v, e
 }
 

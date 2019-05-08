@@ -1,9 +1,3 @@
-* add env.Resolve fn
-** add env.Resolve
-** add resolve prim
-** call with id when not found
-** add clear-env
-*** return env
 * eos.gf
 ** add direct-slots/direct-methods
 ** add method support

@@ -8,6 +8,7 @@ import (
 
 type Env struct {
   vars []*Var
+  resolve *Fun
 }
 
 type EnvType struct {
@@ -88,11 +89,11 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   return max, nil
 }
 
-func (e *Env) Get(g *G, key *Sym) (Val, E) {
+func (e *Env) Get(g *G, task *Task, key *Sym) (Val, E) {
   _, found := e.Find(key)
 
   if found == nil {
-    return nil, g.E("Unknown: %v", key)
+    return e.Resolve(g, task, key)
   }
 
   return found.Val, nil
@@ -121,6 +122,16 @@ func (e *Env) Len() Int {
 }
 
 func (e *Env) Let(g *G, key *Sym, val Val) E {
+  if key == g.resolve_sym {
+    var ok bool
+    
+    if e.resolve, ok = val.(*Fun); !ok {
+      return g.E("Expected Fun, was: %v", val.Type(g))
+    }
+    
+    return nil
+  }
+  
   if i, found := e.Find(key); found == nil {
     e.Insert(i, key).Val = val
   } else if found.env != e {
@@ -132,6 +143,14 @@ func (e *Env) Let(g *G, key *Sym, val Val) E {
   }
 
   return nil
+}
+
+func (e *Env) Resolve(g *G, task *Task, key *Sym) (Val, E) {
+  if e.resolve == nil {
+    return nil, g.E("Unknown: %v", key)
+  }
+
+  return e.resolve.CallArgs(g, task, e, Vec{key})
 }
 
 func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {
