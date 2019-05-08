@@ -7,7 +7,7 @@
      
      (call (fun ((%done? F) %result..)
              (if %done?
-               %result..
+               (if %result (if (= 1 (len %result)) (head %result) %result))
                (do %body.. (recall)))))))
 
 (mac while (cond body..)
@@ -57,3 +57,7 @@
     (if (f val)
       (rf acc val)
       acc)))
+
+(fun find-if (in pred)
+  (for (in v)
+    (if (set 'v (pred v)) (break v))))

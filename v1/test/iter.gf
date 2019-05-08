@@ -50,3 +50,7 @@
   (test (= out '(1 2 3))))
 
 (test (= (t@ 41 (fun (x) (inc x))) 42))
+
+(let (v '(1 2 3))
+  (test (= (find-if v (fun (x) (if (= x 2) 'ok))) 'ok))
+  (test (_? (find-if v (fun (x) F)))))

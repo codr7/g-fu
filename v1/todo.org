@@ -1,12 +1,14 @@
 * eos.gf
-** add direct-slots/direct-methods
-** add method support
-*** bind overridden super methods to Type/method
+** fix width/height
 ** bench
-** move to lib & add tests
+* finish Env readme
 * add support for anonymous classes
 ** fos & eos
-* finish Env readme
+* update eos
+** use '- instead of '/ as separator
+** add this-class
+** filter methods
+** handle resolve
 * ---
 * add thread macro (~)
 ** inject first arg into remaining
@@ -23,5 +25,3 @@
 * add str iter
 ** add char type (rune)
 * add iters to readme
-
-(let _ (fun resolve (id) 42))

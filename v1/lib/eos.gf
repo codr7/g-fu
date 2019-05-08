@@ -3,37 +3,30 @@
 (load "../lib/abc.gf")
 (load "../lib/iter.gf")
 
-(fun new-object (slots args)
-  '(let this (this-env)
-        %(tr slots _
-             (fun (acc x)
-               (if (= (type x) Vec)
-                 (let (id (head x) v (pop-key args id))
-                   (if (_? v) (push acc x..) (push acc id v)))
-                 (push acc x (pop-key args x)))))..))
+(fun Widget (args..)
+  (use _ do)
+  (let left 0 top 0
+       width (or (pop-key args 'width) (fail "Missing width"))
+       height (or (pop-key args 'height) (fail "Missing height")))
+  (this-env))
 
-(mac class (id supers slots methods..)  
-  '(let %id (let (id '%id
-                  this-class (this-env)
-                  supers (vec %supers..)
-                  slots (push (tr supers _
-                                  (t@ push (tmap (fun (s) s/slots)) tcat))
-                              '%slots..)
-                  methods '%methods)
+(fun Button (args..)
+  (let Widget (Widget args..))
+  (Widget/do
+    (this-env)))
 
-              (fun new (args..)
-                (use _ do fail let this-class this-env)
-                (eval (new-object slots args))
-                this)
-                
-              this-class)))
+(let (w (Widget 'width 100 'height 50))
+  (dump w/width))
 
-(class Widget ()
-  ((left 0) (top 0)
-   (width (fail "Missing width")) (height (fail "Missing height"))))
+(let (b (Button 'width 100 'height 50))
+  (dump b/width))
 
-(class Button (Widget)
-  (on-click))
+(__ (b (Button/new 'width 100 'height 50))
+  (test (= (b/move 10 10) '(10 10)))
+  (test (= (b/resize 0 0) '(142 50)))
 
-(dump Button/id)
-(dump (Button/new 'width 100 'height 50))
+  (let (called F)
+    (b/on-click (fun (b) (set 'called T)))
+    (test (not called))
+    (b/click)
+    (test called)))
