@@ -8,13 +8,13 @@
   (let left 0 top 0
        width (or (pop-key args 'width) (fail "Missing width"))
        height (or (pop-key args 'height) (fail "Missing height")))
-  (this-env))
+  this)
 
 (fun Button (args..)
   (let Widget (Widget args..))
   
   (Widget/do
-    (this-env)))
+    this))
 
 (let (b (Button 'width 100 'height 50))
   (dump b/width))

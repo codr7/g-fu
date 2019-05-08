@@ -21,13 +21,13 @@ This document describes the implementation of a minimal viable single-dispatch o
 
   (resize (dx dy)
     (say "Button resize")
-    (this 'Widget/resize dx dy))
+    (self 'Widget/resize dx dy))
 
   (on-click (f)
     (push on-click f))
 
   (click ()
-    (for (on-click f) (f this))))
+    (for (on-click f) (f self))))
 ```
 ```
   (let (b (Button 'new 'width 100 'height 50))
@@ -125,30 +125,30 @@ Calls may be expanded to visually inspect the generated code.
     (T (fail (str "Unknown method: " sym-144)))))
 ```
 
-### This
-`dispatch` is a useful tool in itself, but there comes a time when `this` needs to be accessed from the inside, to delegate etc. `let-this` expands to a new environment with `this` bound to the result of evaluating the last form in its body.
+### Self
+`dispatch` is a useful tool in itself, but there comes a time when `self` needs to be accessed from the inside, to delegate etc. `let-self` expands to a new environment with `self` bound to the result of evaluating the last form in its body.
 
 ```
-(mac let-this (vars body..)
-  '(let (this _ %vars..)
-     (set 'this %(pop body))
+(mac let-self (vars body..)
+  '(let (self _ %vars..)
+     (set 'self %(pop body))
      %body..
-     (fun (args..) (this args..))))
+     (fun (args..) (self args..))))
 ```
 ```
-  (let-this ()
-    (say this)
+  (let-self ()
+    (say self)
     42)
 
 42
 ```
 
-The following example creates a `dispatch` with `this`-support and a `patch`-method that may be used to hook into method dispatch and/or install a different environment. In this case we're installing an intercepting function that returns 42 when called without arguments and delegates anything else to the original dispatch table.
+The following example creates a `self`-aware `dispatch` and a `patch`-method that may be used to hook into method dispatch and/or install a different environment. In this case we're installing an intercepting function that returns 42 when called without arguments and delegates anything else to the original dispatch table.
 
 ```
-(let (s (let-this ()
+(let (s (let-self ()
           (dispatch
-            (patch (new) (set 'this new)))))
+            (patch (new) (set 'self new)))))
   (s 'patch (fun (args..)
     (if args (s args..) 42)))
     
@@ -158,12 +158,12 @@ The following example creates a `dispatch` with `this`-support and a `patch`-met
 ```
 
 ### Classification
-Classes may be created using the `class`-macro. Classes are implemented as dispatchers with `this`-support, the constructor is just another method.
+Classes may be created using the `class`-macro. Classes are implemented as `self`-aware `dispatch`-ers, the constructor is just another method.
 
 ```
 (mac class (id supers slots methods..)
   '(let %id
-     (let-this ()
+     (let-self ()
        (dispatch
          (id () '%id)
          (slots () '%slots)
@@ -176,7 +176,7 @@ Classes may be created using the `class`-macro. Classes are implemented as dispa
 
 ```
 (fun new-object (supers slots methods args)
-  (eval '(let-this %(tr (push (super-slots supers) slots..) _
+  (eval '(let-self %(tr (push (super-slots supers) slots..) _
                         (fun (acc x)
                           (if (= (type x) Vec)
                             (let (id (head x) v (pop-key args id))

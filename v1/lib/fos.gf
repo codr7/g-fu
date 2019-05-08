@@ -19,11 +19,11 @@
                                
        (T (fail (str "Unknown method: " %id))))))
 
-(mac let-this (vars body..)
-  '(let (this _ %vars..)
-     (set 'this %(pop body))
+(mac let-self (vars body..)
+  '(let (self _ %vars..)
+     (set 'self %(pop body))
      %body..
-     (fun (args..) (this args..))))
+     (fun (args..) (self args..))))
 
 (fun super-slots (supers)
   (tr supers _ (t@ push (tmap (fun (s) (s 'slots))) tcat)))
@@ -36,7 +36,7 @@
               (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..)))))))
 
 (fun new-object (supers slots methods args)
-  (eval '(let-this %(tr (push (super-slots supers) slots..) _
+  (eval '(let-self %(tr (push (super-slots supers) slots..) _
                         (fun (acc x)
                           (if (= (type x) Vec)
                             (let (id (head x) v (pop-key args id))
@@ -49,7 +49,7 @@
 
 (mac class (id supers slots methods..)
   '(let %id
-     (let-this ()
+     (let-self ()
        (dispatch
          (id () '%id)
          (slots () '%slots)

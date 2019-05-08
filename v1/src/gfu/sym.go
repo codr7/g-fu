@@ -78,7 +78,15 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  v, _, e = val.(*Sym).Lookup(g, task, env)
+  s := val.(*Sym)
+  switch s {
+  case g.this_sym:
+    return env, nil
+  default:
+    break
+  }
+  
+  v, _, e = s.Lookup(g, task, env)
   return v, e
 }
 

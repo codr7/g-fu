@@ -5,13 +5,13 @@
   (test (= (d 'dec) 3))
   (test (= n 3)))
 
-(let-this ()
-  (test (= this 42))
+(let-self ()
+  (test (= self 42))
   42)
 
-(let (s (let-this ()
+(let (s (let-self ()
            (dispatch
-             (patch (new) (set 'this new)))))
+             (patch (new) (set 'self new)))))
   (s 'patch (fun (x) x))
   (test (= (s 42) 42)))
 
@@ -33,13 +33,13 @@
   (on-click)
 
   (resize (dx dy)
-    (this 'Widget/resize (+ dx 42) dy))
+    (self 'Widget/resize (+ dx 42) dy))
 
   (on-click (f)
     (push on-click f))
 
   (click ()
-    (for (on-click f) (f this))))
+    (for (on-click f) (f self))))
 
 (let b (Button 'new 'width 100 'height 50))
 (test (= (b 'move 10 10) '(10 10)))
