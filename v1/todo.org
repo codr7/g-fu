@@ -1,6 +1,7 @@
-* eos.gf
-** fix width/height
+* lib/eos.gf
+** add methods
 ** bench
+** move to test/env.gf
 * finish Env readme
 * add support for anonymous classes
 ** fos & eos

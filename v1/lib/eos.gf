@@ -12,11 +12,9 @@
 
 (fun Button (args..)
   (let Widget (Widget args..))
+  
   (Widget/do
     (this-env)))
-
-(let (w (Widget 'width 100 'height 50))
-  (dump w/width))
 
 (let (b (Button 'width 100 'height 50))
   (dump b/width))
