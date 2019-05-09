@@ -5,7 +5,7 @@ The word Closure usually means a function with a captured environment. So far so
 
 The thing that been increasingly bugging me is being required to squeeze all interaction with the underlying environment through a function, which is both slow and inconvenient. 
 
-Peeling off the functional layer leaves the (now first class) environment.
+Peeling off the functional layer leaves the (now first class) environment. Note that used bindings,`this-env` in the following example, are captured as usual.
 
 ```
   (let _ this-env)
@@ -16,7 +16,6 @@ Peeling off the functional layer leaves the (now first class) environment.
 Qualified ids allow reaching into external environments to access their bindings.
 
 ```
-
 ```
 
 Combining these ideas allows combining data and code in a more flexible and convenient form.
@@ -34,4 +33,14 @@ Combining these ideas allows combining data and code in a more flexible and conv
   (c/dec))
 
 2
+```
+
+(use)
+
+```
+```
+
+GUI
+
+```
 ```
