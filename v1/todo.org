@@ -1,9 +1,4 @@
-* lib/eos.gf
-** switch (use) to expand to let qualified->id
-** fix extenv (+)?
-*** drill down into funs and macs
-** bench
-** move to test/env.gf
+* bench env counter
 * sort Env dump
 * add (val key) builtin fun
 ** lookup key in env
