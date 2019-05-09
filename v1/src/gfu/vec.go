@@ -215,15 +215,31 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return &g.NIL, nil
   }
   
-  var f Val
-  var e E
+  target, ce, e := id.Lookup(g, task, env, false)
   
-  if f, env, e = id.Lookup(g, task, env, false); e != nil {
+  if e != nil {
     return nil, e
   }
 
-  result, e := g.Call(task, env, f, v[1:])
+  var result Val
+  args := v[1:]
+  
+  if f, ok := target.(*Fun); ok {
+    args, e = args.EvalVec(g, task, env)
 
+    if e != nil {
+      return nil, e
+    }
+
+    if args, e = f.CheckArgs(g, args); e != nil {
+      return nil, e
+    }
+    
+    result, e = f.CallArgs(g, task, ce, args)
+  } else {
+    result, e = g.Call(task, ce, target, args)
+  }
+  
   if e != nil {
     return nil, e
   }

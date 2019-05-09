@@ -39,15 +39,27 @@ func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
   return f, nil
 }
 
-func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var e E
-
-  if e = f.arg_list.Check(g, args); e != nil {
+func (f *Fun) CheckArgs(g *G, args Vec) (Vec, E) {
+  if e := f.arg_list.Check(g, args); e != nil {
     return nil, e
   }
 
   if f.imp != nil {
-    return f.imp(g, task, env, f.arg_list.Fill(g, args))
+    args = f.arg_list.Fill(g, args)
+  }
+
+  return args, nil
+}
+
+func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  args, e := f.CheckArgs(g, args)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  if f.imp != nil {
+    return f.imp(g, task, env, args)
   }
 
   var be Env
