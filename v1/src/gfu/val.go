@@ -13,8 +13,8 @@ func (g *G) Bool(val Val) (bool, E) {
   return val.Type(g).Bool(g, val)
 }
 
-func (g *G) Call(task *Task, env *Env, val Val, args Vec) (Val, E) {
-  return val.Type(g).Call(g, task, env, val, args)
+func (g *G) Call(task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
+  return val.Type(g).Call(g, task, env, val, args, args_env)
 }
 
 func (g *G) Clone(val Val) (Val, E) {

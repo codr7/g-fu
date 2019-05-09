@@ -70,7 +70,7 @@ func (m *Mac) Type(g *G) Type {
   return &g.MacType
 }
 
-func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec) (v Val, e E) {
+func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (v Val, e E) {
   m := val.(*Mac)
   
   if v, e = m.ExpandCall(g, task, env, args); e != nil {

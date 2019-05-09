@@ -86,14 +86,16 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  if v, _, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
+  var args_env *Env
+  
+  if v, args_env, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
     return nil, e
   }
   
   if p, ok := v.(*Prim); ok && p.arg_list.items == nil {
-    v, e = g.Call(task, env, v, Vec{})
+    v, e = g.Call(task, env, v, Vec{}, args_env)
   } else if m, ok := v.(*Mac); ok && m.arg_list.items == nil {
-    v, e = g.Call(task, env, v, Vec{})
+    v, e = g.Call(task, env, v, Vec{}, args_env)
   }
 
   return v, e

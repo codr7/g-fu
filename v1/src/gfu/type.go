@@ -11,7 +11,7 @@ type Type interface {
 
   Init(*G, *Sym) E
   Bool(*G, Val) (bool, E)
-  Call(*G, *Task, *Env, Val, Vec) (Val, E)
+  Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
   Clone(*G, Val) (Val, E)
   Drop(*G, Val, Int) (Val, E)
   Dump(*G, Val, *strings.Builder) E
@@ -48,7 +48,7 @@ func (_ *BasicType) Bool(g *G, val Val) (bool, E) {
   return true, nil
 }
 
-func (t *BasicType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) {
+func (t *BasicType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   return nil, g.E("Call not supported: %v", t.id)
 }
 

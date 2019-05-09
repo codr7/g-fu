@@ -221,28 +221,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return nil, e
   }
 
-  var result Val
-  args := v[1:]
-  
-  if f, ok := target.(*Fun); ok {
-    if args, e = args.EvalVec(g, task, env); e != nil {
-      return nil, e
-    }
-
-    if args, e = f.CheckArgs(g, args); e != nil {
-      return nil, e
-    }
-    
-    result, e = f.CallArgs(g, task, ce, args)
-  } else {
-    result, e = g.Call(task, ce, target, args)
-  }
-  
-  if e != nil {
-    return nil, e
-  }
-
-  return result, nil
+  return g.Call(task, ce, target, v[1:], env)
 }
 
 func (_ *VecType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (Val, E) {

@@ -96,9 +96,9 @@ func (f *Fun) Type(g *G) Type {
   return &g.FunType
 }
 
-func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) {
+func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   f := val.(*Fun)
-  args, e := args.EvalVec(g, task, env)
+  args, e := args.EvalVec(g, task, args_env)
 
   if e != nil {
     return nil, e

@@ -5,7 +5,7 @@ import (
   "strings"
 )
 
-type PrimImp func(*G, *Task, *Env, Vec) (Val, E)
+type PrimImp func(*G, *Task, *Env, Vec, *Env) (Val, E)
 
 type Prim struct {
   id       *Sym
@@ -29,14 +29,14 @@ func (_ *Prim) Type(g *G) Type {
   return &g.PrimType
 }
 
-func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec) (Val, E) {
+func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   p := val.(*Prim)
   
   if e := p.arg_list.Check(g, args); e != nil {
     return nil, e
   }
 
-  return p.imp(g, task, env, p.arg_list.Fill(g, args))
+  return p.imp(g, task, env, p.arg_list.Fill(g, args), args_env)
 }
 
 func (_ *PrimType) Dump(g *G, val Val, out *strings.Builder) E {
