@@ -89,11 +89,11 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   return max, nil
 }
 
-func (e *Env) Get(g *G, task *Task, key *Sym) (Val, E) {
+func (e *Env) Get(g *G, task *Task, key *Sym, silent bool) (Val, E) {
   _, found := e.Find(key)
 
   if found == nil {
-    return e.Resolve(g, task, key)
+    return e.Resolve(g, task, key, silent)
   }
 
   return found.Val, nil
@@ -145,8 +145,12 @@ func (e *Env) Let(g *G, key *Sym, val Val) E {
   return nil
 }
 
-func (e *Env) Resolve(g *G, task *Task, key *Sym) (Val, E) {
+func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
   if e.resolve == nil {
+    if silent {
+      return nil, nil
+    }
+    
     return nil, g.E("Unknown: %v", key)
   }
 

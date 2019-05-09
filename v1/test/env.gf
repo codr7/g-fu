@@ -1,4 +1,4 @@
-(test (= (len (let _ this-env)) 0))
+(test (= (len (let _ this-env)) 1))
 
 (let (e (let (foo 1)
           (use _ do let)
@@ -7,7 +7,7 @@
   (e/do (let bar 2))
   (test (= e/bar 2))
 
-  (let ee (let _ (use e/ foo))
+  (let ee (let _ (use e foo))
     (test (= ee/foo 1))))
 
 (let (foo (let (bar 7)

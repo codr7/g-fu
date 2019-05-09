@@ -148,14 +148,8 @@ func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   return v, nil
 }
 
-func is_let_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  for _, a := range args {
-    if _, ok := env.Find(a.(*Sym)); ok == nil {
-      return &g.F, nil
-    }
-  }
-  
-  return &g.T, nil
+func this_env_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return env, nil
 }
 
 func if_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -698,6 +692,10 @@ func task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return t, nil
 }
 
+func this_task_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return task, nil
+}
+
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   t := args[0].(*Task)
   t.Inbox.Push(g, args[1:]...)
@@ -766,7 +764,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "set", set_imp, ASplat("args"))
-  e.AddFun(g, "let?", is_let_imp, ASplat("ids")) 
+  e.AddPrim(g, "this-env", this_env_imp) 
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "test", test_imp, ASplat("cases"))
@@ -816,6 +814,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
     
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
+  e.AddPrim(g, "this-task", this_task_imp)
   e.AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))

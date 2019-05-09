@@ -218,7 +218,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
   var f Val
   var e E
   
-  if f, env, e = id.Lookup(g, task, env); e != nil {
+  if f, env, e = id.Lookup(g, task, env, false); e != nil {
     return nil, e
   }
 

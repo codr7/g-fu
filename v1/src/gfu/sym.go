@@ -41,14 +41,18 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) Lookup(g *G, task *Task, env *Env) (v Val, _ *Env, e E) {
+func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (v Val, _ *Env, e E) {
   max := len(s.parts)
 
   for i, p := range s.parts {
-    if v, e = env.Get(g, task, p); e != nil {
+    if v, e = env.Get(g, task, p, silent); e != nil {
       return nil, nil, e
     }
 
+    if silent && v == nil {
+      return nil, nil, nil
+    }
+    
     if i == max-1 {
       break
     }
@@ -56,6 +60,10 @@ func (s *Sym) Lookup(g *G, task *Task, env *Env) (v Val, _ *Env, e E) {
     var ok bool
     
     if env, ok = v.(*Env); !ok {
+      if silent {
+        return nil, nil, nil
+      }
+      
       return nil, nil, g.E("Expected env: %v", v.Type(g))
     }
   }
@@ -78,18 +86,35 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  s := val.(*Sym)
-  switch s {
-  case g.this_env_sym:
-    return env, nil
-  case g.this_task_sym:
-    return task, nil
-  default:
-    break
+  if v, _, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
+    return nil, e
   }
   
-  v, _, e = s.Lookup(g, task, env)
+  if p, ok := v.(*Prim); ok && p.arg_list.items == nil {
+    v, e = g.Call(task, env, v, Vec{})
+  } else if m, ok := v.(*Mac); ok && m.arg_list.items == nil {
+    v, e = g.Call(task, env, v, Vec{})
+  }
+
   return v, e
+}
+
+func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val, e E) {
+  s := val.(*Sym)
+  
+  if v, _, e = s.Lookup(g, task, env, true); e != nil {
+    return nil, e
+  }
+
+  if v != nil {
+    if m, ok := v.(*Mac); ok {
+      if m.arg_list.items == nil { 
+        return m.ExpandCall(g, task, env, Vec{})
+      }
+    }
+  }
+
+  return val, nil
 }
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
