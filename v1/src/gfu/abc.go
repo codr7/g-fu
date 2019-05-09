@@ -190,7 +190,7 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   p := args[0]
 
   if id, ok := p.(*Sym); ok {
-    return env.Update(g, id, func(v Val) (Val, E) {
+    return args_env.Update(g, id, func(v Val) (Val, E) {
       return v.(Int) + d.(Int), nil
     })
   }
@@ -473,7 +473,7 @@ func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    return env.Update(g, p, func(v Val) (Val, E) {
+    return args_env.Update(g, p, func(v Val) (Val, E) {
       return g.Push(v, vs...)
     })
   default:
@@ -492,7 +492,7 @@ func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    env.Update(g, p, func(v Val) (Val, E) {
+    args_env.Update(g, p, func(v Val) (Val, E) {
       if it, rest, e = g.Pop(v); e != nil {
         return nil, e
       }
@@ -520,7 +520,7 @@ func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    return env.Update(g, p, func(v Val) (Val, E) {
+    return args_env.Update(g, p, func(v Val) (Val, E) {
       return g.Drop(v, args[1].(Int))
     })
   default:
@@ -567,7 +567,7 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   if id, ok := in.(*Sym); ok {
     var v Val
 
-    if _, e = env.Update(g, id, func(in Val) (Val, E) {
+    if _, e = args_env.Update(g, id, func(in Val) (Val, E) {
       var out Val
 
       if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {

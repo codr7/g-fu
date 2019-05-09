@@ -73,15 +73,15 @@ func (m *Mac) Type(g *G) Type {
 func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (v Val, e E) {
   m := val.(*Mac)
   
-  if v, e = m.ExpandCall(g, task, env, args); e != nil {
+  if v, e = m.ExpandCall(g, task, args_env, args); e != nil {
     return nil, e
   }
 
-  if e = g.Extenv(m.env, env, v, false); e != nil {
+  if e = g.Extenv(m.env, args_env, v, false); e != nil {
     return nil, e
   }
 
-  return g.Eval(task, env, v)
+  return g.Eval(task, args_env, v)
 }
 
 func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {

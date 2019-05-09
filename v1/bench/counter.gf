@@ -4,16 +4,15 @@
 (let _
 
 (let super this-env
-     Counter (fun (n)
-               (use super inc dec)
-               (fun c-inc () (inc n))
-               (fun c-dec () (dec n))
+     Counter (fun ((n 0))
+               (fun inc () (super/inc n))
+               (fun dec () (super/dec n))
                this-env))
 
 (dump (bench 10 (for 1000
-  (let c (Counter 0))
-  (c/c-inc)
-  (c/c-dec))))
+  (let c (Counter))
+  (c/inc)
+  (c/dec))))
 
 )
 
