@@ -1,16 +1,37 @@
 ## Raw Closures
 
 ### Intro
-A closure usually means a function with a derived environment. The environment is used to store data and closure/s form the api. So far so good, it's possible to build mostly anything using [TCO](http://wiki.c2.com/?TailCallOptimization)-gifted closures. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) includes a basic single dispatch object [system](https://github.com/codr7/g-fu/blob/master/v1/doc/functional_objects.md) based on closures.
+The word Closure usually means a function with a captured environment. So far so good, it's possible to build mostly anything using [TCO](http://wiki.c2.com/?TailCallOptimization)-gifted closures. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) includes a basic single dispatch object [system](https://github.com/codr7/g-fu/blob/master/v1/doc/functional_objects.md) based on closures.
 
-The thing that bugs me with functional closures is that they require squeezing all interaction through a functional/applicative pipe, which leads to reinventing unreachable features using suboptimal tools.
+The thing that been increasingly bugging me is being required to squeeze all interaction with the underlying environment through a function, which is both slow and inconvenient. 
 
-Peeling off the functional layer leaves the environment, which is promoted to first class.
-
-```
-```
-
-Qualified ids allows reaching into external environments to access their slots/functions.
+Peeling off the functional layer leaves the (now first class) environment.
 
 ```
+  (let _ this-env)
+
+(this-env:(prim this-env ()))
+```
+
+Qualified ids allow reaching into external environments to access their bindings.
+
+```
+
+```
+
+Combining these ideas allows combining data and code in a more flexible and convenient form.
+
+```
+(let (super this-env
+      Counter (fun ((n 0))
+                (fun inc () (super/inc n))
+                (fun dec () (super/dec n))
+                this-env)
+      c (Counter))
+  (c/inc)
+  (c/inc)
+  (c/inc)
+  (c/dec))
+
+2
 ```
