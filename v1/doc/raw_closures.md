@@ -40,6 +40,24 @@ Combining these ideas allows combining data and code in a more flexible, perform
 ```
 ```
 
+Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate.
+
+```
+(fun proxy (d)
+  (fun resolve (id)
+    (d/val id))
+
+  this-env)
+
+```
+```
+  (let (p (proxy (let (foo 42) this-env)))
+    p/foo)
+
+42
+```
+
+
 GUI
 
 ```

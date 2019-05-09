@@ -2,7 +2,7 @@
 * add (val key) builtin fun
 ** lookup key in env
 * add resolve test
-* raw closures
+* finish raw closures
 * ---
 * add thread macro (~)
 ** inject first arg into remaining
@@ -16,6 +16,4 @@
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
-* add str iter
-** add char type (rune)
 * add iters to readme
