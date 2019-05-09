@@ -1,4 +1,5 @@
 * lib/eos.gf
+** use calling env to eval qualified fun args
 ** fix extenv (+)
 *** drill down into funs and macs
 ** switch (use) to expand to let qualified->id
