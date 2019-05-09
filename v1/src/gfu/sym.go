@@ -91,8 +91,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 }
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  s := val.(*Sym).parts[0]
-  return dst.Extend(g, src, clone, s)
+  return dst.Extend(g, src, clone, val.(*Sym).parts[0])
 }
 
 func (s *SymType) Print(g *G, val Val, out *strings.Builder) {

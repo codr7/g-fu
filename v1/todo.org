@@ -1,15 +1,10 @@
 * lib/eos.gf
-** add methods
+** fix extenv (+)
+*** drill down into funs and macs
+** switch (use) to expand to let qualified->id
 ** bench
 ** move to test/env.gf
 * finish Env readme
-* add support for anonymous classes
-** fos & eos
-* update eos
-** use '- instead of '/ as separator
-** add this-class
-** filter methods
-** handle resolve
 * ---
 * add thread macro (~)
 ** inject first arg into remaining
