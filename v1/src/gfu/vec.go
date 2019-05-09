@@ -225,9 +225,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
   args := v[1:]
   
   if f, ok := target.(*Fun); ok {
-    args, e = args.EvalVec(g, task, env)
-
-    if e != nil {
+    if args, e = args.EvalVec(g, task, env); e != nil {
       return nil, e
     }
 
