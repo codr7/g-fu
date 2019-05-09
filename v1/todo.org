@@ -5,6 +5,7 @@
 ** switch (use) to expand to let qualified->id
 ** bench
 ** move to test/env.gf
+* sort Env dump
 * finish Env readme
 * ---
 * add thread macro (~)

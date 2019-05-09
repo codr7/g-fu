@@ -17,9 +17,9 @@
       (vec (inc width dx)
            (inc height dy)))
   
-    this)
+    this-env)
 
-  this))
+  this-env))
 
 (let Button (let _
   (fun new (args..)
@@ -29,9 +29,9 @@
     (fun resize (dx dy)
       w/resize (+ dx 42) dy)
     
-    this)
+    this-env)
 
-  this))
+  this-env))
 
 (dump Button)
 

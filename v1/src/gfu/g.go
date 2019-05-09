@@ -46,7 +46,8 @@ type G struct {
   nil_sym,
   nop_sym,
   resolve_sym,
-  this_sym *Sym
+  this_env_sym,
+  this_task_sym *Sym
   
   load_path string
 }
@@ -59,7 +60,8 @@ func (g *G) Init() (*G, E) {
   g.nil_sym = g.Sym("_")
   g.nop_sym = g.Sym("__")
   g.resolve_sym = g.Sym("resolve")
-  g.this_sym = g.Sym("this")
+  g.this_env_sym = g.Sym("this-env")
+  g.this_task_sym = g.Sym("this-task")
   g.MainTask.Init(g, &g.RootEnv, g.Sym("main-task"), NewChan(0), nil)
   return g, nil
 }

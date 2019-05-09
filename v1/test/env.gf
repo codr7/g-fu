@@ -1,8 +1,8 @@
-(test (= (len (let _ (this-env))) 1))
+(test (= (len (let _ this-env)) 0))
 
 (let (e (let (foo 1)
           (use _ do let)
-          (this-env)))
+          this-env))
   (test (= e/foo 1))
   (e/do (let bar 2))
   (test (= e/bar 2))
@@ -12,6 +12,6 @@
 
 (let (foo (let (bar 7)
             (fun resolve (id) 42)
-            (this-env)))
+            this-env))
   (test (= foo/bar 7))
   (test (= foo/baz 42)))

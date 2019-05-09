@@ -80,8 +80,10 @@ func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
   s := val.(*Sym)
   switch s {
-  case g.this_sym:
+  case g.this_env_sym:
     return env, nil
+  case g.this_task_sym:
+    return task, nil
   default:
     break
   }
