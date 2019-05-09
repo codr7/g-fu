@@ -111,11 +111,17 @@ func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
   f := val.(*Fun)
   
   if id := f.id; id == nil {
-    out.WriteString("(fun (")
+    out.WriteString("(fun")
   } else {
-    fmt.Fprintf(out, "(fun %v (", f.id)
+    fmt.Fprintf(out, "(fun %v", f.id)
   }
 
+  nargs := len(f.arg_list.items)
+  
+  if nargs > 0 {
+    out.WriteString(" (")
+  }
+  
   for i, a := range f.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
@@ -126,7 +132,11 @@ func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
     }
   }
 
-  out.WriteString("))")
+  if nargs > 0 {
+    out.WriteRune(')')
+  }
+
+  out.WriteRune(')')
   return nil
 }
 

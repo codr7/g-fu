@@ -41,8 +41,13 @@ func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env 
 
 func (_ *PrimType) Dump(g *G, val Val, out *strings.Builder) E {
   p := val.(*Prim)
-  fmt.Fprintf(out, "(prim %v (", p.id)
-
+  fmt.Fprintf(out, "(prim %v", p.id)
+  nargs := len(p.arg_list.items)
+  
+  if nargs > 0 {
+    out.WriteString(" (")
+  }
+  
   for i, a := range p.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
@@ -53,7 +58,11 @@ func (_ *PrimType) Dump(g *G, val Val, out *strings.Builder) E {
     }
   }
 
-  out.WriteString("))")
+  if nargs > 0 {
+    out.WriteRune(')')
+  }
+
+  out.WriteRune(')')
   return nil
 }
 

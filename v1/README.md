@@ -139,9 +139,9 @@ Environments are first class, `this-env` evaluates to the current environment.
 Environments capture used bindings, `this-env` in the following example.
 
 ```
-  (let _ this-env)
+  (let (foo 42) this-env)
 
-(this-env:(prim this-env ()))
+(foo:42 this-env:(prim this-env))
 ```
 
 ### Functions

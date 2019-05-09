@@ -88,11 +88,17 @@ func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {
   m := val.(*Mac)
   
   if id := m.id; id == nil {
-    out.WriteString("(mac (")
+    out.WriteString("(mac")
   } else {
-    fmt.Fprintf(out, "(mac %v (", m.id)
+    fmt.Fprintf(out, "(mac %v", m.id)
   }
 
+  nargs := len(m.arg_list.items)
+  
+  if nargs > 0 {
+    out.WriteString(" (")
+  }
+  
   for i, a := range m.arg_list.items {
     if i > 0 {
       out.WriteRune(' ')
@@ -101,6 +107,10 @@ func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {
     out.WriteString(a.id.name)
   }
 
-  out.WriteString("))")
+  if nargs > 0 {
+    out.WriteRune(')')
+  }
+  
+  out.WriteRune(')')
   return nil
 }

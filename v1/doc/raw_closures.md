@@ -8,9 +8,9 @@ The thing that been increasingly bugging me is being required to squeeze all int
 Peeling off the functional layer leaves the (now first class) environment. Note that used bindings,`this-env` in the following example, are captured as usual.
 
 ```
-  (let _ this-env)
+  (let (foo 42) this-env)
 
-(this-env:(prim this-env ()))
+(foo:42 this-env:(prim this-env))
 ```
 
 Qualified ids allow reaching into external environments to access their bindings.
