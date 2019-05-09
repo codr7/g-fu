@@ -1,10 +1,13 @@
 * lib/eos.gf
-** fix extenv (+)
-*** drill down into funs and macs
 ** switch (use) to expand to let qualified->id
+** fix extenv (+)?
+*** drill down into funs and macs
 ** bench
 ** move to test/env.gf
 * sort Env dump
+* add (val key) builtin fun
+** lookup key in env
+* raw closures
 * finish Env readme
 * ---
 * add thread macro (~)
@@ -22,3 +25,6 @@
 * add str iter
 ** add char type (rune)
 * add iters to readme
+
+
+Raw Closures

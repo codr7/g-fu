@@ -27,7 +27,7 @@
     (use w move)
   
     (fun resize (dx dy)
-      w/resize (+ dx 42) dy)
+      (w/resize (+ dx 42) dy))
     
     this-env)
 
