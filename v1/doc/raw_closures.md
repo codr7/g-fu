@@ -33,12 +33,7 @@ Peeling the functional layer off a closure leaves the (now first class) environm
 (foo:42 this-env:(prim this-env))
 ```
 
-Qualified ids allow reaching into external environments to access their bindings.
-
-```
-```
-
-Combining these ideas allows composing data and code in a more flexible, performant and convenient form.
+Dealing directly with the environment allows composing data and code in a more flexible, performant and convenient form.
 
 ```
   (let (super this-env
