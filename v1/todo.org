@@ -1,9 +1,7 @@
-* sort Env dump
 * add (val key) builtin fun
 ** lookup key in env
-* add resolve test
-* finish raw closures
-* ---
+* add resolve from raw closures
+* sort Env dump
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids
