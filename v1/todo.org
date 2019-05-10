@@ -1,4 +1,8 @@
 * sort Env dump
+* implement Fun/Macro Clone
+** clone envs
+* add chan iter
+
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids
@@ -8,7 +12,4 @@
 ** recursive tcat
 * add tsep
 ** put separator between items
-* implement Fun/Macro Clone
-** clone envs
-* add chan iter
-* add iters to readme
+
