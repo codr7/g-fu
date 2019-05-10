@@ -21,6 +21,9 @@ Press Return twice to evaluate.
 _
 ```
 
+### Syntax
+g-fu uses `_` in place of `nil`, `..` to splat; and `/` as separator in qualified ids.
+
 ### The Environment
 Peeling the functional layer off a closure leaves the (now first class) environment. `this-env` evaluates to the current environment. Note that used bindings,`this-env` in the following example, are automatically captured as usual.
 
