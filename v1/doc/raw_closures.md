@@ -130,7 +130,7 @@ Buttons embed a Widget, delegate `move` and override `resize` to enforce a max s
 ```
   (let (b (Button/new 'width 100 'height 50))
     (say (b/move 10 10))
-    (say (b/resize 200 100))
+    (say (b/resize 400 200))
     (b/on-click (fun (b) (say "Button clicked!")))
     (b/click))
 

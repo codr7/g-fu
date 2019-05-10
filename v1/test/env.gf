@@ -77,7 +77,7 @@
 (let b (Button/new 'width 100 'height 50))
 
 (test (= (b/move 10 10) '(10 10)))
-(test (= (b/resize 200 100) '(200 100)))
+(test (= (b/resize 400 200) '(200 100)))
 
 (let (called F)
   (b/on-click (fun (b) (set 'called T)))
