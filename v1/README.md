@@ -136,7 +136,7 @@ Error: Dup binding: foo 1
 ### Environments
 Environments are first class, `this-env` evaluates to the current environment.
 
-Environments capture used bindings, `this-env` in the following example.
+Used bindings (`this-env` in the following example) are automatically captured.
 
 ```
   (let (foo 42) this-env)
@@ -157,7 +157,7 @@ Functions are created using `fun`; which accepts an optional name to bind in the
 Hello World
 ```
 
-Arguments may be defined as optional by specifying a default value.
+Arguments may be defined as optional by specifying default values.
 
 ```
   (let _
@@ -167,7 +167,7 @@ Arguments may be defined as optional by specifying a default value.
 Hello World
 ```
 
-Arguments suffixed with `..` consume any number of remaining arguments.
+Arguments suffixed with `..` consume any number of remaining values.
 
 ```
   (let _
@@ -214,7 +214,7 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 42
 ```
 
-The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local recursive function to generate its expansion.
+The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local function to generate its expansion recursively.
 
 ```
 (mac and (conds..)
@@ -224,8 +224,6 @@ The next example is taken straight from the [standard library](https://github.co
     
   (rec conds))
 ```
-
-The entire object system described [below](https://github.com/codr7/g-fu#classes), is implemented using nothing but macros and closures.
 
 ### Iterators
 ```(load "lib/iter.gf")```
@@ -271,61 +269,8 @@ bar
 baz
 ```
 
-### Classes
-```(load "lib/fos.gf")```
-
-A minimal, single-dispatch object system is included in the standard library.
-
-New classes may be defined using `class`; which accepts a list of super classes, slots and methods.
-
-```
-(class Widget ()
-  ((left 0) (top 0)
-   (width (fail "Missing width")) (height (fail "Missing height")))
-  
-  (move (dx dy)
-    (vec (inc left dx)
-         (inc top dy)))
-
-  (resize (dx dy)
-    (vec (inc width dx)
-         (inc height dy))))
-```
-
-Any number of super classes may be specified as long as they don't use the same slot names. Slots have optional default values that are evaluated on instantiation. Methods may be overridden and may refer to super class methods using fully qualified names.
-
-```
-(class Button (Widget)
-  (on-click)
-
-  (resize (dx dy)
-    (say "Button resize")
-    (this 'Widget/resize dx dy))
-
-  (on-click (f)
-    (push on-click f))
-
-  (click ()
-    (for (on-click f) (f this))))
-```
-
-Methods exist in a separate namespace and may be invoked by calling the object and passing the name as first argument.
-
-```
-  (let (b (Button 'new 'width 100 'height 50))
-    (say (b 'move 20 10))
-    (say (b 'resize 100 0))
-    (b 'on-click (fun (b) (say "Button click")))
-    (b 'click))
-
-20 10
-Button resize
-200 50
-Button click
-```
-
 ### Tasks
-Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task` which takes an optional task id and channel or buffer size, and returns the new task. `wait` may be used to wait for task completion and get the results.
+Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task`, which takes an optional task id and channel or buffer size and returns the new task. `wait` may be used to wait for task completion and get the results.
 
 ```
   (let _
@@ -350,7 +295,7 @@ The defining environment is cloned.
 ```
 
 #### Channels
-Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values; `len` returns the current number of buffered values.
+Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values. `len` returns the current number of buffered values.
 
 ```
   (let (c (chan 1))
