@@ -214,15 +214,12 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 42
 ```
 
-The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and uses a local function to generate its expansion recursively.
+The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and expands recursively to a nested series of calls using previous result as first argument.
 
 ```
-(mac and (conds..)
-  (fun rec (cs)
-    (let h (head cs) tcs (tail cs))
-    '(if %h %(if tcs (rec tcs) h)))
-    
-  (rec conds))
+(mac @ (f1 fs..)
+  '(fun (args..)
+     %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))
 ```
 
 ### Iterators
