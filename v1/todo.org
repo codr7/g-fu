@@ -1,7 +1,5 @@
 * add (val key) builtin fun
 ** lookup key in env
-* add resolve from raw closures
-* step version
 * sort Env dump
 * add thread macro (~)
 ** inject first arg into remaining

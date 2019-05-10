@@ -32,6 +32,15 @@
   (for 3 (c/inc))
   (test (= (c/dec) 2)))
 
+(let (proxy (fun (d)
+              (fun resolve (id)
+                (d/eval id))
+              this-env)
+      p (proxy (let (foo 42)
+                 (use _ eval)
+                 this-env)))
+  (test (= p/foo 42)))
+
 (let _
 
 (let Widget (let _
