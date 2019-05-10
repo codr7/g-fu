@@ -11,7 +11,7 @@
     (test (= ee/foo 1))))
 
 (let (foo (let (bar 7)
-            (fun resolve (id) 42)
+            (fun resolve (key) 42)
             this-env))
   (test (= foo/bar 7))
   (test (= foo/baz 42)))
@@ -33,11 +33,11 @@
   (test (= (c/dec) 2)))
 
 (let (proxy (fun (d)
-              (fun resolve (id)
-                (d/eval id))
+              (fun resolve (key)
+                (d/val key))
               this-env)
       p (proxy (let (foo 42)
-                 (use _ eval)
+                 (use _ val)
                  this-env)))
   (test (= p/foo 42)))
 

@@ -65,14 +65,14 @@ Failed lookups may be trapped by defining `resolve`. The following example imple
 
 ```
 (fun proxy (d)
-  (fun resolve (id)
-    (d/eval id))
+  (fun resolve (key)
+    (d/val key))
 
   this-env)
 ```
 ```
   (let (p (proxy (let (foo 42)
-                   (use _ eval)
+                   (use _ val)
                    this-env)))
     p/foo)
 

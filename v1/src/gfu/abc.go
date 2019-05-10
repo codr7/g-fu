@@ -135,6 +135,14 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
   return rv, nil
 }
 
+func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  if v, _, e = args[0].(*Sym).Lookup(g, task, env, false); e != nil {
+    return nil, e
+  }
+
+  return v, nil
+}
+
 func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   for i := 0; i+1 < len(args); i += 2 {
     var k Val
@@ -767,6 +775,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
   e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
+  e.AddFun(g, "val", val_imp, A("key"))
   e.AddFun(g, "set", set_imp, ASplat("args"))
   e.AddPrim(g, "this-env", this_env_imp) 
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
