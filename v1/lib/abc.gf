@@ -44,4 +44,10 @@
 (mac dec (var (delta 1))
   '(inc %var (- %delta)))
 
+(fun min (vals..)
+  (tr (tail vals) (head vals) (fun (acc v) (if (< v acc) v acc))))
+
+(fun max (vals..)
+  (tr (tail vals) (head vals) (fun (acc v) (if (> v acc) v acc))))
+
 (fun splat (args) args..)

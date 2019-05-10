@@ -16,6 +16,22 @@
   (test (= foo/bar 7))
   (test (= foo/baz 42)))
 
+(let (foo (let (bar 42)
+            this-env)
+      baz (let _
+            (use foo bar)
+            this-env))
+  (test (= baz/bar 42)))
+
+(let (super this-env
+      Counter (fun ((n 0))
+                (fun inc () (super/inc n))
+                (fun dec () (super/dec n))
+                this-env)
+      c (Counter))
+  (for 3 (c/inc))
+  (test (= (c/dec) 2)))
+
 (let _
 
 (let Widget (let _
@@ -51,7 +67,8 @@
       (push click-event f))
     
     (fun resize (dx dy)
-      (w/resize (+ dx 42) dy))
+      (w/resize (min (+ w/width dx) (- 200 w/width))
+                (min (+ w/height dy) (- 100 w/height))))
     
     this)
 
@@ -59,9 +76,8 @@
 
 (let b (Button/new 'width 100 'height 50))
 
-(test (= (b/resize 0 0) '(142 50)))
-
 (test (= (b/move 10 10) '(10 10)))
+(test (= (b/resize 200 100) '(200 100)))
 
 (let (called F)
   (b/on-click (fun (b) (set 'called T)))
