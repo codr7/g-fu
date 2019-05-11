@@ -1,8 +1,6 @@
 * abs.gf
 ** fix x/io
-*** move env.Update to g.Update(g, task, env, key, f)
-**** use Lookup (Sym)
-** fix (set)/Lookup
+*** fix (set)/Lookup
 ** add simulate fun
 *** root-node, delta-time
 *** use to inc time (start at 0)
