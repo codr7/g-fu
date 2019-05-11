@@ -1,5 +1,3 @@
-* add flat test
-** testcat.gf
 * add type tests/readme
 * separate nil & empty vec
 ** add NilVec type

@@ -42,8 +42,9 @@
       t (tmap (fun (x) (+ x 42)) push))
   (test (= (tr v _ t) '(43 44 45 46 47))))
 
-(let (v '((1 2) (3 4) (5)))
-  (test (= (tr v _ (tcat push)) '(1 2 3 4 5))))
+(let (v '(1 2 ((3 4) 5)))
+  (test (= (tr v _ (tcat push)) '(1 2 (3 4) 5)))
+  (test (= (tr v _ (tflat push)) '(1 2 3 4 5))))
 
 (test (= (t@ 41 (fun (x) (inc x))) 42))
 
