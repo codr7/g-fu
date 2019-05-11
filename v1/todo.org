@@ -4,7 +4,7 @@
 **** use Lookup (Sym)
 ** fix (set)/Lookup
 ** add simulate fun
-*** delta-time
+*** root-node, delta-time
 *** use to inc time (start at 0)
 ** add NumType
 *** add Add/Sub/Div/Mul methods
@@ -13,13 +13,12 @@
 * --
 * sort Env dump
 * separate nil & empty vec
-** add NilVec type
 *** add g.NIL_VEC
 **** Vec(nil)
-*** move vec behavior from Nil
+*** move Vec behavior from Nil
 *** review &NIL handling in abc/vec
 *** change ReadVec to return NIL_VEC on ()
-*** grep _ and switch to () for vec
+*** grep _ and switch to () if vec
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
