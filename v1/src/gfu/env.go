@@ -167,15 +167,15 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
   return e.resolve.CallArgs(g, task, e, Vec{key})
 }
 
-func (e *Env) Set(g *G, key *Sym, val Val) (Val, E) {
-  _, found := e.Find(key)
+func (env *Env) Set(g *G, key *Sym, val Val) (Val, E) {
+  v, _, e := key.LookupVar(g, env, false)
 
-  if found == nil {
-    return nil, g.E("Unknown: %v", key)
+  if e != nil {
+    return nil, e
   }
 
   var prev Val
-  prev, found.Val = found.Val, val
+  prev, v.Val = v.Val, val
   return prev, nil
 }
 

@@ -1,8 +1,7 @@
 * abs.gf
-** fix x/io
-*** fix (set)/Lookup
+** figure out how to propagate elevation
 ** add simulate fun
-*** root-node, delta-time
+*** root, delta-time
 *** use to inc time (start at 0)
 ** add NumType
 *** add Add/Sub/Div/Mul methods
