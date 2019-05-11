@@ -1,4 +1,4 @@
-* add type tests/readme
+* add type readme
 * separate nil & empty vec
 ** add NilVec type
 *** add g.NIL_VEC

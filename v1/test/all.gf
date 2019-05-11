@@ -119,6 +119,7 @@
   (test (= (expand 1 '(bar 42)) '(foo 42)))
   (test (= (expand 2 '(bar 42)) 42)))
 
+(load "type.gf")
 (load "cond.gf")
 (load "env.gf")
 (load "math.gf")
