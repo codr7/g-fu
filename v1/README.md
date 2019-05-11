@@ -28,6 +28,42 @@ Press Return twice to evaluate.
 ### Syntax
 g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
 
+### Types
+`type` may be used to get the type of any value.
+
+```
+  (type 42)
+
+Int
+
+  (type Int)
+
+Meta
+
+  (type Meta)
+
+Meta
+```
+
+Calling a type returns the direct parent if the argument is a child.
+
+```
+  (Int 42)
+  
+Int
+
+  (Int T)
+_
+
+  (Seq Vec)
+
+Seq
+
+  (Seq IntIter)
+
+Iter
+```
+
 ### Conditions
 ```(load "lib/cond.gf")```
 

@@ -1,4 +1,4 @@
-* add type readme
+* sort Env dump
 * separate nil & empty vec
 ** add NilVec type
 *** add g.NIL_VEC
@@ -7,7 +7,6 @@
 *** review &NIL handling in abc/vec
 *** change ReadVec to return NIL_VEC on ()
 *** grep _ and switch to () for vec
-* sort Env dump
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
