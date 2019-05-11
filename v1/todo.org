@@ -1,5 +1,4 @@
-* abs.gf
-** figure out how to propagate elevation
+* pipedream
 ** add simulate fun
 *** root, delta-time
 *** use to inc time (start at 0)
