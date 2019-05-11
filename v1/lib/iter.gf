@@ -39,18 +39,21 @@
      (fun (%rf) %f)
      %f))
 
-(fun tpipe (f)
-  (fun (acc val)
-    (f val)
-    acc))
-
 (fun tmap (f (rf _))
   (tr-fun rf (acc val)
     (rf acc (f val))))
 
 (fun tcat ((rf _))
   (tr-fun rf (acc val)
-    (rf acc val..)))
+    (if (Seq val)
+      (tr val acc rf)
+      (rf acc val))))
+
+(fun tflat ((rf _))
+  (tr-fun rf (acc val)
+    (if (Seq val)
+      (tr val acc (tflat rf))
+      (rf acc val))))
 
 (fun tfilt (f (rf _))
   (tr-fun rf (acc val)

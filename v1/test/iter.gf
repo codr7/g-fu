@@ -45,10 +45,6 @@
 (let (v '((1 2) (3 4) (5)))
   (test (= (tr v _ (tcat push)) '(1 2 3 4 5))))
 
-(let (out _)
-  (tr 3 _ (tpipe (fun (x) (push out (+ x 1)))))
-  (test (= out '(1 2 3))))
-
 (test (= (t@ 41 (fun (x) (inc x))) 42))
 
 (let (v '(1 2 3))

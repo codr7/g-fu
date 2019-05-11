@@ -1,15 +1,11 @@
+* add flat test
+** testcat.gf
+* add type tests/readme
 * sort Env dump
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter
-
 * add thread macro (~)
 ** inject first arg into remaining
 ** add/use (vec!) to allow bare ids
-* tpipe t@-test
-** put tpipe first
-* add tflat
-** recursive tcat
-* add tsep
-** put separator between items
 
