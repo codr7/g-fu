@@ -65,7 +65,7 @@
   (fun new (args..)
     (let this (this-env)
          w (Widget/new args..)
-         click-event _)
+         click-event ())
          
     (use w move)
 

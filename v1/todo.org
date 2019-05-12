@@ -1,3 +1,5 @@
+* separate nil & empty vec
+** update doc/readme
 * move fos to demo/
 ** update functional_objects.md
 * pipedream
@@ -11,13 +13,6 @@
 *** add DecType < NumType
 * --
 * sort Env dump
-* separate nil & empty vec
-*** add g.NIL_VEC
-**** Vec(nil)
-*** move Vec behavior from Nil
-*** review &NIL handling in abc/vec
-*** change ReadVec to return NIL_VEC on ()
-*** grep _ and switch to () if vec
 * implement Fun/Macro Clone
 ** clone envs
 * add chan iter

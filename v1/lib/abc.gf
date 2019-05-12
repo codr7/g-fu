@@ -8,7 +8,7 @@
 (mac use (prefix ids..)
   (if (_? prefix)
     '(__ (use _ %ids..))
-    '(let %(tr ids _
+    '(let %(tr ids ()
                (fun (acc s)
                  (push acc s (sym prefix '/ s))))..)))
 

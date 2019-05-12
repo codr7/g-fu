@@ -34,17 +34,17 @@
       rts (t@@ push (vec t1 t2)..))
   (test
     (= (tr v 0 (t1 +)) 6)
-    (= (tr v _ (t2 push)) '(43 44 45 46 47))
-    (= (tr v _ ts) '(43 44 45))
-    (= (tr v _ rts) '(43 44 45))))
+    (= (tr v () (t2 push)) '(43 44 45 46 47))
+    (= (tr v () ts) '(43 44 45))
+    (= (tr v () rts) '(43 44 45))))
 
 (let (v '(1 2 3 4 5)
       t (tmap (fun (x) (+ x 42)) push))
-  (test (= (tr v _ t) '(43 44 45 46 47))))
+  (test (= (tr v () t) '(43 44 45 46 47))))
 
 (let (v '(1 2 ((3 4) 5)))
-  (test (= (tr v _ (tcat push)) '(1 2 (3 4) 5)))
-  (test (= (tr v _ (tflat push)) '(1 2 3 4 5))))
+  (test (= (tr v () (tcat push)) '(1 2 (3 4) 5)))
+  (test (= (tr v () (tflat push)) '(1 2 3 4 5))))
 
 (test (= (t@ 41 (fun (x) (inc x))) 42))
 

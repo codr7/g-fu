@@ -30,7 +30,7 @@
          (inc height dy))))
 
 (class Button (Widget)
-  (on-click)
+  ((on-click ()))
 
   (resize (dx dy)
     (this 'Widget/resize (+ dx 42) dy))

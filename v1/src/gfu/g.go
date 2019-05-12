@@ -40,7 +40,7 @@ type G struct {
   NIL Nil
   T   True
   F   False
-
+  
   syms,
   consts sync.Map
   nsyms uint64

@@ -53,15 +53,15 @@
 
 (test (= (vec (pop-key '(foo 1 bar 2 baz 3) 'bar)) '(2 (foo 1 baz 3))))
 
-(test (= (push _ 1 2 3) '(1 2 3)))
+(test (= (push () 1 2 3) '(1 2 3)))
 (test (= (push '(1 2) 3) '(1 2 3)))
 
-(let (v _)
+(let (v ())
   (push v 'foo 'bar 'baz)
   (test (= (len v) 3))
   (test (= (pop v) 'baz)))
 
-(let (v (vec))
+(let (v ())
   (push v 1)
   (push v 2 3)
   (test (= (len v) 3))
