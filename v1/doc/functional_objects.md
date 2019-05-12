@@ -58,7 +58,7 @@ _
 ```
 
 ### Syntax
-g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`.
+g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### Dispatch
 From one angle, a closure is essentially a single method object that uses its environment as storage. Adding a method argument and a `switch` extends the idea to support multiple methods. The `dispatch`-macro captures this pattern without assuming or dictating anything concerning object storage. `tr` is the standard tool for transforming sequences in g-fu; it takes an input, initial result and transformer.
@@ -71,7 +71,7 @@ From one angle, a closure is essentially a single method object that uses its en
      (let %id (head %args))
      
      (switch
-       %(tr defs _
+       %(tr defs ()
             (fun (acc d)
               (let did (head d) imp (tail d))
               (push acc
@@ -176,7 +176,7 @@ Classes may be created using the `class`-macro. Classes are implemented as `this
 
 ```
 (fun new-object (supers slots methods args)
-  (eval '(let-this %(tr (push (super-slots supers) slots..) _
+  (eval '(let-this %(tr (push (super-slots supers) slots..) ()
                         (fun (acc x)
                           (if (= (type x) Vec)
                             (let (id (head x) v (pop-key args id))
@@ -193,16 +193,16 @@ The task of collecting super slots makes a good match for [transducers](https://
 
 ```
 (fun super-slots (supers)
-  (tr supers _ (t@ push (tmap (fun (s) (s 'slots))) tcat)))
+  (tr supers () (t@ push (tmap (fun (s) (s 'slots))) tcat)))
 ```
 
 Two dispatch entries are generated for each super method, one regular and one qualified with the super class name.
 
 ```
 (fun super-methods (supers)
-  (tr supers _
+  (tr supers ()
       (fun (acc s)
-        (tr (s 'methods) _
+        (tr (s 'methods) ()
             (fun (acc m)
               (push acc m '(%(sym (s 'id) '/ (head m)) %(tail m)..))))))))
 ```

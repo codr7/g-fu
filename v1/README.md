@@ -10,7 +10,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.12
+g-fu v1.13
 
 Press Return twice to evaluate.
 
@@ -26,7 +26,33 @@ Press Return twice to evaluate.
 ```
 
 ### Syntax
-g-fu quasi-quotes using `'` and splices using `%`. `_` is used in place of `nil` and `..` to splat sequences.
+g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
+
+### Vectors
+g-fu uses vectors (or slices in Go lingo), rather than linked lists as basic data structure.
+
+The empty vector is written `()`, which is not the same thing as `_`.
+
+```
+  (len ())
+
+0
+
+  (len _)
+
+Error: Len not supported: Nil
+```
+
+One consequence of using vectors is that items are pushed/popped last rather than first.
+
+```
+  (let (v ())
+    (push v 1 2 3)
+    (pop v)
+    v)
+
+(1 2)
+```
 
 ### Types
 `type` may be used to get the type of any value.

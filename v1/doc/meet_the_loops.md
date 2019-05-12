@@ -19,7 +19,7 @@ _
 ```
 
 ### Syntax
-g-fu uses `%` as opposed to `,` for splicing, `_` in place of `nil`; and `..` to splat, which replaces `@`.
+g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### while
 First out is the `while`-loop, which keeps iterating until its condition turns false. It is implemented in terms of the more general `loop` macro which will follow shortly.
