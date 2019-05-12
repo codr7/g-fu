@@ -1,4 +1,9 @@
+* change (or) to return last value on fail
 * pipedream
+* simplify types
+** skip class/constructor
+** add chain fun to simplifiy connect in->out
+*** use tr
 ** add simulate fun
 *** root, delta-time
 *** use to inc time (start at 0)
