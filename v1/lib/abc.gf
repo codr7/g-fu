@@ -24,20 +24,16 @@
   (if val F T))
 
 (mac and (conds..)
-  (let v (new-sym))
-  
   (fun rec (cs)
-    (let h (head cs) tcs (tail cs))
-    '(let (%v %h) (if %v %(if tcs (rec tcs) v))))
+    (let v (new-sym) h (head cs) tcs (tail cs))
+    '(let (%v %h) (if %v %(if tcs (rec tcs) v) %v)))
     
   (rec conds))
 
 (mac or (conds..)
-  (let v (new-sym))
-  
   (fun rec (cs)
-    (let h (head cs) tcs (tail cs))
-    '(let (%v %h) (if %v %v %(if tcs (rec tcs)))))
+    (let v (new-sym) h (head cs) tcs (tail cs))
+    '(let (%v %h) (if %v %v %(if tcs (rec tcs) v))))
     
   (rec conds))
   

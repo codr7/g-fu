@@ -99,7 +99,6 @@ func (_ *Sym) Type(g *G) Type {
 }
 
 func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
-  out.WriteRune('\'')
   out.WriteString(val.(*Sym).name)
   return nil
 }
@@ -140,10 +139,6 @@ func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val,
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
   return dst.Extend(g, src, clone, val.(*Sym).parts[0])
-}
-
-func (s *SymType) Print(g *G, val Val, out *strings.Builder) {
-  out.WriteString(val.(*Sym).name)
 }
 
 func (g *G) NewSym(prefix string) *Sym {

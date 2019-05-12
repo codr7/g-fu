@@ -79,21 +79,22 @@ T
 F
 ```
 
-Values may be combined using `or`/`and`. Unused values are not evaluated, and comparisons are performed using boolean representations while preserving the original values.
+Values may be combined using `or`/`and`. Only used values are evaluated. Comparisons are performed using boolean representations while preserving the original values. The last evaluated argument is always returned.
 
 ```
-  (or 0 42)
+  (or 0 1)
 
-42
+1
 
   (or 0 F)
-_
+F
 
-  (and '(1 2) '(3 4))
+  (and 1 2 3)
 
-(3 4)
+3
 
-  (and '(1 2) F)
+  (and 1 _ 3)
+
 _
 ```
 
