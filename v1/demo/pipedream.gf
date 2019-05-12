@@ -1,14 +1,11 @@
 (debug)
 (load "../lib/all.gf")
 
-(let Port (let _
-  (fun new ()
-    (let this this-env io _
-         elevation 0 sg 0 pressure 0
-         init (fun () (if io (io/init))))
+(fun Port ()
+  (let this this-env io _
+       elevation 0 sg 0 pressure 0
+       init (fun () (if io (io/init))))
     this)
-
-  this-env))
 
 (fun connect (ports..)
   (if ports (do
@@ -17,17 +14,15 @@
     (recall ports..))))
 
 (mac define-node (id)
-  '(let %id (let (node-type '%id)
-     (fun new ((id (str '%id)))
-       (let this this-env
-            in (Port/new) out (Port/new))
-       (set 'in/init (fun ()
-                       (if in/io (set 'in/elevation in/io/elevation))
-                       (set 'out/elevation in/elevation)
-                       (out/init)))
-       this)
-
-     this-env)))
+  '(fun %id ((id (str '%id)))
+     (let this this-env
+          in (Port) out (Port))
+          
+     (set 'in/init (fun ()
+                     (if in/io (set 'in/elevation in/io/elevation))
+                     (set 'out/elevation in/elevation)
+                     (out/init)))
+     this))
 
 (define-node Pipe)
 
@@ -35,11 +30,11 @@
 
 (define-node Tank)
 
-(let in-tank (Tank/new "In Tank")
-     in-pipe (Pipe/new "In Pipe")
-     valve (Valve/new)
-     out-pipe (Pipe/new "Out Pipe")
-     out-tank (Tank/new "Out Tank"))
+(let in-tank (Tank "In Tank")
+     in-pipe (Pipe "In Pipe")
+     valve (Valve)
+     out-pipe (Pipe "Out Pipe")
+     out-tank (Tank "Out Tank"))
 
 (dump valve/id)
 
