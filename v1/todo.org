@@ -1,5 +1,3 @@
-* separate nil & empty vec
-** update doc/readme
 * move fos to demo/
 ** update functional_objects.md
 * pipedream
