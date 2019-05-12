@@ -1,15 +1,19 @@
 package gfu
 
 import (
-	"strings"
+  "strings"
 )
 
 type Dumper interface {
-	Dump(*strings.Builder)
+  Dump(*G, *strings.Builder) E
 }
 
-func DumpString(d Dumper) string {
-	var out strings.Builder
-	d.Dump(&out)
-	return out.String()
+func DumpString(g *G, d Dumper) (string, E) {
+  var out strings.Builder
+
+  if e := d.Dump(g, &out); e != nil {
+    return "", e
+  }
+  
+  return out.String(), nil
 }

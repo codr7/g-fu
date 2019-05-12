@@ -1,4 +1,6 @@
-* change (or) to return last value on fail
+* change (or)/(and) to return last value on fail
+* move fos to demo/
+** update functional_objects.md
 * pipedream
 ** add chain fun to simplifiy connect in->out using (tr)
 ** add simulate fun
