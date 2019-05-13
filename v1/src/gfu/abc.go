@@ -624,32 +624,15 @@ func tail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   switch v := v.(type) {
   case Vec:
     if len(v) < 2 {
-      return &g.NIL, nil
+      return Vec(nil), nil
     }
 
     return v[1:], nil
-  case *Nil:
-    return &g.NIL, nil
   default:
     break
   }
 
   return nil, g.E("Invalid tail target: %v", v)
-}
-
-func cons_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var tail Vec
-
-  switch a := args[1].(type) {
-  case Vec:
-    tail = a
-  case *Nil:
-    break
-  default:
-    return nil, g.E("Invalid cons target: %v", args[1].Type(g))
-  }
-
-  return append(Vec{args[0]}, tail...), nil
 }
 
 func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -822,7 +805,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "pop-key", pop_key_imp, A("in"), A("key"))
   e.AddFun(g, "head", head_imp, A("vec"))
   e.AddFun(g, "tail", tail_imp, A("vec"))
-  e.AddFun(g, "cons", cons_imp, A("val"), A("vec"))
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))

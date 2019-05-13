@@ -9,6 +9,7 @@
 *** add Add/Sub/Div/Mul methods
 **** switch abc-defs to cast type & call method
 *** add DecType < NumType
+*** math/big/Float
 * --
 * sort Env dump
 * implement Fun/Macro Clone
