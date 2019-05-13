@@ -1,9 +1,13 @@
 * move fos to demo/
+** drop from lib/all.gf
+** redirect test
 ** update functional_objects.md
 * pipedream
-** add super env in define-node
+** add node env in define-node
 *** override init using fun
-** add chain fun to simplifiy connect in->out using (tr)
+*** move connect to node/pair
+** add chain fun to simplifiy pairing in->out 
+*** tr
 ** add pipe diameter & calculate pressure
 ** add simulation
 *** fun to step delta time

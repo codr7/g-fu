@@ -30,19 +30,17 @@
 
 (define-node Tank)
 
-(let in-tank (Tank "In Tank")
-     in-pipe (Pipe "In Pipe")
-     valve (Valve)
-     out-pipe (Pipe "Out Pipe")
-     out-tank (Tank "Out Tank"))
+(let t1 (Tank 't1)
+     p1 (Pipe 'p1)
+     v (Valve 'v)
+     p2 (Pipe 'p2)
+     t2 (Tank 't2))
 
-(dump valve/id)
+(connect t1/out p1/in
+         p1/out v/in
+         v/out p2/in
+         p2/out t2/in)
 
-(connect in-tank/out in-pipe/in
-         in-pipe/out valve/in
-         valve/out out-pipe/in
-         out-pipe/out out-tank/in)
-
-(set 'in-tank/out/elevation 10)
-(in-tank/out/init)
-(dump out-tank/in/elevation)
+(set 't1/out/elevation 10)
+(t1/out/init)
+(dump t2/in/elevation)
