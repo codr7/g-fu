@@ -2,8 +2,6 @@
 ** add node env in define-node
 *** override init using fun
 *** move connect to node/pair
-** add chain fun to simplifiy pairing in->out 
-*** tr
 ** add pipe diameter & calculate pressure
 ** add simulation
 *** fun to step delta time

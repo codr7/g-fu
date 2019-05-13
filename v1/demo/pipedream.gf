@@ -24,12 +24,6 @@
                      (out/init)))
      this))
 
-(define-node Pipe)
-
-(define-node Valve)
-
-(define-node Tank)
-
 (mac let-node (args..)
   (let a1 (head args))
   
@@ -44,12 +38,18 @@
     '(let %(push-args a1) (tail args)..)
     '(let %(push-args args)..)))
 
-(let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
+(fun chain (ns..)
+  (tr (tail ns) (head ns)
+      (fun (x y)
+        (connect x/out y/in)
+        y)))
 
-(connect t1/out p1/in
-         p1/out v/in
-         v/out p2/in
-         p2/out t2/in)
+(define-node Pipe)
+(define-node Valve)
+(define-node Tank)
+
+(let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
+(chain t1 p1 v p2 t2)
 
 (set 't1/out/elevation 10)
 (t1/out/init)
