@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "fmt"
   //"log"
   "os"
   "strings"
@@ -158,6 +159,31 @@ func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   }
 
   return v, nil
+}
+
+func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+  prefix := args[0]
+
+  if prefix == &g.NIL {
+    return &g.NIL, nil
+  }
+
+  var v *Var
+  var e E
+  
+  for _, k := range args[1:] {
+    ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
+
+    if v, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
+      return nil, e
+    }
+
+    if i, found := env.Find(v.key); found == nil {
+      env.InsertVar(i, v)
+    }
+  }
+
+  return &g.NIL, nil
 }
 
 func this_env_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
@@ -759,6 +785,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))
   e.AddFun(g, "set", set_imp, ASplat("args"))
+  e.AddPrim(g, "use", use_imp, AOpt("prefix", nil), ASplat("ids"))
   e.AddPrim(g, "this-env", this_env_imp)
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
   e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))

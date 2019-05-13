@@ -2,10 +2,14 @@
 (load "../lib/all.gf")
 
 (fun Port ()
-  (let this this-env io _
+  (let this this-env
+       io _
        elevation 0 sg 0 pressure 0
-       init (fun () (if io (io/init))))
-    this)
+       default (let _
+                 (fun init () (if io (io/init)))
+                 this-env))
+  (use default init)
+  this)
 
 (fun connect (ports..)
   (if ports (do
@@ -18,10 +22,11 @@
      (let this this-env
           in (Port) out (Port))
           
-     (set 'in/init (fun ()
-                     (if in/io (set 'in/elevation in/io/elevation))
-                     (set 'out/elevation in/elevation)
-                     (out/init)))
+     (fun in/init ()
+       (if in/io (set 'in/elevation in/io/elevation))
+       (set 'out/elevation in/elevation)
+       (out/init))
+       
      this))
 
 (mac let-node (args..)
