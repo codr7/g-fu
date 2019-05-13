@@ -89,14 +89,14 @@ func (e *Env) Find(key *Sym) (int, *Var) {
   return max, nil
 }
 
-func (e *Env) GetVar(g *G, key *Sym, silent bool) (*Var, E) {
-  _, found := e.Find(key)
+func (e *Env) GetVar(g *G, key *Sym, silent bool) (*Var, int, E) {
+  i, found := e.Find(key)
 
   if found == nil && !silent {
-    return nil, g.E("Unknown: %v", key)
+    return nil, 0, g.E("Unknown: %v", key)
   }
   
-  return found, nil
+  return found, i, nil
 }
 
 func (e *Env) Get(g *G, task *Task, key *Sym, silent bool) (Val, E) {
@@ -131,25 +131,27 @@ func (e *Env) Len() Int {
   return Int(len(e.vars))
 }
 
-func (e *Env) Let(g *G, key *Sym, val Val) E {
+func (env *Env) Let(g *G, key *Sym, val Val) E {
   if key == g.resolve_sym {
     var ok bool
 
-    if e.resolve, ok = val.(*Fun); !ok {
+    if env.resolve, ok = val.(*Fun); !ok {
       return g.E("Expected Fun, was: %v", val.Type(g))
     }
 
     return nil
-  }
+  } 
 
-  if i, found := e.Find(key); found == nil {
-    e.Insert(i, key).Val = val
-  } else if found.env != e {
-    v := new(Var).Init(e, key)
+  k := key.Suffix()
+  
+  if v, i, env, _ := key.LookupVar(g, env, true); v == nil {
+    env.Insert(i, k).Val = val
+  } else if v.env != env {
+    v := new(Var).Init(env, k)
     v.Val = val
-    e.vars[i] = v
+    env.vars[i] = v
   } else {
-    return g.E("Dup binding: %v %v", key, found.Val)
+    return g.E("Dup binding: %v %v", k, v.Val)
   }
 
   return nil
@@ -168,7 +170,7 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
 }
 
 func (env *Env) Set(g *G, key *Sym, val Val) (Val, E) {
-  v, _, e := key.LookupVar(g, env, false)
+  v, _, _, e := key.LookupVar(g, env, false)
 
   if e != nil {
     return nil, e
@@ -184,7 +186,7 @@ func (e *Env) Type(g *G) Type {
 }
 
 func (env *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
-  v, env, e := key.LookupVar(g, env, false)
+  v, _, env, e := key.LookupVar(g, env, false)
 
   if e != nil {
     return nil, e

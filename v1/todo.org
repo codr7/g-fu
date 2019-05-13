@@ -1,15 +1,17 @@
 * move fos to demo/
 ** update functional_objects.md
 * pipedream
+** add super env in define-node
+*** override init using fun
 ** add chain fun to simplifiy connect in->out using (tr)
-** add simulate fun
-*** root, delta-time
-*** use to inc time (start at 0)
-** add NumType
-*** add Add/Sub/Div/Mul methods
-**** switch abc-defs to cast type & call method
-*** add DecType < NumType
-*** math/big/Float
+** add pipe diameter & calculate pressure
+** add simulation
+*** fun to step delta time
+* add NumType
+** add Add/Sub/Div/Mul methods
+*** switch abc-defs to cast type & call method
+** add DecType < NumType
+** math/big/Float
 * --
 * sort Env dump
 * implement Fun/Macro Clone

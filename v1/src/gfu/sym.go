@@ -41,15 +41,15 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, _ *Env, e E) {
+func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, e E) {
   max := len(s.parts)
 
-  for i, p := range s.parts {
-    if v, e = env.GetVar(g, p, silent); e != nil {
-      return nil, nil, e
+  for j, p := range s.parts {
+    if v, i, e = env.GetVar(g, p, silent); e != nil {
+      return nil, 0, nil, e
     }
 
-    if (silent && v == nil) || i == max-1 {
+    if (silent && v == nil) || j == max-1 {
       break
     }
 
@@ -57,21 +57,21 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, _ *Env, e E) {
 
     if env, ok = v.Val.(*Env); !ok {
       if silent {
-        return nil, nil, nil
+        return nil, 0, nil, nil
       }
 
-      return nil, nil, g.E("Expected env: %v", v.Val.Type(g))
+      return nil, 0, nil, g.E("Expected env: %v", v.Val.Type(g))
     }
   }
 
-  return v, env, nil
+  return v, i, env, nil
 }
 
 
 func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, E) {
   var v *Var
   
-  if v, env, _ = s.LookupVar(g, env, true); v != nil {
+  if v, _, env, _ = s.LookupVar(g, env, true); v != nil {
     return v.Val, env, nil
   }
   
@@ -92,6 +92,11 @@ func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, E) {
 
 func (s *Sym) String() string {
   return s.name
+}
+
+func (s *Sym) Suffix() *Sym {
+  ps := s.parts
+  return ps[len(ps)-1]
 }
 
 func (_ *Sym) Type(g *G) Type {
