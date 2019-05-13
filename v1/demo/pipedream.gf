@@ -30,11 +30,21 @@
 
 (define-node Tank)
 
-(let t1 (Tank 't1)
-     p1 (Pipe 'p1)
-     v (Valve 'v)
-     p2 (Pipe 'p2)
-     t2 (Tank 't2))
+(mac let-node (args..)
+  (let a1 (head args))
+  
+  (fun push-args (in (acc ()))
+    (if in (do
+      (let v (pop in) k (pop in))
+      (push acc k '(%(head v) '%k %(tail v)..))
+      (recall in acc))
+      acc))
+    
+  (if (Vec a1)
+    '(let %(push-args a1) (tail args)..)
+    '(let %(push-args args)..)))
+
+(let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
 
 (connect t1/out p1/in
          p1/out v/in

@@ -1,7 +1,3 @@
-* move fos to demo/
-** drop from lib/all.gf
-** redirect test
-** update functional_objects.md
 * pipedream
 ** add node env in define-node
 *** override init using fun
@@ -11,17 +7,17 @@
 ** add pipe diameter & calculate pressure
 ** add simulation
 *** fun to step delta time
+
 * add NumType
 ** add Add/Sub/Div/Mul methods
 *** switch abc-defs to cast type & call method
 ** add DecType < NumType
 ** math/big/Float
-* --
+* move fos to demo/
+** drop from lib/all.gf
+** redirect test
+** update functional_objects.md
 * sort Env dump
 * implement Fun/Macro Clone
 ** clone envs
-* add chan iter
-* add thread macro (~)
-** inject first arg into remaining
-** add/use (vec!) to allow bare ids
 
