@@ -1,6 +1,7 @@
 * finish Dec
 ** convert int_add_imp/int_mul_imp
-** add div_imp
+** add int/dec funs
+*** move inc/dec to Int Call
 * pipedream
 ** add pipe diameter & calculate pressure
 ** add simulation

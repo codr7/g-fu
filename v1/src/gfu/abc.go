@@ -493,6 +493,28 @@ func int_mul_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return v, nil
 }
 
+func div_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  a0 := args[0]
+  
+  if len(args) == 1 {
+    var x, y Dec
+    x.SetInt(1)
+    y.SetInt(a0.(Int))
+    x.Div(y)
+    return x, nil
+  }
+
+  v = args[0]
+  
+  for _, a := range args[1:] {
+    if v, e = g.Div(v, a); e != nil {
+      return nil, e
+    }
+  }
+
+  return v, nil
+}
+
 func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Iter(args[0])
 }
@@ -823,7 +845,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
   e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
 
-  e.AddFun(g, "+", add_imp, ASplat("vals"))
+  e.AddFun(g, "+", add_imp, A("x"), ASplat("ys"))
+  e.AddFun(g, "/", div_imp, A("x"), ASplat("ys"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
   e.AddFun(g, "*", int_mul_imp, ASplat("vals"))
 
