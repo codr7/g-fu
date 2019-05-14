@@ -231,11 +231,11 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
 
   s := buf.String()
   rs := []rune(s)
-  
+    
   if rs[0] == '-' && len(rs) > 1 && rs[1] == '.' {
     s = fmt.Sprintf("-0%v", string(rs[1:]))
   }
-  
+
   if is_dec {
     var v Dec
     e := v.Parse(g, s)

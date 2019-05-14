@@ -4,7 +4,7 @@
 (fun Port ()
   (let this this-env
        io _
-       elevation 0 sg 0 pressure 0
+       elevation .0 sg .0 pressure .0
        default (let _
                  (fun init ()
                    (if io (io/init)))
@@ -55,6 +55,6 @@
 (let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
 (chain t1 p1 v p2 t2)
 
-(set 't1/out/elevation 10)
+(set 't1/out/elevation 10.)
 (t1/out/init)
 (dump t2/in/elevation)
