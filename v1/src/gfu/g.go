@@ -25,7 +25,7 @@ type G struct {
   MacType     MacType
   MetaType    MetaType
   NilType     NilType
-  NilIterType NilIterType
+  NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
   SeqType     SeqType

@@ -1,8 +1,7 @@
 * add NumType
-** add test/dec.gf
-** add Add/Sub/Div/Mul methods
-*** switch abc-defs to cast type & call method
-** DecType < NumType
+** add support for -.5
+** convert int_add_imp/int_mul_imp
+** add div_imp
 * pipedream
 ** add pipe diameter & calculate pressure
 ** add simulation

@@ -12,15 +12,6 @@ type NilType struct {
   BasicType
 }
 
-type NilIter struct {
-}
-
-var nil_iter NilIter
-
-type NilIterType struct {
-  BasicIterType
-}
-
 func (_ *Nil) Type(g *G) Type {
   return &g.NilType
 }

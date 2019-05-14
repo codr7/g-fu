@@ -447,15 +447,19 @@ func int_gt_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.T, nil
 }
 
-func int_add_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func add_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  a0 := args[0]
+  
   if len(args) == 1 {
-    return args[0].(Int).Abs(), nil
+    return g.Abs(a0)
   }
 
-  var v Int
-
-  for _, iv := range args {
-    v += iv.(Int)
+  v = args[0]
+  
+  for _, a := range args[1:] {
+    if v, e = g.Add(v, a); e != nil {
+      return nil, e
+    }
   }
 
   return v, nil
@@ -751,19 +755,21 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.MetaType, "Meta")
+
+  e.AddType(g, &g.NumType, "Num")
   e.AddType(g, &g.SeqType, "Seq")
+
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
   
-  e.AddType(g, &g.DecType, "Dec")
+  e.AddType(g, &g.DecType, "Dec", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FunType, "Fun")
-  e.AddType(g, &g.IntType, "Int")
+  e.AddType(g, &g.IntType, "Int", &g.NumType)
   e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
   e.AddType(g, &g.MacType, "Mac")
   e.AddType(g, &g.NilType, "Nil")
-  e.AddType(g, &g.NilIterType, "NilIter", &g.IterType)
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
   e.AddType(g, &g.SpliceType, "Splice")
@@ -817,7 +823,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
   e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
 
-  e.AddFun(g, "+", int_add_imp, ASplat("vals"))
+  e.AddFun(g, "+", add_imp, ASplat("vals"))
   e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
   e.AddFun(g, "*", int_mul_imp, ASplat("vals"))
 

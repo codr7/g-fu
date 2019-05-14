@@ -121,6 +121,7 @@
 
 (load "type.gf")
 (load "cond.gf")
+(load "dec.gf")
 (load "env.gf")
 (load "math.gf")
 (load "iter.gf")
