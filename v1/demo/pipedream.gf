@@ -6,16 +6,15 @@
        io _
        elevation 0 sg 0 pressure 0
        default (let _
-                 (fun init () (if io (io/init)))
-                 this-env))
-  (use default init)
-  this)
+                 (fun init ()
+                   (if io (io/init)))
 
-(fun connect (ports..)
-  (if ports (do
-    (let x (pop ports) y (pop ports))
-    (set 'x/io y 'y/io x)
-    (recall ports..))))
+                 (fun pair (p)
+                   (set 'io p 'p/io this))
+    
+                 this-env))
+  (use default init pair)
+  this)
 
 (mac define-node (id)
   '(fun %id ((id (str '%id)))
@@ -46,12 +45,12 @@
 (fun chain (ns..)
   (tr (tail ns) (head ns)
       (fun (x y)
-        (connect x/out y/in)
+        (x/out/pair y/in)
         y)))
 
 (define-node Pipe)
-(define-node Valve)
 (define-node Tank)
+(define-node Valve)
 
 (let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
 (chain t1 p1 v p2 t2)

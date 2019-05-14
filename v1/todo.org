@@ -1,13 +1,12 @@
-* pipedream
-** move connect to default/pair
-** add pipe diameter & calculate pressure
-** add simulation
-*** fun to step delta time
 * add NumType
 ** add Add/Sub/Div/Mul methods
 *** switch abc-defs to cast type & call method
 ** add DecType < NumType
 ** math/big/Float
+* pipedream
+** add pipe diameter & calculate pressure
+** add simulation
+*** fun to step delta time
 * move fos to demo/
 ** drop from lib/all.gf
 ** redirect test
