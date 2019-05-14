@@ -1,7 +1,6 @@
 package gfu
 
 import (
-  "fmt"
   "io"
   //"log"
   "strconv"
@@ -196,6 +195,11 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E) 
 
 func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E) {
   var buf strings.Builder
+
+  if prefix != 0 {
+    buf.WriteRune(prefix)
+  }
+
   is_dec := prefix == '.'
   
   for {
@@ -226,10 +230,6 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
 
   s := buf.String()
 
-  if prefix != 0 {
-    s = fmt.Sprintf("%c%v", prefix, s)
-  }
-  
   if is_dec {
     var v Dec
     e := v.Parse(g, s)
