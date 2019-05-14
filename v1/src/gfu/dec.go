@@ -13,6 +13,12 @@ type DecType struct {
   BasicType
 }
 
+func (d *Dec) Abs() {
+  f := big.Float(*d)
+  f.Abs(&f)
+  *d = Dec(f)
+}
+
 func (d *Dec) Add(val Dec) {
   x, y := big.Float(*d), big.Float(val)
   x.Add(&x, &y)
@@ -80,7 +86,9 @@ func (_ Dec) Type(g *G) Type {
 }
 
 func (t *DecType) Abs(g *G, x Val) (Val, E) {
-  return x.(Int).Abs(), nil
+  xd := x.(Dec)
+  xd.Abs()
+  return xd, nil
 }
 
 func (t *DecType) Add(g *G, x, y Val) (Val, E) {

@@ -1,5 +1,4 @@
-* add NumType
-** add support for -.5
+* finish Dec
 ** convert int_add_imp/int_mul_imp
 ** add div_imp
 * pipedream
