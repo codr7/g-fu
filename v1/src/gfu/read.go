@@ -1,323 +1,346 @@
 package gfu
 
 import (
-	"io"
-	//"log"
-	"strconv"
-	"strings"
-	"unicode"
+  "fmt"
+  "io"
+  //"log"
+  "strconv"
+  "strings"
+  "unicode"
 )
 
 type CharSet string
 
 func (s CharSet) Member(c rune) bool {
-	return strings.IndexRune(string(s), c) != -1
+  return strings.IndexRune(string(s), c) != -1
 }
 
 func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
-	c, _, e := in.ReadRune()
+  c, _, e := in.ReadRune()
 
-	if e == io.EOF {
-		return 0, nil
-	}
+  if e == io.EOF {
+    return 0, nil
+  }
 
-	if e != nil {
-		return 0, g.ReadE(*pos, "Failed reading char: %v", e)
-	}
+  if e != nil {
+    return 0, g.ReadE(*pos, "Failed reading char: %v", e)
+  }
 
-	if c == '\n' {
-		pos.Col = INIT_POS.Col
-		pos.Row++
-	} else {
-		pos.Col++
-	}
+  if c == '\n' {
+    pos.Col = INIT_POS.Col
+    pos.Row++
+  } else {
+    pos.Col++
+  }
 
-	return c, nil
+  return c, nil
 }
 
 func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
-	if e := in.UnreadRune(); e != nil {
-		return g.ReadE(*pos, "Failed unreading char")
-	}
+  if e := in.UnreadRune(); e != nil {
+    return g.ReadE(*pos, "Failed unreading char")
+  }
 
-	if c == '\n' {
-		pos.Row--
-	} else {
-		pos.Col--
-	}
+  if c == '\n' {
+    pos.Row--
+  } else {
+    pos.Col--
+  }
 
-	return nil
+  return nil
 }
 
 func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
-	var c rune
-	var e E
+  var c rune
+  var e E
 
-	for {
-		c, e = g.ReadChar(pos, in)
+  for {
+    c, e = g.ReadChar(pos, in)
 
-		if e != nil {
-			return nil, e
-		}
+    if e != nil {
+      return nil, e
+    }
 
-		if end.Member(c) {
-			if e = g.Unread(pos, in, c); e != nil {
-				return nil, e
-			}
+    if end.Member(c) {
+      if e = g.Unread(pos, in, c); e != nil {
+        return nil, e
+      }
 
-			c = 0
-		}
+      c = 0
+    }
 
-		if c == 0 {
-			return nil, e
-		}
+    if c == 0 {
+      return nil, e
+    }
 
-		switch c {
-		case ' ', '\n':
-			break
-		case '(':
-			return g.ReadVec(pos, in, out)
-		case ')':
-			return nil, g.ReadE(*pos, "Unexpected input: )")
-		case '\'':
-			return g.ReadQuote(pos, in, out, end)
-		case '.':
-			return g.ReadSplat(pos, in, out)
-		case '%':
-			return g.ReadSplice(pos, in, out, end)
-		case '"':
-			return g.ReadStr(pos, in, out)
-		default:
-			if unicode.IsDigit(c) {
-				if e = g.Unread(pos, in, c); e != nil {
-					return nil, e
-				}
+    switch c {
+    case ' ', '\n':
+      break
+    case '(':
+      return g.ReadVec(pos, in, out)
+    case ')':
+      return nil, g.ReadE(*pos, "Unexpected input: )")
+    case '\'':
+      return g.ReadQuote(pos, in, out, end)
+    case '.': {
+      var nc rune
+      nc, e = g.ReadChar(pos, in)
 
-				return g.ReadNum(pos, in, out, false)
-			} else if c == '-' {
-				var nc rune
-				nc, e = g.ReadChar(pos, in)
+      if e != nil {
+        return nil, e
+      }
 
-				if e != nil {
-					return nil, e
-				}
+      if nc == '.' {
+        return g.ReadSplat(pos, in, out)
+      }
 
-				is_num := unicode.IsDigit(nc)
+      if !unicode.IsDigit(nc) {
+        return nil, g.ReadE(*pos, "Invalid input: %v", c)
+      }
 
-				if e = g.Unread(pos, in, nc); e != nil {
-					return nil, e
-				}
+      if e = g.Unread(pos, in, nc); e != nil {
+        return nil, e
+      }
+      
+      return g.ReadNum(pos, in, out, '.')
+    }
+    case '%':
+      return g.ReadSplice(pos, in, out, end)
+    case '"':
+      return g.ReadStr(pos, in, out)
+    default:
+      if unicode.IsDigit(c) {
+        if e = g.Unread(pos, in, c); e != nil {
+          return nil, e
+        }
 
-				if is_num {
-					return g.ReadNum(pos, in, out, true)
-				}
+        return g.ReadNum(pos, in, out, 0)
+      } else if c == '-' {
+        var nc rune
+        nc, e = g.ReadChar(pos, in)
 
-				return g.ReadId(pos, in, out, "-")
-			} else if unicode.IsGraphic(c) {
-				if e = g.Unread(pos, in, c); e != nil {
-					return nil, e
-				}
+        if e != nil {
+          return nil, e
+        }
 
-				return g.ReadId(pos, in, out, "")
-			}
+        is_num := unicode.IsDigit(nc)
 
-			return nil, g.ReadE(*pos, "Unexpected input: %v", c)
-		}
-	}
+        if e = g.Unread(pos, in, nc); e != nil {
+          return nil, e
+        }
+
+        if is_num {
+          return g.ReadNum(pos, in, out, '-')
+        }
+
+        return g.ReadId(pos, in, out, c)
+      } else if unicode.IsGraphic(c) {
+        if e = g.Unread(pos, in, c); e != nil {
+          return nil, e
+        }
+
+        return g.ReadId(pos, in, out, 0)
+      }
+
+      return nil, g.ReadE(*pos, "Invalid input: %v", c)
+    }
+  }
 }
 
-func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix string) (Vec, E) {
-	var buf strings.Builder
-	buf.WriteString(prefix)
+func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E) {
+  var buf strings.Builder
 
-	for {
-		c, e := g.ReadChar(pos, in)
+  if prefix != 0 {
+    buf.WriteRune(prefix)
+  }
 
-		if e != nil {
-			return nil, e
-		}
+  for {
+    c, e := g.ReadChar(pos, in)
 
-		if c == 0 {
-			break
-		}
+    if e != nil {
+      return nil, e
+    }
 
-		if unicode.IsSpace(c) ||
-			c == '.' || c == '%' || c == '(' || c == ')' {
-			if e := g.Unread(pos, in, c); e != nil {
-				return nil, e
-			}
+    if c == 0 {
+      break
+    }
 
-			break
-		}
+    if unicode.IsSpace(c) ||
+      c == '.' || c == '%' || c == '(' || c == ')' {
+      if e := g.Unread(pos, in, c); e != nil {
+        return nil, e
+      }
 
-		if _, we := buf.WriteRune(c); we != nil {
-			return nil, g.ReadE(*pos, "Failed writing char: %v", we)
-		}
-	}
+      break
+    }
 
-	s := g.Sym(buf.String())
+    if _, we := buf.WriteRune(c); we != nil {
+      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+    }
+  }
 
-	if v := g.FindConst(s); v != nil {
-		var e E
+  s := g.Sym(buf.String())
 
-		if v, e = g.Clone(v); e != nil {
-			return nil, e
-		}
+  if v := g.FindConst(s); v != nil {
+    var e E
 
-		return append(out, v), nil
-	}
+    if v, e = g.Clone(v); e != nil {
+      return nil, e
+    }
 
-	return append(out, s), nil
+    return append(out, v), nil
+  }
+
+  return append(out, s), nil
 }
 
-func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, is_neg bool) (Vec, E) {
-	var buf strings.Builder
+func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E) {
+  var buf strings.Builder
+  is_dec := prefix == '.'
+  
+  for {
+    c, e := g.ReadChar(pos, in)
 
-	for {
-		c, e := g.ReadChar(pos, in)
+    if e != nil {
+      return nil, e
+    }
 
-		if e != nil {
-			return nil, e
-		}
+    if c == 0 {
+      break
+    }
 
-		if c == 0 {
-			break
-		}
+    is_dec = is_dec || c == '.'
+    
+    if !unicode.IsDigit(c) && (is_dec || c != '.') {
+      if e := g.Unread(pos, in, c); e != nil {
+        return nil, e
+      }
 
-		if !unicode.IsDigit(c) {
-			if e := g.Unread(pos, in, c); e != nil {
-				return nil, e
-			}
+      break
+    }
 
-			break
-		}
+    if _, we := buf.WriteRune(c); we != nil {
+      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+    }
+  }
 
-		if _, we := buf.WriteRune(c); we != nil {
-			return nil, g.ReadE(*pos, "Failed writing char: %v", we)
-		}
-	}
+  s := buf.String()
 
-	s := buf.String()
-	n, e := strconv.ParseInt(s, 10, 64)
+  if prefix != 0 {
+    s = fmt.Sprintf("%c%v", prefix, s)
+  }
+  
+  if is_dec {
+    var v Dec
+    e := v.Parse(g, s)
 
-	if e != nil {
-		return nil, g.ReadE(*pos, "Invalid num: %v", s)
-	}
+    if e != nil {
+      return nil, e
+    }
 
-	if is_neg {
-		n = -n
-	}
+    return append(out, v), nil
+  }
+  
+  n, e := strconv.ParseInt(s, 10, 64)
 
-	return append(out, Int(n)), nil
+  if e != nil {
+    return nil, g.ReadE(*pos, "Invalid Int: %v", s)
+  }
+
+  return append(out, Int(n)), nil
 }
 
 func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
-	vpos := *pos
-	vs, e := g.Read(pos, in, nil, end)
+  vpos := *pos
+  vs, e := g.Read(pos, in, nil, end)
 
-	if e != nil {
-		return nil, e
-	}
+  if e != nil {
+    return nil, e
+  }
 
-	if len(vs) == 0 {
-		return nil, g.ReadE(vpos, "Nothing to quote")
-	}
+  if len(vs) == 0 {
+    return nil, g.ReadE(vpos, "Nothing to quote")
+  }
 
-	return append(out, NewQuote(g, vs[0])), nil
+  return append(out, NewQuote(g, vs[0])), nil
 }
 
 func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-	vpos := *pos
-	vpos.Col--
+  i := len(out)
 
-	var nc rune
-	var e E
+  if i == 0 {
+    return nil, g.ReadE(*pos, "Missing splat value")
+  }
 
-	nc, e = g.ReadChar(pos, in)
-
-	if e != nil {
-		return nil, e
-	}
-
-	if nc != '.' {
-		return nil, g.ReadE(*pos, "Invalid input: .%v", string(nc))
-	}
-
-	i := len(out)
-
-	if i == 0 {
-		return nil, g.ReadE(*pos, "Missing splat value")
-	}
-
-	v := out[i-1]
-	return append(out[:i-1], NewSplat(g, v)), nil
+  v := out[i-1]
+  return append(out[:i-1], NewSplat(g, v)), nil
 }
 
 func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
-	vpos := *pos
-	vpos.Col--
+  vpos := *pos
+  vpos.Col--
 
-	vs, e := g.Read(pos, in, nil, end)
+  vs, e := g.Read(pos, in, nil, end)
 
-	if e != nil {
-		return nil, e
-	}
+  if e != nil {
+    return nil, e
+  }
 
-	if len(vs) == 0 {
-		return nil, g.ReadE(vpos, "Nothing to eval")
-	}
+  if len(vs) == 0 {
+    return nil, g.ReadE(vpos, "Nothing to eval")
+  }
 
-	return append(out, NewSplice(g, vs[0])), nil
+  return append(out, NewSplice(g, vs[0])), nil
 }
 
 func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-	var buf strings.Builder
+  var buf strings.Builder
 
-	for {
-		c, e := g.ReadChar(pos, in)
+  for {
+    c, e := g.ReadChar(pos, in)
 
-		if e != nil {
-			return nil, e
-		}
+    if e != nil {
+      return nil, e
+    }
 
-		if c == 0 || c == '"' {
-			break
-		}
+    if c == 0 || c == '"' {
+      break
+    }
 
-		if _, we := buf.WriteRune(c); we != nil {
-			return nil, g.ReadE(*pos, "Failed writing char: %v", we)
-		}
-	}
+    if _, we := buf.WriteRune(c); we != nil {
+      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+    }
+  }
 
-	return append(out, Str(buf.String())), nil
+  return append(out, Str(buf.String())), nil
 }
 
 func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
-	var body Vec
+  var body Vec
 
-	for {
-		vs, e := g.Read(pos, in, body, ")")
+  for {
+    vs, e := g.Read(pos, in, body, ")")
 
-		if e != nil {
-			return nil, e
-		}
+    if e != nil {
+      return nil, e
+    }
 
-		if vs == nil {
-			break
-		}
+    if vs == nil {
+      break
+    }
 
-		body = vs
-	}
+    body = vs
+  }
 
-	c, e := g.ReadChar(pos, in)
+  c, e := g.ReadChar(pos, in)
 
-	if e != nil {
-		return nil, e
-	}
+  if e != nil {
+    return nil, e
+  }
 
-	if c != ')' {
-		return nil, g.E("Invalid vec end: %v", string(c))
-	}
+  if c != ')' {
+    return nil, g.E("Invalid vec end: %v", string(c))
+  }
 
-	return append(out, body), nil
+  return append(out, body), nil
 }

@@ -754,6 +754,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.SeqType, "Seq")
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
   
+  e.AddType(g, &g.DecType, "Dec")
   e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")

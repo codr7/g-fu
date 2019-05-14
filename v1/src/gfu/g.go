@@ -15,6 +15,7 @@ type G struct {
   RootEnv  Env
 
   ChanType    ChanType
+  DecType     DecType
   EnvType     EnvType
   FalseType   FalseType
   FunType     FunType
