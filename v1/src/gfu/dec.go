@@ -65,6 +65,12 @@ func (d *Dec) Parse(g *G, in string) E {
   return nil
 }
 
+func (d *Dec) SetFloat(val float64) {
+  var f big.Float
+  f.SetFloat64(val)
+  *d = Dec(f)
+}
+
 func (d *Dec) SetInt(val Int) {
   var f big.Float
   f.SetInt64(int64(val))

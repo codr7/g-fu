@@ -1,6 +1,8 @@
 * pipedream
 ** calculate tank pressure
-** calculate pipe pressure
+*** add (node/sim dt) method
+**** propagate until no changes
+** calculate pipe flow/pressure
 ** simulation
 *** delta time
 * move fos to demo/

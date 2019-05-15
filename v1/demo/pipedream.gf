@@ -1,9 +1,10 @@
 (debug)
 (load "../lib/all.gf")
 
-(fun Port (n)
+(fun port (n)
   (let this this-env
        y .0 dy .0
+       pressure .0 density 1.
        io _
        default (let _
                  (fun init (prev)
@@ -14,24 +15,35 @@
                  (fun pair (p)
                    (set 'io p 'p/io this))
     
+                 (fun sim (prev)
+                   (dump 'port-sim)
+                   (set 'pressure prev/pressure)
+                   (if (= n prev) _ (n/sim))
+                   (if (and io (not (= io prev))) (io/sim this)))
+                   
                  this-env))
-  (use default init pair)
+  (use default init pair sim)
   this)
 
-(mac define-node (id (vars ()))
+(mac node (id (vars ()) body..)
   '(fun %id ((id (str '%id)))
      (let this this-env
           y .0 dy .0
-          sg 1. pressure .0
-          in (Port this) out (Port this)
+          pressure .0 density 1.
+          in (port this) out (port this)
           %vars..
           default (let _
                     (fun init ()
                       (set 'y (+ in/y dy))
                       (out/init this))
 
+                    (fun sim ()
+                      (in/sim this)
+                      (out/sim this))
+
                     this-env))
-     (use default init)
+     (use default init sim)
+     %body..
      this))
 
 (mac let-node (args..)
@@ -54,13 +66,41 @@
         (x/out/pair y/in)
         y)))
 
-(define-node Pipe)
-(define-node Tank (volume .0 radius .0))
-(define-node Valve)
+(fun y->pressure (y)
+  (* y 1.422))
+
+(node Pipe
+  (diameter .0 length .0 flow .0)
+
+  (fun get-pressure ()
+    (- in/pressure
+       (* (* (/ density 2.) (/ (* flow) diameter)) length)))
+
+  (fun sim ()
+    (dump 'pipe-sim)
+    (set 'pressure (get-pressure))
+    (out/sim this)))
+
+(node Tank
+  (volume .0 radius .0)
+
+  (fun get-pressure ((dy .0))
+    (y->pressure (- (/ volume (* PI (* radius))) dy)))
+
+  (fun sim ()
+    (dump 'tank-sim)
+    (set 'pressure (get-pressure out/dy))
+    (out/sim this)))
+    
+(node Valve)
 
 (let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
-(chain t1 p1 v p2 t2)
-(set 't1/dy 10.)
-(set 't1/out/dy 5.)
+(__ (chain t1 p1 v p2 t2))
+(chain t1 p1)
+
+(set 't1/radius 10. 't1/volume 10000. 't1/dy 10.
+     'p1/diameter .1 'p1/length 10.)
+
 (t1/init)
-(dump t2/y)
+(t1/sim)
+(dump p1/in/pressure p1/out/pressure)
