@@ -91,11 +91,10 @@ The following exmple uses `let` to create a new environment containing a slot an
 ```
   (let (n 0 d (dispatch
                 (inc ((delta 1)) (inc n delta))
-                (dec ((delta 1)) (dec n delta))
                 (T (args..) (say "Trapped: " args))))
     (say (d 'inc 42))
     (say (d 'inc))
-    (say (d 'dec))
+    (say (d 'inc -1))
     (d 1 2 3))
 
 42
@@ -108,8 +107,7 @@ Calls may be expanded to visually inspect the generated code.
 
 ```
   (expand 1 '(dispatch
-               (inc ((delta 1)) (inc n delta))
-               (dec ((delta 1)) (dec n delta))))
+               (inc ((delta 1)) (inc n delta))))
 
 (fun (sym-143..)
   (let sym-144 (head sym-143))
@@ -117,9 +115,6 @@ Calls may be expanded to visually inspect the generated code.
   (switch
     ((= sym-144 'inc)
       (call (fun ((delta 1)) (inc n delta))
-            (splat (tail sym-143))))
-    ((= sym-144 'dec)
-      (call (fun ((delta 1)) (dec n delta))
             (splat (tail sym-143))))
               
     (T (fail (str "Unknown method: " sym-144)))))

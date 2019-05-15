@@ -65,6 +65,10 @@ func (t *IntType) Mul(g *G, x, y Val) (Val, E) {
   return x.(Int) * y.(Int), nil
 }
 
+func (t *IntType) Neg(g *G, x Val) (Val, E) {
+  return -x.(Int), nil
+}
+
 func (t *IntType) Sub(g *G, x, y Val) (Val, E) {
   return x.(Int) - y.(Int), nil
 }

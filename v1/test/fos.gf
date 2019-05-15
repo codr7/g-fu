@@ -1,8 +1,7 @@
 (let (n 0 d (dispatch
-              (inc ((delta 1)) (inc n delta))
-              (dec ((delta 1)) (dec n delta))))
+              (inc ((delta 1)) (inc n delta))))
   (test (= (d 'inc 4) 4))
-  (test (= (d 'dec) 3))
+  (test (= (d 'inc -1) 3))
   (test (= n 3)))
 
 (let-this ()

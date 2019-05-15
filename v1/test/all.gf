@@ -12,7 +12,7 @@
 (test (= (- (+ 1 2) (+ 3 4)) -4))
 
 (test (= (inc 41) 42))
-(test (= (dec 43) 42))
+(test (= (inc 43 -1) 42))
 
 (test (= (let foo 1 baz 2) 2))
 

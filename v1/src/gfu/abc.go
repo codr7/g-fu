@@ -465,29 +465,37 @@ func add_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   return v, nil
 }
 
-func int_sub_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0].(Int)
-
+func sub_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  a0 := args[0]
+  
   if len(args) == 1 {
-    return -v, nil
+    return g.Neg(a0)
   }
 
-  for _, iv := range args[1:] {
-    v -= iv.(Int)
+  v = args[0]
+  
+  for _, a := range args[1:] {
+    if v, e = g.Sub(v, a); e != nil {
+      return nil, e
+    }
   }
 
   return v, nil
 }
 
-func int_mul_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0].(Int)
-
+func mul_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+  a0 := args[0]
+  
   if len(args) == 1 {
-    return Int(v * v), nil
+    return g.Mul(a0, a0)
   }
 
-  for _, iv := range args[1:] {
-    v *= iv.(Int)
+  v = args[0]
+  
+  for _, a := range args[1:] {
+    if v, e = g.Mul(v, a); e != nil {
+      return nil, e
+    }
   }
 
   return v, nil
@@ -847,8 +855,8 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "+", add_imp, A("x"), ASplat("ys"))
   e.AddFun(g, "/", div_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "-", int_sub_imp, ASplat("vals"))
-  e.AddFun(g, "*", int_mul_imp, ASplat("vals"))
+  e.AddFun(g, "-", sub_imp, A("x"), ASplat("ys"))
+  e.AddFun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
   e.AddFun(g, "iter", iter_imp, A("val"))
   e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))

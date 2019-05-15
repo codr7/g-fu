@@ -205,20 +205,18 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return Vec(nil), nil
   }
 
-  id, ok := v[0].(*Sym)
+  target, ce := v[0], env
 
-  if !ok {
-    return nil, g.E("Invalid call target: %v", v[0])
-  }
+  if id, ok := target.(*Sym); ok {
+    if id == g.nop_sym {
+      return &g.NIL, nil
+    }
 
-  if id == g.nop_sym {
-    return &g.NIL, nil
-  }
-
-  target, ce, e := id.Lookup(g, task, env, false)
-
-  if e != nil {
-    return nil, e
+    var e E
+    
+    if target, ce, e = id.Lookup(g, task, env, false); e != nil {
+      return nil, e
+    }
   }
 
   return g.Call(task, ce, target, v[1:], env)

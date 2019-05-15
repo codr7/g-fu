@@ -1,5 +1,4 @@
 * finish Dec
-** convert int_add_imp/int_mul_imp
 ** add int/dec funs
 *** move inc/dec to Int Call
 * pipedream

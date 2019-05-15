@@ -136,6 +136,12 @@ func (t *DecType) Mul(g *G, x, y Val) (Val, E) {
   return xd, nil
 }
 
+func (t *DecType) Neg(g *G, x Val) (Val, E) {
+  xd := x.(Dec)
+  xd.Neg()
+  return x, nil
+}
+
 func (t *DecType) Is(g *G, x, y Val) bool {
   xd := x.(Dec)
   yd, ok := y.(Dec)

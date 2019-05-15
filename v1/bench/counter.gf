@@ -5,14 +5,13 @@
 
 (let super this-env
      Counter (fun ((n 0))
-               (fun inc () (super/inc n))
-               (fun dec () (super/dec n))
+               (fun inc ((d 1)) (super/inc n d))
                this-env))
 
 (dump (bench 10 (for 1000
   (let c (Counter))
   (c/inc)
-  (c/dec))))
+  (c/inc -1))))
 
 )
 
@@ -20,12 +19,11 @@
 
 (class Counter ()
   ((n 0))
-  (inc () (inc n))
-  (dec () (dec n)))
+  (inc ((d 1)) (inc n d)))
 
 (dump (bench 10 (for 1000
   (let c (Counter 'new))
   (c 'inc)
-  (c 'dec))))
+  (c 'inc -1))))
 
 )

@@ -4,9 +4,10 @@ type Num interface {
   Type
   Abs(*G, Val) (Val, E)
   Add(*G, Val, Val) (Val, E)
-  Sub(*G, Val, Val) (Val, E)
-  Mul(*G, Val, Val) (Val, E)
   Div(*G, Val, Val) (Val, E)
+  Mul(*G, Val, Val) (Val, E)
+  Neg(*G, Val) (Val, E)
+  Sub(*G, Val, Val) (Val, E)
 }
 
 type NumType struct {
@@ -35,7 +36,7 @@ func (g *G) Add(x, y Val) (Val, E) {
   return nt.Add(g, x, y)
 }
 
-func (g *G) Sub(x, y Val) (Val, E) {
+func (g *G) Div(x, y Val) (Val, E) {
   t := x.Type(g)
   nt, ok := t.(Num)
 
@@ -43,7 +44,7 @@ func (g *G) Sub(x, y Val) (Val, E) {
     return nil, g.E("Expected Num: %v", t)
   }
 
-  return nt.Sub(g, x, y)
+  return nt.Div(g, x, y)
 }
 
 func (g *G) Mul(x, y Val) (Val, E) {
@@ -57,7 +58,7 @@ func (g *G) Mul(x, y Val) (Val, E) {
   return nt.Mul(g, x, y)
 }
 
-func (g *G) Div(x, y Val) (Val, E) {
+func (g *G) Neg(x Val) (Val, E) {
   t := x.Type(g)
   nt, ok := t.(Num)
 
@@ -65,5 +66,16 @@ func (g *G) Div(x, y Val) (Val, E) {
     return nil, g.E("Expected Num: %v", t)
   }
 
-  return nt.Div(g, x, y)
+  return nt.Neg(g, x)
+}
+
+func (g *G) Sub(x, y Val) (Val, E) {
+  t := x.Type(g)
+  nt, ok := t.(Num)
+
+  if !ok {
+    return nil, g.E("Expected Num: %v", t)
+  }
+
+  return nt.Sub(g, x, y)
 }

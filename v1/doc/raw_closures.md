@@ -38,12 +38,11 @@ Dealing directly with the environment allows composing data and code in a more f
 ```
   (let (super this-env
         Counter (fun ((n 0))
-                  (fun inc () (super/inc n))
-                  (fun dec () (super/dec n))
+                  (fun inc ((d 1)) (super/inc n d))
                   this-env)
         c (Counter))
     (for 3 (c/inc))
-    (c/dec))
+    (c/inc -1))
 
 2
 ```
