@@ -46,19 +46,18 @@
      %body..
      this))
 
-(mac let-node (args..)
-  (let a1 (head args))
-  
+(mac sim (id args body..)
   (fun push-args (in (acc ()))
     (if in (do
       (let v (pop in) k (pop in))
       (push acc k '(%(head v) '%k %(tail v)..))
       (recall in acc))
       acc))
-    
-  (if (Vec a1)
-    '(let %(push-args a1) (tail args)..)
-    '(let %(push-args args)..)))
+  
+  '(let %id (let (this-sim this-env
+                  %(push-args args)..)
+              %body..
+              this-sim)))
 
 (fun chain (ns..)
   (tr (tail ns) (head ns)
@@ -91,13 +90,12 @@
     
 (node Valve)
 
-(let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
-(__ (chain t1 p1 v p2 t2))
-(chain t1 p1)
+(sim s (t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
+  (chain t1 p1)
 
-(set 't1/radius 10. 't1/volume 10000.
-     'p1/diameter .1 'p1/length 10.)
+  (set 't1/radius 10. 't1/volume 10000.
+       'p1/diameter .1 'p1/length 10.)
 
-(t1/init)
-(t1/run)
-(dump p1/in/pressure p1/out/pressure)
+  (t1/init)
+  (t1/run)
+  (dump p1/in/pressure p1/out/pressure))

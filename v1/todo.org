@@ -1,8 +1,10 @@
 * pipedream
-** put node/port in sim env
-*** add sim.pressure 
-**** use if tank is empty
-**** use if no port.io
+** add node constructor sim arg
+*** inject in sim macro
+*** set this-sim
+** add sim.pressure 
+*** use if tank is empty
+*** use if no port.io
 ** run until t1 is empty
 ** add dt arg to sim/run
 * ---
