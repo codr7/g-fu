@@ -1,6 +1,3 @@
-* finish Dec
-** add int/dec funs
-*** move inc/dec to Int Call
 * pipedream
 ** add pipe diameter & calculate pressure
 ** add simulation
