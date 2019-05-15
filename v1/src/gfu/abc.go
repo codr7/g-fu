@@ -1,881 +1,881 @@
 package gfu
 
 import (
-  "fmt"
-  //"log"
-  "os"
-  "strings"
-  "time"
+	"fmt"
+	//"log"
+	"os"
+	"strings"
+	"time"
 )
 
 func do_imp(g *G, task *Task, env *Env, args Vec, arg_env *Env) (Val, E) {
-  return args.EvalExpr(g, task, env)
+	return args.EvalExpr(g, task, env)
 }
 
 func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  i := 0
-  id, ok := args[0].(*Sym)
+	i := 0
+	id, ok := args[0].(*Sym)
 
-  if ok {
-    i++
-  }
+	if ok {
+		i++
+	}
 
-  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
+	as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  i++
-  f, e := NewFun(g, env, id, as)
+	i++
+	f, e := NewFun(g, env, id, as)
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  f.body = args[i:]
-  return f, nil
+	f.body = args[i:]
+	return f, nil
 }
 
 func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  i := 0
-  id, ok := args[0].(*Sym)
+	i := 0
+	id, ok := args[0].(*Sym)
 
-  if ok {
-    i++
-  }
+	if ok {
+		i++
+	}
 
-  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
+	as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  i++
-  m, e := NewMac(g, env, id, as)
+	i++
+	m, e := NewMac(g, env, id, as)
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  m.body = args[i:]
-  return m, nil
+	m.body = args[i:]
+	return m, nil
 }
 
 func call_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  t, e := g.Eval(task, args_env, args[0])
+	t, e := g.Eval(task, args_env, args[0])
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  return g.Call(task, env, t, args[1:], env)
+	return g.Call(task, env, t, args[1:], env)
 }
 
 func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
-  if len(args) == 0 {
-    return &g.NIL, nil
-  }
+	if len(args) == 0 {
+		return &g.NIL, nil
+	}
 
-  bsf := args[0]
-  bs, is_scope := bsf.(Vec)
+	bsf := args[0]
+	bs, is_scope := bsf.(Vec)
 
-  if bsf == &g.NIL {
-    bs = nil
-    is_scope = true
-  }
+	if bsf == &g.NIL {
+		bs = nil
+		is_scope = true
+	}
 
-  var le *Env
+	var le *Env
 
-  if is_scope {
-    le = new(Env)
+	if is_scope {
+		le = new(Env)
 
-    if e = g.Extenv(env, le, args, false); e != nil {
-      return nil, e
-    }
-  } else {
-    bs = args
-    le = env
-  }
+		if e = g.Extenv(env, le, args, false); e != nil {
+			return nil, e
+		}
+	} else {
+		bs = args
+		le = env
+	}
 
-  if e = g.Extenv(args_env, le, args, false); e != nil {
-    return nil, e
-  }
+	if e = g.Extenv(args_env, le, args, false); e != nil {
+		return nil, e
+	}
 
-  v = &g.NIL
+	v = &g.NIL
 
-  for i := 0; i+1 < len(bs); i += 2 {
-    kf, vf := bs[i], bs[i+1]
+	for i := 0; i+1 < len(bs); i += 2 {
+		kf, vf := bs[i], bs[i+1]
 
-    if _, ok := kf.(*Sym); !ok {
-      return nil, g.E("Invalid let key: %v", kf)
-    }
+		if _, ok := kf.(*Sym); !ok {
+			return nil, g.E("Invalid let key: %v", kf)
+		}
 
-    k := kf.(*Sym)
-    v, e = g.Eval(task, le, vf)
+		k := kf.(*Sym)
+		v, e = g.Eval(task, le, vf)
 
-    if e != nil {
-      return nil, e
-    }
+		if e != nil {
+			return nil, e
+		}
 
-    if e = le.Let(g, k, v); e != nil {
-      return nil, e
-    }
-  }
+		if e = le.Let(g, k, v); e != nil {
+			return nil, e
+		}
+	}
 
-  if !is_scope {
-    return v, nil
-  }
+	if !is_scope {
+		return v, nil
+	}
 
-  rv, e := args[1:].EvalExpr(g, task, le)
+	rv, e := args[1:].EvalExpr(g, task, le)
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  return rv, nil
+	return rv, nil
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  if v, _, e = args[0].(*Sym).Lookup(g, task, env, false); e != nil {
-    return nil, e
-  }
+	if v, _, e = args[0].(*Sym).Lookup(g, task, env, false); e != nil {
+		return nil, e
+	}
 
-  return v, nil
+	return v, nil
 }
 
 func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  for i := 0; i+1 < len(args); i += 2 {
-    var k Val
-    k, v = args[i], args[i+1]
+	for i := 0; i+1 < len(args); i += 2 {
+		var k Val
+		k, v = args[i], args[i+1]
 
-    if _, ok := k.(*Sym); !ok {
-      return nil, g.E("Invalid set key: %v", k)
-    }
+		if _, ok := k.(*Sym); !ok {
+			return nil, g.E("Invalid set key: %v", k)
+		}
 
-    if _, e = env.Set(g, k.(*Sym), v); e != nil {
-      return nil, e
-    }
-  }
+		if _, e = env.Set(g, k.(*Sym), v); e != nil {
+			return nil, e
+		}
+	}
 
-  return v, nil
+	return v, nil
 }
 
 func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  prefix := args[0]
+	prefix := args[0]
 
-  if prefix == &g.NIL {
-    return &g.NIL, nil
-  }
+	if prefix == &g.NIL {
+		return &g.NIL, nil
+	}
 
-  var v *Var
-  var e E
-  
-  for _, k := range args[1:] {
-    ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
+	var v *Var
+	var e E
 
-    if v, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
-      return nil, e
-    }
+	for _, k := range args[1:] {
+		ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
 
-    if i, found := env.Find(v.key); found == nil {
-      env.InsertVar(i, v)
-    }
-  }
+		if v, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
+			return nil, e
+		}
 
-  return &g.NIL, nil
+		if i, found := env.Find(v.key); found == nil {
+			env.InsertVar(i, v)
+		}
+	}
+
+	return &g.NIL, nil
 }
 
 func this_env_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  return env, nil
+	return env, nil
 }
 
 func if_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  c, e := g.Eval(task, env, args[0])
+	c, e := g.Eval(task, env, args[0])
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  v, e := g.Bool(c)
+	v, e := g.Bool(c)
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  if v {
-    return g.Eval(task, args_env, args[1])
-  }
+	if v {
+		return g.Eval(task, args_env, args[1])
+	}
 
-  if len(args) > 2 {
-    return g.Eval(task, args_env, args[2])
-  }
+	if len(args) > 2 {
+		return g.Eval(task, args_env, args[2])
+	}
 
-  return &g.NIL, nil
+	return &g.NIL, nil
 }
 
 func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  d, e := g.Eval(task, args_env, args[1])
+	d, e := g.Eval(task, args_env, args[1])
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  p := args[0]
+	p := args[0]
 
-  if id, ok := p.(*Sym); ok {
-    return args_env.Update(g, id, func(v Val) (Val, E) {
-      return v.(Int) + d.(Int), nil
-    })
-  }
+	if id, ok := p.(*Sym); ok {
+		return args_env.Update(g, id, func(v Val) (Val, E) {
+			return v.(Int) + d.(Int), nil
+		})
+	}
 
-  if p, e = g.Eval(task, args_env, p); e != nil {
-    return nil, e
-  }
+	if p, e = g.Eval(task, args_env, p); e != nil {
+		return nil, e
+	}
 
-  return p.(Int) + d.(Int), nil
+	return p.(Int) + d.(Int), nil
 }
 
 func test_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  for _, in := range args {
-    v, e := g.Eval(task, env, in)
+	for _, in := range args {
+		v, e := g.Eval(task, env, in)
 
-    if e != nil {
-      return nil, e
-    }
+		if e != nil {
+			return nil, e
+		}
 
-    bv, e := g.Bool(v)
+		bv, e := g.Bool(v)
 
-    if e != nil {
-      return nil, e
-    }
+		if e != nil {
+			return nil, e
+		}
 
-    if !bv {
-      return nil, g.E("Test failed: %v", in)
-    }
-  }
+		if !bv {
+			return nil, g.E("Test failed: %v", in)
+		}
+	}
 
-  return &g.NIL, nil
+	return &g.NIL, nil
 }
 
 func bench_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  as := ParsePrimArgs(g, args[0])
+	as := ParsePrimArgs(g, args[0])
 
-  if as == nil {
-    return nil, g.E("Invalid bench args: %v", as)
-  }
+	if as == nil {
+		return nil, g.E("Invalid bench args: %v", as)
+	}
 
-  a, e := g.Eval(task, args_env, as[0])
+	a, e := g.Eval(task, args_env, as[0])
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  n := a.(Int)
-  b := args[1:]
+	n := a.(Int)
+	b := args[1:]
 
-  for i := Int(0); i < n; i++ {
-    b.EvalExpr(g, task, env)
-  }
+	for i := Int(0); i < n; i++ {
+		b.EvalExpr(g, task, env)
+	}
 
-  t := time.Now()
+	t := time.Now()
 
-  for i := Int(0); i < n; i++ {
-    if _, e = b.EvalExpr(g, task, env); e != nil {
-      return nil, e
-    }
-  }
+	for i := Int(0); i < n; i++ {
+		if _, e = b.EvalExpr(g, task, env); e != nil {
+			return nil, e
+		}
+	}
 
-  return Int(time.Now().Sub(t).Nanoseconds() / 1000000), nil
+	return Int(time.Now().Sub(t).Nanoseconds() / 1000000), nil
 }
 
 func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  g.Debug = true
-  return &g.NIL, nil
+	g.Debug = true
+	return &g.NIL, nil
 }
 
 func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.E(string(args[0].(Str)))
+	return nil, g.E(string(args[0].(Str)))
 }
 
 func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
+	var out strings.Builder
 
-  for _, v := range args {
-    g.Dump(v, &out)
-    out.WriteRune('\n')
-  }
+	for _, v := range args {
+		g.Dump(v, &out)
+		out.WriteRune('\n')
+	}
 
-  os.Stderr.WriteString(out.String())
-  return &g.NIL, nil
+	os.Stderr.WriteString(out.String())
+	return &g.NIL, nil
 }
 
 func say_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
+	var out strings.Builder
 
-  for _, v := range args {
-    g.Print(v, &out)
-  }
+	for _, v := range args {
+		g.Print(v, &out)
+	}
 
-  out.WriteRune('\n')
-  os.Stdout.WriteString(out.String())
-  return &g.NIL, nil
+	out.WriteRune('\n')
+	os.Stdout.WriteString(out.String())
+	return &g.NIL, nil
 }
 
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Load(task, env, string(args[0].(Str)))
+	return g.Load(task, env, string(args[0].(Str)))
 }
 
 func dup_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Dup(args[0])
+	return g.Dup(args[0])
 }
 
 func clone_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Clone(args[0])
+	return g.Clone(args[0])
 }
 
 func type_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args[0].Type(g), nil
+	return args[0].Type(g), nil
 }
 
 func eval_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  var e E
-  v := args[0]
+	var e E
+	v := args[0]
 
-  if v, e = g.Eval(task, args_env, v); e != nil {
-    return nil, e
-  }
+	if v, e = g.Eval(task, args_env, v); e != nil {
+		return nil, e
+	}
 
-  return g.Eval(task, env, v)
+	return g.Eval(task, env, v)
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  return g.Expand(task, env, args[1], args[0].(Int))
+	return g.Expand(task, env, args[1], args[0].(Int))
 }
 
 func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return &g.NIL, NewRecall(args)
+	return &g.NIL, NewRecall(args)
 }
 
 func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.NewSym(string(args[0].(Str))), nil
+	return g.NewSym(string(args[0].(Str))), nil
 }
 
 func sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
+	var out strings.Builder
 
-  for _, a := range args {
-    g.Print(a, &out)
-  }
+	for _, a := range args {
+		g.Print(a, &out)
+	}
 
-  return g.Sym(out.String()), nil
+	return g.Sym(out.String()), nil
 }
 
 func str_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
+	var out strings.Builder
 
-  for _, a := range args {
-    g.Print(a, &out)
-  }
+	for _, a := range args {
+		g.Print(a, &out)
+	}
 
-  return Str(out.String()), nil
+	return Str(out.String()), nil
 }
 
 func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.BoolVal(args[0])
+	return g.BoolVal(args[0])
 }
 
 func eq_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0]
+	v := args[0]
 
-  for _, iv := range args[1:] {
-    ok, e := g.Eq(iv, v)
+	for _, iv := range args[1:] {
+		ok, e := g.Eq(iv, v)
 
-    if e != nil {
-      return nil, e
-    }
+		if e != nil {
+			return nil, e
+		}
 
-    if !ok {
-      return &g.F, nil
-    }
-  }
+		if !ok {
+			return &g.F, nil
+		}
+	}
 
-  return &g.T, nil
+	return &g.T, nil
 }
 
 func is_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0]
+	v := args[0]
 
-  for _, iv := range args[1:] {
-    if !g.Is(iv, v) {
-      return &g.F, nil
-    }
-  }
+	for _, iv := range args[1:] {
+		if !g.Is(iv, v) {
+			return &g.F, nil
+		}
+	}
 
-  return &g.T, nil
+	return &g.T, nil
 }
 
 func int_lt_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  lhs := args[0].(Int)
+	lhs := args[0].(Int)
 
-  for _, a := range args[1:] {
-    rhs := a.(Int)
+	for _, a := range args[1:] {
+		rhs := a.(Int)
 
-    if rhs <= lhs {
-      return &g.F, nil
-    }
+		if rhs <= lhs {
+			return &g.F, nil
+		}
 
-    lhs = rhs
-  }
+		lhs = rhs
+	}
 
-  return &g.T, nil
+	return &g.T, nil
 }
 
 func int_gt_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  lhs := args[0].(Int)
+	lhs := args[0].(Int)
 
-  for _, a := range args[1:] {
-    rhs := a.(Int)
+	for _, a := range args[1:] {
+		rhs := a.(Int)
 
-    if rhs >= lhs {
-      return &g.F, nil
-    }
+		if rhs >= lhs {
+			return &g.F, nil
+		}
 
-    lhs = rhs
-  }
+		lhs = rhs
+	}
 
-  return &g.T, nil
+	return &g.T, nil
 }
 
 func add_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  a0 := args[0]
-  
-  if len(args) == 1 {
-    return g.Abs(a0)
-  }
+	a0 := args[0]
 
-  v = args[0]
-  
-  for _, a := range args[1:] {
-    if v, e = g.Add(v, a); e != nil {
-      return nil, e
-    }
-  }
+	if len(args) == 1 {
+		return g.Abs(a0)
+	}
 
-  return v, nil
+	v = args[0]
+
+	for _, a := range args[1:] {
+		if v, e = g.Add(v, a); e != nil {
+			return nil, e
+		}
+	}
+
+	return v, nil
 }
 
 func sub_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  a0 := args[0]
-  
-  if len(args) == 1 {
-    return g.Neg(a0)
-  }
+	a0 := args[0]
 
-  v = args[0]
-  
-  for _, a := range args[1:] {
-    if v, e = g.Sub(v, a); e != nil {
-      return nil, e
-    }
-  }
+	if len(args) == 1 {
+		return g.Neg(a0)
+	}
 
-  return v, nil
+	v = args[0]
+
+	for _, a := range args[1:] {
+		if v, e = g.Sub(v, a); e != nil {
+			return nil, e
+		}
+	}
+
+	return v, nil
 }
 
 func mul_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  a0 := args[0]
-  
-  if len(args) == 1 {
-    return g.Mul(a0, a0)
-  }
+	a0 := args[0]
 
-  v = args[0]
-  
-  for _, a := range args[1:] {
-    if v, e = g.Mul(v, a); e != nil {
-      return nil, e
-    }
-  }
+	if len(args) == 1 {
+		return g.Mul(a0, a0)
+	}
 
-  return v, nil
+	v = args[0]
+
+	for _, a := range args[1:] {
+		if v, e = g.Mul(v, a); e != nil {
+			return nil, e
+		}
+	}
+
+	return v, nil
 }
 
 func div_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  a0 := args[0]
-  
-  if len(args) == 1 {
-    var x, y Dec
-    x.SetInt(1)
-    y.SetInt(a0.(Int))
-    x.Div(y)
-    return x, nil
-  }
+	a0 := args[0]
 
-  v = args[0]
-  
-  for _, a := range args[1:] {
-    if v, e = g.Div(v, a); e != nil {
-      return nil, e
-    }
-  }
+	if len(args) == 1 {
+		var x, y Dec
+		x.SetInt(1)
+		y.SetInt(a0.(Int))
+		x.Div(y)
+		return x, nil
+	}
 
-  return v, nil
+	v = args[0]
+
+	for _, a := range args[1:] {
+		if v, e = g.Div(v, a); e != nil {
+			return nil, e
+		}
+	}
+
+	return v, nil
 }
 
 func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Iter(args[0])
+	return g.Iter(args[0])
 }
 
 func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  place := args[0]
-  vs, e := args[1:].EvalVec(g, task, args_env)
+	place := args[0]
+	vs, e := args[1:].EvalVec(g, task, args_env)
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  switch p := place.(type) {
-  case *Sym:
-    return args_env.Update(g, p, func(v Val) (Val, E) {
-      return g.Push(v, vs...)
-    })
-  default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
-      return nil, e
-    }
-  }
+	switch p := place.(type) {
+	case *Sym:
+		return args_env.Update(g, p, func(v Val) (Val, E) {
+			return g.Push(v, vs...)
+		})
+	default:
+		if place, e = g.Eval(task, args_env, place); e != nil {
+			return nil, e
+		}
+	}
 
-  return g.Push(place, vs...)
+	return g.Push(place, vs...)
 }
 
 func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  var it, rest Val
-  place := args[0]
-  var e E
+	var it, rest Val
+	place := args[0]
+	var e E
 
-  switch p := place.(type) {
-  case *Sym:
-    args_env.Update(g, p, func(v Val) (Val, E) {
-      if it, rest, e = g.Pop(v); e != nil {
-        return nil, e
-      }
+	switch p := place.(type) {
+	case *Sym:
+		args_env.Update(g, p, func(v Val) (Val, E) {
+			if it, rest, e = g.Pop(v); e != nil {
+				return nil, e
+			}
 
-      return rest, nil
-    })
+			return rest, nil
+		})
 
-    return it, nil
-  default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
-      return nil, e
-    }
+		return it, nil
+	default:
+		if place, e = g.Eval(task, args_env, place); e != nil {
+			return nil, e
+		}
 
-    if it, rest, e = g.Pop(place); e != nil {
-      return nil, e
-    }
-  }
+		if it, rest, e = g.Pop(place); e != nil {
+			return nil, e
+		}
+	}
 
-  return NewSplat(g, Vec{it, rest}), nil
+	return NewSplat(g, Vec{it, rest}), nil
 }
 
 func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  place := args[0]
-  var e E
+	place := args[0]
+	var e E
 
-  switch p := place.(type) {
-  case *Sym:
-    return args_env.Update(g, p, func(v Val) (Val, E) {
-      return g.Drop(v, args[1].(Int))
-    })
-  default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
-      return nil, e
-    }
-  }
+	switch p := place.(type) {
+	case *Sym:
+		return args_env.Update(g, p, func(v Val) (Val, E) {
+			return g.Drop(v, args[1].(Int))
+		})
+	default:
+		if place, e = g.Eval(task, args_env, place); e != nil {
+			return nil, e
+		}
+	}
 
-  return g.Drop(place, args[1].(Int))
+	return g.Drop(place, args[1].(Int))
 }
 
 func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Len(args[0])
+	return g.Len(args[0])
 }
 
 func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args, nil
+	return args, nil
 }
 
 func vec_peek_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args[0].(Vec).Peek(g), nil
+	return args[0].(Vec).Peek(g), nil
 }
 
 func find_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  in, k := args[0].(Vec), args[1]
+	in, k := args[0].(Vec), args[1]
 
-  for i := 0; i < len(in)-1; i += 2 {
-    if in[i] == k {
-      return in[i+1], nil
-    }
-  }
+	for i := 0; i < len(in)-1; i += 2 {
+		if in[i] == k {
+			return in[i+1], nil
+		}
+	}
 
-  return &g.NIL, nil
+	return &g.NIL, nil
 }
 
 func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  in, k := args[0], args[1]
-  var e E
+	in, k := args[0], args[1]
+	var e E
 
-  if k, e = g.Eval(task, args_env, k); e != nil {
-    return nil, e
-  }
+	if k, e = g.Eval(task, args_env, k); e != nil {
+		return nil, e
+	}
 
-  if id, ok := in.(*Sym); ok {
-    var v Val
+	if id, ok := in.(*Sym); ok {
+		var v Val
 
-    if _, e = args_env.Update(g, id, func(in Val) (Val, E) {
-      var out Val
+		if _, e = args_env.Update(g, id, func(in Val) (Val, E) {
+			var out Val
 
-      if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
-        return nil, e
-      }
+			if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
+				return nil, e
+			}
 
-      return out, nil
-    }); e != nil {
-      return nil, e
-    }
+			return out, nil
+		}); e != nil {
+			return nil, e
+		}
 
-    return v, nil
-  }
+		return v, nil
+	}
 
-  if in, e = g.Eval(task, args_env, in); e != nil {
-    return nil, e
-  }
+	if in, e = g.Eval(task, args_env, in); e != nil {
+		return nil, e
+	}
 
-  var v, out Val
+	var v, out Val
 
-  if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
-    return nil, e
-  }
+	if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
+		return nil, e
+	}
 
-  return NewSplat(g, Vec{v, out}), nil
+	return NewSplat(g, Vec{v, out}), nil
 }
 
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0]
+	v := args[0]
 
-  switch v := v.(type) {
-  case Vec:
-    if len(v) == 0 {
-      return &g.NIL, nil
-    }
+	switch v := v.(type) {
+	case Vec:
+		if len(v) == 0 {
+			return &g.NIL, nil
+		}
 
-    return v[0], nil
-  case *Nil:
-    return &g.NIL, nil
-  default:
-    break
-  }
+		return v[0], nil
+	case *Nil:
+		return &g.NIL, nil
+	default:
+		break
+	}
 
-  return nil, g.E("Invalid head target: %v", v)
+	return nil, g.E("Invalid head target: %v", v)
 }
 
 func tail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := args[0]
+	v := args[0]
 
-  switch v := v.(type) {
-  case Vec:
-    if len(v) < 2 {
-      return Vec(nil), nil
-    }
+	switch v := v.(type) {
+	case Vec:
+		if len(v) < 2 {
+			return Vec(nil), nil
+		}
 
-    return v[1:], nil
-  default:
-    break
-  }
+		return v[1:], nil
+	default:
+		break
+	}
 
-  return nil, g.E("Invalid tail target: %v", v)
+	return nil, g.E("Invalid tail target: %v", v)
 }
 
 func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return args[0].(Vec).Reverse(), nil
+	return args[0].(Vec).Reverse(), nil
 }
 
 func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  id, ok := args[0].(*Sym)
-  i := 0
+	id, ok := args[0].(*Sym)
+	i := 0
 
-  if ok {
-    i++
-  }
+	if ok {
+		i++
+	}
 
-  as := ParsePrimArgs(g, args[i])
-  var inbox Chan
-  var e E
+	as := ParsePrimArgs(g, args[i])
+	var inbox Chan
+	var e E
 
-  if as == nil {
-    inbox = NewChan(0)
-  } else {
-    var a Val
+	if as == nil {
+		inbox = NewChan(0)
+	} else {
+		var a Val
 
-    if a, e = g.Eval(task, args_env, as[0]); e != nil {
-      return nil, e
-    }
+		if a, e = g.Eval(task, args_env, as[0]); e != nil {
+			return nil, e
+		}
 
-    if v, ok := a.(Int); ok {
-      inbox = NewChan(v)
-    } else if v, ok := a.(Chan); ok {
-      inbox = v
-    } else {
-      return nil, g.E("Invalid task args: %v", as)
-    }
-  }
+		if v, ok := a.(Int); ok {
+			inbox = NewChan(v)
+		} else if v, ok := a.(Chan); ok {
+			inbox = v
+		} else {
+			return nil, g.E("Invalid task args: %v", as)
+		}
+	}
 
-  i++
-  t, e := NewTask(g, env, id, inbox, args[i:])
+	i++
+	t, e := NewTask(g, env, id, inbox, args[i:])
 
-  if e != nil {
-    return nil, e
-  }
+	if e != nil {
+		return nil, e
+	}
 
-  if e = t.Start(g, env); e != nil {
-    return nil, e
-  }
+	if e = t.Start(g, env); e != nil {
+		return nil, e
+	}
 
-  return t, nil
+	return t, nil
 }
 
 func this_task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  return task, nil
+	return task, nil
 }
 
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  t := args[0].(*Task)
-  t.Inbox.Push(g, args[1:]...)
-  return t, nil
+	t := args[0].(*Task)
+	t.Inbox.Push(g, args[1:]...)
+	return t, nil
 }
 
 func task_fetch_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  v := <-task.Inbox
+	v := <-task.Inbox
 
-  if v == nil {
-    v = &g.NIL
-  }
+	if v == nil {
+		v = &g.NIL
+	}
 
-  return v, nil
+	return v, nil
 }
 
 func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  nargs := len(args)
+	nargs := len(args)
 
-  if nargs == 1 {
-    return args[0].(*Task).Wait(), nil
-  }
+	if nargs == 1 {
+		return args[0].(*Task).Wait(), nil
+	}
 
-  out := make(Vec, nargs)
+	out := make(Vec, nargs)
 
-  for i, a := range args {
-    out[i] = a.(*Task).Wait()
-  }
+	for i, a := range args {
+		out[i] = a.(*Task).Wait()
+	}
 
-  return out, nil
+	return out, nil
 }
 
 func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return NewChan(args[0].(Int)), nil
+	return NewChan(args[0].(Int)), nil
 }
 
 func (e *Env) InitAbc(g *G) {
-  e.AddType(g, &g.MetaType, "Meta")
+	e.AddType(g, &g.MetaType, "Meta")
 
-  e.AddType(g, &g.NumType, "Num")
-  e.AddType(g, &g.SeqType, "Seq")
+	e.AddType(g, &g.NumType, "Num")
+	e.AddType(g, &g.SeqType, "Seq")
 
-  e.AddType(g, &g.IterType, "Iter", &g.SeqType)
-  
-  e.AddType(g, &g.DecType, "Dec", &g.NumType)
-  e.AddType(g, &g.ChanType, "Chan")
-  e.AddType(g, &g.EnvType, "Env")
-  e.AddType(g, &g.FalseType, "False")
-  e.AddType(g, &g.FunType, "Fun")
-  e.AddType(g, &g.IntType, "Int", &g.NumType)
-  e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
-  e.AddType(g, &g.MacType, "Mac")
-  e.AddType(g, &g.NilType, "Nil")
-  e.AddType(g, &g.PrimType, "Prim")
-  e.AddType(g, &g.QuoteType, "Quote")
-  e.AddType(g, &g.SpliceType, "Splice")
-  e.AddType(g, &g.SplatType, "Splat")
-  e.AddType(g, &g.StrType, "Str")
-  e.AddType(g, &g.SymType, "Sym")
-  e.AddType(g, &g.TaskType, "Task")
-  e.AddType(g, &g.TrueType, "True")
-  e.AddType(g, &g.VecType, "Vec", &g.SeqType)
-  e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
+	e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
-  e.AddConst(g, "_", &g.NIL)
-  e.AddConst(g, "T", &g.T)
-  e.AddConst(g, "F", &g.F)
+	e.AddType(g, &g.DecType, "Dec", &g.NumType)
+	e.AddType(g, &g.ChanType, "Chan")
+	e.AddType(g, &g.EnvType, "Env")
+	e.AddType(g, &g.FalseType, "False")
+	e.AddType(g, &g.FunType, "Fun")
+	e.AddType(g, &g.IntType, "Int", &g.NumType)
+	e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
+	e.AddType(g, &g.MacType, "Mac")
+	e.AddType(g, &g.NilType, "Nil")
+	e.AddType(g, &g.PrimType, "Prim")
+	e.AddType(g, &g.QuoteType, "Quote")
+	e.AddType(g, &g.SpliceType, "Splice")
+	e.AddType(g, &g.SplatType, "Splat")
+	e.AddType(g, &g.StrType, "Str")
+	e.AddType(g, &g.SymType, "Sym")
+	e.AddType(g, &g.TaskType, "Task")
+	e.AddType(g, &g.TrueType, "True")
+	e.AddType(g, &g.VecType, "Vec", &g.SeqType)
+	e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
 
-  e.AddPrim(g, "do", do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
-  e.AddPrim(g, "let", let_imp, ASplat("args"))
-  e.AddFun(g, "val", val_imp, A("key"))
-  e.AddFun(g, "set", set_imp, ASplat("args"))
-  e.AddPrim(g, "use", use_imp, AOpt("prefix", nil), ASplat("ids"))
-  e.AddPrim(g, "this-env", this_env_imp)
-  e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
-  e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
-  e.AddPrim(g, "test", test_imp, ASplat("cases"))
-  e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
+	e.AddConst(g, "_", &g.NIL)
+	e.AddConst(g, "T", &g.T)
+	e.AddConst(g, "F", &g.F)
 
-  e.AddFun(g, "debug", debug_imp)
-  e.AddFun(g, "fail", fail_imp, A("reason"))
-  e.AddFun(g, "dump", dump_imp, ASplat("vals"))
-  e.AddFun(g, "say", say_imp, ASplat("vals"))
-  e.AddFun(g, "load", load_imp, A("path"))
+	e.AddPrim(g, "do", do_imp, ASplat("body"))
+	e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+	e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+	e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
+	e.AddPrim(g, "let", let_imp, ASplat("args"))
+	e.AddFun(g, "val", val_imp, A("key"))
+	e.AddFun(g, "set", set_imp, ASplat("args"))
+	e.AddPrim(g, "use", use_imp, AOpt("prefix", nil), ASplat("ids"))
+	e.AddPrim(g, "this-env", this_env_imp)
+	e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
+	e.AddPrim(g, "inc", inc_imp, A("var"), AOpt("delta", Int(1)))
+	e.AddPrim(g, "test", test_imp, ASplat("cases"))
+	e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 
-  e.AddFun(g, "dup", dup_imp, A("val"))
-  e.AddFun(g, "clone", clone_imp, A("val"))
-  e.AddFun(g, "type", type_imp, A("val"))
-  e.AddPrim(g, "eval", eval_imp, A("expr"))
-  e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
-  e.AddFun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
-  e.AddFun(g, "sym", sym_imp, ASplat("args"))
-  e.AddFun(g, "str", str_imp, ASplat("args"))
+	e.AddFun(g, "debug", debug_imp)
+	e.AddFun(g, "fail", fail_imp, A("reason"))
+	e.AddFun(g, "dump", dump_imp, ASplat("vals"))
+	e.AddFun(g, "say", say_imp, ASplat("vals"))
+	e.AddFun(g, "load", load_imp, A("path"))
 
-  e.AddFun(g, "bool", bool_imp, A("val"))
+	e.AddFun(g, "dup", dup_imp, A("val"))
+	e.AddFun(g, "clone", clone_imp, A("val"))
+	e.AddFun(g, "type", type_imp, A("val"))
+	e.AddPrim(g, "eval", eval_imp, A("expr"))
+	e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
+	e.AddFun(g, "recall", recall_imp, ASplat("args"))
+	e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
+	e.AddFun(g, "sym", sym_imp, ASplat("args"))
+	e.AddFun(g, "str", str_imp, ASplat("args"))
 
-  e.AddFun(g, "=", eq_imp, ASplat("vals"))
-  e.AddFun(g, "==", is_imp, ASplat("vals"))
+	e.AddFun(g, "bool", bool_imp, A("val"))
 
-  e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
-  e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
+	e.AddFun(g, "=", eq_imp, ASplat("vals"))
+	e.AddFun(g, "==", is_imp, ASplat("vals"))
 
-  e.AddFun(g, "+", add_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "/", div_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "-", sub_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "*", mul_imp, A("x"), ASplat("ys"))
+	e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
+	e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
 
-  e.AddFun(g, "iter", iter_imp, A("val"))
-  e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
-  e.AddPrim(g, "pop", pop_imp, A("in"))
-  e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
-  e.AddFun(g, "len", len_imp, A("in"))
+	e.AddFun(g, "+", add_imp, A("x"), ASplat("ys"))
+	e.AddFun(g, "/", div_imp, A("x"), ASplat("ys"))
+	e.AddFun(g, "-", sub_imp, A("x"), ASplat("ys"))
+	e.AddFun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
-  e.AddFun(g, "vec", vec_imp, ASplat("vals"))
-  e.AddFun(g, "peek", vec_peek_imp, A("vec"))
-  e.AddFun(g, "find-key", find_key_imp, A("in"), A("key"))
-  e.AddPrim(g, "pop-key", pop_key_imp, A("in"), A("key"))
-  e.AddFun(g, "head", head_imp, A("vec"))
-  e.AddFun(g, "tail", tail_imp, A("vec"))
-  e.AddFun(g, "reverse", reverse_imp, A("vec"))
+	e.AddFun(g, "iter", iter_imp, A("val"))
+	e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
+	e.AddPrim(g, "pop", pop_imp, A("in"))
+	e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
+	e.AddFun(g, "len", len_imp, A("in"))
 
-  e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
-  e.AddPrim(g, "this-task", this_task_imp)
-  e.AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
-  e.AddFun(g, "fetch", task_fetch_imp)
-  e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
-  e.AddFun(g, "chan", chan_imp, AOpt("buf", Int(0)))
+	e.AddFun(g, "vec", vec_imp, ASplat("vals"))
+	e.AddFun(g, "peek", vec_peek_imp, A("vec"))
+	e.AddFun(g, "find-key", find_key_imp, A("in"), A("key"))
+	e.AddPrim(g, "pop-key", pop_key_imp, A("in"), A("key"))
+	e.AddFun(g, "head", head_imp, A("vec"))
+	e.AddFun(g, "tail", tail_imp, A("vec"))
+	e.AddFun(g, "reverse", reverse_imp, A("vec"))
+
+	e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
+	e.AddPrim(g, "this-task", this_task_imp)
+	e.AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
+	e.AddFun(g, "fetch", task_fetch_imp)
+	e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
+	e.AddFun(g, "chan", chan_imp, AOpt("buf", Int(0)))
 }

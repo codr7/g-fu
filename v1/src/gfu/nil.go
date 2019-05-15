@@ -1,26 +1,26 @@
 package gfu
 
 import (
-  //"log"
-  "strings"
+	//"log"
+	"strings"
 )
 
 type Nil struct {
 }
 
 type NilType struct {
-  BasicType
+	BasicType
 }
 
 func (_ *Nil) Type(g *G) Type {
-  return &g.NilType
+	return &g.NilType
 }
 
 func (_ *NilType) Bool(g *G, val Val) (bool, E) {
-  return false, nil
+	return false, nil
 }
 
 func (_ *NilType) Dump(g *G, val Val, out *strings.Builder) E {
-  out.WriteRune('_')
-  return nil
+	out.WriteRune('_')
+	return nil
 }
