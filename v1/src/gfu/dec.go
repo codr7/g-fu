@@ -36,6 +36,12 @@ func (d *Dec) Div(val Dec) {
   *d = Dec(x)
 }
 
+func (d Dec) Int() Int {
+  f := big.Float(d)
+  i, _ := f.Int64()
+  return Int(i)
+}
+
 func (d *Dec) Mul(val Dec) {
   x, y := big.Float(*d), big.Float(val)
   x.Mul(&x, &y)
@@ -107,6 +113,10 @@ func (_ *DecType) Bool(g *G, val Val) (bool, E) {
   return val.(Dec).Sign() != 0, nil
 }
 
+func (_ *DecType) Dec(g *G, val Val) (Val, E) {
+  return val, nil
+}
+
 func (t *DecType) Div(g *G, x, y Val) (Val, E) {
   xd := x.(Dec)
   yd, ok := y.(Dec)
@@ -122,6 +132,10 @@ func (t *DecType) Div(g *G, x, y Val) (Val, E) {
 func (_ *DecType) Dump(g *G, val Val, out *strings.Builder) E {
   fmt.Fprintf(out, "%v", val.(Dec))
   return nil
+}
+
+func (_ *DecType) Int(g *G, val Val) (Val, E) {
+  return val.(Dec).Int(), nil
 }
 
 func (t *DecType) Mul(g *G, x, y Val) (Val, E) {

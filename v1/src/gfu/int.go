@@ -37,13 +37,25 @@ func (t *IntType) Abs(g *G, x Val) (Val, E) {
 }
 
 func (t *IntType) Add(g *G, x, y Val) (Val, E) {
-  return x.(Int) + y.(Int), nil
+  yi, ok := y.(Int)
+
+  if !ok {
+    return nil, g.E("Expected Int: %v", y.Type(g))
+  }
+ 
+  return x.(Int) + yi, nil
 }
 
 func (t *IntType) Div(g *G, x, y Val) (Val, E) {
+  yi, ok := y.(Int)
+
+  if !ok {
+    return nil, g.E("Expected Int: %v", y.Type(g))
+  }
+  
   var xd, yd Dec
   xd.SetInt(x.(Int))
-  yd.SetInt(y.(Int))
+  yd.SetInt(yi)
   xd.Div(yd)
   return xd, nil
 }
@@ -52,9 +64,19 @@ func (_ *IntType) Bool(g *G, val Val) (bool, E) {
   return val.(Int) != 0, nil
 }
 
+func (_ *IntType) Dec(g *G, val Val) (Val, E) {
+  var d Dec
+  d.SetInt(val.(Int))
+  return d, nil
+}
+
 func (_ *IntType) Dump(g *G, val Val, out *strings.Builder) E {
   fmt.Fprintf(out, "%v", int64(val.(Int)))
   return nil
+}
+
+func (_ *IntType) Int(g *G, val Val) (Val, E) {
+  return val, nil
 }
 
 func (_ *IntType) Iter(g *G, val Val) (Val, E) {
@@ -62,7 +84,13 @@ func (_ *IntType) Iter(g *G, val Val) (Val, E) {
 }
 
 func (t *IntType) Mul(g *G, x, y Val) (Val, E) {
-  return x.(Int) * y.(Int), nil
+  yi, ok := y.(Int)
+
+  if !ok {
+    return nil, g.E("Expected Int: %v", y.Type(g))
+  }
+  
+  return x.(Int) * yi, nil
 }
 
 func (t *IntType) Neg(g *G, x Val) (Val, E) {
@@ -70,7 +98,13 @@ func (t *IntType) Neg(g *G, x Val) (Val, E) {
 }
 
 func (t *IntType) Sub(g *G, x, y Val) (Val, E) {
-  return x.(Int) - y.(Int), nil
+  yi, ok := y.(Int)
+
+  if !ok {
+    return nil, g.E("Expected Int: %v", y.Type(g))
+  }
+  
+  return x.(Int) - yi, nil
 }
 
 func (i *IntIter) Init(g *G, max Int) *IntIter {

@@ -1,8 +1,8 @@
-* add Int/Dec() convs to Num
 * pipedream
-** add pipe diameter & calculate pressure
-** add simulation
-*** fun to step delta time
+** calculate pipe pressure
+** calculate tank pressure
+** simulation
+*** delta time
 * move fos to demo/
 ** drop from lib/all.gf
 ** redirect test
