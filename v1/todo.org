@@ -1,7 +1,6 @@
 * pipedream
-** add node constructor sim arg
-*** inject in sim macro
-*** set this-sim
+** add sim arg to run
+*** forward this-sim
 ** add sim.pressure 
 *** use if tank is empty
 *** use if no port.io

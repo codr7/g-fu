@@ -65,13 +65,13 @@
         (x/out/pair y/in)
         y)))
 
-(fun y->pressure (y)
+(fun height->psi (y)
   (* y 1.422))
-
-(__ "Uses Darcy–Weisbach equation solved for flow rate.")
 
 (node Pipe
   (diameter .0 length .0 flow .0)
+
+  (__ "Uses Darcy–Weisbach equation solved for flow rate.")
 
   (fun run ()
     (dump 'pipe-run)
