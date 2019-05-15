@@ -15,14 +15,14 @@
                  (fun pair (p)
                    (set 'io p 'p/io this))
     
-                 (fun sim (prev)
-                   (dump 'port-sim)
+                 (fun run (prev)
+                   (dump 'port-run)
                    (set 'pressure prev/pressure)
-                   (if (= n prev) _ (n/sim))
-                   (if (and io (not (= io prev))) (io/sim this)))
+                   (if (= n prev) _ (n/run))
+                   (if (and io (not (= io prev))) (io/run this)))
                    
                  this-env))
-  (use default init pair sim)
+  (use default init pair run)
   this)
 
 (mac node (id (vars ()) body..)
@@ -37,12 +37,12 @@
                       (set 'y (+ in/y dy))
                       (out/init this))
 
-                    (fun sim ()
-                      (in/sim this)
-                      (out/sim this))
+                    (fun run ()
+                      (in/run this)
+                      (out/run this))
 
                     this-env))
-     (use default init sim)
+     (use default init run)
      %body..
      this))
 
@@ -69,28 +69,25 @@
 (fun y->pressure (y)
   (* y 1.422))
 
+(__ "Uses Darcy–Weisbach equation solved for flow rate.")
+
 (node Pipe
   (diameter .0 length .0 flow .0)
 
-  (fun get-pressure ()
-    (- in/pressure
-       (* (* (/ density 2.) (/ (* flow) diameter)) length)))
-
-  (fun sim ()
-    (dump 'pipe-sim)
-    (set 'pressure (get-pressure))
-    (out/sim this)))
+  (fun run ()
+    (dump 'pipe-run)
+    (out/run this)))
 
 (node Tank
   (volume .0 radius .0)
 
   (fun get-pressure ((dy .0))
-    (y->pressure (- (/ volume (* PI (* radius))) dy)))
+    (- (/ volume (* PI (* radius))) dy))
 
-  (fun sim ()
-    (dump 'tank-sim)
+  (fun run ()
+    (dump 'tank-run)
     (set 'pressure (get-pressure out/dy))
-    (out/sim this)))
+    (out/run this)))
     
 (node Valve)
 
@@ -98,9 +95,9 @@
 (__ (chain t1 p1 v p2 t2))
 (chain t1 p1)
 
-(set 't1/radius 10. 't1/volume 10000. 't1/dy 10.
+(set 't1/radius 10. 't1/volume 10000.
      'p1/diameter .1 'p1/length 10.)
 
 (t1/init)
-(t1/sim)
+(t1/run)
 (dump p1/in/pressure p1/out/pressure)
