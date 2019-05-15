@@ -18,12 +18,13 @@
   (use default init pair)
   this)
 
-(mac define-node (id)
+(mac define-node (id (vars ()))
   '(fun %id ((id (str '%id)))
      (let this this-env
           y .0 dy .0
-          sg .0 pressure .0
+          sg 1. pressure .0
           in (Port this) out (Port this)
+          %vars..
           default (let _
                     (fun init ()
                       (set 'y (+ in/y dy))
@@ -54,11 +55,12 @@
         y)))
 
 (define-node Pipe)
-(define-node Tank)
+(define-node Tank (volume .0 radius .0))
 (define-node Valve)
 
 (let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
 (chain t1 p1 v p2 t2)
 (set 't1/dy 10.)
+(set 't1/out/dy 5.)
 (t1/init)
 (dump t2/y)
