@@ -3,7 +3,8 @@
 *** add sim.pressure 
 **** use if tank is empty
 **** use if no port.io
-** run until no changes
+** run until t1 is empty
+** add dt arg to sim/run
 * ---
 * move fos to demo/
 ** drop from lib/all.gf
