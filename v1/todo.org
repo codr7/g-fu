@@ -1,3 +1,4 @@
+* add Int/Dec() convs to Num
 * pipedream
 ** add pipe diameter & calculate pressure
 ** add simulation

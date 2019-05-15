@@ -1,13 +1,15 @@
 (debug)
 (load "../lib/all.gf")
 
-(fun Port ()
+(fun Port (n)
   (let this this-env
+       y .0 dy .0
        io _
-       elevation .0 sg .0 pressure .0
        default (let _
-                 (fun init ()
-                   (if io (io/init)))
+                 (fun init (prev)
+                   (set 'y (+ prev/y dy))
+                   (if (= n prev) _ (n/init))
+                   (if (and io (not (= io prev))) (io/init this)))
 
                  (fun pair (p)
                    (set 'io p 'p/io this))
@@ -19,13 +21,16 @@
 (mac define-node (id)
   '(fun %id ((id (str '%id)))
      (let this this-env
-          in (Port) out (Port))
-          
-     (fun in/init ()
-       (if in/io (set 'in/elevation in/io/elevation))
-       (set 'out/elevation in/elevation)
-       (out/init))
-       
+          y .0 dy .0
+          sg .0 pressure .0
+          in (Port this) out (Port this)
+          default (let _
+                    (fun init ()
+                      (set 'y (+ in/y dy))
+                      (out/init this))
+
+                    this-env))
+     (use default init)
      this))
 
 (mac let-node (args..)
@@ -54,7 +59,6 @@
 
 (let-node t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
 (chain t1 p1 v p2 t2)
-
-(set 't1/out/elevation 10.)
-(t1/out/init)
-(dump t2/in/elevation)
+(set 't1/dy 10.)
+(t1/init)
+(dump t2/y)
