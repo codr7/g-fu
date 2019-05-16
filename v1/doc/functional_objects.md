@@ -1,7 +1,7 @@
 ## Functional Objects
 
 ### Intro
-This document describes the implementation of a minimal viable single-dispatch object system using closures and macros in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
+This document describes the implementation of a minimal viable single-dispatch object system using closures in g-fu (https://github.com/codr7/g-fu), a pragmatic Lisp embedded in Go.
 
 ```
 (class Widget ()
@@ -42,7 +42,7 @@ Button resize
 Button click
 ```
 
-All of this and more may be loaded by evaluating `(load "lib/all.gf")` from the release root.
+All of this and more may be loaded by evaluating `(load "demo/all.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -53,7 +53,7 @@ g-fu v1.11
 
 Press Return twice to evaluate.
 
-  (load "lib/all.gf")
+  (load "demo/all.gf")
 _
 ```
 

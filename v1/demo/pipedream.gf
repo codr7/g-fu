@@ -71,7 +71,7 @@
 (node Pipe
   (diameter .0 length .0 flow .0)
 
-  (__ "Uses Darcy–Weisbach equation solved for flow rate.")
+  (__ "Use Darcy–Weisbach equation solved for flow rate.")
 
   (fun run ()
     (dump 'pipe-run)

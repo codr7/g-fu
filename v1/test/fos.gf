@@ -1,3 +1,5 @@
+(load "../demo/fos.gf")
+
 (let (n 0 d (dispatch
               (inc ((delta 1)) (inc n delta))))
   (test (= (d 'inc 4) 4))

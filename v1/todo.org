@@ -7,10 +7,7 @@
 ** run until t1 is empty
 ** add dt arg to sim/run
 * ---
-* move fos to demo/
-** drop from lib/all.gf
-** redirect test
-** update functional_objects.md
+* move fos to demo
 * sort Env dump
 * implement Fun/Macro Clone
 ** clone envs
