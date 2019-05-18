@@ -624,6 +624,14 @@ func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Len(args[0])
 }
 
+func index_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return g.Index(args[0], args[1:])
+}
+
+func set_index_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return g.SetIndex(args[1], args[2:], args[0].(Setter))
+}
+
 func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args, nil
 }
@@ -897,6 +905,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
   e.AddFun(g, "len", len_imp, A("in"))
 
+  e.AddFun(g, "#", index_imp, A("source"), ASplat("key"))
+  e.AddFun(g, "set-#", set_index_imp, A("set"), A("dest"), ASplat("key"))
+  
   e.AddFun(g, "vec", vec_imp, ASplat("vals"))
   e.AddFun(g, "peek", vec_peek_imp, A("vec"))
   e.AddFun(g, "find-key", find_key_imp, A("in"), A("key"))

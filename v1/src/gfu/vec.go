@@ -271,7 +271,17 @@ func (_ *VecType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (Val, E
 }
 
 func (_ *VecType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  for _, it := range val.(Vec) {
+  v := val.(Vec)
+  
+  if len(v) > 1 && v[0] == g.set_sym {
+    if k, ok := v[1].(Vec); ok {
+      if e := g.Extenv(src, dst, g.Sym("set-%v", k[0]), clone); e != nil {
+        return e
+      }
+    }
+  }
+  
+  for _, it := range v {
     if e := g.Extenv(src, dst, it, clone); e != nil {
       return e
     }
