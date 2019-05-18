@@ -167,19 +167,9 @@ func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
       if k, e = g.Eval(task, env, k); e != nil {
         return nil, e
       }
-    } else if vk, ok := k.(Vec); ok {
-      if e = env.SetPlace(g, task, vk, v, args_env); e != nil {
-        return nil, e
-      }
-      
-      continue
     }
 
-    if _, ok := k.(*Sym); !ok {
-      return nil, g.E("Invalid set key: %v", k)
-    }
-
-    if _, e = env.Set(g, k.(*Sym), v); e != nil {
+    if e = env.Set(g, task, k, v, args_env); e != nil {
       return nil, e
     }
   }
@@ -842,6 +832,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
+  e.AddType(g, &g.SetterType, "Setter")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")
   e.AddType(g, &g.StrType, "Str")

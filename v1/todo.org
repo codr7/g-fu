@@ -1,12 +1,8 @@
 * Bin
-** add Vec key support in Update
-*** switch key arg to Val
-*** replace env.SetPlace
-*** call from env.Set if Vec key
+** testbin.gf
+** add Vec key support in Update like Set
 ** add #/set-#
 *** add Type.Index/SetIndex
-*** add test & commit
-** testbin.gf
 ** add write/copy
 *** *scratch*
 *** copy to stdout

@@ -15,6 +15,12 @@ type EnvType struct {
   BasicType
 }
 
+type Var struct {
+  env *Env
+  key *Sym
+  Val Val
+}
+
 func (e *Env) Clear() {
   e.vars = nil
 }
@@ -189,19 +195,30 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
   return e.resolve.CallArgs(g, task, e, Vec{key})
 }
 
-func (env *Env) Set(g *G, key *Sym, val Val) (Val, E) {
-  v, _, _, e := key.LookupVar(g, env, false)
-
-  if e != nil {
-    return nil, e
+func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
+  switch k := key.(type) {
+  case *Sym:
+    v, _, _, e := k.LookupVar(g, env, false)
+    
+    if e != nil {
+      return e
+    }
+    
+    v.Val = val
+  case Vec:
+    f := func (_ Val) (Val, E) { return val, nil }
+    
+    if e := env.SetPlace(g, task, k, f, args_env); e != nil {
+      return e
+    }
+  default:
+    return g.E("Invalid set key: %v", key.Type(g))
   }
 
-  var prev Val
-  prev, v.Val = v.Val, val
-  return prev, nil
+  return nil
 }
 
-func (env *Env) SetPlace(g *G, task *Task, key Vec, val Val, args_env *Env) (e E) {
+func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (e E) {
   if s, ok := key[0].(*Sym); ok {
     var f Val
     s = g.Sym("set-%v", s)
@@ -209,8 +226,6 @@ func (env *Env) SetPlace(g *G, task *Task, key Vec, val Val, args_env *Env) (e E
     if f, e = env.Get(g, task, s, false); e != nil {
       return e
     }
-    
-    key[0] = val
     
     if _, e = g.Call(task, env, f, key, args_env); e != nil {
       return e
@@ -226,14 +241,14 @@ func (e *Env) Type(g *G) Type {
   return &g.EnvType
 }
 
-func (env *Env) Update(g *G, key *Sym, f func(Val) (Val, E)) (Val, E) {
+func (env *Env) Update(g *G, key *Sym, set Setter) (Val, E) {
   v, _, env, e := key.LookupVar(g, env, false)
 
   if e != nil {
     return nil, e
   }
 
-  return v.Update(g, env, f)
+  return v.Update(g, env, set)
 }
 
 func (_ *EnvType) Bool(g *G, val Val) (bool, E) {
@@ -260,12 +275,6 @@ func (_ *EnvType) Dup(g *G, val Val) (Val, E) {
 
 func (_ *EnvType) Len(g *G, val Val) (Int, E) {
   return val.(*Env).Len(), nil
-}
-
-type Var struct {
-  env *Env
-  key *Sym
-  Val Val
 }
 
 func (v *Var) Init(env *Env, key *Sym) *Var {

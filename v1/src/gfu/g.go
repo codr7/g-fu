@@ -30,6 +30,7 @@ type G struct {
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
+  SetterType  SetterType
   SeqType     SeqType
   SplatType   SplatType
   SpliceType  SpliceType
