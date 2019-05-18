@@ -19,6 +19,24 @@ func (e *Env) Clear() {
   e.vars = nil
 }
 
+func (env *Env) Clone(g *G, dst *Env) (e E) {
+  src := env.vars
+
+  if src == nil {
+    dst.vars = nil
+  } else {
+    dst.vars = make([]*Var, len(src))
+
+    for i, v := range src {
+      if dst.vars[i], e = v.Clone(g, env); e != nil {
+        return e
+      }
+    }
+  }
+
+  return nil
+}
+
 func (e *Env) Dump(g *G, out *strings.Builder) E {
   out.WriteRune('(')
 
@@ -202,16 +220,10 @@ func (_ *EnvType) Bool(g *G, val Val) (bool, E) {
 }
 
 func (_ *EnvType) Clone(g *G, val Val) (Val, E) {
-  env := val.(*Env)
-  src := env.vars
   dst := new(Env)
-  dst.vars = make([]*Var, len(src))
-  var e E
-
-  for i, v := range src {
-    if dst.vars[i], e = v.Clone(g, env); e != nil {
-      return nil, e
-    }
+  
+  if e := val.(*Env).Clone(g, dst); e != nil {
+    return nil, e
   }
 
   return dst, nil

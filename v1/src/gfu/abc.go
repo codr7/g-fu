@@ -34,6 +34,11 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   f.body = args[i:]
+
+  if e = f.InitEnv(g, env); e != nil {
+    return nil, e
+  }
+
   return f, nil
 }
 
@@ -59,6 +64,11 @@ func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   m.body = args[i:]
+
+  if e = m.InitEnv(g, env); e != nil {
+    return nil, e
+  }
+  
   return m, nil
 }
 
