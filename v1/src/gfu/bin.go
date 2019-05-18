@@ -71,8 +71,8 @@ func (_ *BinType) Index(g *G, val Val, key Vec) (Val, E) {
   if !ok {
     return nil, g.E("Invalid index: %v", key[0].Type(g))
   }
-
-  if int(i) > b.len {
+  
+  if i := int(i); i < 0 || i > b.len {
     return nil, g.E("Index out of bounds: %v", i)
   }
 
@@ -99,7 +99,7 @@ func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
     return nil, g.E("Invalid index: %v", key[0].Type(g))
   }
 
-  if int(i) > len(b.data) {
+  if i := int(i); i < 0 || i > len(b.data) {
     return nil, g.E("Index out of bounds: %v", i)
   }
 
