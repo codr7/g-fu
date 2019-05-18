@@ -201,6 +201,27 @@ func (env *Env) Set(g *G, key *Sym, val Val) (Val, E) {
   return prev, nil
 }
 
+func (env *Env) SetPlace(g *G, task *Task, key Vec, val Val, args_env *Env) (e E) {
+  if s, ok := key[0].(*Sym); ok {
+    var f Val
+    s = g.Sym("set-%v", s)
+    
+    if f, e = env.Get(g, task, s, false); e != nil {
+      return e
+    }
+    
+    key[0] = val
+    
+    if _, e = g.Call(task, env, f, key, args_env); e != nil {
+      return e
+    }
+
+    return nil
+  }
+
+  return g.E("Invalid set key: %v", key)
+}
+
 func (e *Env) Type(g *G) Type {
   return &g.EnvType
 }

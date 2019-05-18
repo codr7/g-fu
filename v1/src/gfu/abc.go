@@ -154,10 +154,26 @@ func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   return v, nil
 }
 
-func set_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
+func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
   for i := 0; i+1 < len(args); i += 2 {
     var k Val
     k, v = args[i], args[i+1]
+    
+    if v, e = g.Eval(task, env, v); e != nil {
+      return nil, e
+    }
+
+    if _, ok := k.(Quote); ok {
+      if k, e = g.Eval(task, env, k); e != nil {
+        return nil, e
+      }
+    } else if vk, ok := k.(Vec); ok {
+      if e = env.SetPlace(g, task, vk, v, args_env); e != nil {
+        return nil, e
+      }
+      
+      continue
+    }
 
     if _, ok := k.(*Sym); !ok {
       return nil, g.E("Invalid set key: %v", k)
@@ -232,7 +248,7 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   p := args[0]
-
+  
   if id, ok := p.(*Sym); ok {
     return args_env.Update(g, id, func(v Val) (Val, E) {
       return v.(Int) + d.(Int), nil
@@ -845,7 +861,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))
-  e.AddFun(g, "set", set_imp, ASplat("args"))
+  e.AddPrim(g, "set", set_imp, ASplat("args"))
   e.AddPrim(g, "use", use_imp, AOpt("prefix", nil), ASplat("ids"))
   e.AddPrim(g, "this-env", this_env_imp)
   e.AddPrim(g, "if", if_imp, A("cond"), A("t"), AOpt("f", nil))
