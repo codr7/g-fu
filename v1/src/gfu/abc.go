@@ -249,7 +249,7 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     return nil, e
   }
 
-  return p.(Int) + d.(Int), nil
+  return g.Add(p, d)
 }
 
 func test_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
@@ -828,7 +828,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
-  e.AddType(g, &g.ByteType, "Byte")
+  e.AddType(g, &g.ByteType, "Byte", &g.NumType)
   e.AddType(g, &g.DecType, "Dec", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.EnvType, "Env")

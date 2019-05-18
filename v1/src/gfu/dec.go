@@ -119,8 +119,8 @@ func (_ *DecType) Bool(g *G, val Val) (bool, E) {
   return val.(Dec).Sign() != 0, nil
 }
 
-func (_ *DecType) Dec(g *G, val Val) (Val, E) {
-  return val, nil
+func (_ *DecType) Dec(g *G, val Val) (Dec, E) {
+  return val.(Dec), nil
 }
 
 func (t *DecType) Div(g *G, x, y Val) (Val, E) {
@@ -140,7 +140,7 @@ func (_ *DecType) Dump(g *G, val Val, out *strings.Builder) E {
   return nil
 }
 
-func (_ *DecType) Int(g *G, val Val) (Val, E) {
+func (_ *DecType) Int(g *G, val Val) (Int, E) {
   return val.(Dec).Int(), nil
 }
 

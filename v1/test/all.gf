@@ -125,5 +125,6 @@
 (load "env.gf")
 (load "math.gf")
 (load "iter.gf")
+(load "bin.gf")
 (load "fos.gf")
 (load "task.gf")

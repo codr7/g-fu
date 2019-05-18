@@ -64,7 +64,17 @@ func (_ *IntType) Bool(g *G, val Val) (bool, E) {
   return val.(Int) != 0, nil
 }
 
-func (_ *IntType) Dec(g *G, val Val) (Val, E) {
+func (_ *IntType) Byte(g *G, val Val) (Byte, E) {
+  i := val.(Int)
+
+  if i < 0 || i > 255 {
+    return Byte(0), g.E("Out of byte range: %v", i)
+  }
+
+  return Byte(i), nil
+}
+
+func (_ *IntType) Dec(g *G, val Val) (Dec, E) {
   var d Dec
   d.SetInt(val.(Int))
   return d, nil
@@ -75,8 +85,8 @@ func (_ *IntType) Dump(g *G, val Val, out *strings.Builder) E {
   return nil
 }
 
-func (_ *IntType) Int(g *G, val Val) (Val, E) {
-  return val, nil
+func (_ *IntType) Int(g *G, val Val) (Int, E) {
+  return val.(Int), nil
 }
 
 func (_ *IntType) Iter(g *G, val Val) (Val, E) {

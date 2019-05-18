@@ -1,0 +1,1 @@
+(test (= (inc 0xfe) 0xff))
