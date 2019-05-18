@@ -34,12 +34,8 @@ func (_ *BinType) Bool(g *G, val Val) (bool, E) {
 func (_ *BinType) Dump(g *G, val Val, out *strings.Builder) E {
   out.WriteString("(bin")
 
-  for i, v := range val.(*Bin).data {
-    if i > 0 {
-      out.WriteRune(' ')
-    }
-
-    fmt.Fprintf(out, "%v", v)
+  for _, v := range val.(*Bin).data {
+    fmt.Fprintf(out, " %02x", v)
   }
 
   out.WriteRune(')')

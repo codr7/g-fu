@@ -1,5 +1,6 @@
 * Bin/Byte types
 ** add write/copy
+*** *scratch*
 *** copy to stdout
 ** add direct indexing
 * sort Env dump
