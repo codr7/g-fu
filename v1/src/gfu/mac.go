@@ -73,7 +73,7 @@ func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
     return nil, e
   }
 
-  if e = g.Extenv(&g.RootEnv, args_env, v, false); e != nil {
+  if e = g.Extenv(&g.RootEnv, args_env, v, task != &g.MainTask); e != nil {
     return nil, e
   }
 
