@@ -1,3 +1,7 @@
+* Bin/Byte types
+** add write/copy
+*** copy to stdout
+** add direct indexing
 * sort Env dump
 * pipedream
 ** add sim arg to run

@@ -717,6 +717,10 @@ func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].(Vec).Reverse(), nil
 }
 
+func new_bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return NewBin(int(args[0].(Int))), nil
+}
+
 func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   id, ok := args[0].(*Sym)
   i := 0
@@ -809,6 +813,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
+  e.AddType(g, &g.BinType, "Bin", &g.SeqType)
   e.AddType(g, &g.DecType, "Dec", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.EnvType, "Env")
@@ -892,6 +897,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
+  e.AddFun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
+  
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "this-task", this_task_imp)
   e.AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
