@@ -1,8 +1,9 @@
 * Bin
-** testbin.gf
-** add Vec key support in Update like Set
 ** add #/set-#
 *** add Type.Index/SetIndex
+** testbin.gf
+** implement setter Call
+** add Vec key support in Update like Set
 ** add write/copy
 *** *scratch*
 *** copy to stdout

@@ -226,8 +226,8 @@ func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (
     if f, e = env.Get(g, task, s, false); e != nil {
       return e
     }
-    
-    if _, e = g.Call(task, env, f, key, args_env); e != nil {
+
+    if _, e = g.Call(task, env, f, append(Vec{set}, key[1:]...), args_env); e != nil {
       return e
     }
 

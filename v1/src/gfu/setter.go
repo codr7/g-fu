@@ -17,6 +17,6 @@ func (_ Setter) Type(g *G) Type {
 }
 
 func (_ *SetterType) Dump(g *G, val Val, out *strings.Builder) E {
-  fmt.Fprintf(out, "%v", func(Val) (Val, E)(val.(Setter)))
+  fmt.Fprintf(out, "set-%v", func(Val) (Val, E)(val.(Setter)))
   return nil
 }
