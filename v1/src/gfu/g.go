@@ -15,6 +15,7 @@ type G struct {
   RootEnv  Env
 
   BinType     BinType
+  ByteType    ByteType
   ChanType    ChanType
   DecType     DecType
   EnvType     EnvType

@@ -1,8 +1,12 @@
-* Bin/Byte types
+* Bin
+** add direct indexing
+*** use Call
+**** _ if not found
 ** add write/copy
 *** *scratch*
 *** copy to stdout
-** add direct indexing
+* add Call indexing to Env/Vec
+** return _ if not found
 * sort Env dump
 * pipedream
 ** add sim arg to run
@@ -13,3 +17,4 @@
 ** run until t1 is empty
 ** add dt arg to sim/run
 
+((new-bin 10) 5)

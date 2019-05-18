@@ -32,7 +32,7 @@ func (_ *BinType) Bool(g *G, val Val) (bool, E) {
 }
 
 func (_ *BinType) Dump(g *G, val Val, out *strings.Builder) E {
-  out.WriteString("(bin")
+  out.WriteString("(0x")
 
   for _, v := range val.(*Bin).data {
     fmt.Fprintf(out, " %02x", v)
