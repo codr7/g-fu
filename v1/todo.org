@@ -1,7 +1,8 @@
 * Bin
-** parameterize set- calls with f(old, new)->val
-*** use to get value in SetPlace
-** switch env.Update to use SetPlace on Vec keys
+** add Vec key support in Update
+*** switch key arg to Val
+*** replace env.SetPlace
+*** call from env.Set if Vec key
 ** add #/set-#
 *** add Type.Index/SetIndex
 *** add test & commit
