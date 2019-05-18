@@ -3,7 +3,7 @@
 ** add Vec key support in Update like Set
 ** implement setter Call
 *** add bin test
-** add copy to io.Writer via Reader
+* add Bin copy to io.Writer via Reader
 * sort Env dump
 * pipedream
 ** add sim arg to run
