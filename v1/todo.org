@@ -1,7 +1,10 @@
 * demo/burn.gf
 ** add Bin copy to io.Writer (stdout) via Reader
+** ansi output
 *** scratch
 * sort Env dump
+* add update prim
+** like set but takes setter-funs instead of values
 * demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim
