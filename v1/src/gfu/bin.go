@@ -7,20 +7,14 @@ import (
   "strings"
 )
 
-type Bin struct {
-  data []byte
-  len  int
-}
+type Bin []byte
 
 type BinType struct {
   BasicType
 }
 
-func NewBin(len int) *Bin {
-  b := new(Bin)
-  b.data = make([]byte, len)
-  b.len = len
-  return b
+func NewBin(len int) Bin {
+  return make(Bin, len)
 }
 
 func (b Bin) Type(g *G) Type {
@@ -28,13 +22,13 @@ func (b Bin) Type(g *G) Type {
 }
 
 func (_ *BinType) Bool(g *G, val Val) (bool, E) {
-  return val.(*Bin).len > 0, nil
+  return len(val.(Bin)) > 0, nil
 }
 
 func (_ *BinType) Dump(g *G, val Val, out *strings.Builder) E {
   out.WriteString("(0x")
 
-  for _, v := range val.(*Bin).data {
+  for _, v := range val.(Bin) {
     fmt.Fprintf(out, " %02x", v)
   }
 
@@ -43,21 +37,19 @@ func (_ *BinType) Dump(g *G, val Val, out *strings.Builder) E {
 }
 
 func (_ *BinType) Dup(g *G, val Val) (Val, E) {
-  b := val.(*Bin)
-  src := b.data
-  dst := new(Bin)
-
+  var dst Bin
+  src := val.(Bin)
+  
   if len(src) > 0 {
-    dst.data = make([]byte, len(src))
-    copy(dst.data, src)
+    dst = NewBin(len(src))
+    copy(dst, src)
   }
 
   return dst, nil
 }
 
 func (_ *BinType) Eq(g *G, lhs, rhs Val) (bool, E) {
-  lb, rb := lhs.(*Bin), rhs.(*Bin)
-  return bytes.Compare(lb.data[:lb.len], rb.data[:rb.len]) == 0, nil
+  return bytes.Compare(lhs.(Bin), rhs.(Bin)) == 0, nil
 }
 
 func (_ *BinType) Index(g *G, val Val, key Vec) (Val, E) {
@@ -65,26 +57,26 @@ func (_ *BinType) Index(g *G, val Val, key Vec) (Val, E) {
     return nil, g.E("Invalid index: %v", key.Type(g))
   }
 
-  b := val.(*Bin)
+  b := val.(Bin)
   i, ok := key[0].(Int)
 
   if !ok {
     return nil, g.E("Invalid index: %v", key[0].Type(g))
   }
   
-  if i := int(i); i < 0 || i > b.len {
+  if i := int(i); i < 0 || i > len(b) {
     return nil, g.E("Index out of bounds: %v", i)
   }
 
-  return Byte(b.data[i]), nil
+  return Byte(b[i]), nil
 }
 
 func (_ *BinType) Len(g *G, val Val) (Int, E) {
-  return Int(val.(*Bin).len), nil
+  return Int(len(val.(Bin))), nil
 }
 
 func (_ *BinType) Print(g *G, val Val, out *strings.Builder) {
-  out.WriteString(string(val.(*Bin).data))
+  out.WriteString(string(val.(Bin)))
 }
 
 func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
@@ -92,18 +84,18 @@ func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
     return nil, g.E("Invalid index: %v", key.Type(g))
   }
 
-  b := val.(*Bin)
+  b := val.(Bin)
   i, ok := key[0].(Int)
 
   if !ok {
     return nil, g.E("Invalid index: %v", key[0].Type(g))
   }
 
-  if i := int(i); i < 0 || i > len(b.data) {
+  if i := int(i); i < 0 || i > len(b) {
     return nil, g.E("Index out of bounds: %v", i)
   }
 
-  v, e := set(Byte(b.data[i]))
+  v, e := set(Byte(b[i]))
 
   if e != nil {
     return nil, e
@@ -115,6 +107,6 @@ func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
     return nil, g.E("Expected Byte: %v", v.Type(g))
   }
 
-  b.data[i] = byte(bv)
+  b[i] = byte(bv)
   return bv, nil
 }
