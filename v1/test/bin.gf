@@ -1,1 +1,2 @@
+(test (= (int 0xff) 255))
 (test (= (inc 0xfe) 0xff))

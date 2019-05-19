@@ -18,13 +18,17 @@ func (_ Byte) Type(g *G) Type {
 
 func (_ *ByteType) Add(g *G, x Val, y Val) (Val, E) {
   xb := x.(Byte)
-  yb, e := g.Byte(y)
-  
-  if e != nil {
-    return nil, e
-  }
 
-  return xb+yb, nil
+  switch y := y.(type) {
+  case Byte:
+    return xb + y, nil    
+  case Int:
+    return Byte(Int(xb) + y), nil    
+  default:
+    break
+  }
+  
+  return nil, g.E("Invalid add arg: %v", y.Type(g))
 }
 
 func (_ *ByteType) Bool(g *G, val Val) (bool, E) {
@@ -38,4 +42,8 @@ func (_ *ByteType) Byte(g *G, val Val) (Byte, E) {
 func (_ *ByteType) Dump(g *G, val Val, out *strings.Builder) E {
   fmt.Fprintf(out, "0x%02x", val.(Byte))
   return nil
+}
+
+func (_ *ByteType) Int(g *G, val Val) (Int, E) {
+  return Int(val.(Byte)), nil
 }
