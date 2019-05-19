@@ -2,7 +2,7 @@
 
 (let width 25 height 25
      data (new-bin (* width height 1))
-     out  (dup data))
+     out (new-bin))
 
 (fun offs (x y)
   (+ (- width x 1) (* (- height y 1) width)))
@@ -14,9 +14,6 @@
   (let i (offs x y))
   (set (# data i) (f (# data i)))
   _)
-
-(fun rand (x)
-  (div x 2))
 
 (fun render ()
   (for ((- height 1) y)
