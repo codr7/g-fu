@@ -2,6 +2,9 @@
 ** add rand fun
 ** add Bin copy to io.Writer (stdout) via Reader
 ** ansi output
+*** r 255, b 0
+**** shift g using data
+**** set all to 0/255 at end points
 *** scratch
 * add update prim
 ** like set but takes setter-funs instead of values
