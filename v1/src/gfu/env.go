@@ -102,7 +102,7 @@ func (e *Env) Find(key *Sym) (int, *Var) {
     i := (max + min) / 2
     v := vs[i]
 
-    switch key.tag.Cmp(v.key.tag) {
+    switch strings.Compare(key.name, v.key.name) {
     case -1:
       max = i
     case 1:
