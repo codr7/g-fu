@@ -31,6 +31,13 @@
   (for 3 (c/inc))
   (test (= (c/inc -1) 2)))
 
+(let (key _ val _)
+  (fun foo (x y))
+  (fun set-foo (f k..) (set 'key k val (f _)))
+  (set (foo 'bar 'baz) 42)
+  (test (= key '(bar baz)))
+  (test (= val 42)))
+
 (let (proxy (fun (d)
               (fun resolve (key)
                 (d/val key))
