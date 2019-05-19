@@ -1,3 +1,4 @@
+(debug)
 (load "../lib/all.gf")
 
 (let width 25 height 25
@@ -19,7 +20,7 @@
   (for ((- height 1) y)
     (for (width x)
       (let v (xy x y))
-      (set (xy x (+ y 1)) (- v (rand v))))))
+      (set (xy x (+ y 1)) (- v (rand (+ v 1)))))))
 
 (for (width x)
   (set (xy x 0) 0xff))

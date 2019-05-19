@@ -23,7 +23,13 @@ func (_ *ByteType) Add(g *G, x Val, y Val) (Val, E) {
   case Byte:
     return xb + y, nil    
   case Int:
-    return Byte(Int(xb) + y), nil    
+    v := Int(xb) + y
+    
+    if v >= 0 && v < 256 {
+      return Byte(v), nil
+    }
+    
+    return v, nil    
   default:
     break
   }
@@ -44,6 +50,17 @@ func (_ *ByteType) Dump(g *G, val Val, out *strings.Builder) E {
   return nil
 }
 
+func (_ *ByteType) Eq(g *G, lhs, rhs Val) (bool, E) {
+  lb := lhs.(Byte)
+  rb, e := g.Byte(rhs)
+
+  if e != nil {
+    return false, e
+  }
+  
+  return lb == rb, nil
+}
+
 func (_ *ByteType) Int(g *G, val Val) (Int, E) {
   return Int(val.(Byte)), nil
 }
@@ -55,7 +72,13 @@ func (_ *ByteType) Sub(g *G, x Val, y Val) (Val, E) {
   case Byte:
     return xb - y, nil    
   case Int:
-    return Byte(Int(xb) - y), nil    
+    v := Int(xb) - y
+
+    if v >= 0 && v < 256 {
+      return Byte(v), nil
+    }
+    
+    return v, nil    
   default:
     break
   }
