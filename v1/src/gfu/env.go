@@ -208,7 +208,7 @@ func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
   case Vec:
     f := func (_ Val) (Val, E) { return val, nil }
     
-    if e := env.SetPlace(g, task, k, f, args_env); e != nil {
+    if _, e := env.SetPlace(g, task, k, f, args_env); e != nil {
       return e
     }
   default:
@@ -218,37 +218,45 @@ func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
   return nil
 }
 
-func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (e E) {
+func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (v Val, e E) {
   if s, ok := key[0].(*Sym); ok {
     var f Val
     s = g.Sym("set-%v", s)
     
     if f, e = env.Get(g, task, s, false); e != nil {
-      return e
+      return nil, e
     }
 
-    if _, e = g.Call(task, env, f, append(Vec{set}, key[1:]...), args_env); e != nil {
-      return e
+    if v, e = g.Call(task, env, f, append(Vec{set}, key[1:]...), args_env); e != nil {
+      return nil, e
     }
 
-    return nil
+    return v, nil
   }
 
-  return g.E("Invalid set key: %v", key)
+  return nil, g.E("Invalid set key: %v", key)
 }
 
 func (e *Env) Type(g *G) Type {
   return &g.EnvType
 }
 
-func (env *Env) Update(g *G, key *Sym, set Setter) (Val, E) {
-  v, _, env, e := key.LookupVar(g, env, false)
+func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Val, E) {
+  switch k := key.(type) {
+  case *Sym:
+    var vp *Var
+    var e E
+    
+    if vp, _, env, e = k.LookupVar(g, env, false); e != nil {
+      return nil, e
+    }
 
-  if e != nil {
-    return nil, e
+    return vp.Update(g, env, set)
+  case Vec:
+    return env.SetPlace(g, task, k, set, args_env)
   }
 
-  return v.Update(g, env, set)
+  return nil, g.E("Invalid Update key: %v", key.Type(g))
 }
 
 func (_ *EnvType) Bool(g *G, val Val) (bool, E) {

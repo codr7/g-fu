@@ -238,11 +238,12 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   p := args[0]
-  
-  if id, ok := p.(*Sym); ok {
-    return args_env.Update(g, id, func(v Val) (Val, E) {
-      return v.(Int) + d.(Int), nil
-    })
+
+  switch p.(type) {
+  case *Sym, Vec:
+    return args_env.Update(g, task, p, func(v Val) (Val, E) {
+      return g.Add(v, d)
+    }, args_env)
   }
 
   if p, e = g.Eval(task, args_env, p); e != nil {
@@ -561,9 +562,9 @@ func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    return args_env.Update(g, p, func(v Val) (Val, E) {
+    return args_env.Update(g, task, p, func(v Val) (Val, E) {
       return g.Push(v, vs...)
-    })
+    }, args_env)
   default:
     if place, e = g.Eval(task, args_env, place); e != nil {
       return nil, e
@@ -580,13 +581,13 @@ func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    args_env.Update(g, p, func(v Val) (Val, E) {
+    args_env.Update(g, task, p, func(v Val) (Val, E) {
       if it, rest, e = g.Pop(v); e != nil {
         return nil, e
       }
 
       return rest, nil
-    })
+    }, args_env)
 
     return it, nil
   default:
@@ -608,9 +609,9 @@ func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   switch p := place.(type) {
   case *Sym:
-    return args_env.Update(g, p, func(v Val) (Val, E) {
+    return args_env.Update(g, task, p, func(v Val) (Val, E) {
       return g.Drop(v, args[1].(Int))
-    })
+    }, args_env)
   default:
     if place, e = g.Eval(task, args_env, place); e != nil {
       return nil, e
@@ -663,7 +664,7 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   if id, ok := in.(*Sym); ok {
     var v Val
 
-    if _, e = args_env.Update(g, id, func(in Val) (Val, E) {
+    if _, e = args_env.Update(g, task, id, func(in Val) (Val, E) {
       var out Val
 
       if v, out, e = in.(Vec).PopKey(g, k.(*Sym)); e != nil {
@@ -671,7 +672,7 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
       }
 
       return out, nil
-    }); e != nil {
+    }, args_env); e != nil {
       return nil, e
     }
 

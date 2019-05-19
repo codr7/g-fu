@@ -1,14 +1,15 @@
-(let rows 25
-     cols 25
+(load "../lib/all.gf")
+
+(let rows 25 cols 25
      buf (new-bin (* rows cols)))
 
-(fun xy (x y)
-  (# buf (+ (* y cols) x)))
+(fun get-offs (x y)
+  (+ (* y cols) x))
 
-(fun set-xy (f x y)
-  (let i (+ (* y cols) x))
-  (set (# buf i) (f (# buf i)))
-  _)
-
-(set (xy 10 10) 0xff)
-(dump (xy 10 10))
+(fun render ()
+  (for (rows r)
+    (for (cols c)
+      (let i (get-offs r c))
+      (set (# buf i) 0xff))))
+      
+(render)

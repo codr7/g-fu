@@ -1,11 +1,9 @@
-* Bin
-** testbin.gf
-** add Vec key support in Update like Set
 * remove set_imp Quote logic
 ** change all (set) calls to pass unquoted syms
-* add Bin copy to io.Writer via Reader
+* demo/burn.gf
+** add Bin copy to io.Writer via Reader
 * sort Env dump
-* pipedream
+* demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim
 ** add sim.pressure 
