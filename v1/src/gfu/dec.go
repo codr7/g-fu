@@ -140,10 +140,6 @@ func (_ *DecType) Dump(g *G, val Val, out *strings.Builder) E {
   return nil
 }
 
-func (_ *DecType) Int(g *G, val Val) (Int, E) {
-  return val.(Dec).Int(), nil
-}
-
 func (t *DecType) Mul(g *G, x, y Val) (Val, E) {
   xd := x.(Dec)
   yd, ok := y.(Dec)
