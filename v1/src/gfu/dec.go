@@ -36,12 +36,6 @@ func (d *Dec) Div(val Dec) {
   *d = Dec(x)
 }
 
-func (d Dec) Int() Int {
-  f := big.Float(d)
-  i, _ := f.Int64()
-  return Int(i)
-}
-
 func (d *Dec) Mul(val Dec) {
   x, y := big.Float(*d), big.Float(val)
   x.Mul(&x, &y)
