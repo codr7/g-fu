@@ -1,10 +1,10 @@
 * demo/burn.gf
-** add push-bytes(bin str)
 ** add BinIter
 *** use to generate output after loops
 ** add Bin copy to io.Writer (stdout) via Reader
 *** scratch
 ** ansi output
+*** use push-bytes(bin, str)
 *** r 255, b 0
 **** shift g using data
 **** set all to 0/255 at end points

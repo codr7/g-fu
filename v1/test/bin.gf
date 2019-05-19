@@ -8,3 +8,8 @@
   (test (= (# b 0) 0xfe))
   (test (= (inc (# b 0)) 0xff))
   (test (= (# b 0) 0xff)))
+
+(let (b (new-bin))
+  (push-bytes b "abc")
+  (test (= (len b) 3))
+  (test (= (str b) "abc")))
