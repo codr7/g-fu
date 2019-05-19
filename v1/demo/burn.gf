@@ -1,7 +1,7 @@
 (load "../lib/all.gf")
 
-(let width 25 height 24
-     buf (new-bin (* width (+ height 1))))
+(let width 25 height 25
+     buf (new-bin (* width height 1)))
 
 (fun offs (x y)
   (+ (- width x 1) (* (- height y 1) width)))
@@ -11,11 +11,12 @@
 
 (fun set-xy (f x y)
   (let i (offs x y))
-  (set (# buf i) (f (# buf i))))
+  (set (# buf i) (f (# buf i)))
+  _)
 
 (fun render ()
-  (for (height y)
+  (for ((- height 1) y)
     (for (width x)
-      (set (xy x y) 0xff))))
+      (set (xy x (+ y 1)) 0xff))))
       
 (render)
