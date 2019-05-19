@@ -1,6 +1,8 @@
 * demo/burn.gf
 ** add BinIter
 *** use to generate output after loops
+** switch Bin to raw storage like Vec
+** add push-bytes(bin str)
 ** add Bin copy to io.Writer (stdout) via Reader
 *** scratch
 ** ansi output
