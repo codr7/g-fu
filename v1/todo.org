@@ -1,15 +1,11 @@
 * demo/burn.gf
 ** add BinIter
-*** use to generate output after loops
-** add Bin copy to io.Writer (stdout) via Reader
-*** scratch
+*** use to generate output
 ** ansi output
-*** use push-bytes(bin, str)
+*** push-bytes
 *** r 255, b 0
 **** shift g using data
 **** set all to 0/255 at end points
-* add update prim
-** like set but takes setter-funs instead of values
 * demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim
