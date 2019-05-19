@@ -1,4 +1,5 @@
 * demo/burn.gf
+** add rand fun
 ** add Bin copy to io.Writer (stdout) via Reader
 ** ansi output
 *** scratch

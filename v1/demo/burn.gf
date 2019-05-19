@@ -14,9 +14,16 @@
   (set (# buf i) (f (# buf i)))
   _)
 
+(fun rand (x)
+  (div x 2))
+
 (fun render ()
   (for ((- height 1) y)
     (for (width x)
-      (set (xy x (+ y 1)) 0xff))))
-      
+      (let v (xy x y))
+      (set (xy x (+ y 1)) (- v (rand v))))))
+
+(for (width x)
+  (set (xy x 0) 0xff))
+
 (render)

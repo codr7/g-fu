@@ -47,3 +47,18 @@ func (_ *ByteType) Dump(g *G, val Val, out *strings.Builder) E {
 func (_ *ByteType) Int(g *G, val Val) (Int, E) {
   return Int(val.(Byte)), nil
 }
+
+func (_ *ByteType) Sub(g *G, x Val, y Val) (Val, E) {
+  xb := x.(Byte)
+
+  switch y := y.(type) {
+  case Byte:
+    return xb - y, nil    
+  case Int:
+    return Byte(Int(xb) - y), nil    
+  default:
+    break
+  }
+  
+  return nil, g.E("Invalid sub arg: %v", y.Type(g))
+}

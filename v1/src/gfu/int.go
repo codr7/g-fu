@@ -37,19 +37,19 @@ func (t *IntType) Abs(g *G, x Val) (Val, E) {
 }
 
 func (t *IntType) Add(g *G, x, y Val) (Val, E) {
-  yi, ok := y.(Int)
+  yi, e := g.Int(y)
 
-  if !ok {
-    return nil, g.E("Expected Int: %v", y.Type(g))
+  if e != nil {
+    return nil, e
   }
  
   return x.(Int) + yi, nil
 }
 
 func (t *IntType) Div(g *G, x, y Val) (Val, E) {
-  yi, ok := y.(Int)
+  yi, e := g.Int(y)
 
-  if !ok {
+  if e != nil {
     return nil, g.E("Expected Int: %v", y.Type(g))
   }
   
@@ -94,10 +94,10 @@ func (_ *IntType) Iter(g *G, val Val) (Val, E) {
 }
 
 func (t *IntType) Mul(g *G, x, y Val) (Val, E) {
-  yi, ok := y.(Int)
+  yi, e := g.Int(y)
 
-  if !ok {
-    return nil, g.E("Expected Int: %v", y.Type(g))
+  if e != nil {
+    return nil, e
   }
   
   return x.(Int) * yi, nil
@@ -108,10 +108,10 @@ func (t *IntType) Neg(g *G, x Val) (Val, E) {
 }
 
 func (t *IntType) Sub(g *G, x, y Val) (Val, E) {
-  yi, ok := y.(Int)
+  yi, e := g.Int(y)
 
-  if !ok {
-    return nil, g.E("Expected Int: %v", y.Type(g))
+  if e != nil {
+    return nil, e
   }
   
   return x.(Int) - yi, nil
