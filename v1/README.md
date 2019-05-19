@@ -3,7 +3,7 @@
 ### Intro
 [g-fu](https://github.com/codr7/g-fu) is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go.
 
-This document describes the initial release; which implements an extensible, tree-walking interpreter with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, threads and channels; weighing in at 3 kloc.
+This document describes the initial release; which implements an extensible, tree-walking interpreter for a fully block-structured Lisp-dialect with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first class environments, user-defined setters, threads and channels; weighing in at 4 kloc.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
