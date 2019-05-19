@@ -33,7 +33,7 @@
 
 (let (key _ val _)
   (fun foo (x y))
-  (fun set-foo (f k..) (set 'key k val (f _)))
+  (fun set-foo (f k..) (set key k val (f _)))
   (set (foo 'bar 'baz) 42)
   (test (= key '(bar baz)))
   (test (= val 42)))
@@ -95,7 +95,7 @@
 (test (= (b/resize 400 200) '(200 100)))
 
 (let (called F)
-  (b/on-click (fun (b) (set 'called T)))
+  (b/on-click (fun (b) (set called T)))
   (test (not called))
   (b/click)
   (test called))

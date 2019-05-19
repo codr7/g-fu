@@ -163,12 +163,6 @@ func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
       return nil, e
     }
 
-    if _, ok := k.(Quote); ok {
-      if k, e = g.Eval(task, env, k); e != nil {
-        return nil, e
-      }
-    }
-
     if e = env.Set(g, task, k, v, args_env); e != nil {
       return nil, e
     }

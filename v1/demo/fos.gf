@@ -21,7 +21,7 @@
 
 (mac let-this (vars body..)
   '(let (this _ %vars..)
-     (set 'this %(pop body))
+     (set this %(pop body))
      %body..
      (fun (args..) (this args..))))
 

@@ -12,7 +12,7 @@
 
 (let (s (let-this ()
            (dispatch
-             (patch (new) (set 'this new)))))
+             (patch (new) (set this new)))))
   (s 'patch (fun (x) x))
   (test (= (s 42) 42)))
 
@@ -47,7 +47,7 @@
 (test (= (b 'resize 0 0) '(142 50)))
 
 (let (called F)
-  (b 'on-click (fun (b) (set 'called T)))
+  (b 'on-click (fun (b) (set called T)))
   (test (not called))
   (b 'click)
   (test called))

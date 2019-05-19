@@ -190,7 +190,7 @@ Error: Dup binding: foo 1
 ```
   (let (foo 1)
     (let _
-      (set 'foo 3))
+      (set foo 3))
     (say foo))
 
 3

@@ -1,7 +1,6 @@
-* remove set_imp Quote logic
-** change all (set) calls to pass unquoted syms
 * demo/burn.gf
-** add Bin copy to io.Writer via Reader
+** add Bin copy to io.Writer (stdout) via Reader
+*** scratch
 * sort Env dump
 * demo/pipedream.gf
 ** add sim arg to run

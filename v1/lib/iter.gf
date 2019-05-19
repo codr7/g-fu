@@ -63,4 +63,4 @@
 
 (fun find-if (in pred)
   (for (in v)
-    (if (set 'v (pred v)) (break v))))
+    (if (set v (pred v)) (break v))))

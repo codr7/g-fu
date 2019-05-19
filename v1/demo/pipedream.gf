@@ -8,16 +8,16 @@
        io _
        default (let _
                  (fun init (prev)
-                   (set 'y (+ prev/y dy))
+                   (set y (+ prev/y dy))
                    (if (= n prev) _ (n/init))
                    (if (and io (not (= io prev))) (io/init this)))
 
                  (fun pair (p)
-                   (set 'io p 'p/io this))
+                   (set io p p/io this))
     
                  (fun run (prev)
                    (dump 'port-run)
-                   (set 'pressure prev/pressure)
+                   (set pressure prev/pressure)
                    (if (= n prev) _ (n/run))
                    (if (and io (not (= io prev))) (io/run this)))
                    
@@ -34,7 +34,7 @@
           %vars..
           default (let _
                     (fun init ()
-                      (set 'y (+ in/y dy))
+                      (set y (+ in/y dy))
                       (out/init this))
 
                     (fun run ()
@@ -85,7 +85,7 @@
 
   (fun run ()
     (dump 'tank-run)
-    (set 'pressure (get-pressure out/dy))
+    (set pressure (get-pressure out/dy))
     (out/run this)))
     
 (node Valve)
@@ -93,8 +93,8 @@
 (sim s (t1 (Tank) p1 (Pipe) v (Valve) p2 (Pipe) t2 (Tank))
   (chain t1 p1)
 
-  (set 't1/radius 10. 't1/volume 10000.
-       'p1/diameter .1 'p1/length 10.)
+  (set t1/radius 10. t1/volume 10000.
+       p1/diameter .1 p1/length 10.)
 
   (t1/init)
   (t1/run)

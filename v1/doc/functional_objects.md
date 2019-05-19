@@ -126,7 +126,7 @@ Calls may be expanded to visually inspect the generated code.
 ```
 (mac let-this (vars body..)
   '(let (this _ %vars..)
-     (set 'this %(pop body))
+     (set this %(pop body))
      %body..
      (fun (args..) (this args..))))
 ```
@@ -143,7 +143,7 @@ The following example creates a `this`-aware `dispatch`-er with a `patch`-method
 ```
 (let (s (let-this ()
           (dispatch
-            (patch (new) (set 'this new)))))
+            (patch (new) (set this new)))))
   (s 'patch (fun (args..)
     (if args (s args..) 42)))
     
