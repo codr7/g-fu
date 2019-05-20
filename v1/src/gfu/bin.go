@@ -13,6 +13,15 @@ type BinType struct {
   BasicType
 }
 
+type BinIter struct {
+  in  Bin
+  pos Int
+}
+
+type BinIterType struct {
+  BasicIterType
+}
+
 func NewBin(len int) Bin {
   return make(Bin, len)
 }
@@ -71,6 +80,10 @@ func (_ *BinType) Index(g *G, val Val, key Vec) (Val, E) {
   return Byte(b[i]), nil
 }
 
+func (_ *BinType) Iter(g *G, val Val) (Val, E) {
+  return new(BinIter).Init(g, val.(Bin)), nil
+}
+
 func (_ *BinType) Len(g *G, val Val) (Int, E) {
   return Int(len(val.(Bin))), nil
 }
@@ -109,4 +122,73 @@ func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
 
   b[i] = byte(bv)
   return bv, nil
+}
+
+func (i *BinIter) Init(g *G, in Bin) *BinIter {
+  i.in = in
+  return i
+}
+
+func (_ *BinIter) Type(g *G) Type {
+  return &g.BinIterType
+}
+
+func (_ *BinIterType) Bool(g *G, val Val) (bool, E) {
+  i := val.(*BinIter)
+  return i.pos < Int(len(i.in)), nil
+}
+
+func (_ *BinIterType) Drop(g *G, val Val, n Int) (Val, E) {
+  i := val.(*BinIter)
+
+  if Int(len(i.in))-i.pos < n {
+    return nil, g.E("Nothing to drop")
+  }
+
+  i.pos += n
+  return i, nil
+}
+
+func (_ *BinIterType) Dup(g *G, val Val) (Val, E) {
+  out := *val.(*BinIter)
+  return &out, nil
+}
+
+func (_ *BinIterType) Eq(g *G, lhs, rhs Val) (bool, E) {
+  li := lhs.(*BinIter)
+  ri, ok := rhs.(*BinIter)
+
+  if !ok {
+    return false, nil
+  }
+
+  ok, e := g.Eq(ri.in, li.in)
+
+  if e != nil {
+    return false, e
+  }
+
+  return ok && ri.pos == li.pos, nil
+}
+
+func (_ *BinIterType) Pop(g *G, val Val) (Val, Val, E) {
+  i := val.(*BinIter)
+
+  if i.pos >= Int(len(i.in)) {
+    return &g.NIL, i, nil
+  }
+
+  v := Byte(i.in[i.pos])
+  i.pos++
+  return v, i, nil
+}
+
+func (_ *BinIterType) Splat(g *G, val Val, out Vec) (Vec, E) {
+  i := val.(*BinIter)
+  
+  for _, v := range i.in[i.pos:] {
+    out = append(out, Byte(v))
+  }
+  
+  return out, nil
 }

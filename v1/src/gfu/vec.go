@@ -441,5 +441,5 @@ func (_ *VecIterType) Pop(g *G, val Val) (Val, Val, E) {
 
 func (_ *VecIterType) Splat(g *G, val Val, out Vec) (Vec, E) {
   i := val.(*VecIter)
-  return append(out, i.in[i.pos:]), nil
+  return append(out, i.in[i.pos:]...), nil
 }

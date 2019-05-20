@@ -730,6 +730,22 @@ func new_bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return NewBin(int(args[0].(Int))), nil
 }
 
+func bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  b := NewBin(len(args))
+  
+  for i, v := range args {
+    bv, ok := v.(Byte)
+
+    if !ok {
+      return nil, g.E("Expected Byte: %v", bv.Type(g))
+    }
+
+    b[i] = byte(bv)
+  }
+  
+  return b, nil
+}
+
 func push_bytes_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   place := args[0]
   s, ok := args[1].(Str)
@@ -857,6 +873,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
+  e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
   e.AddType(g, &g.DecType, "Dec", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
@@ -946,6 +963,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
   e.AddFun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
+  e.AddFun(g, "bin", bin_imp, ASplat("vals"))
   e.AddPrim(g, "push-bytes", push_bytes_imp, A("bin"), A("str"))
   
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))

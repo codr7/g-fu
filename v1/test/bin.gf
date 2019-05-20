@@ -13,3 +13,8 @@
   (push-bytes b "abc")
   (test (= (len b) 3))
   (test (= (str b) "abc")))
+
+(let (b (bin 0x10 0x20 0x30)
+      n 0x00)
+  (for (b v) (inc n v))
+  (test (= n 0x60)))

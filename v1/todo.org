@@ -1,10 +1,4 @@
-* add Var.pos
-** init on insert
-** only compare strings if same pos
 * demo/burn.gf
-** add BinIter
-*** use to generate output
-*** disable buffering and print directly
 ** ansi output
 *** r 255, b 0
 **** shift g using data

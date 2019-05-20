@@ -19,7 +19,8 @@
   (for ((- height 1) y)
     (for (width x)
       (let v (xy x y))
-      (set (xy x (+ y 1)) (- v (rand (+ v 1)))))))
+      (set (xy x (+ y 1)) (- v (rand (+ v 1))))
+      (dump 'print))))
 
 (for (width x)
   (set (xy x 0) 0xff))
