@@ -15,14 +15,14 @@
   (set (# data i) (f (# data i)))
   _)
 
-(let esc (bin 0x1b "[")
-     home (bin esc "H"))
+(let esc (str 0x1b "[")
+     top-left (str esc "H"))
 
-(fun move-home (out)
-  (print out home))
+(fun move-top-left (out)
+  (print out top-left))
 
 (fun pick-color (out r g b)
-  (print out (bin esc "48;2;" r ";" g ";" b "m")))
+  (print out (str esc "48;2;" r ";" g ";" b "m")))
 
 (fun render (out)
   (for ((- height 1) y)
@@ -30,12 +30,15 @@
       (let v (xy x y))
       (set (xy x (+ y 1)) (- v (rand (+ v 1))))))
 
-  (move-home out)
+  (move-top-left out)
   
-  (for (data g)
-    (let r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
-    (pick-color out r g b)
-    (print out " ")))
+  (for (height y)
+    (if y (move-next-line out))
+
+    (for (width x)
+      (let g (xy x y) r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
+      (pick-color out r g b)
+      (print out " " ))))
 
 (for (width x)
   (set (xy x 0) 0xff))

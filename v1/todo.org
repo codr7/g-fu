@@ -1,11 +1,10 @@
 * demo/burn.gf
-** add Type.WriteBytes(io.Writer)
-*** implement for byte/bin/str
-*** use in (bin)
 ** switch *strings.Builder args to io.Writer
-** use io.WriteString(out, x)
+*** use io.WriteString(out, x)
 ** add print(out, ...) fun
 *** handle nil out => stdout
+** add move-next-line
+*** print before every line except first
 * demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim
