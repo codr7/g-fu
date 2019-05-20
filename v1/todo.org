@@ -1,12 +1,11 @@
 * demo/burn.gf
-** add Buf based on strings.Builder
-** add print(buf, ...) fun
-** add Char type
-*** rune
-*** use \ for literals
-**** add \cr \lf \sp \es
-*** add Char.Byte()
-** call v.Byte() for non-bytes via NumType in (bin ...)
+** add Type.WriteBytes(io.Writer)
+*** implement for byte/bin/str
+*** use in (bin)
+** switch *strings.Builder args to io.Writer
+** use io.WriteString(out, x)
+** add print(out, ...) fun
+*** handle nil out => stdout
 * demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim

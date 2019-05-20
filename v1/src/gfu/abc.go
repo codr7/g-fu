@@ -737,7 +737,7 @@ func bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     bv, ok := v.(Byte)
 
     if !ok {
-      return nil, g.E("Expected Byte: %v", bv.Type(g))
+      return nil, g.E("Expected Byte: %v", v.Type(g))
     }
 
     b[i] = byte(bv)
