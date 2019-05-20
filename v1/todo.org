@@ -1,8 +1,8 @@
 * demo/burn.gf
-** switch *strings.Builder args to io.Writer
-*** use io.WriteString(out, x)
+** switch *strings.Builder args to bufio.Writer
+** add ByteType.Print
 ** add Writer type
-*** struct with io.Writer imp
+*** struct with bufio.Writer imp
 ** add print(out, ...) fun
 *** handle nil out => stdout
 * demo/pipedream.gf
