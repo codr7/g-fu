@@ -1,8 +1,11 @@
+* add Var.pos
+** init on insert
+** only compare strings if same pos
 * demo/burn.gf
 ** add BinIter
 *** use to generate output
+*** disable buffering and print directly
 ** ansi output
-*** push-bytes
 *** r 255, b 0
 **** shift g using data
 **** set all to 0/255 at end points
