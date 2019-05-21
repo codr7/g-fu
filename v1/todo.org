@@ -1,4 +1,4 @@
-* demo/burn.gf
+* demo/fire.gf
 ** switch *strings.Builder args to bufio.Writer
 ** add ByteType.Print
 ** add Writer type
@@ -7,7 +7,7 @@
 *** handle nil out => stdout
 ** reset console on ctrl+c
 *** trap os.Kill
-* demo/pipedream.gf
+* demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
 ** add sim.pressure 

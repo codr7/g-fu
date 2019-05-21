@@ -42,7 +42,7 @@ Button resize
 Button click
 ```
 
-All of this and more may be loaded by evaluating `(load "demo/all.gf")` from the release root.
+All of this and more may be loaded by evaluating `(load "demo/fos.gf")` from the release root.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -53,7 +53,7 @@ g-fu v1.11
 
 Press Return twice to evaluate.
 
-  (load "demo/all.gf")
+  (load "demo/fos.gf")
 _
 ```
 

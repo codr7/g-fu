@@ -1,3 +1,5 @@
+(load "../lib/all.gf")
+
 (mac dispatch (defs..)
   (let args (new-sym) id (new-sym))
   
