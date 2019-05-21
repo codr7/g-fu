@@ -19,7 +19,7 @@
   (fun move-to (x y)
     (print out (str esc (if (or x y) (str (+ y 1) ";" (+ x 1))) "H")))
 
-  (fun cr-lf ((n 1))
+  (fun new-line ((n 1))
     (print out (str esc (if (> n 1) n) "E"))) 
   
   (fun pick-color (r g b)
@@ -38,7 +38,7 @@
     (move-to 0 0)
   
     (for (height y)
-      (if y (cr-lf))
+      (if y (new-line))
 
       (for (width x)
         (let g (xy x y) r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
