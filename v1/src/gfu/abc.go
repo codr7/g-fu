@@ -147,10 +147,11 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  if v, _, e = args[0].(*Sym).Lookup(g, task, env, false); e != nil {
+  if v, _, e = args[0].(*Sym).Lookup(g, task, env, true); e != nil {
     return nil, e
   }
 
+  if v == nil { v = &g.NIL }
   return v, nil
 }
 

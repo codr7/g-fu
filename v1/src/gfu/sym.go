@@ -8,10 +8,10 @@ import (
 )
 
 type Sym struct {
-  tag   Tag
-  name  string
-  parts []*Sym
-  root  bool
+  tag    Tag
+  name   string
+  parts  []*Sym
+  weight uint64
 }
 
 type SymType struct {
