@@ -1,7 +1,7 @@
 (debug)
 (load "../lib/all.gf")
 
-(env burn (width 25 height 25
+(env fire (width 25 height 25
            esc (str 0x1b "[")
            buf (new-bin (* width height 1))
            out _)
@@ -45,5 +45,5 @@
         (pick-color r g b)
         (print " " )))))
 
-(burn/init)
-(burn/render)
+(fire/init)
+(fire/render)
