@@ -7,6 +7,7 @@
 *** handle nil out => stdout
 ** reset console on ctrl+c
 *** trap os.Kill
+**** (trap 'kill (fun () ...))
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
