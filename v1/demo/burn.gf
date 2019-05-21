@@ -1,10 +1,10 @@
 (debug)
 (load "../lib/all.gf")
 
-(let burn (let (width 25 height 25
-                esc (str 0x1b "[")
-                buf (new-bin (* width height 1))
-                out _)
+(env burn (width 25 height 25
+           esc (str 0x1b "[")
+           buf (new-bin (* width height 1))
+           out _)
   (fun get-offs (x y)
     (+ (- width x 1) (* (- height y 1) width)))
 
@@ -43,9 +43,7 @@
       (for (width x)
         (let g (xy x y) r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
         (pick-color r g b)
-        (print " " ))))
-
-  this-env))
+        (print " " )))))
 
 (burn/init)
 (burn/render)

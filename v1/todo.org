@@ -5,6 +5,8 @@
 *** struct with bufio.Writer imp
 ** add print(out, ...) fun
 *** handle nil out => stdout
+** reset console on ctrl+c
+*** trap os.Kill
 * demo/pipedream.gf
 ** add sim arg to run
 *** forward this-sim

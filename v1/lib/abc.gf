@@ -1,3 +1,6 @@
+(mac env (id vars body..)
+  '(let %id (let %vars %body.. this-env)))
+
 (fun tr (in acc fn)
   (fun rec (in acc fn)
     (let v (pop in))
@@ -29,7 +32,7 @@
     '(let (%v %h) (if %v %v %(if tcs (rec tcs) v))))
     
   (rec conds))
-  
+
 (fun min (vals..)
   (tr (tail vals) (head vals) (fun (acc v) (if (< v acc) v acc))))
 

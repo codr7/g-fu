@@ -54,10 +54,9 @@
       (recall in acc))
       acc))
   
-  '(let %id (let (this-sim this-env
-                  %(push-args args)..)
-              %body..
-              this-sim)))
+  '(env %id (this-sim this-env
+             %(push-args args)..)
+     %body..))
 
 (fun chain (ns..)
   (tr (tail ns) (head ns)
