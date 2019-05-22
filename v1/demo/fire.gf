@@ -20,8 +20,8 @@
   (fun clear ()
     (print out (str esc "2J")))
 
-  (fun move-to (x y)
-    (print out (str esc (+ y 1) ";" (+ x 1) "H")))
+  (fun home ()
+    (print out (str esc "H")))
 
   (fun pick-color (r g b)
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
@@ -29,7 +29,7 @@
   (fun restore ()
     (print out (str esc "0m"))
     (clear)
-    (move-to 0 0)
+    (home)
     (flush out))
 
   (fun init ()
@@ -45,14 +45,15 @@
         (set (xy x (+ y 1)) (- v (rand (min max-fade (+ (int v) 1)))))))
 
     (let i -1)
+    (home)
     
     (for (height y)
-      (move-to 0 y)
-
       (for (width x)
         (let g (# buf (inc i)) r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
         (pick-color r g b)
-        (print out " ")))
+        (print out " "))
+
+      (print out \n))
 
     (flush out)))
 

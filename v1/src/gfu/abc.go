@@ -857,6 +857,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
+  e.AddType(g, &g.CharType, "Char")
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FloatType, "Float", &g.NumType)
@@ -881,6 +882,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "_", &g.NIL)
   e.AddConst(g, "T", &g.T)
   e.AddConst(g, "F", &g.F)
+  e.AddConst(g, "\\n", Char('\n'))
 
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))

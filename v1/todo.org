@@ -1,6 +1,7 @@
 * demo/fire.gf
 ** print frame rate in top left
 *** use moving average
+*** store avg-time in env
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim

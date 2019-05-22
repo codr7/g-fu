@@ -1,9 +1,9 @@
 (fun say (args..)
   (for (args a)
-    (print stdout a LF))
+    (print stdout a \n))
   (flush stdout))
 
 (fun dump (args..)
   (for (args a)
-    (print stderr a LF))
+    (print stderr a \n))
   (flush stderr))
