@@ -99,13 +99,24 @@ func (t *FloatType) Abs(g *G, x Val) (Val, E) {
 
 func (t *FloatType) Add(g *G, x, y Val) (Val, E) {
   xf := x.(Float)
-  yf, ok := y.(Float)
 
-  if !ok {
-    return nil, g.E("Expected Float: %v", y.Type(g))
+  switch y := y.(type) {
+  case Float:
+    xf.Add(y)
+  case Int:
+    var yf Float
+    yf.SetInt(y)
+    xf.Add(yf)
+  default:
+    yf, e := g.Float(y)
+
+    if e != nil {
+      return nil, e
+    }
+
+    xf.Add(yf)
   }
 
-  xf.Add(yf)
   return xf, nil
 }
 

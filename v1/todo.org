@@ -11,5 +11,3 @@
 * add Vec Index/SetIndex
 * add Env Index/SetIndex
 * add Str Index
-
-new_average = (old_average * (n-1) + new_value) / n

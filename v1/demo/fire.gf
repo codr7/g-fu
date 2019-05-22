@@ -6,7 +6,7 @@
            esc (str 0x1b "[")
            out stdout
            max-fade 50
-           avg-n 3 avg-time _)
+           tot-frames 0 tot-time .0)
   (fun get-offs (x y)
     (+ (- width x 1) (* (- height y 1) width)))
 
@@ -31,9 +31,9 @@
     (print out (str esc "0m")))
 
   (fun restore ()
+    (restore-color)
     (clear)
-    (home)
-    (flush out))
+    (home))
 
   (fun init ()
     (for (width x)
@@ -61,14 +61,9 @@
 
       (print out \n))
 
-    (set avg-time (if (_? avg-time)
-                    (- (now) t0)
-                    (+ (/ (* avg-time (- avg-n 1)) avg-n)
-                       (/ (- (now) t0) avg-n))))
-    
-    (restore-color)
-    (print out (/ 1000000000.0 avg-time))
-    (flush out)))
+    (flush out)
+    (inc tot-time (- (now) t0))
+    (inc tot-frames)))
 
 (fire/init)
 
@@ -76,3 +71,4 @@
   (fire/render))
 
 (fire/restore)
+(say (/ (* 1000000000.0 fire/tot-frames) fire/tot-time))
