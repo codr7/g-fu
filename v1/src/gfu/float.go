@@ -102,7 +102,7 @@ func (t *FloatType) Add(g *G, x, y Val) (Val, E) {
   yf, ok := y.(Float)
 
   if !ok {
-    return nil, g.E("Expected Float: ", y.Type(g))
+    return nil, g.E("Expected Float: %v", y.Type(g))
   }
 
   xf.Add(yf)
@@ -119,30 +119,52 @@ func (_ *FloatType) Float(g *G, val Val) (Float, E) {
 
 func (t *FloatType) Div(g *G, x, y Val) (Val, E) {
   xf := x.(Float)
-  yf, ok := y.(Float)
 
-  if !ok {
-    return nil, g.E("Expected Float: ", y.Type(g))
+  switch y := y.(type) {
+  case Float:
+    xf.Div(y)
+  case Int:
+    var yf Float
+    yf.SetInt(y)
+    xf.Div(yf)
+  default:
+    yf, e := g.Float(y)
+
+    if e != nil {
+      return nil, e
+    }
+
+    xf.Div(yf)
   }
 
-  xf.Div(yf)
   return xf, nil
 }
 
 func (_ *FloatType) Dump(g *G, val Val, out *bufio.Writer) E {
-  fmt.Fprintf(out, "%v", big.Float(val.(Float)))
+  fmt.Fprintf(out, "%v", val.(Float))
   return nil
 }
 
 func (t *FloatType) Mul(g *G, x, y Val) (Val, E) {
   xf := x.(Float)
-  yf, ok := y.(Float)
 
-  if !ok {
-    return nil, g.E("Expected Float: ", y.Type(g))
+  switch y := y.(type) {
+  case Float:
+    xf.Mul(y)
+  case Int:
+    var yf Float
+    yf.SetInt(y)
+    xf.Mul(yf)
+  default:
+    yf, e := g.Float(y)
+
+    if e != nil {
+      return nil, e
+    }
+
+    xf.Mul(yf)
   }
 
-  xf.Mul(yf)
   return xf, nil
 }
 
@@ -164,7 +186,7 @@ func (t *FloatType) Sub(g *G, x, y Val) (Val, E) {
   yf, ok := y.(Float)
 
   if !ok {
-    return nil, g.E("Expected Float: ", y.Type(g))
+    return nil, g.E("Expected Float: %v", y.Type(g))
   }
 
   xf.Sub(yf)

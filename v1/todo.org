@@ -1,7 +1,5 @@
 * demo/fire.gf
-** print frame rate in top left
-*** use moving average
-*** store avg-time in env
+** simply avg calc as below
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
@@ -13,5 +11,5 @@
 * add Vec Index/SetIndex
 * add Env Index/SetIndex
 * add Str Index
-* add Byte div
-** promote to int
+
+new_average = (old_average * (n-1) + new_value) / n
