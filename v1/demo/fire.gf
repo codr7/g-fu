@@ -41,6 +41,7 @@
     (for ((- height 1) y)
       (for (width x)
         (let v (xy x y))
+        (if (and x (< x (- width 1))) (inc x (- 1 (rand 3))))
         (set (xy x (+ y 1)) (- v (rand (min max-fade (+ (int v) 1)))))))
 
     (let i -1)
