@@ -1,7 +1,7 @@
 ## The DOOM Fire Kata
 
 ### Intro
-Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics for use as a kata to exercise new languages. This post describes how I would perform it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
+Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics for use as kata to exercise new languages. This post describes how I would perform it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
 
 ![Fire](fire.gif)
 [Source](https://github.com/codr7/g-fu/blob/master/v1/demo/fire.gf)
@@ -34,7 +34,7 @@ Since the particles have to be printed top to bottom eventually, yet calculated 
 
 ```
 (env fire (width 50 height 25
-           buf (new-bin (* width height 1))
+           buf (new-bin (* width height))
            esc (str 0x1b "[")
            out stdout
            max-fade 50

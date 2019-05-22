@@ -1,7 +1,7 @@
 (load "../lib/all.gf")
 
 (env fire (width 50 height 25
-           buf (new-bin (* width height 1))
+           buf (new-bin (* width height))
            esc (str 0x1b "[")
            out stdout
            max-fade 50

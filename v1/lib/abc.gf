@@ -33,6 +33,9 @@
     
   (rec conds))
 
+(mac dec (val (d 1))
+  '(inc %val %(- d)))
+
 (fun min (vals..)
   (tr (tail vals) (head vals) (fun (acc v) (if (< v acc) v acc))))
 
