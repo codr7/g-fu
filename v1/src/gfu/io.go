@@ -6,7 +6,7 @@ import (
   "os"
 )
 
-func flush(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func flush_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   w := (*bufio.Writer)(args[0].(*Writer))
   
   if e := w.Flush(); e != nil {
@@ -27,7 +27,7 @@ func print_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (e *Env) InitIO(g *G) {
-  e.AddFun(g, "flush", flush, A("out"))
+  e.AddFun(g, "flush", flush_imp, A("out"))
   e.AddFun(g, "print", print_imp, A("out"), ASplat("vals"))
 
   e.AddConst(g, "CR", Byte(13))

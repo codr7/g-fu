@@ -24,6 +24,7 @@ func main() {
   g.RootEnv.InitAbc(g)
   g.RootEnv.InitIO(g)
   g.RootEnv.InitMath(g)
+  g.RootEnv.InitTime(g)
   
   flag.Parse()
 

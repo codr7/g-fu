@@ -28,6 +28,7 @@ type G struct {
   MacType     MacType
   MetaType    MetaType
   NilType     NilType
+  NSecsType   NSecsType
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
@@ -38,6 +39,7 @@ type G struct {
   StrType     StrType
   SymType     SymType
   TaskType    TaskType
+  TimeType    TimeType
   TrueType    TrueType
   VecType     VecType
   VecIterType VecIterType

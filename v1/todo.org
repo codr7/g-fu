@@ -1,14 +1,6 @@
 * demo/fire.gf
-** restore on ctrl+c
-*** trap os.Kill
-**** (trap 'kill (fun () ...))
 ** print frame rate in top left
-*** moving average
-*** add Timestamp type
-**** add (now) fn
-**** implement Sub
-*** add Time type
-**** derive IntType
+*** use moving average
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
