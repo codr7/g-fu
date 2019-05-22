@@ -1,7 +1,7 @@
 (debug)
 (load "../lib/all.gf")
 
-(env fire (width 100 height 25
+(env fire (width 50 height 25
            esc (str 0x1b "[")
            buf (new-bin (* width height 1))
            out stdout)
@@ -40,7 +40,9 @@
       (for (width x)
         (let g (# buf (inc i)) r (if g 0xff 0x00) b (if (= g 0xff) 0xff 0x00))
         (pick-color r g b)
-        (print out " ")))))
+        (print out " ")))
+
+    (flush out)))
 
 (fire/init)
 

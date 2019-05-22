@@ -1,9 +1,11 @@
 * demo/fire.gf
-** add io/flush(out) fun
-*** call at end of say/dump
-*** call after render
-*** commit
 ** print frame rate in top left
+*** moving average
+*** add Timestamp type
+**** add (now) fn
+**** implement Sub
+*** add Time type
+**** derive IntType
 ** reset console on ctrl+c
 *** trap os.Kill
 **** (trap 'kill (fun () ...))
