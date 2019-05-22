@@ -28,9 +28,9 @@ g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing value
 The idea is to model each particle of the fire as a value that decays from white to black along a reddish scale while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
 
 ### Implementation
-Particles are represented using an array of bytes representing the green part of their color. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors.
+Particles are represented using an array of bytes representing the green part of their color. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors. 
 
-Since the particles have to be printed top to bottom eventually, yet calculated bottom-top; a pair of accessors are provided to allow convenient 0-based bottom-top indexing.
+We start with module variables and a set of utilities for manipulating the console, more info may be found on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
 ```
 (env fire (width 50 height 25
@@ -39,22 +39,6 @@ Since the particles have to be printed top to bottom eventually, yet calculated 
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
-  (fun get-offs (x y)
-    (+ x (* (- height y 1) width)))
-
-  (fun xy (x y)
-    (# buf (get-offs x y)))
-
-  (fun set-xy (f x y)
-    (let i (get-offs x y))
-    (set (# buf i) (f (# buf i))))
-
-  ...
-```
-
-Next up is a set of utilities for manipulating the console, a full set of control codes may be found on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code).
-
-```
   (fun clear ()
     (print out (str esc "2J")))
 
@@ -65,7 +49,7 @@ Next up is a set of utilities for manipulating the console, a full set of contro
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
 ```
 
-Before the show can start, the bottom row needs to be initialized and the screen cleared.
+Before we can start rendering, the bottom row needs to be initialized and the screen cleared.
 
 ```
   (fun init ()
@@ -75,34 +59,37 @@ Before the show can start, the bottom row needs to be initialized and the screen
     (clear))
 ```
 
-Rendering starts with grabbing a timestamp to calculate frame rate, followed by a loop that fades all particles. Particles may rise straight or diagonally, the three cases are handled by the `if`-statement. Next the color is faded if not already black and the particle is moved one row upwards.
+Rendering begins with a loop that fades all particles. Particles may rise straight or diagonally, the three cases are handled by the `if`-statement. Next the color is faded if not black and the particle is moved up one row. Note that particles are actually stored bottom-top, since that's the direction they move.
 
 ```
   (fun render ()
-    (let t0 (now))
-    
+    (let t0 (now) i -1)
+
     (for ((- height 1) y)
       (for (width x)
-        (let v (xy x y))
+        (let v (# buf (inc i))
+             j (+ i width))
         
         (if (and x (< x (- width 1)))
-          (inc x (- 1 (rand 3))))
-          
-        (set (xy x (+ y 1))
+          (inc j (- 1 (rand 3))))
+        
+        (set (# buf j)
              (if v (- v (rand (min max-fade (+ (int v) 1)))) v))))
 
         ...
 ```
 
-Once particles are faded and moved, its time to generate the console output. We start by moving the cursor home and initializing a particle index, then pick the right color and print a blank for each. Before exiting, the frame rate is recorded.
+Once particles are faded and moved, its time to generate console output. We start by adding the bottom row to the index and moving the cursor home, then pick the right color and print a blank for each particle last-first. Before exiting, the frame rate is recorded.
 
 ```
+    ...
+
+    (inc i (+ width 1))
     (home)
-    (let i -1)
     
     (for (height y)
       (for (width x)
-        (let g (# buf (inc i))
+        (let g (# buf (dec i))
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))
              
@@ -138,7 +125,7 @@ The final few lines run 50 frames and print the average frame rate.
 ```
 
 ### Performance
-While there's nothing seriously wrong with this implementation from what I can see, it's not going to win any performance prizes. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) is still very young and I'm mostly working on correctness at this point. More mature languages with comparable features should be able to run this plenty faster. One thing that does come to mind is using a separate buffer for output and dumping it all at once to the console, the code is prepared for switching output stream but g-fu is still missing support for memory streams.
+While there's nothing seriously wrong with this implementation from what I can see, it's not going to win any performance prizes yet. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) is still very young and I'm mostly focusing on correctness at this point. More mature languages with comparable features should be able to run this plenty faster. One thing that does come to mind is using a separate buffer for output and dumping that all at once to the console, the code supports switching output stream but g-fu is still missing support for memory streams.
 
 Until next time,<br/>
 c7

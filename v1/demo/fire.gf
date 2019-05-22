@@ -1,3 +1,4 @@
+(debug)
 (load "../lib/all.gf")
 
 (env fire (width 50 height 25
@@ -6,16 +7,6 @@
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
-  (fun get-offs (x y)
-    (+ x (* (- height y 1) width)))
-
-  (fun xy (x y)
-    (# buf (get-offs x y)))
-
-  (fun set-xy (f x y)
-    (let i (get-offs x y))
-    (set (# buf i) (f (# buf i))))
-
   (fun clear ()
     (print out (str esc "2J")))
 
@@ -26,30 +17,31 @@
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
 
   (fun init ()
-    (for (width x)
-      (set (xy x 0) 0xff))
+    (for (width i)
+      (set (# buf i) 0xff))
 
     (clear))
 
   (fun render ()
-    (let t0 (now))
-    
+    (let t0 (now) i -1)
+
     (for ((- height 1) y)
       (for (width x)
-        (let v (xy x y))
+        (let v (# buf (inc i))
+             j (+ i width))
         
         (if (and x (< x (- width 1)))
-          (inc x (- 1 (rand 3))))
-          
-        (set (xy x (+ y 1))
+          (inc j (- 1 (rand 3))))
+        
+        (set (# buf j)
              (if v (- v (rand (min max-fade (+ (int v) 1)))) v))))
 
+    (inc i (+ width 1))
     (home)
-    (let i -1)
     
     (for (height y)
       (for (width x)
-        (let g (# buf (inc i))
+        (let g (# buf (dec i))
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))
              
