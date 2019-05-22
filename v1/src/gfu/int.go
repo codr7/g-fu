@@ -53,11 +53,11 @@ func (t *IntType) Div(g *G, x, y Val) (Val, E) {
     return nil, g.E("Expected Int: %v", y.Type(g))
   }
   
-  var xd, yd Dec
-  xd.SetInt(x.(Int))
-  yd.SetInt(yi)
-  xd.Div(yd)
-  return xd, nil
+  var xf, yf Float
+  xf.SetInt(x.(Int))
+  yf.SetInt(yi)
+  xf.Div(yf)
+  return xf, nil
 }
 
 func (_ *IntType) Bool(g *G, val Val) (bool, E) {
@@ -74,15 +74,15 @@ func (_ *IntType) Byte(g *G, val Val) (Byte, E) {
   return Byte(i), nil
 }
 
-func (_ *IntType) Dec(g *G, val Val) (Dec, E) {
-  var d Dec
-  d.SetInt(val.(Int))
-  return d, nil
-}
-
 func (_ *IntType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "%v", int64(val.(Int)))
   return nil
+}
+
+func (_ *IntType) Float(g *G, val Val) (Float, E) {
+  var f Float
+  f.SetInt(val.(Int))
+  return f, nil
 }
 
 func (_ *IntType) Int(g *G, val Val) (Int, E) {

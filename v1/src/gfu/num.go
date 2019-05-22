@@ -5,8 +5,8 @@ type Num interface {
   Abs(*G, Val) (Val, E)
   Add(*G, Val, Val) (Val, E)
   Byte(*G, Val) (Byte, E)
-  Dec(*G, Val) (Dec, E)
   Div(*G, Val, Val) (Val, E)
+  Float(*G, Val) (Float, E)
   Int(*G, Val) (Int, E)
   Mul(*G, Val, Val) (Val, E)
   Neg(*G, Val) (Val, E)
@@ -29,12 +29,12 @@ func (_ *NumType) Byte(g *G, val Val) (Byte, E) {
   return Byte(0), g.E("Byte not supported: %v", val.Type(g))
 }
 
-func (_ *NumType) Dec(g *G, val Val) (Dec, E) {
-  return Dec{}, g.E("Dec not supported: %v", val.Type(g))
-}
-
 func (_ *NumType) Div(g *G, x Val, _ Val) (Val, E) {
   return nil, g.E("Div not supported: %v", x.Type(g))
+}
+
+func (_ *NumType) Float(g *G, val Val) (Float, E) {
+  return Float{}, g.E("Float not supported: %v", val.Type(g))
 }
 
 func (_ *NumType) Inc(g *G, val, delta Val) (Val, E) {
@@ -91,17 +91,6 @@ func (g *G) Byte(val Val) (Byte, E) {
   return nt.Byte(g, val)
 }
 
-func (g *G) Dec(x Val) (Dec, E) {
-  t := x.Type(g)
-  nt, ok := t.(Num)
-
-  if !ok {
-    return Dec{}, g.E("Expected Num: %v", t)
-  }
-
-  return nt.Dec(g, x)
-}
-
 func (g *G) Div(x, y Val) (Val, E) {
   t := x.Type(g)
   nt, ok := t.(Num)
@@ -111,6 +100,17 @@ func (g *G) Div(x, y Val) (Val, E) {
   }
 
   return nt.Div(g, x, y)
+}
+
+func (g *G) Float(x Val) (Float, E) {
+  t := x.Type(g)
+  nt, ok := t.(Num)
+
+  if !ok {
+    return Float{}, g.E("Expected Num: %v", t)
+  }
+
+  return nt.Float(g, x)
 }
 
 func (g *G) Int(x Val) (Int, E) {

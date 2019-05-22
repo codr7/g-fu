@@ -242,7 +242,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
     buf.WriteRune(prefix)
   }
 
-  is_dec := prefix == '.'
+  is_float := prefix == '.'
 
   for {
     c, e := g.ReadChar(pos, in)
@@ -255,7 +255,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
       break
     }
 
-    is_dec = is_dec || c == '.'
+    is_float = is_float || c == '.'
 
     if !unicode.IsDigit(c) && c != '.' {
       if e := g.Unread(pos, in, c); e != nil {
@@ -277,8 +277,8 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
     s = fmt.Sprintf("-0%v", string(rs[1:]))
   }
 
-  if is_dec {
-    var v Dec
+  if is_float {
+    var v Float
     e := v.Parse(g, s)
 
     if e != nil {

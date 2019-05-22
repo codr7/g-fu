@@ -377,8 +377,8 @@ func bool_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.BoolVal(args[0])
 }
 
-func dec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Dec(args[0])
+func float_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return g.Float(args[0])
 }
 
 func int_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -505,7 +505,7 @@ func div_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   a0 := args[0]
 
   if len(args) == 1 {
-    var x, y Dec
+    var x, y Float
     x.SetInt(1)
     y.SetInt(a0.(Int))
     x.Div(y)
@@ -856,10 +856,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
-  e.AddType(g, &g.DecType, "Dec", &g.NumType)
   e.AddType(g, &g.ChanType, "Chan")
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
+  e.AddType(g, &g.FloatType, "Float", &g.NumType)
   e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int", &g.NumType)
   e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
@@ -911,7 +911,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "str", str_imp, ASplat("args"))
 
   e.AddFun(g, "bool", bool_imp, A("val"))
-  e.AddFun(g, "dec", dec_imp, A("val"))
+  e.AddFun(g, "float", float_imp, A("val"))
   e.AddFun(g, "int", int_imp, A("val"))
 
   e.AddFun(g, "=", eq_imp, ASplat("vals"))

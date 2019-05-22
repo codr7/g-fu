@@ -53,7 +53,7 @@ func (e *Env) InitMath(g *G) {
   e.AddFun(g, "mod", mod_imp, A("x"), A("y"))
   e.AddFun(g, "rand", rand_imp, AOpt("max", nil))
 
-  var pi Dec
+  var pi Float
   pi.SetFloat(math.Pi)
   e.AddConst(g, "PI", pi)
 }

@@ -18,9 +18,9 @@ type G struct {
   BinIterType BinIterType
   ByteType    ByteType
   ChanType    ChanType
-  DecType     DecType
   EnvType     EnvType
   FalseType   FalseType
+  FloatType   FloatType
   FunType     FunType
   IntType     IntType
   IntIterType IntIterType
