@@ -32,14 +32,3 @@ func (t *TimeType) Sub(g *G, x, y Val) (Val, E) {
   
   return NSecs(time.Time(x.(Time)).Sub(time.Time(yt))), nil
 }
-
-func now_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return Time(time.Now()), nil
-}
-
-func (e *Env) InitTime(g *G) {
-  e.AddType(g, &g.NSecsType, "NSecs")
-  e.AddType(g, &g.TimeType, "Time")
-
-  e.AddFun(g, "now", now_imp)
-}
