@@ -1,8 +1,8 @@
 package gfu
 
 import (
+  "bufio"
   //"log"
-  "strings"
 )
 
 type Vec []Val
@@ -155,7 +155,7 @@ func (_ *VecType) Drop(g *G, val Val, n Int) (Val, E) {
   return v[:vl-n], nil
 }
 
-func (_ *VecType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *VecType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteRune('(')
 
   for i, iv := range val.(Vec) {
@@ -332,7 +332,7 @@ func (_ *VecType) Pop(g *G, val Val) (Val, Val, E) {
   return v[n-1], v[:n-1], nil
 }
 
-func (_ *VecType) Print(g *G, val Val, out *strings.Builder) {
+func (_ *VecType) Print(g *G, val Val, out *bufio.Writer) {
   for i, iv := range val.(Vec) {
     if i > 0 {
       out.WriteRune(' ')

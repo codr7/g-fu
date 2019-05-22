@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Setter func(Val) (Val, E)
@@ -24,7 +24,7 @@ func (_ *SetterType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_en
   return val.(Setter)(v)
 }
 
-func (_ *SetterType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *SetterType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "set-%v", func(Val) (Val, E)(val.(Setter)))
   return nil
 }

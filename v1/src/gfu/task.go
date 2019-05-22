@@ -1,99 +1,99 @@
 package gfu
 
 import (
-	"fmt"
-	"log"
-	"strings"
-	"sync"
+  "bufio"
+  "fmt"
+  "log"
+  "sync"
 )
 
 type Task struct {
-	Inbox Chan
+  Inbox Chan
 
-	id     *Sym
-	body   Vec
-	mutex  sync.Mutex
-	cond   *sync.Cond
-	done   bool
-	result Val
+  id     *Sym
+  body   Vec
+  mutex  sync.Mutex
+  cond   *sync.Cond
+  done   bool
+  result Val
 }
 
 type TaskType struct {
-	BasicType
+  BasicType
 }
 
 func NewTask(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
-	return new(Task).Init(g, env, id, inbox, body)
+  return new(Task).Init(g, env, id, inbox, body)
 }
 
 func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
-	if id != nil {
-		t.id = id
+  if id != nil {
+    t.id = id
 
-		if e := env.Let(g, id, t); e != nil {
-			return nil, e
-		}
-	}
+    if e := env.Let(g, id, t); e != nil {
+      return nil, e
+    }
+  }
 
-	t.body = body
-	t.cond = sync.NewCond(&t.mutex)
-	t.Inbox = inbox
-	return t, nil
+  t.body = body
+  t.cond = sync.NewCond(&t.mutex)
+  t.Inbox = inbox
+  return t, nil
 }
 
 func (t *Task) Start(g *G, env *Env) E {
-	var te Env
+  var te Env
 
-	if e := g.Extenv(env, &te, t.body, true); e != nil {
-		return e
-	}
+  if e := g.Extenv(env, &te, t.body, true); e != nil {
+    return e
+  }
 
-	go func() {
-		var e E
+  go func() {
+    var e E
 
-		if t.result, e = t.body.EvalExpr(g, t, &te); e != nil {
-			log.Fatal(e)
-		}
+    if t.result, e = t.body.EvalExpr(g, t, &te); e != nil {
+      log.Fatal(e)
+    }
 
-		t.mutex.Lock()
-		t.done = true
-		t.cond.Broadcast()
-		t.mutex.Unlock()
-	}()
+    t.mutex.Lock()
+    t.done = true
+    t.cond.Broadcast()
+    t.mutex.Unlock()
+  }()
 
-	return nil
+  return nil
 }
 
 func (t *Task) Type(g *G) Type {
-	return &g.TaskType
+  return &g.TaskType
 }
 
 func (t *Task) Wait() Val {
-	t.mutex.Lock()
+  t.mutex.Lock()
 
-	for !t.done {
-		t.cond.Wait()
-	}
+  for !t.done {
+    t.cond.Wait()
+  }
 
-	t.mutex.Unlock()
-	return t.result
+  t.mutex.Unlock()
+  return t.result
 }
 
 func (_ *TaskType) Bool(g *G, val Val) (bool, E) {
-	t := val.(*Task)
-	t.mutex.Lock()
-	out := t.done
-	t.mutex.Unlock()
-	return out, nil
+  t := val.(*Task)
+  t.mutex.Lock()
+  out := t.done
+  t.mutex.Unlock()
+  return out, nil
 }
 
-func (_ *TaskType) Dump(g *G, val Val, out *strings.Builder) E {
-	out.WriteString("(task")
+func (_ *TaskType) Dump(g *G, val Val, out *bufio.Writer) E {
+  out.WriteString("(task")
 
-	if t := val.(*Task); t.id != nil {
-		fmt.Fprintf(out, " %v", t.id)
-	}
+  if t := val.(*Task); t.id != nil {
+    fmt.Fprintf(out, " %v", t.id)
+  }
 
-	out.WriteString(")")
-	return nil
+  out.WriteString(")")
+  return nil
 }

@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "os"
   "strings"
   "time"
 )
@@ -310,30 +310,6 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return nil, g.E(string(args[0].(Str)))
 }
 
-func dump_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
-
-  for _, v := range args {
-    g.Dump(v, &out)
-    out.WriteRune('\n')
-  }
-
-  os.Stderr.WriteString(out.String())
-  return &g.NIL, nil
-}
-
-func say_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  var out strings.Builder
-
-  for _, v := range args {
-    g.Print(v, &out)
-  }
-
-  out.WriteRune('\n')
-  os.Stdout.WriteString(out.String())
-  return &g.NIL, nil
-}
-
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Load(task, env, string(args[0].(Str)))
 }
@@ -375,21 +351,25 @@ func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var out strings.Builder
-
+  w := bufio.NewWriter(&out)
+  
   for _, a := range args {
-    g.Print(a, &out)
+    g.Print(a, w)
   }
 
+  w.Flush()
   return g.Sym(out.String()), nil
 }
 
 func str_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var out strings.Builder
+  w := bufio.NewWriter(&out)
 
   for _, a := range args {
-    g.Print(a, &out)
+    g.Print(a, w)
   }
 
+  w.Flush()
   return Str(out.String()), nil
 }
 
@@ -896,6 +876,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.TrueType, "True")
   e.AddType(g, &g.VecType, "Vec", &g.SeqType)
   e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
+  e.AddType(g, &g.WriterType, "Writer")
 
   e.AddConst(g, "_", &g.NIL)
   e.AddConst(g, "T", &g.T)
@@ -917,8 +898,6 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp)
   e.AddFun(g, "fail", fail_imp, A("reason"))
-  e.AddFun(g, "dump", dump_imp, ASplat("vals"))
-  e.AddFun(g, "say", say_imp, ASplat("vals"))
   e.AddFun(g, "load", load_imp, A("path"))
 
   e.AddFun(g, "dup", dup_imp, A("val"))

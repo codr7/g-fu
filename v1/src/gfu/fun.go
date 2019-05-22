@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type FunImp func(*G, *Task, *Env, Vec) (Val, E)
@@ -109,7 +109,7 @@ func (_ *FunType) Clone(g *G, val Val) (Val, E) {
   return cf, nil
 }
 
-func (_ *FunType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
   f := val.(*Fun)
 
   if id := f.id; id == nil {
@@ -162,7 +162,7 @@ func NewRecall(args Vec) (r Recall) {
   return r
 }
 
-func (r Recall) Dump(g *G, out *strings.Builder) {
+func (r Recall) Dump(g *G, out *bufio.Writer) {
   out.WriteString("(recall")
 
   for _, a := range r.args {

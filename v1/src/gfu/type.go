@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
   "sync"
 )
 
@@ -17,7 +17,7 @@ type Type interface {
   Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
   Clone(*G, Val) (Val, E)
   Drop(*G, Val, Int) (Val, E)
-  Dump(*G, Val, *strings.Builder) E
+  Dump(*G, Val, *bufio.Writer) E
   Dup(*G, Val) (Val, E)
   EachParent(func(Type))
   Eq(*G, Val, Val) (bool, E)
@@ -31,7 +31,7 @@ type Type interface {
   Iter(*G, Val) (Val, E)
   Len(*G, Val) (Int, E)
   Pop(*G, Val) (Val, Val, E)
-  Print(*G, Val, *strings.Builder)
+  Print(*G, Val, *bufio.Writer)
   Push(*G, Val, ...Val) (Val, E)
   Quote(*G, *Task, *Env, Val) (Val, E)
   SetIndex(*G, Val, Vec, Setter) (Val, E)
@@ -87,7 +87,7 @@ func (_ *BasicType) Drop(g *G, val Val, n Int) (out Val, e E) {
   return out, nil
 }
 
-func (t *BasicType) Dump(g *G, val Val, out *strings.Builder) E {
+func (t *BasicType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "%v", val)
   return nil
 }
@@ -153,7 +153,7 @@ func (t *BasicType) Pop(g *G, val Val) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", t.id)
 }
 
-func (_ *BasicType) Print(g *G, val Val, out *strings.Builder) {
+func (_ *BasicType) Print(g *G, val Val, out *bufio.Writer) {
   g.Dump(val, out)
 }
 
@@ -197,7 +197,7 @@ func (_ *MetaType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env 
   return pt, nil
 }
 
-func (_ *MetaType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *MetaType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString(val.(Type).Id().name)
   return nil
 }

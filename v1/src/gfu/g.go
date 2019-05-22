@@ -13,7 +13,7 @@ type G struct {
   Debug    bool
   MainTask Task
   RootEnv  Env
-
+  
   BinType     BinType
   BinIterType BinIterType
   ByteType    ByteType
@@ -41,7 +41,8 @@ type G struct {
   TrueType    TrueType
   VecType     VecType
   VecIterType VecIterType
-
+  WriterType  WriterType
+  
   NIL Nil
   T   True
   F   False

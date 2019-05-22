@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Mac struct {
@@ -91,7 +91,7 @@ func (_ *MacType) Clone(g *G, val Val) (Val, E) {
   return cm, nil
 }
 
-func (_ *MacType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *MacType) Dump(g *G, val Val, out *bufio.Writer) E {
   m := val.(*Mac)
 
   if id := m.id; id == nil {

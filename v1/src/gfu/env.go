@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Env struct {
@@ -43,7 +43,7 @@ func (env *Env) Clone(g *G, dst *Env) (e E) {
   return nil
 }
 
-func (e *Env) Dump(g *G, out *strings.Builder) E {
+func (e *Env) Dump(g *G, out *bufio.Writer) E {
   out.WriteRune('(')
 
   for i, v := range e.vars {
@@ -273,7 +273,7 @@ func (_ *EnvType) Clone(g *G, val Val) (Val, E) {
   return dst, nil
 }
 
-func (_ *EnvType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *EnvType) Dump(g *G, val Val, out *bufio.Writer) E {
   return val.(*Env).Dump(g, out)
 }
 
@@ -301,7 +301,7 @@ func (v *Var) Clone(g *G, env *Env) (dst *Var, e E) {
   return dst, e
 }
 
-func (v *Var) Dump(g *G, out *strings.Builder) {
+func (v *Var) Dump(g *G, out *bufio.Writer) {
   fmt.Fprintf(out, "%v:", v.key)
   g.Dump(v.Val, out)
 }

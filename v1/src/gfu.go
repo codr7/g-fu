@@ -22,7 +22,9 @@ func main() {
   }
 
   g.RootEnv.InitAbc(g)
+  g.RootEnv.InitIO(g)
   g.RootEnv.InitMath(g)
+  
   flag.Parse()
 
   if *prof != "" {

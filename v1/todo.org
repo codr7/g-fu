@@ -1,13 +1,15 @@
 * demo/fire.gf
-** switch *strings.Builder args to bufio.Writer
-** add ByteType.Print
-** add Writer type
-*** struct with bufio.Writer imp
-** add print(out, ...) fun
-*** handle nil out => stdout
+** add io/flush(out) fun
+*** call at end of say/dump
+*** call after render
+*** commit
+** print frame rate in top left
 ** reset console on ctrl+c
 *** trap os.Kill
 **** (trap 'kill (fun () ...))
+** add separate buf
+*** add Buf type based on strings.Builder
+*** add Type.Writer() & io/writer fun
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
@@ -19,5 +21,5 @@
 * add Vec Index/SetIndex
 * add Env Index/SetIndex
 * add Str Index
-* add byte div
+* add Byte div
 ** promote to int

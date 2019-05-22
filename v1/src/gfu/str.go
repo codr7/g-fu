@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "bufio"
   //"log"
   "strings"
 )
@@ -34,7 +35,7 @@ func (_ *StrType) Drop(g *G, val Val, n Int) (Val, E) {
   return s[:sl-n], nil
 }
 
-func (_ *StrType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *StrType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteRune('"')
   out.WriteString(string(val.(Str)))
   out.WriteRune('"')
@@ -50,17 +51,19 @@ func (_ *StrType) Len(g *G, val Val) (Int, E) {
   return val.(Str).Len(), nil
 }
 
-func (_ *StrType) Print(g *G, val Val, out *strings.Builder) {
+func (_ *StrType) Print(g *G, val Val, out *bufio.Writer) {
   out.WriteString(string(val.(Str)))
 }
 
 func (g *G) String(val Val) (string, E) {
   var out strings.Builder
-
-  if e := g.Dump(val, &out); e != nil {
+  w := bufio.NewWriter(&out)
+  
+  if e := g.Dump(val, w); e != nil {
     return "", e
   }
 
+  w.Flush()
   return out.String(), nil
 }
 

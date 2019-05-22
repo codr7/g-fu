@@ -4,6 +4,7 @@
 
 (load "../lib/abc.gf")
 (load "../lib/iter.gf")
+(load "../lib/io.gf")
 (load "../lib/cond.gf")
 (load "../lib/math.gf")
 

@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
   "strings"
@@ -11,7 +12,6 @@ type Sym struct {
   tag    Tag
   name   string
   parts  []*Sym
-  weight uint64
 }
 
 type SymType struct {
@@ -102,7 +102,7 @@ func (_ *Sym) Type(g *G) Type {
   return &g.SymType
 }
 
-func (_ *SymType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString(val.(*Sym).name)
   return nil
 }

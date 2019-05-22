@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Int int64
@@ -80,7 +80,7 @@ func (_ *IntType) Dec(g *G, val Val) (Dec, E) {
   return d, nil
 }
 
-func (_ *IntType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *IntType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "%v", int64(val.(Int)))
   return nil
 }

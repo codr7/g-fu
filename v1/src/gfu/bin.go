@@ -1,10 +1,10 @@
 package gfu
 
 import (
+  "bufio"
   "bytes"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Bin []byte
@@ -34,7 +34,7 @@ func (_ *BinType) Bool(g *G, val Val) (bool, E) {
   return len(val.(Bin)) > 0, nil
 }
 
-func (_ *BinType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *BinType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString("(0x")
 
   for _, v := range val.(Bin) {
@@ -88,7 +88,7 @@ func (_ *BinType) Len(g *G, val Val) (Int, E) {
   return Int(len(val.(Bin))), nil
 }
 
-func (_ *BinType) Print(g *G, val Val, out *strings.Builder) {
+func (_ *BinType) Print(g *G, val Val, out *bufio.Writer) {
   out.WriteString(string(val.(Bin)))
 }
 

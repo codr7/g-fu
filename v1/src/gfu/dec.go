@@ -1,10 +1,10 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
   "math/big"
-  "strings"
 )
 
 type Dec big.Float
@@ -129,7 +129,7 @@ func (t *DecType) Div(g *G, x, y Val) (Val, E) {
   return xd, nil
 }
 
-func (_ *DecType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *DecType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "%v", val.(Dec))
   return nil
 }

@@ -1,8 +1,8 @@
 package gfu
 
 import (
+  "bufio"
   //"log"
-  "strings"
 )
 
 type Val interface {
@@ -29,7 +29,7 @@ func (g *G) Dup(val Val) (Val, E) {
   return val.Type(g).Dup(g, val)
 }
 
-func (g *G) Dump(val Val, out *strings.Builder) E {
+func (g *G) Dump(val Val, out *bufio.Writer) E {
   return val.Type(g).Dump(g, val, out)
 }
 
@@ -69,7 +69,7 @@ func (g *G) Pop(val Val) (Val, Val, E) {
   return val.Type(g).Pop(g, val)
 }
 
-func (g *G) Print(val Val, out *strings.Builder) {
+func (g *G) Print(val Val, out *bufio.Writer) {
   val.Type(g).Print(g, val, out)
 }
 

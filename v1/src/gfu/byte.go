@@ -1,9 +1,9 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   //"log"
-  "strings"
 )
 
 type Byte byte
@@ -45,7 +45,7 @@ func (_ *ByteType) Byte(g *G, val Val) (Byte, E) {
   return val.(Byte), nil
 }
 
-func (_ *ByteType) Dump(g *G, val Val, out *strings.Builder) E {
+func (_ *ByteType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "0x%02x", val.(Byte))
   return nil
 }
@@ -63,6 +63,10 @@ func (_ *ByteType) Eq(g *G, lhs, rhs Val) (bool, E) {
 
 func (_ *ByteType) Int(g *G, val Val) (Int, E) {
   return Int(val.(Byte)), nil
+}
+
+func (_ *ByteType) Print(g *G, val Val, out *bufio.Writer) {
+  out.WriteByte(byte(val.(Byte)))
 }
 
 func (_ *ByteType) Sub(g *G, x Val, y Val) (Val, E) {
