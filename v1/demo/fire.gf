@@ -15,8 +15,7 @@
 
   (fun set-xy (f x y)
     (let i (get-offs x y))
-    (set (# buf i) (f (# buf i)))
-    _)
+    (set (# buf i) (f (# buf i))))
 
   (fun clear ()
     (print out (str esc "2J")))
