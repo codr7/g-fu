@@ -1,4 +1,7 @@
 * demo/fire.gf
+** restore on ctrl+c
+*** trap os.Kill
+**** (trap 'kill (fun () ...))
 ** print frame rate in top left
 *** moving average
 *** add Timestamp type
@@ -6,12 +9,6 @@
 **** implement Sub
 *** add Time type
 **** derive IntType
-** reset console on ctrl+c
-*** trap os.Kill
-**** (trap 'kill (fun () ...))
-** add separate buf
-*** add Buf type based on strings.Builder
-*** add Type.Writer() & io/writer fun
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim

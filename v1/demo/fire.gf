@@ -16,13 +16,23 @@
     (set (# buf i) (f (# buf i)))
     _)
 
+  (fun clear ()
+    (print out (str esc "2J")))
+
   (fun move-to (x y)
     (print out (str esc (+ y 1) ";" (+ x 1) "H")))
 
   (fun pick-color (r g b)
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
+    
+  (fun restore ()
+    (print out (str esc "0m"))
+    (clear)
+    (move-to 0 0)
+    (flush out))
 
   (fun init ()
+    (clear)
     (for (width x)
       (set (xy x 0) 0xff)))
 
@@ -48,3 +58,5 @@
 
 (for 50
   (fire/render))
+
+(fire/restore)
