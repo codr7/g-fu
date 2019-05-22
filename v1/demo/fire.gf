@@ -1,4 +1,3 @@
-(debug)
 (load "../lib/all.gf")
 
 (env fire (width 50 height 25
@@ -26,11 +25,8 @@
   (fun pick-color (r g b)
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
 
-  (fun restore-color ()
-    (print out (str esc "0m")))
-
   (fun restore ()
-    (restore-color)
+    (print out (str esc "0m"))
     (clear)
     (home))
 
