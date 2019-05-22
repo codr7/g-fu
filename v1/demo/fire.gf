@@ -66,9 +66,6 @@
     (inc tot-frames)))
 
 (fire/init)
-
-(for 50
-  (fire/render))
-
+(for 50 (fire/render))
 (fire/restore)
 (say (/ (* 1000000000.0 fire/tot-frames) fire/tot-time))
