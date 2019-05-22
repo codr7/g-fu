@@ -25,11 +25,6 @@
   (fun pick-color (r g b)
     (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
 
-  (fun restore ()
-    (print out (str esc "0m"))
-    (clear)
-    (home))
-
   (fun init ()
     (for (width x)
       (set (xy x 0) 0xff))
@@ -42,15 +37,22 @@
     (for ((- height 1) y)
       (for (width x)
         (let v (xy x y))
-        (if (and x (< x (- width 1))) (inc x (- 1 (rand 3))))
-        (set (xy x (+ y 1)) (- v (rand (min max-fade (+ (int v) 1)))))))
+        
+        (if (and x (< x (- width 1)))
+          (inc x (- 1 (rand 3))))
+          
+        (set (xy x (+ y 1))
+             (if v (- v (rand (min max-fade (+ (int v) 1)))) v))))
 
-    (let i -1)
     (home)
+    (let i -1)
     
     (for (height y)
       (for (width x)
-        (let g (# buf (inc i)) r (if g 0xff 0) b (if (= g 0xff) 0xff 0))
+        (let g (# buf (inc i))
+             r (if g 0xff 0)
+             b (if (= g 0xff) 0xff 0))
+             
         (pick-color r g b)
         (print out " "))
 
@@ -58,9 +60,15 @@
 
     (flush out)
     (inc tot-time (- (now) t0))
-    (inc tot-frames)))
+    (inc tot-frames))
+
+  (fun restore ()
+    (print out (str esc "0m"))
+    (clear)
+    (home)))
 
 (fire/init)
 (for 50 (fire/render))
 (fire/restore)
+
 (say (/ (* 1000000000.0 fire/tot-frames) fire/tot-time))
