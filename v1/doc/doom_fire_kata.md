@@ -53,8 +53,8 @@ Before we can start rendering, the bottom row needs to be initialized and the sc
 
 ```
   (fun init ()
-    (for (width x)
-      (set (xy x 0) 0xff))
+    (for (width i)
+      (set (# buf i) 0xff))
 
     (clear))
 ```
@@ -125,7 +125,7 @@ The final few lines run 50 frames and print the average frame rate.
 ```
 
 ### Performance
-While there's nothing seriously wrong with this implementation from what I can see, it's not going to win any performance prizes yet. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) is still very young and I'm mostly focusing on correctness at this point. More mature languages with comparable features should be able to run this plenty faster. One thing that does come to mind is using a separate buffer for output and dumping that all at once to the console, the code supports switching output stream but g-fu is still missing support for memory streams.
+While there's nothing seriously wrong with this implementation from my perspective, it's not going to win any performance prizes yet. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) is still very young and I'm mostly focusing on correctness at this point. More mature languages with comparable features should be able to run this plenty faster. One thing that does come to mind is using a separate buffer for output and dumping that all at once to the console, the code supports switching output stream but g-fu is still missing support for memory streams.
 
 Until next time,<br/>
 c7
