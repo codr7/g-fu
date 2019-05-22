@@ -30,7 +30,7 @@ The idea is to model each particle of the fire as a value that decays from white
 ### Implementation
 Particles are represented using an array of bytes representing the green part of their color. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors.
 
-Since the particles have to be printed top to bottom eventually, yet calculated bottom-top; a pair of accessors are provided to allow 0-based bottom-top indexing.
+Since the particles have to be printed top to bottom eventually, yet calculated bottom-top; a pair of accessors are provided to allow convenient 0-based bottom-top indexing.
 
 ```
 (env fire (width 50 height 25
@@ -40,7 +40,7 @@ Since the particles have to be printed top to bottom eventually, yet calculated 
            max-fade 50
            tot-frames 0 tot-time .0)
   (fun get-offs (x y)
-    (+ (- width x 1) (* (- height y 1) width)))
+    (+ x (* (- height y 1) width)))
 
   (fun xy (x y)
     (# buf (get-offs x y)))

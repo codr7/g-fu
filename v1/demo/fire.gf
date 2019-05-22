@@ -7,7 +7,7 @@
            max-fade 50
            tot-frames 0 tot-time .0)
   (fun get-offs (x y)
-    (+ (- width x 1) (* (- height y 1) width)))
+    (+ x (* (- height y 1) width)))
 
   (fun xy (x y)
     (# buf (get-offs x y)))
