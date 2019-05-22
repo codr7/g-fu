@@ -1,13 +1,13 @@
 ## The DOOM Fire Kata
 
 ### Intro
-Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics for use as kata to exercise new languages. This post describes how I would perform it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
+Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics for use as kata to exercise new languages. This post describes how I would approach it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
 
 ![Fire](fire.gif)
 [Source](https://github.com/codr7/g-fu/blob/master/v1/demo/fire.gf)
 
 ### Setup
-If you feel like lighting your own fire, the following shell spell will take you where you need to go.
+If you're in the mood to light your own fire, the following shell spell will take you where you need to go.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -25,10 +25,10 @@ Press Return twice to evaluate.
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### Idea
-The idea is to model each particle of the fire as a value that decays from white to black along a reddish scale while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
+The idea is to model each "particle" of the fire as a value that decays from white to black along a reddish scale while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
 
 ### Implementation
-Particles are represented using an array of bytes representing the green part of their color. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors. 
+Particles are implemented using an array of bytes representing the green part of their colors. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors. 
 
 We start with module variables and a set of utilities for manipulating the console, more info may be found on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
