@@ -4,6 +4,7 @@
 (env fire (width 50 height 25
            esc (str 0x1b "[")
            buf (new-bin (* width height 1))
+           max-fade 50
            out stdout)
   (fun get-offs (x y)
     (+ (- width x 1) (* (- height y 1) width)))
@@ -40,7 +41,7 @@
     (for ((- height 1) y)
       (for (width x)
         (let v (xy x y))
-        (set (xy x (+ y 1)) (- v (min 50 (rand (+ v 1)))))))
+        (set (xy x (+ y 1)) (- v (rand (min max-fade (+ (int v) 1)))))))
 
     (let i -1)
     
