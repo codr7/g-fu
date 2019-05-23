@@ -70,7 +70,7 @@ Rendering begins with a loop that fades and moves all particles. Direction of mo
   (fun render ()
     (let t0 (now) i -1)
 
-    (for ((- height 1) y)
+    (for ((- height 1))
       (for (width x)
         (let v (# buf (inc i))
              j (+ i width))
@@ -93,8 +93,8 @@ Once all particles are faded and moved, its time to generate console output. We 
     (let prev-g _)
     (home)
     
-    (for (height y)
-      (for (width x)
+    (for height
+      (for width
         (let g (# buf (dec i))
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))

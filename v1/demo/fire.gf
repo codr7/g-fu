@@ -24,7 +24,7 @@
   (fun render ()
     (let t0 (now) i -1)
 
-    (for ((- height 1) y)
+    (for ((- height 1))
       (for (width x)
         (let v (# buf (inc i))
              j (+ i width))
@@ -39,8 +39,8 @@
     (let prev-g _)
     (home)
     
-    (for (height y)
-      (for (width x)
+    (for height
+      (for width
         (let g (# buf (dec i))
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))
