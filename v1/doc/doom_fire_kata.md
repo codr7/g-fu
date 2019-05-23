@@ -1,7 +1,7 @@
 ## The DOOM Fire Kata
 
 ### Intro
-Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics as a kata to exercise new languages. This post describes how I would approach it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
+Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics as a kata to exercise new languages. This post describes how I approach it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
 
 ![Fire](fire.gif)
 [Source](https://github.com/codr7/g-fu/blob/master/v1/demo/fire.gf)
