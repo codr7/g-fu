@@ -3,15 +3,17 @@
 
 (env fire (width 50 height 25
            buf (new-bin (* width height))
-           esc "\e["
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
+  (fun print-esc (args..)
+    (print out "\e[" args..))
+
   (fun clear ()
-    (print out esc "2J"))
+    (print-esc "2J"))
 
   (fun home ()
-    (print out esc "H"))
+    (print-esc "H"))
 
   (fun init ()
     (for (width i)
@@ -46,7 +48,7 @@
         (if (= g prev-g)
           (print out " ")
           (do
-            (print out esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (print-esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
             (set prev-g g))))
 
       (print out \n))
@@ -56,7 +58,7 @@
     (inc tot-frames))
 
   (fun restore ()
-    (print out esc "0m")
+    (print-esc "0m")
     (clear)
     (home)))
 

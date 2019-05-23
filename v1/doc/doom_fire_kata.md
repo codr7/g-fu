@@ -35,15 +35,17 @@ We start with module variables and a set of utilities for manipulating the conso
 ```
 (env fire (width 50 height 25
            buf (new-bin (* width height))
-           esc (str 0x1b "[")
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
+  (fun print-esc (args..)
+    (print out "\e[" args..))
+
   (fun clear ()
-    (print out esc "2J"))
+    (print-esc "2J"))
 
   (fun home ()
-    (print out esc "H"))
+    (print-esc "H"))
 
   ...
 ```
@@ -100,7 +102,7 @@ Once all particles are faded and moved, its time to generate console output. We 
         (if (= g prev-g)
           (print out " ")
           (do
-            (print out esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (print-esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
             (set prev-g g))))
 
       (print out \n))
@@ -116,7 +118,7 @@ Since it's rude to mess around with user console settings, we make sure that eve
   ...
   
   (fun restore ()
-    (print out esc "0m")
+    (print-esc "0m")
     (clear)
     (home)))
 ```
