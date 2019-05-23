@@ -103,7 +103,7 @@ Once particles are faded and moved, its time to generate console output. We star
     (inc tot-frames))
 ```
 
-Since it's rude to mess around with user console settings, we make sure that everything is put back in the right place before leaving; the first line resets the color.
+Since it's rude to mess around with user console settings, we make sure that everything is put back in the right place before leaving. The first line resets the color.
 
 ```
   ...
