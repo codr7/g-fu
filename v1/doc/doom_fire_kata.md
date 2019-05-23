@@ -81,7 +81,7 @@ Rendering begins with a loop that fades and moves all particles. Direction of mo
         (set (# buf j)
              (if v (- v (rand (min max-fade (+ (int v) 1)))) v))))
 
-        ...
+    ...
 ```
 
 Once all particles are faded and moved, its time to generate console output. We start by adding the top row to `i` and moving the cursor `home`, then compose the color and print a blank for each particle last-first. Keeping track of `prev-g` allows reusing the color control code for horizontal spans (which are mostly black). Before exiting, the output is flushed and frame rate recorded.
