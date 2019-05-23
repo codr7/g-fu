@@ -6,6 +6,3 @@
 *** use if no port.io
 ** run until t1 is empty
 ** add dt arg to sim/run
-* add Vec Index/SetIndex
-* add Env Index/SetIndex
-* add Str Index
