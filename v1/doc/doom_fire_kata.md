@@ -110,7 +110,7 @@ Once all particles are faded and moved, its time to generate console output. We 
     (inc avg-frames))
 ```
 
-Since it's rude to mess around with user console settings, we make sure that everything is put back in the right place before leaving. The first line resets the color.
+The final function restores the console to its default state, the first line restores the color.
 
 ```
   ...
