@@ -1,7 +1,7 @@
 (debug)
 (load "../lib/all.gf")
 
-(env fire (width 50 height 25
+(env fire (width 50 height 25 max-y (- height 1)
            buf (new-bin (* width height))
            out stdout
            max-fade 50
@@ -24,7 +24,7 @@
   (fun render ()
     (let t0 (now) i -1)
 
-    (for ((- height 1))
+    (for max-y
       (for (width x)
         (let v (# buf (inc i))
              j (+ i width))

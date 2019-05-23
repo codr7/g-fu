@@ -33,7 +33,7 @@ Particles are implemented using an array of bytes representing the green compone
 We start with the module header and utilities for manipulating the console, a complete list of control codes may be found [here](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
 ```
-(env fire (width 50 height 25
+(env fire (width 50 height 25 max-y (- height 1)
            buf (new-bin (* width height))
            out stdout
            max-fade 50
@@ -70,7 +70,7 @@ Rendering begins with a loop that fades and moves all particles. Direction of mo
   (fun render ()
     (let t0 (now) i -1)
 
-    (for ((- height 1))
+    (for max-y
       (for (width x)
         (let v (# buf (inc i))
              j (+ i width))
