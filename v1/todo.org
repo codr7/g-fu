@@ -1,6 +1,3 @@
-* fire.gf
-** track prev (init _) and skip pick-color if =
-** inline pick-color and join prints / drop str
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim

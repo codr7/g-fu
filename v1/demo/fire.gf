@@ -13,9 +13,6 @@
   (fun home ()
     (print out (str esc "H")))
 
-  (fun pick-color (r g b)
-    (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
-
   (fun init ()
     (for (width i)
       (set (# buf i) 0xff))
@@ -37,6 +34,7 @@
              (if v (- v (rand (min max-fade (+ (int v) 1)))) v))))
 
     (inc i (+ width 1))
+    (let prev-g _)
     (home)
     
     (for (height y)
@@ -45,8 +43,11 @@
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))
              
-        (pick-color r g b)
-        (print out " "))
+        (if (= g prev-g)
+          (print out " ")
+          (do
+            (print out esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (set prev-g g))))
 
       (print out \n))
 
