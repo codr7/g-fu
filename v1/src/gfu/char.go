@@ -18,6 +18,8 @@ func (_ *CharType) Dump(g *G, val Val, out *bufio.Writer) E {
   c := rune(val.(Char))
   
   switch c {
+  case '\x1b':
+    out.WriteString("\\e")
   case '\n':
     out.WriteString("\\n")
   default:

@@ -3,7 +3,7 @@
 
 (env fire (width 50 height 25
            buf (new-bin (* width height))
-           esc (str 0x1b "[")
+           esc "\e["
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)

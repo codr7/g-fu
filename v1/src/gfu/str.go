@@ -37,7 +37,18 @@ func (_ *StrType) Drop(g *G, val Val, n Int) (Val, E) {
 
 func (_ *StrType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteRune('"')
-  out.WriteString(string(val.(Str)))
+
+  for _, c := range val.(Str) {
+    switch c {
+    case '\x1b':
+      out.WriteString("\\e")
+    case '\n':
+      out.WriteString("\\n")
+    default:
+      out.WriteRune(c)
+    }
+  }
+  
   out.WriteRune('"')
   return nil
 }

@@ -342,7 +342,8 @@ func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec,
 
 func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   var buf strings.Builder
-
+  pc := ' '
+  
   for {
     c, e := g.ReadChar(pos, in)
 
@@ -354,9 +355,31 @@ func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
       break
     }
 
+    if c == '\\' {
+      if pc == '\\' {
+        pc = ' '
+        continue
+      }
+
+      nc, e := g.ReadChar(pos, in)
+      
+      if e != nil {
+        return nil, e
+      }
+
+      switch nc {
+      case 'e':
+        c = '\x1b'
+      case 'n':
+        c = '\n'
+      }
+    }
+
     if _, we := buf.WriteRune(c); we != nil {
       return nil, g.ReadE(*pos, "Failed writing char: %v", we)
     }
+
+    pc = c
   }
 
   return append(out, Str(buf.String())), nil
