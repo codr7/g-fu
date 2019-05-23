@@ -47,9 +47,7 @@
              
         (if (= g prev-g)
           (print out " ")
-          (do
-            (ctrl "48;2;" (int r) ";" (int g) ";" (int b) "m ")
-            (set prev-g g))))
+          (ctrl "48;2;" (int r) ";" (int (set prev-g g)) ";" (int b) "m ")))
 
       (print out \n))
 
