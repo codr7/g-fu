@@ -30,7 +30,7 @@ The idea is to model each fire-particle as a value that decays from white to bla
 ### Implementation
 Particles are implemented using an array of bytes representing the green component of their colors. Red is locked at 255 and blue at 0 to get a nice gradient.
 
-We start with module variables and a set of utilities for manipulating the console, more info may be found on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code).
+We start with module variables and a set of utilities for manipulating the console, a complete list of control codes may be found [here](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
 ```
 (env fire (width 50 height 25
@@ -40,13 +40,10 @@ We start with module variables and a set of utilities for manipulating the conso
            max-fade 50
            tot-frames 0 tot-time .0)
   (fun clear ()
-    (print out (str esc "2J")))
+    (print out esc "2J"))
 
   (fun home ()
-    (print out (str esc "H")))
-
-  (fun pick-color (r g b)
-    (print out (str esc "48;2;" (int r) ";" (int g) ";" (int b) "m")))
+    (print out esc "H"))
 ```
 
 Before we can start rendering, the bottom row needs to be initialized and the screen cleared.
@@ -79,12 +76,13 @@ Rendering begins with a loop that fades and moves all particles. Direction of mo
         ...
 ```
 
-Once all particles are faded and moved, its time to generate console output. We start by adding the top row to the index and moving the cursor home, then pick the color and print a blank for each particle last-first. Before exiting, the output is flushed and frame rate recorded.
+Once all particles are faded and moved, its time to generate console output. We start by adding the top row to `i` and moving the cursor `home`, then compose the color and print a blank for each particle last-first. Keeping track of `prev-g` allows reusing the color control code for horizontal spans (which are mostly black). Before exiting, the output is flushed and frame rate recorded.
 
 ```
     ...
 
     (inc i (+ width 1))
+    (let prev-g _)
     (home)
     
     (for (height y)
@@ -93,8 +91,11 @@ Once all particles are faded and moved, its time to generate console output. We 
              r (if g 0xff 0)
              b (if (= g 0xff) 0xff 0))
              
-        (pick-color r g b)
-        (print out " "))
+        (if (= g prev-g)
+          (print out " ")
+          (do
+            (print out esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (set prev-g g))))
 
       (print out \n))
 
@@ -109,7 +110,7 @@ Since it's rude to mess around with user console settings, we make sure that eve
   ...
   
   (fun restore ()
-    (print out (str esc "0m"))
+    (print out esc "0m")
     (clear)
     (home)))
 ```
