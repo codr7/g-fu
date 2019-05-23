@@ -5,7 +5,7 @@
            buf (new-bin (* width height))
            out stdout
            max-fade 50
-           tot-frames 0 tot-time .0)
+           avg-frames 0 avg-time .0)
   (fun ctrl (args..)
     (print out "\e[" args..))
 
@@ -54,8 +54,8 @@
       (print out \n))
 
     (flush out)
-    (inc tot-time (- (now) t0))
-    (inc tot-frames))
+    (inc avg-time (- (now) t0))
+    (inc avg-frames))
 
   (fun restore ()
     (ctrl "0m")
@@ -66,4 +66,4 @@
 (for 50 (fire/render))
 (fire/restore)
 
-(say (/ (* 1000000000.0 fire/tot-frames) fire/tot-time))
+(say (/ (* 1000000000.0 fire/avg-frames) fire/avg-time))

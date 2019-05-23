@@ -37,7 +37,7 @@ We start with the module header and utilities for manipulating the console, a co
            buf (new-bin (* width height))
            out stdout
            max-fade 50
-           tot-frames 0 tot-time .0)
+           avg-frames 0 avg-time .0)
   (fun ctrl (args..)
     (print out "\e[" args..))
 
@@ -108,8 +108,8 @@ Once all particles are faded and moved, its time to generate console output. We 
       (print out \n))
 
     (flush out)
-    (inc tot-time (- (now) t0))
-    (inc tot-frames))
+    (inc avg-time (- (now) t0))
+    (inc avg-frames))
 ```
 
 Since it's rude to mess around with user console settings, we make sure that everything is put back in the right place before leaving. The first line resets the color.
@@ -130,7 +130,7 @@ The final few lines run 50 frames and print the average frame rate.
 (for 50 (fire/render))
 (fire/restore)
 
-(say (/ (* 1000000000.0 fire/tot-frames) fire/tot-time))
+(say (/ (* 1000000000.0 fire/avg-frames) fire/avg-time))
 ```
 
 ### Performance
