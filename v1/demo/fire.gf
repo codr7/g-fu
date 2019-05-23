@@ -6,14 +6,14 @@
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
-  (fun print-esc (args..)
+  (fun ctrl (args..)
     (print out "\e[" args..))
 
   (fun clear ()
-    (print-esc "2J"))
+    (ctrl "2J"))
 
   (fun home ()
-    (print-esc "H"))
+    (ctrl "H"))
 
   (fun init ()
     (for (width i)
@@ -48,7 +48,7 @@
         (if (= g prev-g)
           (print out " ")
           (do
-            (print-esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (ctrl "48;2;" (int r) ";" (int g) ";" (int b) "m ")
             (set prev-g g))))
 
       (print out \n))
@@ -58,7 +58,7 @@
     (inc tot-frames))
 
   (fun restore ()
-    (print-esc "0m")
+    (ctrl "0m")
     (clear)
     (home)))
 

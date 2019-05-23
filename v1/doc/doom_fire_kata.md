@@ -38,14 +38,14 @@ We start with module variables and a set of utilities for manipulating the conso
            out stdout
            max-fade 50
            tot-frames 0 tot-time .0)
-  (fun print-esc (args..)
+  (fun ctrl (args..)
     (print out "\e[" args..))
 
   (fun clear ()
-    (print-esc "2J"))
+    (ctrl "2J"))
 
   (fun home ()
-    (print-esc "H"))
+    (ctrl "H"))
 
   ...
 ```
@@ -102,7 +102,7 @@ Once all particles are faded and moved, its time to generate console output. We 
         (if (= g prev-g)
           (print out " ")
           (do
-            (print-esc "48;2;" (int r) ";" (int g) ";" (int b) "m ")
+            (ctrl "48;2;" (int r) ";" (int g) ";" (int b) "m ")
             (set prev-g g))))
 
       (print out \n))
@@ -118,7 +118,7 @@ Since it's rude to mess around with user console settings, we make sure that eve
   ...
   
   (fun restore ()
-    (print-esc "0m")
+    (ctrl "0m")
     (clear)
     (home)))
 ```
