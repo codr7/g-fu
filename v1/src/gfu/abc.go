@@ -1,4 +1,4 @@
-package gfu
++package gfu
 
 import (
   "bufio"

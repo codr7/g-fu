@@ -1,3 +1,5 @@
+* move bench/find-key/test to lib
+* wrap up v1
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
