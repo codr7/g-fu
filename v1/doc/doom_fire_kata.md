@@ -1,7 +1,7 @@
 ## The DOOM Fire Kata
 
 ### Intro
-Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics for use as kata to exercise new languages. This post describes how I would approach it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
+Ever since I came across the DOOM fire [trick](https://fabiensanglard.net/doom_fire_psx/), I've been itching to work my way through it using console graphics as kata to exercise new languages. This post describes how I would approach it in [g-fu](https://github.com/codr7/g-fu/tree/master/v1), a pragmatic Lisp embedded in Go.
 
 ![Fire](fire.gif)
 [Source](https://github.com/codr7/g-fu/blob/master/v1/demo/fire.gf)
@@ -25,7 +25,7 @@ Press Return twice to evaluate.
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### Idea
-The idea is to model each "particle" of the fire as a value that decays from white to black along a reddish scale while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
+The idea is to model each fire-particle as a value that decays from white to black along a reddish scale while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
 
 ### Implementation
 Particles are implemented using an array of bytes representing the green part of their colors. Red is locked at 255 and blue at 0 to get a gradient of red/yellow colors. 
@@ -59,7 +59,7 @@ Before we can start rendering, the bottom row needs to be initialized and the sc
     (clear))
 ```
 
-Rendering begins with a loop that fades all particles. Particles may rise straight or diagonally, the three cases are handled by the `if`-statement. Next the color is faded if not black and the particle is moved up one row. Note that particles are actually stored bottom-top, since that's the direction they move.
+Rendering begins with a loop that fades and moves all particles. Direction of movement is either straight up or diagonal, the three cases are handled by the `if`. The color is faded unless already black and the particle is moved up one row. Note that particles are stored bottom-top, since that's the direction they move.
 
 ```
   (fun render ()
@@ -79,7 +79,7 @@ Rendering begins with a loop that fades all particles. Particles may rise straig
         ...
 ```
 
-Once particles are faded and moved, its time to generate console output. We start by adding the top row to the index and moving the cursor home, then pick the right color and print a blank for each particle last-first. Before exiting, the output is flushed and average frame rate recorded.
+Once all particles are faded and moved, its time to generate console output. We start by adding the top row to the index and moving the cursor home, then pick the color and print a blank for each particle last-first. Before exiting, the output is flushed and frame rate recorded.
 
 ```
     ...
