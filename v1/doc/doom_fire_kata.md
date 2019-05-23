@@ -30,7 +30,7 @@ The idea is to model each fire-particle as a value that decays from white to bla
 ### Implementation
 Particles are implemented using an array of bytes representing the green component of their colors. Red is locked at 255 and blue at 0 to get a nice gradient.
 
-We start with module variables and a set of utilities for manipulating the console, a complete list of control codes may be found [here](https://en.wikipedia.org/wiki/ANSI_escape_code).
+We start with the module header and utilities for manipulating the console, a complete list of control codes may be found [here](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
 ```
 (env fire (width 50 height 25
