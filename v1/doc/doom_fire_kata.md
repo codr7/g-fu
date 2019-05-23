@@ -44,11 +44,15 @@ We start with module variables and a set of utilities for manipulating the conso
 
   (fun home ()
     (print out esc "H"))
+
+  ...
 ```
 
 Before we can start rendering, the bottom row needs to be initialized and the screen cleared.
 
 ```
+  ...
+  
   (fun init ()
     (for (width i)
       (set (# buf i) 0xff))
@@ -59,6 +63,8 @@ Before we can start rendering, the bottom row needs to be initialized and the sc
 Rendering begins with a loop that fades and moves all particles. Direction of movement is either straight up or diagonal, the three cases are handled by the `if`. The color is faded unless already black and the particle is moved up one row. Note that particles are stored bottom-top, since that's the direction they move.
 
 ```
+  ...
+  
   (fun render ()
     (let t0 (now) i -1)
 
