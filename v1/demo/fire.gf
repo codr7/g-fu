@@ -8,10 +8,10 @@
            max-fade 50
            tot-frames 0 tot-time .0)
   (fun clear ()
-    (print out (str esc "2J")))
+    (print out esc "2J"))
 
   (fun home ()
-    (print out (str esc "H")))
+    (print out esc "H"))
 
   (fun init ()
     (for (width i)
@@ -56,7 +56,7 @@
     (inc tot-frames))
 
   (fun restore ()
-    (print out (str esc "0m"))
+    (print out esc "0m")
     (clear)
     (home)))
 
