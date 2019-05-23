@@ -25,10 +25,10 @@ Press Return twice to evaluate.
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### Idea
-The idea is to model each fire-particle as a value that decays from white to black along a red/yellow gradient while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting and that's pretty much it.
+The idea is to model each fire-particle as a value that decays from white to black along a red/yellow gradient while moving upwards. This is the reason for the white line at the bottom, that's where new particles are born. Add a touch of pseudo-chaos to make it interesting, and that's pretty much it.
 
 ### Implementation
-Particles are implemented using an array of bytes representing the green part of their colors. Red is locked at 255 and blue at 0 to get a nice gradient.
+Particles are implemented using an array of bytes representing the green component of their colors. Red is locked at 255 and blue at 0 to get a nice gradient.
 
 We start with module variables and a set of utilities for manipulating the console, more info may be found on [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code).
 
