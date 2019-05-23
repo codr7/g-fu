@@ -79,7 +79,7 @@ Rendering begins with a loop that fades all particles. Particles may rise straig
         ...
 ```
 
-Once particles are faded and moved, its time to generate console output. We start by adding the bottom row to the index and moving the cursor home, then pick the right color and print a blank for each particle last-first. Before exiting, the frame rate is recorded.
+Once particles are faded and moved, its time to generate console output. We start by adding the top row to the index and moving the cursor home, then pick the right color and print a blank for each particle last-first. Before exiting, the output is flushed and average frame rate recorded.
 
 ```
     ...
