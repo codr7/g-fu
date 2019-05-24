@@ -10,7 +10,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.16
+g-fu v1.17
 
 Press Return twice to evaluate.
 
@@ -23,6 +23,15 @@ Press Return twice to evaluate.
   (fib 20)
 
 6765
+```
+
+### Library
+g-fu comes with a standard library that is used in many of the examples. `load` evaluates all code in the specified file and returns the last result, the `fib` function in this case.
+
+```
+  (load "lib/all.gf")
+
+(fun fib (n (a 0) (b 1)))
 ```
 
 ### Syntax
