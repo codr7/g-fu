@@ -170,7 +170,7 @@ func (env *Env) Let(g *G, key *Sym, val Val) E {
 
   k := key.Suffix()
 
-  if v, i, env, _, _ := key.LookupVar(g, env, nil, true); v == nil {
+  if v, i, env, _, _ := key.LookupVar(g, env, true); v == nil {
     env.Insert(i, k).Val = val
   } else if v.env != env {
     v := new(Var).Init(env, k)
@@ -198,7 +198,7 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, args_env *Env, silent bool) (V
 func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
   switch k := key.(type) {
   case *Sym:
-    v, _, _, _, e := k.LookupVar(g, env, nil, false)
+    v, _, _, _, e := k.LookupVar(g, env, false)
     
     if e != nil {
       return e
@@ -247,7 +247,7 @@ func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Va
     var vp *Var
     var e E
     
-    if vp, _, env, _, e = k.LookupVar(g, env, nil, false); e != nil {
+    if vp, _, env, _, e = k.LookupVar(g, env, false); e != nil {
       return nil, e
     }
 

@@ -41,7 +41,7 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) LookupVar(g *G, env *Env, args []Val, silent bool) (v *Var, i int, _ *Env, _ []Val, e E) {
+func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, args []Val, e E) {
   max := len(s.parts)
 
   for j, p := range s.parts {
@@ -75,7 +75,7 @@ func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *E
   var v *Var
   var args []Val
   
-  if v, _, env, args, _ = s.LookupVar(g, env, nil, true); v != nil {
+  if v, _, env, args, _ = s.LookupVar(g, env, true); v != nil {
     return v.Val, env, args, nil
   }
 

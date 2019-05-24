@@ -191,7 +191,7 @@ func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   for _, k := range args[1:] {
     ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
 
-    if v, _, _, _, e = ks.LookupVar(g, args_env, nil, false); e != nil {
+    if v, _, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
       return nil, e
     }
 

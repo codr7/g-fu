@@ -219,8 +219,8 @@ Using qualified identifiers allows reaching into external environments.
 Since binding environments is a very common thing to do, `env` is provided as a shortcut.
 
 ```
-  (env foo (bar 42)
-    (fun baz () (set bar 7)))
+(env foo (bar 42)
+  (fun baz () (set bar 7)))
 ```
 ```
   foo/bar
