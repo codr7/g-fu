@@ -232,10 +232,10 @@ Since binding environments is a very common thing to do, `env` is provided as a 
 7
 ```
 
-#### Sandboxing
-Environments may be used to sandbox evaluation of untrusted code.
+#### Sandboxes
+Environments may be used to isolate evaluation of untrusted code.
 
-The following example creates a sandbox called `secure` and imports `pub` and `eval`. `use` is likewise imported, but restricted to named environments that are already bound.
+The following example creates a sandbox named `secure` and imports `pub` and `eval`. `use` is likewise imported, but restricted within eval.
 
 ```
 (fun pub () (say 'pub))
@@ -253,7 +253,7 @@ The following example creates a sandbox called `secure` and imports `pub` and `e
 pub
 ```
 
-While `priv` is inaccessible.
+While `priv` may not.
 
 ```
   (secure/eval '(priv))
