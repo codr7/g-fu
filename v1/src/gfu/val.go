@@ -37,8 +37,8 @@ func (g *G) Eq(lhs, rhs Val) (bool, E) {
   return lhs.Type(g).Eq(g, lhs, rhs)
 }
 
-func (g *G) Eval(task *Task, env *Env, val Val) (Val, E) {
-  return val.Type(g).Eval(g, task, env, val)
+func (g *G) Eval(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
+  return val.Type(g).Eval(g, task, env, val, args_env)
 }
 
 func (g *G) Expand(task *Task, env *Env, val Val, depth Int) (Val, E) {
@@ -77,8 +77,8 @@ func (g *G) Push(val Val, its ...Val) (Val, E) {
   return val.Type(g).Push(g, val, its...)
 }
 
-func (g *G) Quote(task *Task, env *Env, val Val) (Val, E) {
-  return val.Type(g).Quote(g, task, env, val)
+func (g *G) Quote(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
+  return val.Type(g).Quote(g, task, env, val, args_env)
 }
 
 func (g *G) SetIndex(val Val, key Vec, set Setter) (Val, E) {

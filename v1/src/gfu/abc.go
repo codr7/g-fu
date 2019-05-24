@@ -8,8 +8,8 @@ import (
   "time"
 )
 
-func do_imp(g *G, task *Task, env *Env, args Vec, arg_env *Env) (Val, E) {
-  return args.EvalExpr(g, task, env)
+func do_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+  return args.EvalExpr(g, task, env, args_env)
 }
 
 func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
@@ -20,7 +20,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     i++
   }
 
-  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
+  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]), args_env)
 
   if e != nil {
     return nil, e
@@ -50,7 +50,7 @@ func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     i++
   }
 
-  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]))
+  as, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[i]), args_env)
 
   if e != nil {
     return nil, e
@@ -73,7 +73,7 @@ func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 }
 
 func call_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  t, e := g.Eval(task, args_env, args[0])
+  t, e := g.Eval(task, args_env, args[0], args_env)
 
   if e != nil {
     return nil, e
@@ -122,7 +122,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
     }
 
     k := kf.(*Sym)
-    v, e = g.Eval(task, le, vf)
+    v, e = g.Eval(task, le, vf, args_env)
 
     if e != nil {
       return nil, e
@@ -137,7 +137,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
     return v, nil
   }
 
-  rv, e := args[1:].EvalExpr(g, task, le)
+  rv, e := args[1:].EvalExpr(g, task, le, args_env)
 
   if e != nil {
     return nil, e
@@ -147,7 +147,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  if v, _, _, e = args[0].(*Sym).Lookup(g, task, env, true); e != nil {
+  if v, _, _, e = args[0].(*Sym).Lookup(g, task, env, env, true); e != nil {
     return nil, e
   }
 
@@ -160,7 +160,7 @@ func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
     var k Val
     k, v = args[i], args[i+1]
     
-    if v, e = g.Eval(task, env, v); e != nil {
+    if v, e = g.Eval(task, env, v, args_env); e != nil {
       return nil, e
     }
 
@@ -202,7 +202,7 @@ func this_env_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) 
 }
 
 func if_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  c, e := g.Eval(task, env, args[0])
+  c, e := g.Eval(task, env, args[0], args_env)
 
   if e != nil {
     return nil, e
@@ -215,18 +215,18 @@ func if_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   if v {
-    return g.Eval(task, args_env, args[1])
+    return g.Eval(task, args_env, args[1], args_env)
   }
 
   if len(args) > 2 {
-    return g.Eval(task, args_env, args[2])
+    return g.Eval(task, args_env, args[2], args_env)
   }
 
   return &g.NIL, nil
 }
 
 func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  d, e := g.Eval(task, args_env, args[1])
+  d, e := g.Eval(task, args_env, args[1], args_env)
 
   if e != nil {
     return nil, e
@@ -241,7 +241,7 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     }, args_env)
   }
 
-  if p, e = g.Eval(task, args_env, p); e != nil {
+  if p, e = g.Eval(task, args_env, p, args_env); e != nil {
     return nil, e
   }
 
@@ -250,7 +250,7 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
 func test_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   for _, in := range args {
-    v, e := g.Eval(task, env, in)
+    v, e := g.Eval(task, env, in, args_env)
 
     if e != nil {
       return nil, e
@@ -277,7 +277,7 @@ func bench_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     return nil, g.E("Invalid bench args: %v", as)
   }
 
-  a, e := g.Eval(task, args_env, as[0])
+  a, e := g.Eval(task, args_env, as[0], args_env)
 
   if e != nil {
     return nil, e
@@ -287,13 +287,13 @@ func bench_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   b := args[1:]
 
   for i := Int(0); i < n; i++ {
-    b.EvalExpr(g, task, env)
+    b.EvalExpr(g, task, env, args_env)
   }
 
   t := time.Now()
 
   for i := Int(0); i < n; i++ {
-    if _, e = b.EvalExpr(g, task, env); e != nil {
+    if _, e = b.EvalExpr(g, task, env, args_env); e != nil {
       return nil, e
     }
   }
@@ -330,11 +330,17 @@ func eval_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   var e E
   v := args[0]
 
-  if v, e = g.Eval(task, args_env, v); e != nil {
+  if v, e = g.Eval(task, args_env, v, args_env); e != nil {
     return nil, e
   }
 
-  return g.Eval(task, env, v)
+  if args_env != env {
+    if e := g.Extenv(args_env, env, v, false); e != nil {
+      return nil, e
+    }
+  }
+  
+  return g.Eval(task, env, v, args_env)
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
@@ -541,7 +547,7 @@ func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
       return g.Push(v, vs...)
     }, args_env)
   default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
+    if place, e = g.Eval(task, args_env, place, args_env); e != nil {
       return nil, e
     }
   }
@@ -566,7 +572,7 @@ func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
     return it, nil
   default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
+    if place, e = g.Eval(task, args_env, place, args_env); e != nil {
       return nil, e
     }
 
@@ -588,7 +594,7 @@ func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
       return g.Drop(v, args[1].(Int))
     }, args_env)
   default:
-    if place, e = g.Eval(task, args_env, place); e != nil {
+    if place, e = g.Eval(task, args_env, place, args_env); e != nil {
       return nil, e
     }
   }
@@ -632,7 +638,7 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   in, k := args[0], args[1]
   var e E
 
-  if k, e = g.Eval(task, args_env, k); e != nil {
+  if k, e = g.Eval(task, args_env, k, args_env); e != nil {
     return nil, e
   }
 
@@ -654,7 +660,7 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     return v, nil
   }
 
-  if in, e = g.Eval(task, args_env, in); e != nil {
+  if in, e = g.Eval(task, args_env, in, args_env); e != nil {
     return nil, e
   }
 
@@ -744,7 +750,7 @@ func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   } else {
     var a Val
 
-    if a, e = g.Eval(task, args_env, as[0]); e != nil {
+    if a, e = g.Eval(task, args_env, as[0], args_env); e != nil {
       return nil, e
     }
 

@@ -1,4 +1,5 @@
-* remove fos from repo
+* testenv.gf
+** how block access to (use)?
 * rename this-env to Env/this
 ** bind EnvType.this to prim
 * rename this-task to Task/this
@@ -17,3 +18,5 @@
 ** run until t1 is empty
 ** add dt arg to sim/run
 * wrap up v1
+
+contextual programming

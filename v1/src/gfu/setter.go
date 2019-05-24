@@ -17,7 +17,7 @@ func (_ Setter) Type(g *G) Type {
 }
 
 func (_ *SetterType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (v Val, e E) {
-  if v, e = g.Eval(task, env, args[0]); e != nil {
+  if v, e = g.Eval(task, env, args[0], args_env); e != nil {
     return nil, e
   }
 

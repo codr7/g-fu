@@ -22,7 +22,7 @@ type Type interface {
   EachParent(func(Type))
   Env() *Env
   Eq(*G, Val, Val) (bool, E)
-  Eval(*G, *Task, *Env, Val) (Val, E)
+  Eval(*G, *Task, *Env, Val, *Env) (Val, E)
   Expand(*G, *Task, *Env, Val, Int) (Val, E)
   Extenv(*G, *Env, *Env, Val, bool) E
   Id() *Sym
@@ -34,7 +34,7 @@ type Type interface {
   Pop(*G, Val) (Val, Val, E)
   Print(*G, Val, *bufio.Writer)
   Push(*G, Val, ...Val) (Val, E)
-  Quote(*G, *Task, *Env, Val) (Val, E)
+  Quote(*G, *Task, *Env, Val, *Env) (Val, E)
   SetIndex(*G, Val, Vec, Setter) (Val, E)
   Splat(*G, Val, Vec) (Vec, E)
 }
@@ -113,7 +113,7 @@ func (_ *BasicType) Eq(g *G, lhs, rhs Val) (bool, E) {
   return g.Is(lhs, rhs), nil
 }
 
-func (_ *BasicType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *BasicType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   return val, nil
 }
 
@@ -167,7 +167,7 @@ func (t *BasicType) Push(g *G, val Val, its ...Val) (Val, E) {
   return nil, g.E("Push not supported: %v", t.id)
 }
 
-func (_ *BasicType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *BasicType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   return val, nil
 }
 
@@ -188,7 +188,7 @@ func (_ *BasicType) Type(g *G) Type {
 }
 
 func (_ *MetaType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
-  v, e := g.Eval(task, env, args[0])
+  v, e := g.Eval(task, env, args[0], args_env)
 
   if e != nil {
     return nil, e

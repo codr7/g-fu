@@ -71,7 +71,7 @@ func (s *Sym) LookupVar(g *G, env *Env, args []Val, silent bool) (v *Var, i int,
   return v, i, env, args, nil
 }
 
-func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, []Val, E) {
+func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *Env, []Val, E) {
   var v *Var
   var args []Val
   
@@ -80,7 +80,7 @@ func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, []Val,
   }
 
   if env != nil {
-    val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], true)
+    val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
 
     if val != nil {
       return val, env, args, nil
@@ -112,10 +112,8 @@ func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  var args_env *Env
-
-  if v, args_env, _, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
+func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
+  if v, args_env, _, e = val.(*Sym).Lookup(g, task, env, env, false); e != nil {
     return nil, e
   }
 
@@ -131,7 +129,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val, e E) {
   s := val.(*Sym)
 
-  if v, _, _, e = s.Lookup(g, task, env, true); e != nil {
+  if v, _, _, e = s.Lookup(g, task, env, env, true); e != nil {
     return nil, e
   }
 

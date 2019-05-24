@@ -31,8 +31,8 @@ func (_ *SplatType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (_ *SplatType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  if v, e = g.Eval(task, env, val.(Splat).val); e != nil {
+func (_ *SplatType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
+  if v, e = g.Eval(task, env, val.(Splat).val, args_env); e != nil {
     return nil, e
   }
 
@@ -47,8 +47,8 @@ func (_ *SplatType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Va
   return NewSplat(g, v), nil
 }
 
-func (_ *SplatType) Quote(g *G, task *Task, env *Env, val Val) (v Val, e E) {
-  if v, e = g.Quote(task, env, val.(Splat).val); e != nil {
+func (_ *SplatType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
+  if v, e = g.Quote(task, env, val.(Splat).val, args_env); e != nil {
     return nil, e
   }
 

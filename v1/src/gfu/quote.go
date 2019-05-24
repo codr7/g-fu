@@ -38,9 +38,9 @@ func (_ *QuoteType) Eq(g *G, lhs, rhs Val) (bool, E) {
   return g.Eq(lq.val, rq.val)
 }
 
-func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   q := val.(Quote)
-  qv, e := g.Quote(task, env, q.val)
+  qv, e := g.Quote(task, env, q.val, args_env)
 
   if e != nil {
     return nil, e
@@ -55,7 +55,7 @@ func (_ *QuoteType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
   return qv, nil
 }
 
-func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   q := val.(Quote)
 
   if _, ok := q.val.(Splice); !ok {
@@ -65,7 +65,7 @@ func (_ *QuoteType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
   var v Val
   var e E
 
-  if v, e = g.Quote(task, env, q.val); e != nil {
+  if v, e = g.Quote(task, env, q.val, args_env); e != nil {
     return nil, e
   }
 

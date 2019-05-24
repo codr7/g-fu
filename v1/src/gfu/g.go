@@ -104,7 +104,7 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
     return nil, e
   }
 
-  return out.EvalExpr(g, &g.MainTask, env)
+  return out.EvalExpr(g, &g.MainTask, env, env)
 }
 
 func (g *G) Load(task *Task, env *Env, path string) (Val, E) {

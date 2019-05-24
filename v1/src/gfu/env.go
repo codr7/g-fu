@@ -125,11 +125,11 @@ func (e *Env) GetVar(g *G, key *Sym, silent bool) (*Var, int, E) {
   return found, i, nil
 }
 
-func (e *Env) Get(g *G, task *Task, key *Sym, silent bool) (Val, E) {
+func (e *Env) Get(g *G, task *Task, key *Sym, args_env *Env, silent bool) (Val, E) {
   _, found := e.Find(key)
 
   if found == nil {
-    return e.Resolve(g, task, key, silent)
+    return e.Resolve(g, task, key, args_env, silent)
   }
 
   return found.Val, nil
@@ -183,7 +183,7 @@ func (env *Env) Let(g *G, key *Sym, val Val) E {
   return nil
 }
 
-func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
+func (e *Env) Resolve(g *G, task *Task, key *Sym, args_env *Env, silent bool) (Val, E) {
   if e.resolve == nil {
     if silent {
       return nil, nil
@@ -192,7 +192,7 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, silent bool) (Val, E) {
     return nil, g.E("Unknown: %v", key)
   }
 
-  return e.resolve.CallArgs(g, task, e, Vec{key})
+  return e.resolve.CallArgs(g, task, e, Vec{key}, args_env)
 }
 
 func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
@@ -223,7 +223,7 @@ func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (
     var f Val
     s = g.Sym("set-%v", s)
     
-    if f, e = env.Get(g, task, s, false); e != nil {
+    if f, e = env.Get(g, task, s, args_env, false); e != nil {
       return nil, e
     }
 

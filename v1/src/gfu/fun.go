@@ -53,7 +53,7 @@ func (f *Fun) CheckArgs(g *G, args Vec) (Vec, E) {
   return args, nil
 }
 
-func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec) (Val, E) {
+func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   args, e := f.CheckArgs(g, args)
 
   if e != nil {
@@ -70,7 +70,7 @@ recall:
   f.arg_list.LetVars(g, &be, args)
   var v Val
 
-  if v, e = f.body.EvalExpr(g, task, &be); e != nil {
+  if v, e = f.body.EvalExpr(g, task, &be, args_env); e != nil {
     if r, ok := e.(Recall); ok {
       be.Clear()
       args = r.args
@@ -95,7 +95,7 @@ func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
     return nil, e
   }
 
-  return f.CallArgs(g, task, env, args)
+  return f.CallArgs(g, task, env, args, args_env)
 }
 
 func (_ *FunType) Clone(g *G, val Val) (Val, E) {

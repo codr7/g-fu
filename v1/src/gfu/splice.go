@@ -27,11 +27,11 @@ func (_ *SpliceType) Dump(g *G, val Val, out *bufio.Writer) E {
   return g.Dump(val.(Splice).val, out)
 }
 
-func (_ *SpliceType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *SpliceType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   return nil, g.E("Unquoted splice")
 }
 
-func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   s := val.(Splice)
 
   if v, ok := s.val.(Vec); ok {
@@ -40,7 +40,7 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
         var v Val
         var e E
 
-        if v, e = g.Eval(task, env, sv.val); e != nil {
+        if v, e = g.Eval(task, env, sv.val, args_env); e != nil {
           return nil, e
         }
 
@@ -49,7 +49,7 @@ func (_ *SpliceType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
     }
   }
 
-  return g.Eval(task, env, s.val)
+  return g.Eval(task, env, s.val, args_env)
 }
 
 func (_ *SpliceType) Unwrap(val Val) Val {

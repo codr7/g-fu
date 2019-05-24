@@ -51,7 +51,7 @@ func (t *Task) Start(g *G, env *Env) E {
   go func() {
     var e E
 
-    if t.result, e = t.body.EvalExpr(g, t, &te); e != nil {
+    if t.result, e = t.body.EvalExpr(g, t, &te, &te); e != nil {
       log.Fatal(e)
     }
 

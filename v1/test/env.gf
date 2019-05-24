@@ -47,6 +47,13 @@
                  this-env)))
   (test (= p/foo 42)))
 
+(let (bar 1 qux 4)
+  (env foo (bar 2 baz 3)
+    (use _ do))
+  
+  (test (= (vec foo/bar foo/baz) '(2 3)))
+  (foo/do (test (= (vec bar baz qux) '(2 3 4)))))
+
 (let _
 
 (let Widget (let _

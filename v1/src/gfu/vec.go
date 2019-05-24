@@ -24,13 +24,19 @@ func (v Vec) Delete(i int) Vec {
   return append(v[:i], v[i+1:]...)
 }
 
-func (v Vec) EvalExpr(g *G, task *Task, env *Env) (Val, E) {
+func (v Vec) EvalExpr(g *G, task *Task, env, args_env *Env) (Val, E) {
   var out Val = &g.NIL
+
+  if args_env != env {
+    if e := g.Extenv(args_env, env, v, false); e != nil {
+      return nil, e
+    }
+  }
 
   for _, it := range v {
     var e E
 
-    if out, e = g.Eval(task, env, it); e != nil {
+    if out, e = g.Eval(task, env, it, args_env); e != nil {
       return nil, e
     }
   }
@@ -43,7 +49,7 @@ func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
   var e E
 
   for _, it := range v {
-    it, e = g.Eval(task, env, it)
+    it, e = g.Eval(task, env, it, env)
 
     if e != nil {
       return nil, e
@@ -198,7 +204,7 @@ func (_ *VecType) Eq(g *G, lhs, rhs Val) (bool, E) {
   return true, nil
 }
 
-func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   v := val.(Vec)
 
   if len(v) == 0 {
@@ -216,7 +222,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     var e E
     var target_args []Val
     
-    if target, ce, target_args, e = id.Lookup(g, task, env, false); e != nil {
+    if target, ce, target_args, e = id.Lookup(g, task, env, args_env, false); e != nil {
       return nil, e
     }
 
@@ -346,13 +352,13 @@ func (_ *VecType) Print(g *G, val Val, out *bufio.Writer) {
   }
 }
 
-func (_ *VecType) Quote(g *G, task *Task, env *Env, val Val) (Val, E) {
+func (_ *VecType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   v := val.(Vec)
   out := make(Vec, len(v))
   var e E
 
   for i, it := range v {
-    out[i], e = g.Quote(task, env, it)
+    out[i], e = g.Quote(task, env, it, args_env)
 
     if e != nil {
       return nil, e

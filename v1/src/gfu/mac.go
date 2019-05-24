@@ -43,7 +43,7 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var e E
 
   for i, a := range args {
-    if avs[i], e = g.Quote(task, env, a); e != nil {
+    if avs[i], e = g.Quote(task, env, a, env); e != nil {
       return nil, e
     }
   }
@@ -55,7 +55,7 @@ func (m *Mac) ExpandCall(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var be Env
   m.env.Dup(&be)
   m.arg_list.LetVars(g, &be, args)
-  return m.body.EvalExpr(g, task, &be)
+  return m.body.EvalExpr(g, task, &be, &be)
 }
 
 func (m *Mac) Type(g *G) Type {
@@ -77,7 +77,7 @@ func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
     return nil, e
   }
 
-  return g.Eval(task, args_env, v)
+  return g.Eval(task, args_env, v, args_env)
 }
 
 func (_ *MacType) Clone(g *G, val Val) (Val, E) {

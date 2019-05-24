@@ -189,7 +189,7 @@ func (l *ArgList) LetVars(g *G, env *Env, args Vec) E {
   return nil
 }
 
-func ParseArgs(g *G, task *Task, env *Env, in Vec) (Args, E) {
+func ParseArgs(g *G, task *Task, env *Env, in Vec, args_env *Env) (Args, E) {
   var e E
   var out Args
 
@@ -206,7 +206,7 @@ func ParseArgs(g *G, task *Task, env *Env, in Vec) (Args, E) {
       a.arg_type = ARG_OPT
       a.id = vv[0].(*Sym)
 
-      if a.opt_val, e = g.Eval(task, env, vv[1]); e != nil {
+      if a.opt_val, e = g.Eval(task, env, vv[1], args_env); e != nil {
         return nil, e
       }
     } else if sv, ok := v.(Splat); ok {
