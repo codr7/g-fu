@@ -3,6 +3,9 @@
 * dup parent type envs when deriving
 ** move (iter) to SeqType
 * move bench/find-key/test to lib
+* expand env readme
+** raw_closures
+** type envs
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
