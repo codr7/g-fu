@@ -205,6 +205,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     return Vec(nil), nil
   }
 
+  args := v[1:]
   target, ce := v[0], env
 
   if id, ok := target.(*Sym); ok {
@@ -213,13 +214,16 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val) (Val, E) {
     }
 
     var e E
-
-    if target, ce, e = id.Lookup(g, task, env, false); e != nil {
+    var target_args []Val
+    
+    if target, ce, target_args, e = id.Lookup(g, task, env, false); e != nil {
       return nil, e
     }
+
+    args = append(target_args, args...)
   }
 
-  return g.Call(task, ce, target, v[1:], env)
+  return g.Call(task, ce, target, args, env)
 }
 
 func (_ *VecType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (Val, E) {

@@ -20,6 +20,7 @@ type Type interface {
   Dump(*G, Val, *bufio.Writer) E
   Dup(*G, Val) (Val, E)
   EachParent(func(Type))
+  Env() *Env
   Eq(*G, Val, Val) (bool, E)
   Eval(*G, *Task, *Env, Val) (Val, E)
   Expand(*G, *Task, *Env, Val, Int) (Val, E)
@@ -41,6 +42,7 @@ type Type interface {
 type BasicType struct {
   id      *Sym
   parents sync.Map
+  env     Env
 }
 
 type MetaType struct {
@@ -101,6 +103,10 @@ func (t *BasicType) EachParent(f func(Type)) {
     f(key.(Type))
     return true
   })
+}
+
+func (t *BasicType) Env() *Env {
+  return &t.env
 }
 
 func (_ *BasicType) Eq(g *G, lhs, rhs Val) (bool, E) {

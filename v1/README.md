@@ -10,7 +10,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.15
+g-fu v1.16
 
 Press Return twice to evaluate.
 
@@ -372,10 +372,10 @@ Unbuffered channels are useful for synchronizing tasks. The following example st
 ```
   (let _
     (task t ()
-      (post (fetch) 'foo)
+      (Task/post (fetch) 'foo)
       'bar)
       
-    (post t this-task)
+    (t/post this-task)
     (say (fetch))
     (say (wait t)))
 

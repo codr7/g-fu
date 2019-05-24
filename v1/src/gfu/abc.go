@@ -1,4 +1,4 @@
-+package gfu
+package gfu
 
 import (
   "bufio"
@@ -147,7 +147,7 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
-  if v, _, e = args[0].(*Sym).Lookup(g, task, env, true); e != nil {
+  if v, _, _, e = args[0].(*Sym).Lookup(g, task, env, true); e != nil {
     return nil, e
   }
 
@@ -185,7 +185,7 @@ func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   for _, k := range args[1:] {
     ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
 
-    if v, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
+    if v, _, _, _, e = ks.LookupVar(g, args_env, nil, false); e != nil {
       return nil, e
     }
 
@@ -951,7 +951,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "this-task", this_task_imp)
-  e.AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
+  g.TaskType.Env().AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
   e.AddFun(g, "chan", chan_imp, AOpt("buf", Int(0)))

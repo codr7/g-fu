@@ -41,12 +41,12 @@ func (s *Sym) Init(g *G, tag Tag, name string) *Sym {
   return s
 }
 
-func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, e E) {
+func (s *Sym) LookupVar(g *G, env *Env, args []Val, silent bool) (v *Var, i int, _ *Env, _ []Val, e E) {
   max := len(s.parts)
 
   for j, p := range s.parts {
     if v, i, e = env.GetVar(g, p, silent); e != nil {
-      return nil, 0, nil, e
+      return nil, 0, nil, nil, e
     }
 
     if (silent && v == nil) || j == max-1 {
@@ -56,37 +56,42 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, e E
     var ok bool
 
     if env, ok = v.Val.(*Env); !ok {
-      if silent {
-        return nil, 0, nil, nil
+      t := v.Val.Type(g)
+
+      if t == &g.MetaType {
+        t = v.Val.(Type)
+      } else {
+        args = append(args, v.Val)
       }
 
-      return nil, 0, nil, g.E("Expected env: %v", v.Val.Type(g))
+      env = t.Env()
     }
   }
 
-  return v, i, env, nil
+  return v, i, env, args, nil
 }
 
-func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, E) {
+func (s *Sym) Lookup(g *G, task *Task, env *Env, silent bool) (Val, *Env, []Val, E) {
   var v *Var
-
-  if v, _, env, _ = s.LookupVar(g, env, true); v != nil {
-    return v.Val, env, nil
+  var args []Val
+  
+  if v, _, env, args, _ = s.LookupVar(g, env, nil, true); v != nil {
+    return v.Val, env, args, nil
   }
 
   if env != nil {
     val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], true)
 
     if val != nil {
-      return val, env, nil
+      return val, env, args, nil
     }
   }
 
   if !silent {
-    return nil, nil, g.E("Unknown: %v", s)
+    return nil, nil, nil, g.E("Unknown: %v", s)
   }
 
-  return nil, nil, nil
+  return nil, nil, nil, nil
 }
 
 func (s *Sym) String() string {
@@ -110,7 +115,7 @@ func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
   var args_env *Env
 
-  if v, args_env, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
+  if v, args_env, _, e = val.(*Sym).Lookup(g, task, env, false); e != nil {
     return nil, e
   }
 
@@ -126,7 +131,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val) (v Val, e E) {
 func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val, e E) {
   s := val.(*Sym)
 
-  if v, _, e = s.Lookup(g, task, env, true); e != nil {
+  if v, _, _, e = s.Lookup(g, task, env, true); e != nil {
     return nil, e
   }
 

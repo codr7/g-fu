@@ -19,9 +19,9 @@
 
 (let _
   (task t (0)
-    (post (fetch) 'foo)
+    (Task/post (fetch) 'foo)
     'bar)
     
-  (post t this-task)
+  (t/post this-task)
   (test (= (fetch) 'foo))
   (test (= (wait t) 'bar)))
