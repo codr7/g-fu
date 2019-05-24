@@ -236,20 +236,20 @@ Since binding environments is a very common thing to do, `env` is provided as a 
 #### Sandboxes
 Environments may be used to isolate evaluation of untrusted code.
 
-The following example creates a sandbox named `secure` and imports `pub` and `eval`. `use` is likewise imported, but restricted within eval.
+The following example creates a sandbox named `sec` and imports `eval` and the local function `pub`. `use` is likewise imported, but its use restricted within eval.
 
 ```
 (fun pub () (say 'pub))
 (fun priv () (say 'priv))
 
-(env secure _
+(env sec _
   (use _ eval pub))
 ```
 
 `pub` may be accessed from within `eval`.
 
 ```
-  (secure/eval '(pub))
+  (sec/eval '(pub))
 
 pub
 ```
@@ -257,17 +257,17 @@ pub
 While `priv` may not.
 
 ```
-  (secure/eval '(priv))
+  (sec/eval '(priv))
 
-panic: Error: Unknown: secure/priv
+panic: Error: Unknown: sec/priv
 ```
 
-Importing it doesn't work either.
+Importing doesn't work either.
 
 ```
-  (secure/eval '(use _ priv))
+  (sec/eval '(use _ priv))
 
-panic: Error: Unknown: secure/priv
+panic: Error: Unknown: sec/priv
 ```
 
 ### Functions

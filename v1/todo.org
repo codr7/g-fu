@@ -1,13 +1,8 @@
-* add env test
-** testenv.gf
-** commit
 * rename this-task to Task/this
 * dup parent type envs when deriving
 ** move (iter) to SeqType
 * move bench/find-key/test to lib
-* expand env readme
-** raw_closures
-** type envs
+* move new-sym to Sym/new
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim

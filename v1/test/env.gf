@@ -55,6 +55,11 @@
   (foo/do (test (= (vec bar baz qux) '(2 3 4)))))
 
 (let _
+  (fun pub () 42)
+  (env sec _ (use _ eval pub))
+  (test (= (sec/eval '(pub)) 42)))
+
+(let _
 
 (let Widget (let _
   (fun new (args..)
