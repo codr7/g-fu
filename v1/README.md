@@ -447,7 +447,7 @@ Unbuffered channels are useful for synchronizing tasks. The following example st
       (Task/post (fetch) 'foo)
       'bar)
       
-    (t/post this-task)
+    (t/post Task/this)
     (say (fetch))
     (say (wait t)))
 

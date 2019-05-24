@@ -22,6 +22,6 @@
     (Task/post (fetch) 'foo)
     'bar)
     
-  (t/post this-task)
+  (t/post Task/this)
   (test (= (fetch) 'foo))
   (test (= (wait t) 'bar)))

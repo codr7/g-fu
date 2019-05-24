@@ -1,4 +1,4 @@
-(load "../demo/fos.gf")
+(load "../doc/fos.gf")
 
 (let (n 0 d (dispatch
               (inc ((delta 1)) (inc n delta))))
