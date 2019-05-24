@@ -1,3 +1,5 @@
+* replace this-env prim with hardcoded 'this'-support in Env
+** add g.this_sym
 * dup parent type envs when deriving
 ** move (iter) to SeqType
 * move bench/find-key/test to lib
