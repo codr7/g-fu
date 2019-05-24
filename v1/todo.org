@@ -1,5 +1,5 @@
-* testenv.gf
-** how block access to (use)?
+* add env sandbox readme + test
+** testenv.gf
 * rename this-env to Env/this
 ** bind EnvType.this to prim
 * rename this-task to Task/this

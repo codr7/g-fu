@@ -334,12 +334,6 @@ func eval_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     return nil, e
   }
 
-  if args_env != env {
-    if e := g.Extenv(args_env, env, v, false); e != nil {
-      return nil, e
-    }
-  }
-  
   return g.Eval(task, env, v, args_env)
 }
 
