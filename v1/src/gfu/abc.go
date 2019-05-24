@@ -727,40 +727,6 @@ func bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return b, nil
 }
 
-func push_bytes_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  place := args[0]
-  s, ok := args[1].(Str)
-  
-  if (!ok) {
-    return nil, g.E("Expected Str: %v", args[1].Type(g))
-  }
-
-  bs := []byte(string(s))
-  
-  switch p := place.(type) {
-  case *Sym:
-    return args_env.Update(g, task, p, func(v Val) (Val, E) {      
-      return append(v.(Bin), bs...), nil
-    }, args_env)
-  case Bin:
-    var e E
-
-    if place, e = g.Eval(task, args_env, place); e != nil {
-      return nil, e
-    }
-
-    bp, ok := place.(Bin)
-
-    if !ok {
-      return nil, g.E("Expected Bin: %v", bp.Type(g))
-    }
-    
-    return append(place.(Bin), bs...), nil
-  }
-
-  return nil, g.E("Invalid push-bytes place: %v", place.Type(g))
-}
-
 func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   id, ok := args[0].(*Sym)
   i := 0
@@ -947,7 +913,6 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
   e.AddFun(g, "bin", bin_imp, ASplat("vals"))
-  e.AddPrim(g, "push-bytes", push_bytes_imp, A("bin"), A("str"))
   
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   e.AddPrim(g, "this-task", this_task_imp)

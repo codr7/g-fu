@@ -9,11 +9,6 @@
   (test (= (inc (# b 0)) 0xff))
   (test (= (# b 0) 0xff)))
 
-(let (b (new-bin))
-  (push-bytes b "abc")
-  (test (= (len b) 3))
-  (test (= (str b) "abc")))
-
 (let (b (bin 0x10 0x20 0x30)
       n 0x00)
   (for (b v) (inc n v))

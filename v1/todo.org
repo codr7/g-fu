@@ -1,3 +1,5 @@
+* dup parent type envs when deriving
+** move (iter) to SeqType
 * move bench/find-key/test to lib
 * demo/abs.gf
 ** add sim arg to run
