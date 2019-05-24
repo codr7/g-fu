@@ -197,14 +197,76 @@ Error: Dup binding: foo 1
 ```
 
 ### Environments
-Environments are first class, `Env/this` always evaluates to the current environment.
+Environments are first class, `Env/this` evaluates to the current one.
 
-Used bindings, such as the type `Env` from `Env/this` in the following example, are automatically captured.
+Referenced bindings, such as the type `Env` from `Env/this` in the following example, are automatically captured.
 
 ```
   (let (foo 42) Env/this)
 
 (foo:42 Env:Env)
+```
+
+Using qualified identifiers allows reaching into external environments.
+
+```
+  (let (foo (let (bar 42) Env/this))
+    foo/bar)
+
+42
+```
+
+Since binding environments is a very common thing to do, `env` is provided as a shortcut.
+
+```
+  (env foo (bar 42)
+    (fun baz () (set bar 7)))
+  
+  foo/bar
+
+42
+
+  (foo/baz)
+  foo/bar
+
+7
+```
+
+#### Sandboxing
+Environments may be used to sandbox evaluation of untrusted code.
+
+The following example creates a sandbox called `secure` and imports `pub` and `eval`. `use` is likewise imported, but restricted to named environments that are already bound.
+
+```
+(fun pub () (say 'pub))
+(fun priv () (say 'priv))
+
+(env secure _
+  (use _ eval pub))
+```
+
+`pub` may be accessed from within `eval`.
+
+```
+  (secure/eval '(pub))
+
+pub
+```
+
+While `priv` is inaccessible.
+
+```
+  (secure/eval '(priv))
+
+panic: Error: Unknown: secure/priv
+```
+
+Importing it doesn't work either.
+
+```
+  (secure/eval '(use _ priv))
+
+panic: Error: Unknown: secure/priv
 ```
 
 ### Functions

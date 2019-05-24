@@ -1,5 +1,7 @@
-* add env sandbox readme + test
+* add env test
 ** testenv.gf
+** commit
+* drop args-arg from Sym.LookupVar
 * rename this-task to Task/this
 * dup parent type envs when deriving
 ** move (iter) to SeqType

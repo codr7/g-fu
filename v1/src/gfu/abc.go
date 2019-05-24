@@ -176,6 +176,12 @@ func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   prefix := args[0]
 
   if prefix == &g.NIL {
+    for _, k := range args[1:] {
+      if _, found := env.Find(k.(*Sym)); found == nil {
+        return nil, g.E("Unknown: %v", k)
+      }
+    }
+    
     return &g.NIL, nil
   }
 
