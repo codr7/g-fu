@@ -105,7 +105,7 @@ T
 F
 ```
 
-Values may be combined using `or`/`and`. Only used values are evaluated. Comparisons are performed using boolean representations while preserving the original values. The last evaluated argument is always returned.
+Values may be combined using `or`/`and`, unused values are not evaluated. Comparisons are performed using boolean representations while preserving original values, the last evaluated argument is returned.
 
 ```
   (or 0 1)
@@ -140,7 +140,7 @@ The else-branch is optional.
 _
 ```
 
-`switch` may be used to combine multiple branches.
+`switch` may be used to combine multiple branches. Each branch is prefixed by its condition, and the first branch with a truthy condition is evaluated.
 
 ```
   (switch
@@ -166,7 +166,7 @@ inner
 outer
 ```
 
-And when called without arguments, it creates the specified bindings in the current environment.
+And when called without arguments, it binds the specified names in the current environment instead. In the following example, `bar` and `baz` are bound in the current environment which already contains `foo`.
 
 ```
   (let (foo 1)
@@ -265,7 +265,7 @@ The following example defines a macro called `foo` that expands to it's argument
 42
 ```
 
-Raising the bar one notch, the `call`-macro below expands into code calling the specified target with arguments. `expand` may be used to expand any macro call to the specified depth.
+Raising the bar one notch, the `call`-macro below expands into code calling the specified target with arguments. `expand` may be used to get the resulting code from a macro call.
 
 ```
   (let _
@@ -277,7 +277,7 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 42
 ```
 
-The next example is taken straight from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and expands recursively to a nested series of calls using previous result as first argument.
+The next example is taken from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and expands recursively to a nested series of calls using previous result as first argument.
 
 ```
 (mac @ (f1 fs..)
@@ -288,9 +288,9 @@ The next example is taken straight from the [standard library](https://github.co
 ### Iterators
 ```(load "lib/iter.gf")```
 
-All loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
+Loops support exiting with a result using `(break ...)` and skipping to the start of next iteration using `(continue)`.
 
-The most fundamental loop is called `loop`, and that's exactly what it does until exited using `break` or external means such as `recall` and `fail`.
+The fundamental loop is called `loop`, and that's exactly what it does until interrupted by `break` or the stack unwinds for some reason.
 
 ```
   (say (loop (say 'foo) (break 'bar) (say 'baz)))
@@ -299,7 +299,7 @@ foo
 bar
 ```
 
-The `while`-loop keeps iterating until the specified condition turns false.
+`while` keeps iterating until the specified condition turns false.
 
 ```
   (let (i 0)
@@ -311,7 +311,7 @@ The `while`-loop keeps iterating until the specified condition turns false.
 3
 ```
 
-The `for`-loop accepts any iterable and an optional variable name, and runs one iteration for each value.
+`for` accepts any iterable and an optional variable name, and runs one iteration for each value.
 
 ```
   (for 3 (say 'foo))
@@ -330,7 +330,7 @@ baz
 ```
 
 ### Tasks
-Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task`, which takes an optional task id and channel or buffer size and returns the new task. `wait` may be used to wait for task completion and get the results.
+Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task`, which takes an optional task id and channel or buffer size and returns the task. `wait` may be used to sleep until a set of tasks are done and get the results.
 
 ```
   (let _
@@ -387,7 +387,7 @@ bar
 CPU profiling may be enabled by passing `-prof` on the command line; results are written to the specified file, `fib_tail.prof` in the following example.
 
 ```
-$ ./gfu -prof fib_tail.prof bench/fib_tail.gf
+$ gfu -prof fib_tail.prof bench/fib_tail.gf
 
 $ go tool pprof fib_tail.prof
 File: gfu
