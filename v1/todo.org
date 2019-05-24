@@ -1,4 +1,8 @@
 * move bench/find-key/test to lib
+* markov gen
+** store phrase-offs trigram prob in file
+** use Scanner to parse input
+** add dialog mode
 * wrap up v1
 * demo/abs.gf
 ** add sim arg to run
