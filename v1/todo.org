@@ -1,5 +1,3 @@
-* rename this-env to Env/this
-** bind EnvType.this to prim
 * add env sandbox readme + test
 ** testenv.gf
 * rename this-task to Task/this

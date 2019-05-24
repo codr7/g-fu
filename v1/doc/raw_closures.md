@@ -25,21 +25,21 @@ _
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### The Environment
-Peeling the functional layer off a closure leaves the (now first class) environment. `this-env` evaluates to the current environment. Note that used bindings,`this-env` in the following example, are automatically captured as usual.
+Peeling the functional layer off a closure leaves the (now first class) environment. `Env/this` evaluates to the current environment. Note that used bindings,`Env/this` in the following example, are automatically captured as usual.
 
 ```
-  (let (foo 42) this-env)
+  (let (foo 42) Env/this)
 
-(foo:42 this-env:(prim this-env))
+(foo:42 Env/this:(prim Env/this))
 ```
 
 Dealing directly with the environment allows composing data and code in a more flexible, performant and convenient form.
 
 ```
-  (let (super this-env
+  (let (super Env/this
         Counter (fun ((n 0))
                   (fun inc ((d 1)) (super/inc n d))
-                  this-env)
+                  Env/this)
         c (Counter))
     (for 3 (c/inc))
     (c/inc -1))
@@ -51,10 +51,10 @@ Besides capturing used bindings, environments also support manually importing no
 
 ```
 (let (foo (let (bar 42)
-            this-env)
+            Env/this)
       baz (let _
             (use foo bar)
-            this-env))
+            Env/this))
   baz/bar)
 
 42
@@ -67,12 +67,12 @@ Failed lookups may be trapped by defining `resolve`. The following example imple
   (fun resolve (key)
     (d/val key))
 
-  this-env)
+  Env/this)
 ```
 ```
   (let (p (proxy (let (foo 42)
                    (use _ val)
-                   this-env)))
+                   Env/this)))
     p/foo)
 
 42
@@ -95,9 +95,9 @@ We will end this environmental adventure in the land of graphical user interface
       (vec (inc width dx)
            (inc height dy)))
   
-    this-env)
+    Env/this)
 
-  this-env))
+  Env/this))
 ```
 
 Buttons embed a Widget, delegate `move` and override `resize` to enforce a max size. They also support registering `on-click`-handlers.
@@ -105,14 +105,13 @@ Buttons embed a Widget, delegate `move` and override `resize` to enforce a max s
 ```
 (let Button (let _
   (fun new (args..)
-    (let this (this-env)
-         w (Widget/new args..)
+    (let w (Widget/new args..)
          click-event ())
          
     (use w move)
 
     (fun click ()
-      (for (click-event f) (f this)))
+      (for (click-event f) (f Env/this)))
       
     (fun on-click (f)
       (push click-event f))
@@ -121,9 +120,9 @@ Buttons embed a Widget, delegate `move` and override `resize` to enforce a max s
       (w/resize (min (+ w/width dx) (- 200 w/width))
                 (min (+ w/height dy) (- 100 w/height))))
     
-    this)
+    Env/this)
 
-  this-env))
+  Env/this))
 ```
 ```
   (let (b (Button/new 'width 100 'height 50))

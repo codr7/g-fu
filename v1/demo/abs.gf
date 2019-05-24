@@ -2,7 +2,7 @@
 (load "../lib/all.gf")
 
 (fun port (n)
-  (let this this-env
+  (let this Env/this
        y .0 dy .0
        pressure .0 density 1.
        io _
@@ -21,13 +21,13 @@
                    (if (= n prev) _ (n/run))
                    (if (and io (not (= io prev))) (io/run this)))
                    
-                 this-env))
+                 Env/this))
   (use default init pair run)
   this)
 
 (mac node (id (vars ()) body..)
   '(fun %id ((id (str '%id)))
-     (let this this-env
+     (let this Env/this
           y .0 dy .0
           pressure .0 density 1.
           in (port this) out (port this)
@@ -41,7 +41,7 @@
                       (in/run this)
                       (out/run this))
 
-                    this-env))
+                    Env/this))
      (use default init run)
      %body..
      this))
@@ -54,7 +54,7 @@
       (recall in acc))
       acc))
   
-  '(env %id (this-sim this-env
+  '(env %id (this-sim Env/this
              %(push-args args)..)
      %body..))
 

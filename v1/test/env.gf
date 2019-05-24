@@ -1,8 +1,8 @@
-(test (= (len (let _ this-env)) 1))
+(test (= (len (let _ Env/this)) 1))
 
 (let (e (let (foo 1)
           (use _ do let)
-          this-env))
+          Env/this))
   (test (= e/foo 1))
   (e/do (let bar 2))
   (test (= e/bar 2))
@@ -12,21 +12,21 @@
 
 (let (foo (let (bar 7)
             (fun resolve (key) 42)
-            this-env))
+            Env/this))
   (test (= foo/bar 7))
   (test (= foo/baz 42)))
 
 (let (foo (let (bar 42)
-            this-env)
+            Env/this)
       baz (let _
             (use foo bar)
-            this-env))
+            Env/this))
   (test (= baz/bar 42)))
 
-(let (super this-env
+(let (super Env/this
       Counter (fun ((n 0))
                 (fun inc ((d 1)) (super/inc n d))
-                this-env)
+                Env/this)
       c (Counter))
   (for 3 (c/inc))
   (test (= (c/inc -1) 2)))
@@ -41,10 +41,10 @@
 (let (proxy (fun (d)
               (fun resolve (key)
                 (d/val key))
-              this-env)
+              Env/this)
       p (proxy (let (foo 42)
                  (use _ val)
-                 this-env)))
+                 Env/this)))
   (test (= p/foo 42)))
 
 (let (bar 1 qux 4)
@@ -70,20 +70,19 @@
       (vec (inc width dx)
            (inc height dy)))
   
-    this-env)
+    Env/this)
 
-  this-env))
+  Env/this))
 
 (let Button (let _
   (fun new (args..)
-    (let this (this-env)
-         w (Widget/new args..)
+    (let w (Widget/new args..)
          click-event ())
          
     (use w move)
 
     (fun click ()
-      (for (click-event f) (f this)))
+      (for (click-event f) (f Env/this)))
       
     (fun on-click (f)
       (push click-event f))
@@ -92,9 +91,9 @@
       (w/resize (min (+ w/width dx) (- 200 w/width))
                 (min (+ w/height dy) (- 100 w/height))))
     
-    this)
+    Env/this)
 
-  this-env))
+  Env/this))
 
 (let b (Button/new 'width 100 'height 50))
 

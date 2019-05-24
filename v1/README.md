@@ -197,14 +197,14 @@ Error: Dup binding: foo 1
 ```
 
 ### Environments
-Environments are first class, `this-env` evaluates to the current environment.
+Environments are first class, `Env/this` always evaluates to the current environment.
 
-Used bindings (`this-env` in the following example) are automatically captured.
+Used bindings, such as the type `Env` from `Env/this` in the following example, are automatically captured.
 
 ```
-  (let (foo 42) this-env)
+  (let (foo 42) Env/this)
 
-(foo:42 this-env:(prim this-env))
+(foo:42 Env:Env)
 ```
 
 ### Functions
