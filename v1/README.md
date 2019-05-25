@@ -254,7 +254,7 @@ Non-captured bindings may be imported manually.
 ```
 
 #### Proxies
-Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate.
+Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate. Since we're parameterizing the proxy, a function environment is used.
 
 ```
 (fun proxy (d)
