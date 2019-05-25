@@ -8,10 +8,11 @@
 * replace Type/BasicType with Env
 ** change Type to struct embedding Env
 *** add concrete types for type checking
-**** IterType { SeqType }
-** store as *Env
+**** BasicIterType { SeqType }
+**** IterType { BasicIterType } 
 ** switch args from Type to *Type
-** move fields/methods to bindings
+** convert fields/methods to bindings
+*** change val funcs to lookup methods
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim

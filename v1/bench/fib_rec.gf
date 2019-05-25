@@ -3,6 +3,6 @@
 (fun f (n)
   (if (< n 2)
     n
-    (+ (f (- n 1)) (f (- n 2)))))
+    (+ (f (dec n)) (f (dec n)))))
     
 (dump (bench 10 (for 10 (f 20))))

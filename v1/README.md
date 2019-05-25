@@ -17,7 +17,7 @@ Press Return twice to evaluate.
   (fun fib (n)
     (if (< n 2)
       n
-      (+ (fib (- n 1)) (fib (- n 2)))))
+      (+ (fib (dec n)) (fib (dec n)))))
 ```
 ```
   (fib 20)
