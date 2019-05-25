@@ -216,7 +216,7 @@ Referenced bindings, such as the type `Env` from `Env/this` in the following exa
 (foo:42 Env:Env)
 ```
 
-Using qualified identifiers allows reaching into external environments.
+Qualified identifiers allows reaching into external environments.
 
 ```
   (let (foo (let (bar 42) Env/this))
@@ -240,6 +240,36 @@ Since binding environments is a very common thing to do, `env` is provided as a 
   foo/bar
 
 7
+```
+
+Non-captured bindings may be imported manually.
+
+```
+(let _
+  (env foo (bar 42))
+  (env baz _ (use foo bar))
+  baz/bar)
+
+42
+```
+
+#### Proxies
+Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate.
+
+```
+(fun proxy (d)
+  (fun resolve (key)
+    (d/val key))
+
+  Env/this)
+```
+```
+  (let (p (proxy (let (foo 42)
+                   (use _ val)
+                   Env/this)))
+    p/foo)
+
+42
 ```
 
 #### Sandboxes

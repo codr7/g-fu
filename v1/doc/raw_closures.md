@@ -47,15 +47,13 @@ Dealing directly with the environment allows composing data and code in a more f
 2
 ```
 
-Besides capturing used bindings, environments also support manually importing non-captured bindings with `use`.
+Non-captured bindings may be imported manually.
 
 ```
-(let (foo (let (bar 42)
-            Env/this)
-      baz (let _
-            (use foo bar)
-            Env/this))
-  baz/bar)
+  (let _
+    (env foo (bar 42))
+    (env baz _ (use foo bar))
+    baz/bar)
 
 42
 ```
