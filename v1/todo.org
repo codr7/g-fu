@@ -1,8 +1,11 @@
-* add do/let/set/vals to type envs
-** testenv.gf
-** BasicType.Init
 * dup parent type envs when deriving
 ** move (iter) to SeqType
+** update lib/tests
+** add iter readme
+*** (while (do (let v (pop in)) (not (_? v)))
+* add do/let/set/vals to type envs
+** (Int/let foo 'bar)
+** BasicType.Init
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
 * replace Type/BasicType with Env
