@@ -1,6 +1,5 @@
 (debug)
 (load "../lib/all.gf")
-(load "../demo/fos.gf")
 
 (let _
 
