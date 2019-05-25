@@ -12,14 +12,10 @@
 ** BasicType.Init
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
-* replace Type/BasicType with Env
-** change Type to struct embedding Env
-*** add concrete types for type checking
-**** BasicIterType { SeqType }
-**** IterType { BasicIterType } 
+* move Type methods into .env
 ** switch args from Type to *Type
 ** convert fields/methods to bindings
-*** change val funcs to lookup methods
+** change val funcs to lookup methods
 * ---
 * demo/abs.gf
 ** add sim arg to run
@@ -31,3 +27,24 @@
 ** add dt arg to sim/run
 
 contextual programming
+
+* add sql plugin
+
+https://github.com/Masterminds/squirrel
+https://www.sqlite.org/autoinc.html
+
+(sql/Table users
+  (name Str)
+  (active? Bool)
+  (pk (Key name)))
+
+(sql/Table feeds
+  (name Str)
+  (pk (Key name)))
+
+(sql/Table posts
+  (id Id)
+  (feed (Rec feeds))
+  (author (Rec users))
+  (body Str)
+  (pk (Key id)))
