@@ -253,6 +253,21 @@ Non-captured bindings may be imported manually.
 42
 ```
 
+#### Setters
+The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys. It is expected to update the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
+
+```
+  (let _
+    (fun set-foo (f k..)
+      (say k)
+      (f 35))
+      
+    (inc (foo 'bar 'baz) 7))
+
+bar baz
+42
+```
+
 #### Proxies
 Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate. Since we're parameterizing the proxy, a function environment is used.
 
