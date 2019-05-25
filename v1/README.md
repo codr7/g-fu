@@ -19,8 +19,11 @@ Press Return twice to evaluate.
 ```
   (let (foo (let (bar 42)
               Env/this))
-    foo/bar)
+    (say foo/bar)
+    (use foo bar)
+    (say bar))
 
+42
 42
 ```
 
