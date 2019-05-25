@@ -1,8 +1,12 @@
 * dup parent type envs when deriving
 ** move (iter) to SeqType
 ** update lib/tests
-** add iter readme
+* add Env iter
+** return key and val separately
+** copy Vec
 *** (while (do (let v (pop in)) (not (_? v)))
+* add iter readme
+* ---
 * add do/let/set/vals to type envs
 ** (Int/let foo 'bar)
 ** BasicType.Init
@@ -16,6 +20,7 @@
 ** switch args from Type to *Type
 ** convert fields/methods to bindings
 *** change val funcs to lookup methods
+* ---
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
