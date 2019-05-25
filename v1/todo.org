@@ -6,8 +6,11 @@
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
 * replace Type/BasicType with Env
-** change Type to alias Env
+** change Type to struct embedding Env
+*** add concrete types for type checking
+**** IterType { SeqType }
 ** store as *Env
+** switch args from Type to *Type
 ** move fields/methods to bindings
 * demo/abs.gf
 ** add sim arg to run
