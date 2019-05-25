@@ -17,15 +17,11 @@ Press Return twice to evaluate.
   (load "lib/all.gf")
 ```
 ```
-  (fun fib (n)
-    (if (< n 2)
-      n
-      (+ (fib (dec n)) (fib (dec n)))))
-```
-```
-  (fib 20)
+  (let (foo (let (bar 42)
+              Env/this))
+    foo/bar)
 
-6765
+42
 ```
 
 ### Syntax
