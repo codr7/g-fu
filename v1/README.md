@@ -14,6 +14,9 @@ g-fu v1.18
 
 Press Return twice to evaluate.
 
+  (load "lib/all.gf")
+```
+```
   (fun fib (n)
     (if (< n 2)
       n
