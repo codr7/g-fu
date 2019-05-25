@@ -57,6 +57,24 @@ func (t *BasicType) add_parent(key, val Type) {
   t.parents.LoadOrStore(key, val)
 }
 
+func type_check_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  pt, ok := args[0].(Type)
+
+  if !ok {
+    return nil, g.E("Expected Type: %v", args[0].Type(g))
+  }
+
+  for _, a := range args[1:] {
+    pt = g.Isa(a, pt)
+  }
+  
+  if pt == nil {
+    return &g.NIL, nil
+  }
+
+  return pt, nil
+}
+
 func (t *BasicType) Init(g *G, id *Sym, parents []Type) E {
   t.id = id
 
@@ -187,22 +205,6 @@ func (_ *BasicType) Type(g *G) Type {
   return &g.MetaType
 }
 
-func (_ *MetaType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
-  v, e := g.Eval(task, env, args[0], args_env)
-
-  if e != nil {
-    return nil, e
-  }
-
-  pt := g.Isa(v, val.(Type))
-
-  if pt == nil {
-    return &g.NIL, nil
-  }
-
-  return pt, nil
-}
-
 func (_ *MetaType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString(val.(Type).Id().name)
   return nil
@@ -210,6 +212,13 @@ func (_ *MetaType) Dump(g *G, val Val, out *bufio.Writer) E {
 
 func (e *Env) AddType(g *G, t Type, id string, parents ...Type) E {
   t.Init(g, g.Sym(id), parents)
+
+  t.Env().AddFun(g, "?",
+    func (g *G, task *Task, env *Env, args Vec) (Val, E) {
+      return type_check_imp(g, task, env, append(Vec{t}, args...))
+    },
+    A("val0"), ASplat("vals"))
+
   return e.Let(g, t.Id(), t)
 }
 

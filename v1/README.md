@@ -10,7 +10,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.17
+g-fu v1.18
 
 Press Return twice to evaluate.
 
@@ -80,21 +80,21 @@ Meta
 Meta
 ```
 
-Calling a type returns the direct parent if the argument is a child.
+Calling `X/?' for any type `X` and an arbitrary number of values and/or types returns the direct parent.
 
 ```
-  (Int 42)
+  (Int/? 42)
   
 Int
 
-  (Int T)
+  (Int/? T)
 _
 
-  (Seq Vec)
+  (Seq/? Vec)
 
 Seq
 
-  (Seq IntIter)
+  (Seq/? IntIter)
 
 Iter
 ```
