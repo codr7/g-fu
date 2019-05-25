@@ -1,4 +1,3 @@
-* add setters to readme
 * rename NSecs to Nanos
 * add do/let/set/vals to type envs
 ** BasicType.Init

@@ -254,7 +254,7 @@ Non-captured bindings may be imported manually.
 ```
 
 #### Setters
-The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys. It is expected to update the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
+The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys, and typically updates the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
 
 ```
   (let _
