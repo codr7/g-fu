@@ -45,13 +45,13 @@
 
 (fun tcat ((rf _))
   (tr-fun rf (acc val)
-    (if (Seq val)
+    (if (Seq/? val)
       (tr val acc rf)
       (rf acc val))))
 
 (fun tflat ((rf _))
   (tr-fun rf (acc val)
-    (if (Seq val)
+    (if (Seq/? val)
       (tr val acc (tflat rf))
       (rf acc val))))
 
