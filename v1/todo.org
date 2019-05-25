@@ -1,7 +1,10 @@
 * dup parent type envs when deriving
 ** move (iter) to SeqType
 * move bench/find-key/test to lib
+* add do/let/set/vals to type envs
+** BasicType.Init
 * move new-sym to Sym/new
+* move type call to Type/?
 * demo/abs.gf
 ** add sim arg to run
 *** forward this-sim
