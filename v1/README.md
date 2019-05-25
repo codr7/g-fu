@@ -28,15 +28,6 @@ Press Return twice to evaluate.
 6765
 ```
 
-### Library
-g-fu comes with a standard library that is used in many of the examples. `load` evaluates all code in the specified file and returns the last result, the `fib` function in this case.
-
-```
-  (load "lib/all.gf")
-
-(fun fib (n (a 0) (b 1)))
-```
-
 ### Syntax
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
