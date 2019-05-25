@@ -29,7 +29,7 @@ type G struct {
   MacType     MacType
   MetaType    MetaType
   NilType     NilType
-  NSecsType   NSecsType
+  NanosType   NanosType
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType

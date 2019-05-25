@@ -30,5 +30,5 @@ func (t *TimeType) Sub(g *G, x, y Val) (Val, E) {
     return nil, g.E("Expected Time: %v", y.Type(g))
   }
   
-  return NSecs(time.Time(x.(Time)).Sub(time.Time(yt))), nil
+  return Nanos(time.Time(x.(Time)).Sub(time.Time(yt))), nil
 }

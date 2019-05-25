@@ -9,7 +9,7 @@ func now_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (e *Env) InitTime(g *G) {
-  e.AddType(g, &g.NSecsType, "NSecs")
+  e.AddType(g, &g.NanosType, "Nanos")
   e.AddType(g, &g.TimeType, "Time")
 
   e.AddFun(g, "now", now_imp)

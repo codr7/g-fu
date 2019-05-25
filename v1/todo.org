@@ -1,5 +1,5 @@
-* rename NSecs to Nanos
 * add do/let/set/vals to type envs
+** testenv.gf
 ** BasicType.Init
 * move type call to Type/?
 * dup parent type envs when deriving
