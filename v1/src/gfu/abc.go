@@ -197,6 +197,8 @@ func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
     if i, found := env.Find(v.key); found == nil {
       env.InsertVar(i, v)
+    } else {
+      env.vars[i] = v
     }
   }
 
@@ -856,6 +858,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "F", &g.F)
   e.AddConst(g, "\\e", Char('\x1b'))
   e.AddConst(g, "\\n", Char('\n'))
+  e.AddConst(g, "\\\"", Char('"'))
 
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
