@@ -922,7 +922,7 @@ func (e *Env) InitAbc(g *G) {
   
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   g.TaskType.Env().AddPrim(g, "this", this_task_imp)
-  g.TaskType.Env().AddFun(g, "post", task_post_imp, A("task"), ASplat("vals"))
+  g.TaskType.Env().AddFun(g, "post", task_post_imp, A("task"), A("val0"), ASplat("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
   e.AddFun(g, "chan", chan_imp, AOpt("buf", Int(0)))

@@ -87,6 +87,10 @@ func (f *Fun) Type(g *G) Type {
   return &g.FunType
 }
 
+func (_ *FunType) ArgList(g *G, val Val) (*ArgList, E) {
+  return &val.(*Fun).arg_list, nil
+}
+
 func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   f := val.(*Fun)
   args, e := args.EvalVec(g, task, args_env)

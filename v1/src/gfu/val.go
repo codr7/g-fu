@@ -9,6 +9,10 @@ type Val interface {
   Type(*G) Type
 }
 
+func (g *G) ArgList(val Val) (*ArgList, E) {
+  return val.Type(g).ArgList(g, val)
+}
+
 func (g *G) Bool(val Val) (bool, E) {
   return val.Type(g).Bool(g, val)
 }

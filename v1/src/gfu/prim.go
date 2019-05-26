@@ -29,6 +29,10 @@ func (_ *Prim) Type(g *G) Type {
   return &g.PrimType
 }
 
+func (_ *PrimType) ArgList(g *G, val Val) (*ArgList, E) {
+  return &val.(*Prim).arg_list, nil
+}
+
 func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   p := val.(*Prim)
 

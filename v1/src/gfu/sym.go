@@ -54,16 +54,15 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, arg
     }
 
     var ok bool
+    t := v.Val.Type(g)
+
+    if t == &g.MetaType {
+      t = v.Val.(Type)
+    } else {
+      args = append(args, v.Val)
+    }
 
     if env, ok = v.Val.(*Env); !ok {
-      t := v.Val.Type(g)
-
-      if t == &g.MetaType {
-        t = v.Val.(Type)
-      } else {
-        args = append(args, v.Val)
-      }
-
       env = t.Env()
     }
   }

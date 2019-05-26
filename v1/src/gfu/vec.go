@@ -211,8 +211,8 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val,
     return Vec(nil), nil
   }
 
-  args := v[1:]
   target, ce := v[0], env
+  var args Vec
 
   if id, ok := target.(*Sym); ok {
     if id == g.nop_sym {
@@ -220,13 +220,31 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val,
     }
 
     var e E
-    var target_args []Val
     
-    if target, ce, target_args, e = id.Lookup(g, task, env, args_env, false); e != nil {
+    if target, ce, args, e = id.Lookup(g, task, env, args_env, false); e != nil {
       return nil, e
     }
+  }
 
-    args = append(target_args, args...)
+  arg_list, e := g.ArgList(target)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  min_args := arg_list.min
+  max_args := min_args - len(v) + 1
+  
+  if max_args > 0 {
+    n := len(args)
+
+    if n < max_args {
+      args = append(args, v[1:]...)
+    } else {
+      args = append(args[n-max_args:], v[1:]...)
+    }
+  } else {
+    args = v[1:]
   }
 
   return g.Call(task, ce, target, args, env)

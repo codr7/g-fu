@@ -13,6 +13,7 @@ type Type interface {
 
   Init(*G, *Sym, []Type) E
 
+  ArgList(*G, Val) (*ArgList, E)
   Bool(*G, Val) (bool, E)
   Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
   Clone(*G, Val) (Val, E)
@@ -83,6 +84,10 @@ func (t *BasicType) Init(g *G, id *Sym, parents []Type) E {
   }
 
   return nil
+}
+
+func (t *BasicType) ArgList(g *G, _ Val) (*ArgList, E) {
+  return nil, g.E("ArgList not supported: %v", t.id)
 }
 
 func (_ *BasicType) Bool(g *G, val Val) (bool, E) {

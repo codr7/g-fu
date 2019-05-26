@@ -62,6 +62,10 @@ func (m *Mac) Type(g *G) Type {
   return &g.MacType
 }
 
+func (_ *MacType) ArgList(g *G, val Val) (*ArgList, E) {
+  return &val.(*Mac).arg_list, nil
+}
+
 func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (v Val, e E) {
   m := val.(*Mac)
 
