@@ -40,6 +40,8 @@ func (_ *StrType) Dump(g *G, val Val, out *bufio.Writer) E {
 
   for _, c := range val.(Str) {
     switch c {
+    case '"':
+      out.WriteString("\\\"")
     case '\x1b':
       out.WriteString("\\e")
     case '\n':

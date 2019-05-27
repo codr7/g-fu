@@ -860,6 +860,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "F", &g.F)
   e.AddConst(g, "\\e", Char('\x1b'))
   e.AddConst(g, "\\n", Char('\n'))
+  e.AddConst(g, "\\s", Char(' '))
   e.AddConst(g, "\\\"", Char('"'))
 
   e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))

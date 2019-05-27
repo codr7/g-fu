@@ -368,6 +368,8 @@ func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
       }
 
       switch nc {
+      case '"':
+        c = nc
       case 'e':
         c = '\x1b'
       case 'n':
