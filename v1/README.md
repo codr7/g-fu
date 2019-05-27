@@ -523,4 +523,4 @@ Showing top 10 nodes out of 79
 ```
 
 ### License
-LGPL3
+MIT
