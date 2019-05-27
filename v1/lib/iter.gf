@@ -43,6 +43,9 @@
   (tr-fun rf (acc val)
     (rf acc (f val))))
 
+(Vec/fun map (in f)
+  (tr in () (tmap f push)))
+
 (fun tcat ((rf _))
   (tr-fun rf (acc val)
     (if (Seq/? val)

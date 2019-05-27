@@ -39,6 +39,12 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     return nil, e
   }
 
+  if args_env != env {
+    if e := g.Extenv(args_env, &f.env, f.body, false); e != nil {
+      return nil, e
+    }
+  }
+
   return f, nil
 }
 
@@ -68,7 +74,13 @@ func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   if e = m.InitEnv(g, env); e != nil {
     return nil, e
   }
-  
+
+  if args_env != env {
+    if e := g.Extenv(args_env, &m.env, m.body, false); e != nil {
+      return nil, e
+    }
+  }
+
   return m, nil
 }
 
@@ -820,6 +832,10 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (e *Env) InitAbc(g *G) {
+  e.AddPrim(g, "do", do_imp, ASplat("body"))
+  e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+
   e.AddType(g, &g.MetaType, "Meta")
 
   e.AddType(g, &g.NumType, "Num")
@@ -860,9 +876,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "\\n", Char('\n'))
   e.AddConst(g, "\\\"", Char('"'))
 
-  e.AddPrim(g, "do", do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
   e.AddPrim(g, "call", call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))

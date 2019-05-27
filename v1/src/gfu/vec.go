@@ -234,7 +234,7 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val,
   
   min_args := arg_list.min
   max_args := min_args - len(v) + 1
-  
+
   if max_args > 0 {
     n := len(args)
 

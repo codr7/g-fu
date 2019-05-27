@@ -51,3 +51,6 @@
 (let (v '(1 2 3))
   (test (= (find-if v (fun (x) (if (= x 2) 'ok))) 'ok))
   (test (_? (find-if v (fun (x) F)))))
+
+(let (v '(1 2 3))
+  (test (= (v/map inc) '(2 3 4))))

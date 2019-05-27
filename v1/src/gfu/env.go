@@ -259,6 +259,24 @@ func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Va
   return nil, g.E("Invalid Update key: %v", key.Type(g))
 }
 
+func (env *Env) Use(g *G, src *Env, ids...string) (e E) {
+  for _, k := range ids {
+    var v *Var
+    
+    if v, _, _, _, e = g.Sym(k).LookupVar(g, src, false); e != nil {
+      return e
+    }
+
+    if i, found := env.Find(v.key); found == nil {
+      env.InsertVar(i, v)
+    } else {
+      env.vars[i] = v
+    }
+  }
+
+  return nil
+}
+
 func (_ *EnvType) Bool(g *G, val Val) (bool, E) {
   return len(val.(*Env).vars) > 0, nil
 }
