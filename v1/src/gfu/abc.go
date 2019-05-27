@@ -606,6 +606,41 @@ func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Len(args[0])
 }
 
+func seq_join_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  i, e := g.Iter(args[0])
+
+  if e != nil {
+    return nil, e
+  }
+
+  var sep Val
+  var out strings.Builder
+  w := bufio.NewWriter(&out)
+    
+  for {    
+    v, _, e := g.Pop(i)
+
+    if e != nil {
+      return nil, e
+    }
+    
+    if v == &g.NIL {
+      break
+    }
+
+    if sep == nil {
+      sep = args[1]
+    } else if sep != &g.NIL {
+      g.Print(sep, w)
+    }
+
+    g.Print(v, w)
+  }
+
+  w.Flush()
+  return Str(out.String()), nil
+}
+
 func index_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Index(args[0], args[1:])
 }
@@ -825,7 +860,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.MetaType, "Meta")
 
   e.AddType(g, &g.NumType, "Num")
+
   e.AddType(g, &g.SeqType, "Seq")
+  g.SeqType.Env().AddFun(g, "join", seq_join_imp, A("in"), A("sep"))
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
@@ -908,7 +945,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "pop", pop_imp, A("in"))
   e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
   e.AddFun(g, "len", len_imp, A("in"))
-
   e.AddFun(g, "#", index_imp, A("source"), ASplat("key"))
   e.AddFun(g, "set-#", set_index_imp, A("set"), A("dest"), ASplat("key"))
   

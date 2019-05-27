@@ -55,6 +55,14 @@ func (t *BasicType) add_parent(key, val Type) {
     t.add_parent(k, val)
   })
 
+  for _, v := range key.Env().vars {
+    if i, found := t.env.Find(v.key); found == nil {
+      t.env.InsertVar(i, v)
+    } else {
+      t.env.vars[i] = v
+    }
+  }
+  
   t.parents.LoadOrStore(key, val)
 }
 

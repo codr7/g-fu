@@ -8,7 +8,7 @@ import (
 type Vec []Val
 
 type VecType struct {
-  BasicType
+  SeqType
 }
 
 type VecIter struct {
