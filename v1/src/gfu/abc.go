@@ -186,34 +186,20 @@ func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
 
 func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   prefix := args[0]
-
-  if prefix == &g.NIL {
-    for _, k := range args[1:] {
-      if _, found := env.Find(k.(*Sym)); found == nil {
-        return nil, g.E("Unknown: %v", k)
-      }
-    }
-    
-    return &g.NIL, nil
-  }
-
-  var v *Var
-  var e E
-
+  var ss []string
+  
   for _, k := range args[1:] {
-    ks := g.Sym(fmt.Sprintf("%v/%v", prefix.(*Sym), k))
-
-    if v, _, _, _, e = ks.LookupVar(g, args_env, false); e != nil {
-      return nil, e
-    }
-
-    if i, found := env.Find(v.key); found == nil {
-      env.InsertVar(i, v)
-    } else {
-      env.vars[i] = v
+    if prefix == &g.NIL {
+      ss = append(ss, k.(*Sym).name)
+    } else { 
+      ss = append(ss, fmt.Sprintf("%v/%v", prefix.(*Sym), k))
     }
   }
 
+  if e := env.Use(g, args_env, ss...); e != nil {
+    return nil, e
+  }
+  
   return &g.NIL, nil
 }
 
