@@ -3,7 +3,7 @@
 ### Intro
 [g-fu](https://github.com/codr7/g-fu) is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go.
 
-This document describes the initial release; which implements an extensible, tree-walking interpreter for a fully block-structured Lisp-dialect with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first class environments, user-defined setters, threads and channels.
+This document describes the initial release; which implements an extensible, tree-walking interpreter for a full block-structured Lisp-dialect with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first-class environments, user-defined setters, threads, and channels.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -31,7 +31,7 @@ Press Return twice to evaluate.
 g-fu quasi-quotes using `'` and splices using `%`, `_` is used for missing values and `..` to splat sequences.
 
 ### Vectors
-g-fu uses vectors (or slices in Go lingo), rather than linked lists as basic data structure.
+g-fu uses vectors (or slices in Go lingo), rather than linked lists as a basic data structure.
 
 The empty vector is written `()`, which is not the same thing as `_`.
 
@@ -209,7 +209,7 @@ Referenced bindings, such as the type `Env` from `Env/this` in the following exa
 (foo:42 Env:Env)
 ```
 
-Qualified identifiers allows reaching into external environments.
+Qualified identifiers allow reaching into external environments.
 
 ```
   (let (foo (let (bar 42) Env/this))
@@ -247,7 +247,7 @@ Non-captured bindings may be imported manually.
 ```
 
 #### Setters
-The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys, and typically updates the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
+The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys and typically updates the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
 
 ```
   (let _
@@ -281,7 +281,7 @@ Failed lookups may be trapped by defining `resolve`. The following example imple
 ```
 
 #### Sandboxes
-Environments may be used to isolate evaluation of untrusted code.
+Environments may be used to isolate the evaluation of untrusted code.
 
 The following example creates a sandbox named `sec` and imports `eval` and the local function `pub`. `use` is likewise imported, but its use restricted within eval.
 
@@ -365,7 +365,7 @@ The following example implements a simple counter as a closure.
 ### Macros
 From a distance, macros look much like functions. They are defined the same way, accept arguments and return results. The difference is that macros have to deal with two dimensions, expansion time and evaluation time. As a consequence, macro arguments are not automatically evaluated. What is eventually evaluated is the result of expanding the macro.
 
-The following example defines a macro called `foo` that expands to it's argument.
+The following example defines a macro called `foo` that expands to its argument.
 
 ```
   (let _
@@ -387,7 +387,7 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 42
 ```
 
-The next example is taken from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf), and expands recursively to a nested series of calls using previous result as first argument.
+The next example is taken from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf) and expands recursively to a nested series of calls using the previous result as the first argument.
 
 ```
 (mac @ (f1 fs..)
@@ -465,7 +465,7 @@ The defining environment is cloned.
 ```
 
 #### Channels
-Channels are optionally buffered, thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values. `len` returns the current number of buffered values.
+Channels are optionally buffered thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values. `len` returns the current number of buffered values.
 
 ```
   (let (c (chan 1))
