@@ -30,6 +30,15 @@ func (e *Env) Add(key *Sym, val Val) bool {
   return false
 }
 
+func (e *Env) Remove(key *Sym) Val {
+  if i, found := e.Find(key); found != nil {
+    e.vars = append(e.vars[:i], e.vars[i+1:]...)
+    return found.Val
+  }
+
+  return nil
+}
+
 func (e *Env) Clear() {
   e.vars = nil
 }

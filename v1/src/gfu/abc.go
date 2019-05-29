@@ -316,12 +316,17 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return nil, g.E(string(args[0].(Str)))
 }
 
-func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
+func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E) {
   prev := task.try
-  task.try = new(Try)
-  v, e = args.EvalExpr(g, task, env, args_env)
+  task.try = task.NewTry()
+  ev, ee = args.EvalExpr(g, task, env, args_env)
+
+  if e := task.try.End(g); e != nil {
+    return nil, e
+  }
+  
   task.try = prev
-  return v, e
+  return ev, ee
 }
 
 func restart_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {

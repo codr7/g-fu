@@ -1,4 +1,3 @@
-* clean up task.restarts on try exit
 * add Restart struct
 ** store in task.restarts
 ** try & fun
@@ -7,6 +6,8 @@
 ** add abort that unwinds
 ** add retry that reruns try
 ** use EachRestart to print list with selection on error
+* return error like Recall on restart
+** return the actual Restart value as error
 * ---
 * move (iter) to SeqType
 ** update lib/tests
