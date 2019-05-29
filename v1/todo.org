@@ -1,7 +1,13 @@
+* clean up task.restarts on try exit
+* add Restart struct
+** store in task.restarts
+** try & fun
+* add t.EachRestart(fn)
 * add default restarts
 ** add abort that unwinds
 ** add retry that reruns try
-** print restart list with selection on error
+** use EachRestart to print list with selection on error
+* ---
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
