@@ -6,14 +6,3 @@
 ** update lib/tests
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
-* ---
-* demo/abs.gf
-** add sim arg to run
-*** forward this-sim
-** add sim.pressure 
-*** use if tank is empty
-*** use if no port.io
-** run until t1 is empty
-** add dt arg to sim/run
-
-contextual programming
