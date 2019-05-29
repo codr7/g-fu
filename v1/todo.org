@@ -6,3 +6,5 @@
 ** update lib/tests
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
+* add switch val-arg
+** inject into vec-conds if != _
