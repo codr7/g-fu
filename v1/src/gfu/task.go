@@ -14,6 +14,8 @@ type Task struct {
   body   Vec
   mutex  sync.Mutex
   cond   *sync.Cond
+  try      *Try
+  restarts Env
   done   bool
   result Val
 }

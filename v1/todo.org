@@ -1,21 +1,11 @@
-* dup parent type envs when deriving
-** move (iter) to SeqType
+* add default restarts
+** add abort that unwinds
+** add retry that reruns try
+** print restart list with selection on error
+* move (iter) to SeqType
 ** update lib/tests
-* add Env iter
-** return key and val separately
-** copy Vec
-*** (while (do (let v (pop in)) (not (_? v)))
-* add iter readme
-* ---
-* add do/let/set/vals to type envs
-** (Int/let foo 'bar)
-** BasicType.Init
 * move bench/find-key/test to lib
 * move new-sym to Sym/new
-* move Type methods into .env
-** switch args from Type to *Type
-** convert fields/methods to bindings
-** change val funcs to lookup methods
 * ---
 * demo/abs.gf
 ** add sim arg to run

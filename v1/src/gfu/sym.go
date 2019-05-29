@@ -152,7 +152,7 @@ func (g *G) NewSym(prefix string) *Sym {
   tag := g.NextSymTag()
 
   if len(prefix) > 0 {
-    name = fmt.Sprintf("%v-%v", prefix, tag)
+    name = fmt.Sprintf("%v-sym-%v", prefix, tag)
   } else {
     name = fmt.Sprintf("sym-%v", tag)
   }

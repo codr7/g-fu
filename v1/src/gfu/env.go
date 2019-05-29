@@ -21,6 +21,15 @@ type Var struct {
   Val Val
 }
 
+func (e *Env) Add(key *Sym, val Val) bool {
+  if i, found := e.Find(key); found == nil {
+    e.Insert(i, key).Val = val
+    return true
+  }
+
+  return false
+}
+
 func (e *Env) Clear() {
   e.vars = nil
 }

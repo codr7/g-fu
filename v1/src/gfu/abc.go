@@ -316,6 +316,43 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return nil, g.E(string(args[0].(Str)))
 }
 
+func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
+  prev := task.try
+  task.try = new(Try)
+  v, e = args.EvalExpr(g, task, env, args_env)
+  task.try = prev
+  return v, e
+}
+
+func restart_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+  fargs, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[1]), args_env)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  f, e := NewFun(g, env, nil, fargs)
+
+  if e != nil {
+    return nil, e
+  }
+
+  var id *Sym
+  var ok bool
+  
+  if id, ok = args[0].(*Sym); !ok {
+    return nil, g.E("Invalid restart id: %v", args[0].Type(g))
+  }
+  
+  f.body = args[2:]
+
+  if e := task.AddRestart(g, id, f); e != nil {
+    return nil, e
+  }
+
+  return &g.NIL, nil
+}
+
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Load(task, env, string(args[0].(Str)))
 }
@@ -913,6 +950,8 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp)
   e.AddFun(g, "fail", fail_imp, A("reason"))
+  e.AddPrim(g, "try", try_imp, ASplat("body"))
+  e.AddPrim(g, "restart", restart_imp, A("id"), A("args"), ASplat("body"))
   e.AddFun(g, "load", load_imp, A("path"))
 
   e.AddFun(g, "dup", dup_imp, A("val"))
