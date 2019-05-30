@@ -1,5 +1,9 @@
 * add restart shadow test
-* add (case () ...)
+* add throw
+** add Throw type that contains Val
+*** add String()
+*** use in (throw)
+* add (catch () ...)
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib

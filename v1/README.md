@@ -482,11 +482,11 @@ baz
 `restart` may be used to call restarts directly from user code.
 
 ```
-  (try ((foo (bar) bar))
+  (try ((foo (x) x))
     (try _
       (restart 'foo 42)
-      'baz)
-    'qux)
+      'bar)
+    'baz)
 
 42
 ```

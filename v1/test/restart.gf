@@ -5,9 +5,9 @@
            'baz)
          42))
 
-(test (= (try ((foo (bar) bar))
+(test (= (try ((foo (x) x))
            (try _
              (restart 'foo 42)
-             'baz)
-           'qux)
+             'bar)
+           'baz)
          42))
