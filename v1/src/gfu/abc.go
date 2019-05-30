@@ -322,12 +322,28 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
 restart:
   ev, ee = args.EvalExpr(g, task, env, args_env)
 
-  if e := task.try.End(g); e != nil {
-    return nil, e
-  }
+  if ee != nil {
+    if _, ok := ee.(Abort); ok {
+      return nil, ee
+    }
 
-  if r, ok := ee.(Restart); ok && r.try == task.try {
-    goto restart
+    if r, ok := ee.(Retry); ok && r.try == task.try {
+      goto restart
+    }
+
+    ev, ee = g.BreakLoop(task, env, ee, args_env)
+
+    if _, ok := ee.(Abort); ok {
+      return nil, ee
+    }
+
+    if r, ok := ee.(Retry); ok && r.try == task.try {
+      if e := task.try.End(g); e != nil {
+        return nil, e
+      }
+
+      goto restart
+    }
   }
   
   task.try = prev
@@ -928,7 +944,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
-  e.AddType(g, &g.RestartType, "Restart")
   e.AddType(g, &g.SetterType, "Setter")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")
@@ -962,6 +977,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "debug", debug_imp)
   e.AddFun(g, "fail", fail_imp, A("reason"))
   e.AddPrim(g, "try", try_imp, ASplat("body"))
+  e.AddFun(g, "abort", abort_imp)
+  e.AddFun(g, "retry", retry_imp)
   e.AddPrim(g, "restart", restart_imp, A("id"), A("args"), ASplat("body"))
   e.AddFun(g, "load", load_imp, A("path"))
 

@@ -28,6 +28,24 @@ func NewTask(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
   return new(Task).Init(g, env, id, inbox, body)
 }
 
+func abort_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  if task.try == nil {
+    return nil, g.E("Abort outside of try")
+  }
+  
+  return nil, NewAbort()
+}
+
+func retry_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  t := task.try
+
+  if t == nil {
+    return nil, g.E("Retry outside of try")
+  }
+  
+  return nil, NewRetry(t)
+}
+
 func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
   if id != nil {
     t.id = id
@@ -40,6 +58,8 @@ func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {
   t.body = body
   t.cond = sync.NewCond(&t.mutex)
   t.Inbox = inbox
+  t.restarts.AddFun(g, "abort", abort_imp)
+  t.restarts.AddFun(g, "retry", retry_imp)
   return t, nil
 }
 

@@ -439,6 +439,41 @@ bar
 baz
 ```
 
+### Restarts
+Restarts allow handling errors further up the call stack without having to deal with unwinding or propagation. Every restart belongs to a `try`-block. `abort` and `retry` are always available, `restart` may be used to define custom alternatives.
+
+```
+  (let (i 0)
+    (try
+      (restart foo ()
+        (say "Restarting foo")
+        (retry))
+      (fail (str "Going down " (inc i)))))
+
+Error: Going down 1
+0 abort
+1 retry
+2 foo
+
+Choose 0-3: 1
+
+Error: Going down 2
+0 abort
+1 retry
+2 foo
+
+Choose 0-3: 2
+
+Restarting foo
+Error: Going down 3
+0 abort
+1 retry
+2 foo
+
+Choose 0-3: 0
+2019/05/30 05:24:49 Abort
+```
+
 ### Tasks
 Tasks are first class, preemptive green threads (or goroutines) that run in separate environments and interact with the outside world using channels. New tasks are started using `task`, which takes an optional task id and channel or buffer size and returns the task. `wait` may be used to sleep until a set of tasks are done and get the results.
 

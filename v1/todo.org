@@ -1,10 +1,4 @@
-* add default restarts
-** add abort that unwinds
-** add retry that reruns try
 * wrap try block around repl input
-* return error like Recall on restart
-** return the actual Restart value as error
-* ---
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib

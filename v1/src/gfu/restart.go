@@ -1,44 +1,31 @@
 package gfu
 
 import (
-  "bufio"
+  "fmt"
+  "strconv"
 )
 
-type Restart struct {
+type Abort struct {}
+
+func NewAbort() (a Abort) {
+  return a
+}
+
+func (_ Abort) String() string {
+  return "Abort"
+}
+
+type Retry struct {
   try *Try
-  imp *Fun
 }
 
-type RestartType struct {
-  BasicType
-}
-
-func (t *Try) NewRestart(imp *Fun) (r Restart) {
-  r.try = t
-  r.imp = imp
+func NewRetry(try *Try) (r Retry) {
+  r.try = try
   return r
 }
 
-func (r Restart) String() string {
-  return "Restart"
-}
-
-func (_ Restart) Type(g *G) Type {
-  return &g.RestartType
-}
-
-func (_ *RestartType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (v Val, e E) {
-  r := val.(Restart)
-  
-  if v, e = g.Call(task, env, r.imp, args, args_env); e != nil {
-    return nil, e
-  }
-
-  return nil, r
-}
-
-func (_ *RestartType) Dump(g *G, val Val, out *bufio.Writer) E {
-  return g.Dump(val.(Restart).imp, out)
+func (r Retry) String() string {
+  return "Retry"
 }
 
 func (t *Task) AddRestart(g *G, id *Sym, f *Fun) E {
@@ -48,10 +35,49 @@ func (t *Task) AddRestart(g *G, id *Sym, f *Fun) E {
     return g.E("Restart outside of try")    
   }
 
-  if !t.restarts.Add(id, try.NewRestart(f)) {
+  if !t.restarts.Add(id, f) {
     return g.E("Dup restart: %v", id)
   }
 
   try.restarts = append(try.restarts, id)
   return nil
+}
+
+func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
+  fmt.Printf("%v\n", cause)
+  rs := task.restarts.vars
+  
+  for i, v := range rs {
+    fmt.Printf("%v %v\n", i, v.key)
+  }
+
+  var in string
+  var n int64
+  
+  for {
+    fmt.Printf("\nChoose 0-%v: ", len(rs))
+    _, e := fmt.Scanln(&in)
+  
+    if e != nil {
+      fmt.Printf("Failed reading line: %v\n", e)
+      continue
+    }
+
+    n, e = strconv.ParseInt(in, 10, 64)
+
+    if e != nil {
+      fmt.Printf("Failed parsing choice: %v\n", e)
+      continue
+    }
+
+    if n < 0 || int(n) > len(rs)-1 {
+      continue
+    }
+
+    break
+  }
+  
+  fmt.Printf("\n")
+  r := rs[n].Val.(*Fun)
+  return g.Call(task, env, r, nil, args_env)
 }
