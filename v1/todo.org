@@ -6,9 +6,9 @@
 *** (fail Foo 'bar 42)
 *** add g.ErrorType
 *** eval body in type env
-* add FileNotFound error
+* add FileNotFound
 ** throw from (load)
-** add (open-file fname) restart
+** add (replace-filename new) restart
 * ---
 * move (iter) to SeqType
 ** update lib/tests
