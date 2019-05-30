@@ -1,7 +1,9 @@
-* add Restart(*Fun) type
+* add Restart(*Try, *Fun) type
+** store in Task.restarts
 ** return as error from (restart)
-** trap in try
+** trap in try and exit/forward
 ** update test to check that try is exited
+** add test with outer restart
 * add (case () ...)
 * ---
 * move (iter) to SeqType
