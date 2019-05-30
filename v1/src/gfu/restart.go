@@ -9,40 +9,14 @@ import (
 
 type Abort struct {}
 
-func NewAbort() (a Abort) {
-  return a
-}
-
 func (_ Abort) String() string {
   return "Abort"
 }
 
-type Retry struct {
-  try *Try
-}
-
-func NewRetry(try *Try) (r Retry) {
-  r.try = try
-  return r
-}
+type Retry struct {}
 
 func (r Retry) String() string {
   return "Retry"
-}
-
-func (t *Task) AddRestart(g *G, id *Sym, f *Fun) E {
-  try := t.try
-
-  if try == nil {
-    return g.E("Restart outside of try")    
-  }
-
-  if !t.restarts.Add(id, f) {
-    return g.E("Dup restart: %v", id)
-  }
-
-  try.restarts = append(try.restarts, id)
-  return nil
 }
 
 func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {

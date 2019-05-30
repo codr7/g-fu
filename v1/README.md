@@ -445,13 +445,13 @@ Restarts allow handling errors upstream without having to deal with unwinding st
 ```
   (fail "Going down")
   
-Error: failing
+Error: Going down
 0 abort()
 1 retry()
 
 Choose 0-2: 1
 
-Error: failing
+Error: Going down
 0 abort()
 1 retry()
 
@@ -460,13 +460,12 @@ Choose 0-2: 0
 Abort
 ```
 
-Restarts belong to `try`-blocks, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to register custom restarts.
+Restarts may have their scope limited using `try`, which also supports registering custom alternatives.
 
 ```
-  (try
-    (restart foo (bar)
-      (say (str "foo " bar))
-      'baz)
+  (try ((foo (bar)
+          (say (str "foo " bar))
+          'baz))
     (fail (str "Going down")))
 
 Error: Going down

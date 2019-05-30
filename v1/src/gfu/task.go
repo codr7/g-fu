@@ -33,17 +33,15 @@ func abort_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return nil, g.E("Abort outside of try")
   }
   
-  return nil, NewAbort()
+  return nil, Abort{}
 }
 
 func retry_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  t := task.try
-
-  if t == nil {
+  if task.try == nil {
     return nil, g.E("Retry outside of try")
   }
   
-  return nil, NewRetry(t)
+  return nil, Retry{}
 }
 
 func (t *Task) Init(g *G, env *Env, id *Sym, inbox Chan, body Vec) (*Task, E) {

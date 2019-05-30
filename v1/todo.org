@@ -1,3 +1,4 @@
+* add (case () ...)
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib

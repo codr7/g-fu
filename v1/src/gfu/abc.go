@@ -318,7 +318,48 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E) {
   prev := task.try
-  task.try = task.NewTry()
+  t := task.NewTry()
+  task.try = t
+  
+  if args[0] != &g.NIL {
+    rs, ok := args[0].(Vec)
+
+    if !ok {
+      return nil, g.E("Invalid restarts: %v", args[0].Type(g))
+    }
+    
+    for _, r := range rs {
+      rv, ok := r.(Vec)
+
+      if !ok {
+        return nil, g.E("Invalid restart: %v", r)
+      }
+      
+      fargs, e := ParseArgs(g, task, env, ParsePrimArgs(g, rv[1]), args_env)
+
+      if e != nil {
+        return nil, e
+      }
+  
+      f, e := NewFun(g, env, nil, fargs)
+
+      if e != nil {
+        return nil, e
+      }
+
+      var id *Sym
+      
+      if id, ok = rv[0].(*Sym); !ok {
+        return nil, g.E("Invalid restart id: %v", rv[0].Type(g))
+      }
+      
+      f.body = rv[2:]
+
+      if e := t.AddRestart(g, id, f); e != nil {
+        return nil, e
+      }
+    }
+  }
 restart:
   ev, ee = args.EvalExpr(g, task, env, args_env)
 
@@ -327,7 +368,7 @@ restart:
       return nil, ee
     }
 
-    if r, ok := ee.(Retry); ok && r.try == task.try {
+    if _, ok := ee.(Retry); ok {
       goto restart
     }
 
@@ -337,8 +378,8 @@ restart:
       return nil, ee
     }
 
-    if r, ok := ee.(Retry); ok && r.try == task.try {
-      if e := task.try.End(g); e != nil {
+    if _, ok := ee.(Retry); ok {
+      if e := t.End(g); e != nil {
         return nil, e
       }
 
@@ -350,33 +391,20 @@ restart:
   return ev, ee
 }
 
-func restart_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  fargs, e := ParseArgs(g, task, env, ParsePrimArgs(g, args[1]), args_env)
+func restart_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  id, ok := args[0].(*Sym)
 
-  if e != nil {
-    return nil, e
-  }
-  
-  f, e := NewFun(g, env, nil, fargs)
-
-  if e != nil {
-    return nil, e
-  }
-
-  var id *Sym
-  var ok bool
-  
-  if id, ok = args[0].(*Sym); !ok {
+  if !ok {
     return nil, g.E("Invalid restart id: %v", args[0].Type(g))
   }
   
-  f.body = args[2:]
+  v, e := task.restarts.Get(g, task, id, env, false)
 
-  if e := task.AddRestart(g, id, f); e != nil {
+  if e != nil {
     return nil, e
   }
 
-  return &g.NIL, nil
+  return g.Call(task, env, v, args[1:], env)
 }
 
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -976,10 +1004,10 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddFun(g, "debug", debug_imp)
   e.AddFun(g, "fail", fail_imp, A("reason"))
-  e.AddPrim(g, "try", try_imp, ASplat("body"))
+  e.AddPrim(g, "try", try_imp, A("restarts"), ASplat("body"))
   e.AddFun(g, "abort", abort_imp)
   e.AddFun(g, "retry", retry_imp)
-  e.AddPrim(g, "restart", restart_imp, A("id"), A("args"), ASplat("body"))
+  e.AddFun(g, "restart", restart_imp, A("id"), A("args"))
   e.AddFun(g, "load", load_imp, A("path"))
 
   e.AddFun(g, "dup", dup_imp, A("val"))

@@ -11,6 +11,15 @@ func (t *Task) NewTry() *Try {
   return try
 }
 
+func (t *Try) AddRestart(g *G, id *Sym, f *Fun) E {
+  if !t.task.restarts.Add(id, f) {
+    return g.E("Dup restart: %v", id)
+  }
+
+  t.restarts = append(t.restarts, id)
+  return nil
+}
+
 func (t *Try) End(g *G) E {
   for _, id := range t.restarts {
     if t.task.restarts.Remove(id) == nil {
