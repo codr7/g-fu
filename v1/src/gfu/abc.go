@@ -319,10 +319,15 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E) {
   prev := task.try
   task.try = task.NewTry()
+restart:
   ev, ee = args.EvalExpr(g, task, env, args_env)
 
   if e := task.try.End(g); e != nil {
     return nil, e
+  }
+
+  if r, ok := ee.(Restart); ok && r.try == task.try {
+    goto restart
   }
   
   task.try = prev
@@ -923,6 +928,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
+  e.AddType(g, &g.RestartType, "Restart")
   e.AddType(g, &g.SetterType, "Setter")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")

@@ -30,15 +30,6 @@ func (e *Env) Add(key *Sym, val Val) bool {
   return false
 }
 
-func (e *Env) Remove(key *Sym) Val {
-  if i, found := e.Find(key); found != nil {
-    e.vars = append(e.vars[:i], e.vars[i+1:]...)
-    return found.Val
-  }
-
-  return nil
-}
-
 func (e *Env) Clear() {
   e.vars = nil
 }
@@ -196,6 +187,15 @@ func (env *Env) Let(g *G, key *Sym, val Val) E {
     env.vars[i] = v
   } else {
     return g.E("Dup binding: %v %v", k, v.Val)
+  }
+
+  return nil
+}
+
+func (e *Env) Remove(key *Sym) Val {
+  if i, found := e.Find(key); found != nil {
+    e.vars = append(e.vars[:i], e.vars[i+1:]...)
+    return found.Val
   }
 
   return nil

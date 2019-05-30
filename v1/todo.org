@@ -1,11 +1,7 @@
-* add Restart struct
-** store in task.restarts
-** try & fun
-* add t.EachRestart(fn)
 * add default restarts
 ** add abort that unwinds
 ** add retry that reruns try
-** use EachRestart to print list with selection on error
+* wrap try block around repl input
 * return error like Recall on restart
 ** return the actual Restart value as error
 * ---
