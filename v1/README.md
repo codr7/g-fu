@@ -460,24 +460,16 @@ Choose 0-2: 0
 Abort
 ```
 
-Restarts belong to `try`-blocks, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to include a custom restart from that point on.
+Restarts belong to `try`-blocks, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to register custom restarts.
 
 ```
-  (let (i 0)
-    (try
-      (restart foo (bar)
-        (say (str "foo " bar))
-        (retry))
-      (fail (str "Going down " (inc i)))))
+  (try
+    (restart foo (bar)
+      (say (str "foo " bar))
+      'baz)
+    (fail (str "Going down")))
 
-Error: Going down 1
-0 abort()
-1 retry()
-2 foo(bar)
-
-Choose 0-3: 1
-
-Error: Going down 2
+Error: Going down
 0 abort()
 1 retry()
 2 foo(bar)
@@ -485,16 +477,10 @@ Error: Going down 2
 Choose 0-3: 2 42
 
 foo 42
-Error: Going down 3
-0 abort()
-1 retry()
-2 foo(bar)
-
-Choose 0-3: 0
-Abort
+baz
 ```
 
-Calling `(abort)` manually exits unconditionally without a break loop.
+Calling `(abort)` manually exits unconditionally without entering a break loop.
 
 ```
   (try (abort) (say "Not going to happen"))
