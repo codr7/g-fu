@@ -440,7 +440,7 @@ baz
 ```
 
 ### Restarts
-Restarts allow handling errors further up the call stack without having to deal with unwinding or propagation.
+Restarts allow handling errors upstream without having to deal with unwinding stacks or manual propagation.
 
 ```
   (fail "Going down")
@@ -460,7 +460,7 @@ Choose 0-2: 0
 Abort
 ```
 
-Each restarts belongs to a `try`-block, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used anywhere within a try block to include a custom restart from that point on.
+Restarts belong to `try`-blocks, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to include a custom restart from that point on.
 
 ```
   (let (i 0)
@@ -491,6 +491,14 @@ Error: Going down 3
 2 foo(bar)
 
 Choose 0-3: 0
+Abort
+```
+
+Calling `(abort)` manually exits unconditionally without a break loop.
+
+```
+  (try (abort) (say "Not going to happen"))
+
 Abort
 ```
 
