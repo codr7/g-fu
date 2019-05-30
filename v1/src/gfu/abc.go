@@ -312,6 +312,10 @@ func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
+func throw_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  return nil, g.Throw(args[0])
+}
+
 func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return nil, g.E(string(args[0].(Str)))
 }
@@ -1034,6 +1038,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "bench", bench_imp, A("nreps"), ASplat("body"))
 
   e.AddFun(g, "debug", debug_imp)
+  e.AddFun(g, "throw", throw_imp, A("val"))
   e.AddFun(g, "fail", fail_imp, A("reason"))
   e.AddPrim(g, "try", try_imp, A("restarts"), ASplat("body"))
   g.abort_fun, _ = e.AddFun(g, "abort", abort_imp)

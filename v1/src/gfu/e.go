@@ -1,80 +1,80 @@
 package gfu
 
 import (
-	"fmt"
-	//"log"
+  "fmt"
+  //"log"
 )
 
 type E interface {
-	String() string
+  String() string
 }
 
 type BasicE struct {
-	msg string
+  msg string
 }
 
 func (e *BasicE) Init(g *G, msg string) *BasicE {
-	if g.Debug {
-		panic(msg)
-	}
+  if g.Debug {
+    panic(msg)
+  }
 
-	e.msg = msg
-	return e
+  e.msg = msg
+  return e
 }
 
 func (e *BasicE) String() string {
-	return e.msg
+  return e.msg
 }
 
 func (g *G) E(msg string, args ...interface{}) *BasicE {
-	for i, a := range args {
-		switch v := a.(type) {
-		case Dumper:
-			var e E
+  for i, a := range args {
+    switch v := a.(type) {
+    case Dumper:
+      var e E
 
-			if args[i], e = DumpString(g, v); e != nil {
-				args[i] = e
-			}
-		case Val:
-			var e E
+      if args[i], e = DumpString(g, v); e != nil {
+        args[i] = e
+      }
+    case Val:
+      var e E
 
-			if args[i], e = g.String(v); e != nil {
-				args[i] = e
-			}
-		}
-	}
+      if args[i], e = g.String(v); e != nil {
+        args[i] = e
+      }
+    }
+  }
 
-	msg = fmt.Sprintf(msg, args...)
-	e := new(BasicE).Init(g, fmt.Sprintf("Error: %v", msg))
+  msg = fmt.Sprintf(msg, args...)
+  e := new(BasicE).Init(g, fmt.Sprintf("Error: %v", msg))
 
-	if g.Debug {
-		panic(e.String())
-	}
+  if g.Debug {
+    panic(e.String())
+  }
 
-	return e
+  return e
 }
 
 type ReadE struct {
-	BasicE
-	pos Pos
+  BasicE
+  pos Pos
 }
 
 func (e *ReadE) Init(g *G, pos Pos, msg string) *ReadE {
-	e.BasicE.Init(g, msg)
-	e.pos = pos
-	return e
+  e.BasicE.Init(g, msg)
+  e.pos = pos
+  return e
 }
 
 func (e *ReadE) String() string {
-	p := &e.pos
+  p := &e.pos
 
-	return fmt.Sprintf(
-		"Read error in '%s'; row %v, col %v:\n%v",
-		p.src, p.Row, p.Col, e.msg)
+  return fmt.Sprintf(
+    "Read error in '%s'; row %v, col %v:\n%v",
+    p.src, p.Row, p.Col, e.msg)
 }
 
 func (g *G) ReadE(pos Pos, msg string, args ...interface{}) *ReadE {
-	msg = fmt.Sprintf(msg, args...)
-	e := new(ReadE).Init(g, pos, msg)
-	return e
+  msg = fmt.Sprintf(msg, args...)
+  e := new(ReadE).Init(g, pos, msg)
+  return e
 }
