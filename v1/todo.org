@@ -1,4 +1,9 @@
+* add Restart(*Fun) type
+** return as error from (restart)
+** trap in try
+** update test to check that try is exited
 * add (case () ...)
+* ---
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
