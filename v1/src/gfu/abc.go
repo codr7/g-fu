@@ -361,7 +361,7 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
     }
   }
 restart:
-  ev, ee = args.EvalExpr(g, task, env, args_env)
+  ev, ee = args[1:].EvalExpr(g, task, env, args_env)
 
   if ee != nil {
     if _, ok := ee.(Abort); ok {

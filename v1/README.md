@@ -479,10 +479,10 @@ foo 42
 baz
 ```
 
-Calling `(abort)` manually exits unconditionally without entering a break loop.
+Calling `(abort)` exits unconditionally without entering a break loop.
 
 ```
-  (try (abort) (say "Not going to happen"))
+  (try (abort) (say "Not bloody likely"))
 
 Abort
 ```
