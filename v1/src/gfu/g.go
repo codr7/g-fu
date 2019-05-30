@@ -83,23 +83,12 @@ func (g *G) NewEnv() *Env {
 
 func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   in := strings.NewReader(s)
-  var out Vec
+  out, e := g.ReadAll(&pos, in, nil)
 
-  for {
-    vs, e := g.Read(&pos, in, out, "")
-
-    if e != nil {
-      return nil, e
-    }
-
-    if vs == nil {
-      break
-    }
-
-    out = vs
+  if e != nil {
+    return nil, e
   }
-
-  var e E
+  
   if out, e = out.ExpandVec(g, task, env, -1); e != nil {
     return nil, e
   }

@@ -440,38 +440,58 @@ baz
 ```
 
 ### Restarts
-Restarts allow handling errors further up the call stack without having to deal with unwinding or propagation. Every restart belongs to a `try`-block. `abort` and `retry` are always available, `restart` may be used to define custom alternatives.
+Restarts allow handling errors further up the call stack without having to deal with unwinding or propagation.
+
+```
+  (fail "Going down")
+  
+Error: failing
+0 abort()
+1 retry()
+
+Choose 0-2: 1
+
+Error: failing
+0 abort()
+1 retry()
+
+Choose 0-2: 0
+
+Abort
+```
+
+Each restarts belongs to a `try`-block, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to define custom restarts.
 
 ```
   (let (i 0)
     (try
-      (restart foo ()
-        (say "Restarting foo")
+      (restart foo (bar)
+        (say (str "foo " bar))
         (retry))
       (fail (str "Going down " (inc i)))))
 
 Error: Going down 1
-0 abort
-1 retry
-2 foo
+0 abort()
+1 retry()
+2 foo(bar)
 
 Choose 0-3: 1
 
 Error: Going down 2
-0 abort
-1 retry
-2 foo
+0 abort()
+1 retry()
+2 foo(bar)
 
-Choose 0-3: 2
+Choose 0-3: 2 42
 
-Restarting foo
+foo 42
 Error: Going down 3
-0 abort
-1 retry
-2 foo
+0 abort()
+1 retry()
+2 foo(bar)
 
 Choose 0-3: 0
-2019/05/30 05:24:49 Abort
+Abort
 ```
 
 ### Tasks

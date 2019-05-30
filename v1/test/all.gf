@@ -127,4 +127,5 @@
 (load "iter.gf")
 (load "bin.gf")
 (load "fos.gf")
+(load "restart.gf")
 (load "task.gf")

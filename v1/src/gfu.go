@@ -52,7 +52,8 @@ func main() {
 
       if len(line) == 0 {
         if buf.Len() > 0 {
-          v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, buf.String())
+          expr := fmt.Sprintf("(try %v)", buf.String())
+          v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, expr)
 
           if e == nil {
             if s, e := g.String(v); e != nil {

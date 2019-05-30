@@ -598,7 +598,7 @@ func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   place := args[0]
-  vs, e := args[1:].EvalVec(g, task, args_env)
+  vs, e := args[1:].EvalVec(g, task, args_env, args_env)
 
   if e != nil {
     return nil, e

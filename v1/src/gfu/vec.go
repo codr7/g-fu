@@ -44,12 +44,12 @@ func (v Vec) EvalExpr(g *G, task *Task, env, args_env *Env) (Val, E) {
   return out, nil
 }
 
-func (v Vec) EvalVec(g *G, task *Task, env *Env) (Vec, E) {
+func (v Vec) EvalVec(g *G, task *Task, env, args_env *Env) (Vec, E) {
   var out Vec
   var e E
 
   for _, it := range v {
-    it, e = g.Eval(task, env, it, env)
+    it, e = g.Eval(task, env, it, args_env)
 
     if e != nil {
       return nil, e

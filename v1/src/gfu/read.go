@@ -50,6 +50,24 @@ func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   return nil
 }
 
+func (g *G) ReadAll(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
+  for {
+    vs, e := g.Read(pos, in, out, "")
+
+    if e != nil {
+      return nil, e
+    }
+
+    if vs == nil {
+      break
+    }
+
+    out = vs
+  }
+
+  return out, nil
+}
+
 func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
   var c rune
   var e E

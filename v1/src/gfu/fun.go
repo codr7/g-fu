@@ -93,7 +93,7 @@ func (_ *FunType) ArgList(g *G, val Val) (*ArgList, E) {
 
 func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
   f := val.(*Fun)
-  args, e := args.EvalVec(g, task, args_env)
+  args, e := args.EvalVec(g, task, args_env, args_env)
 
   if e != nil {
     return nil, e
