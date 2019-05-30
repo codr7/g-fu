@@ -1,7 +1,3 @@
-* add throw
-** add Throw type that contains Val
-*** add String()
-*** use in (throw)
 * add (catch () ...)
 * move (iter) to SeqType
 ** update lib/tests

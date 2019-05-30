@@ -156,26 +156,3 @@ func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
   f.imp = imp
   return f, nil
 }
-
-type Recall struct {
-  args Vec
-}
-
-func NewRecall(args Vec) (r Recall) {
-  r.args = args
-  return r
-}
-
-func (r Recall) Dump(g *G, out *bufio.Writer) {
-  out.WriteString("(recall")
-
-  for _, a := range r.args {
-    g.Dump(a, out)
-  }
-
-  out.WriteRune(')')
-}
-
-func (r Recall) String() string {
-  return "Recall"
-}

@@ -62,7 +62,11 @@ func main() {
               fmt.Printf("\r%v\n", s)
             }
           } else {
-            fmt.Printf("\r%v\n", e)
+            if s, e := g.DumpString(e); e != nil {
+              log.Fatal(e)
+            } else {
+              fmt.Printf("\r%v\n", s)
+            }
           }
         }
 

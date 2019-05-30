@@ -22,12 +22,14 @@ type RestartType struct {
   BasicType
 }
 
-func (_ Abort) String() string {
-  return "Abort"
+func (_ Abort) Dump(g *G, out *bufio.Writer) E {
+  out.WriteString("Abort")
+  return nil
 }
 
-func (r Retry) String() string {
-  return "Retry"
+func (_ Retry) Dump(g *G, out *bufio.Writer) E {
+  out.WriteString("Retry")
+  return nil
 }
 
 func (t *Try) NewRestart(id *Sym, imp *Fun) (r Restart) {
@@ -37,12 +39,8 @@ func (t *Try) NewRestart(id *Sym, imp *Fun) (r Restart) {
   return r
 }
 
-func (r Restart) String() string {
-  return fmt.Sprintf("Restart: %v", r.id)
-}
-
-func (_ *Restart) Dump(g *G, val Val, out *bufio.Writer) E {
-  fmt.Fprintf(out, "restart-%v", val.(Restart).id)
+func (r Restart) Dump(g *G, out *bufio.Writer) E {
+  fmt.Fprintf(out, "Restart: %v", r.id)
   return nil
 }
 
@@ -50,8 +48,19 @@ func (_ Restart) Type(g *G) Type {
   return &g.RestartType
 }
 
+func (_ *RestartType) Dump(g *G, val Val, out *bufio.Writer) E {
+  fmt.Fprintf(out, "restart-%v", val.(Restart).id)
+  return nil
+}
+
 func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
-  fmt.Printf("%v\n", cause)
+  cs, e := g.DumpString(cause)
+
+  if e != nil {
+    return nil, e
+  }
+  
+  fmt.Printf("%v\n", cs)
   rs := task.try.restarts.vars
   stdin := bufio.NewReader(os.Stdin) 
   stdout := bufio.NewWriter(os.Stdout)

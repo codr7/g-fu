@@ -1,19 +1,22 @@
 package gfu
 
 import (
-	"strings"
+  "bufio"
+  "strings"
 )
 
 type Dumper interface {
-	Dump(*G, *strings.Builder) E
+  Dump(*G, *bufio.Writer) E
 }
 
-func DumpString(g *G, d Dumper) (string, E) {
-	var out strings.Builder
+func (g *G) DumpString(d Dumper) (string, E) {
+  var out strings.Builder
+  w := bufio.NewWriter(&out)
+  
+  if e := d.Dump(g, w); e != nil {
+    return "", e
+  }
 
-	if e := d.Dump(g, &out); e != nil {
-		return "", e
-	}
-
-	return out.String(), nil
+  w.Flush()
+  return out.String(), nil
 }

@@ -84,7 +84,7 @@ func (g *G) EString(val Val) string {
   s, e := g.String(val)
 
   if e != nil {
-    s = e.String()
+    s, _ = g.DumpString(e)
   }
 
   return s
