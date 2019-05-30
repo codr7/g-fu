@@ -1,14 +1,15 @@
-* add (catch (((FileNotFound e) ...)
-              (T ...))
+* add (catch (((EFileNotFound e) ...)
+              (_ ...))
         ...)
+** store in task.catch like .try
 ** add (error Foo ((bar _)) ...) to define new Error type
 *** (throw (Foo/new 'bar 42))
 *** (fail Foo 'bar 42)
 *** add g.ErrorType
 *** eval body in type env
-* add FileNotFound
+* add EFileNotFound
 ** throw from (load)
-** add (replace-filename new) restart
+** add (use-filename new) restart
 * ---
 * move (iter) to SeqType
 ** update lib/tests
