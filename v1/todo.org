@@ -1,4 +1,15 @@
-* add (catch () ...)
+* add (catch (((FileNotFound e) ...)
+              (T ...))
+        ...)
+** add (error Foo ((bar _)) ...) to define new Error type
+*** (throw (Foo/new 'bar 42))
+*** (fail Foo 'bar 42)
+*** add g.ErrorType
+*** eval body in type env
+* add FileNotFound error
+** throw from (load)
+** add (open-file fname) restart
+* ---
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
