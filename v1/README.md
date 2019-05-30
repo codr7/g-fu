@@ -460,7 +460,7 @@ Choose 0-2: 0
 Abort
 ```
 
-Each restarts belongs to a `try`-block, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used to define custom restarts.
+Each restarts belongs to a `try`-block, the reason the previous example didn't need one is that the REPL adds it behind the scenes. `abort` and `retry` are always included, `restart` may be used anywhere within a try block to include a custom restart from that point on.
 
 ```
   (let (i 0)
