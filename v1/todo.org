@@ -1,4 +1,3 @@
-* add restart shadow test
 * add throw
 ** add Throw type that contains Val
 *** add String()

@@ -491,6 +491,16 @@ baz
 42
 ```
 
+Shadowing works the same way as for regular bindings.
+
+```
+  (try ((foo () 'bar))
+    (try ((foo () 'baz))
+      (restart 'foo)))  
+  
+baz
+```
+
 Calling `(abort)` exits unconditionally without entering a break loop.
 
 ```

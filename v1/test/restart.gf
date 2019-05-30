@@ -11,3 +11,8 @@
              'bar)
            'baz)
          42))
+
+(test (= (try ((foo () 'bar))
+           (try ((foo () 'baz))
+             (restart 'foo)))
+         'baz))
