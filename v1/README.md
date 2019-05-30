@@ -460,7 +460,7 @@ Choose 0-2: 0
 Abort
 ```
 
-Restarts may have their scope limited using `try`, which also supports registering custom alternatives.
+`try` may be used to limit the scope and/or add custom restarts.
 
 ```
   (try ((foo (bar)
@@ -477,6 +477,18 @@ Choose 0-3: 2 42
 
 foo 42
 baz
+```
+
+`restart` may be used to call restarts directly from user code.
+
+```
+  (try ((foo (bar) bar))
+    (try _
+      (restart 'foo 42)
+      'baz)
+    'qux)
+
+42
 ```
 
 Calling `(abort)` exits unconditionally without entering a break loop.

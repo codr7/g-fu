@@ -1,15 +1,4 @@
-* switch Var.Val to interface{}
-* remove Task.restarts/Try.task
-** store env in Try
-*** dup prev
-*** use Let
-* add Restart(*Try, *Fun) type
-** store in Task.restarts
-** return as error from (restart)
-** trap in try and exit/forward
-** update test to check that try is exited
-** add test with outer restart
-* ---
+* add restart shadow test
 * add (case () ...)
 * move (iter) to SeqType
 ** update lib/tests

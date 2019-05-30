@@ -146,15 +146,15 @@ func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) E {
+func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
   f, e := NewFun(g, env, g.Sym(id), args)
   
   if e != nil {
-    return e
+    return nil, e
   }
 
   f.imp = imp
-  return nil
+  return f, nil
 }
 
 type Recall struct {

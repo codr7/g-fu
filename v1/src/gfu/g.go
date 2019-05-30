@@ -33,6 +33,7 @@ type G struct {
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
+  RestartType RestartType
   SetterType  SetterType
   SeqType     SeqType
   SplatType   SplatType
@@ -58,6 +59,9 @@ type G struct {
   nop_sym,
   resolve_sym,
   set_sym *Sym
+
+  abort_fun,
+  retry_fun *Fun
 
   load_path string
 }
@@ -113,7 +117,7 @@ func (g *G) Load(task *Task, env *Env, path string) (Val, E) {
   return v, e
 }
 
-func (e *Env) AddConst(g *G, id string, val Val) E {
+func (env *Env) AddConst(g *G, id string, val Val) E {
   if _, dup := g.consts.LoadOrStore(g.Sym(id), val); dup {
     return g.E("Dup const: %v", id)
   }
@@ -132,7 +136,8 @@ func (e *Env) AddConst(g *G, id string, val Val) E {
     return &g.T, nil
   }
 
-  return e.AddFun(g, fmt.Sprintf("%v?", id), imp, A("val"))
+  _, e := env.AddFun(g, fmt.Sprintf("%v?", id), imp, A("val")) 
+  return e
 }
 
 func (g *G) FindConst(id *Sym) Val {

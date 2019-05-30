@@ -9,25 +9,56 @@ import (
 
 type Abort struct {}
 
+type Retry struct {}
+
+type Restart struct {
+  try *Try
+  id *Sym
+  imp *Fun
+  args []Val
+}
+
+type RestartType struct {
+  BasicType
+}
+
 func (_ Abort) String() string {
   return "Abort"
 }
-
-type Retry struct {}
 
 func (r Retry) String() string {
   return "Retry"
 }
 
+func (t *Try) NewRestart(id *Sym, imp *Fun) (r Restart) {
+  r.try = t
+  r.id = id
+  r.imp = imp
+  return r
+}
+
+func (r Restart) String() string {
+  return fmt.Sprintf("Restart: %v", r.id)
+}
+
+func (_ *Restart) Dump(g *G, val Val, out *bufio.Writer) E {
+  fmt.Fprintf(out, "restart-%v", val.(Restart).id)
+  return nil
+}
+
+func (_ Restart) Type(g *G) Type {
+  return &g.RestartType
+}
+
 func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
   fmt.Printf("%v\n", cause)
-  rs := task.restarts.vars
+  rs := task.try.restarts.vars
   stdin := bufio.NewReader(os.Stdin) 
   stdout := bufio.NewWriter(os.Stdout)
   
   for i, v := range rs {
     fmt.Printf("%v %v", i, v.key)
-    v.Val.(*Fun).arg_list.items.Dump(g, stdout)
+    v.Val.(Restart).imp.arg_list.items.Dump(g, stdout)
     stdout.WriteRune('\n')
     stdout.Flush()
   }
@@ -70,6 +101,6 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
   }
   
   fmt.Printf("\n")
-  r := rs[n].Val.(*Fun)
+  r := rs[n].Val.(Restart).imp
   return g.Call(task, env, r, args, args_env)
 }
