@@ -1,4 +1,8 @@
-* wrap try block around repl input
+* wrap try around repl input
+* allow passing restart args from break loop
+** parse args after n
+** update readme example
+* --
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
