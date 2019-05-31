@@ -7,9 +7,17 @@ import (
   "strings"
 )
 
-type Abort struct {}
+type Abort struct { }
 
-type Retry struct {}
+type AbortType struct {
+  BasicType
+}
+
+type Retry struct { }
+
+type RetryType struct {
+  BasicType
+}
 
 type Restart struct {
   try *Try
@@ -22,12 +30,20 @@ type RestartType struct {
   BasicType
 }
 
-func (_ Abort) Dump(g *G, out *bufio.Writer) E {
+func (_ Abort) Type(g *G) Type {
+  return &g.AbortType
+}
+
+func (_ *AbortType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString("Abort")
   return nil
 }
 
-func (_ Retry) Dump(g *G, out *bufio.Writer) E {
+func (_ Retry) Type(g *G) Type {
+  return &g.RetryType
+}
+
+func (_ RetryType) Dump(g *G, val Val, out *bufio.Writer) E {
   out.WriteString("Retry")
   return nil
 }
@@ -54,16 +70,14 @@ func (_ *RestartType) Dump(g *G, val Val, out *bufio.Writer) E {
 }
 
 func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
-  cs, e := g.DumpString(cause)
-
-  if e != nil {
-    return nil, e
-  }
-  
-  fmt.Printf("%v\n", cs)
-  rs := task.try.restarts.vars
   stdin := bufio.NewReader(os.Stdin) 
   stdout := bufio.NewWriter(os.Stdout)
+  rs := task.try.restarts.vars
+
+  stdout.WriteString("\nBreak: ")
+  g.Print(cause, stdout)
+  stdout.WriteRune('\n')
+  stdout.Flush()
   
   for i, v := range rs {
     fmt.Printf("%v %v", i, v.key)

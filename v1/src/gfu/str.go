@@ -64,8 +64,9 @@ func (_ *StrType) Len(g *G, val Val) (Int, E) {
   return val.(Str).Len(), nil
 }
 
-func (_ *StrType) Print(g *G, val Val, out *bufio.Writer) {
+func (_ *StrType) Print(g *G, val Val, out *bufio.Writer) E {
   out.WriteString(string(val.(Str)))
+  return nil
 }
 
 func (g *G) String(val Val) (string, E) {
@@ -84,7 +85,7 @@ func (g *G) EString(val Val) string {
   s, e := g.String(val)
 
   if e != nil {
-    s, _ = g.DumpString(e)
+    s, _ = g.String(e)
   }
 
   return s

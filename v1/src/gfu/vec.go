@@ -360,14 +360,18 @@ func (_ *VecType) Pop(g *G, val Val) (Val, Val, E) {
   return v[n-1], v[:n-1], nil
 }
 
-func (_ *VecType) Print(g *G, val Val, out *bufio.Writer) {
+func (_ *VecType) Print(g *G, val Val, out *bufio.Writer) E {
   for i, iv := range val.(Vec) {
     if i > 0 {
       out.WriteRune(' ')
     }
 
-    g.Print(iv, out)
+    if e := g.Print(iv, out); e != nil {
+      return e
+    }
   }
+
+  return nil
 }
 
 func (_ *VecType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {

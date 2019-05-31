@@ -8,12 +8,21 @@ type Recall struct {
   args Vec
 }
 
+type RecallType struct {
+  BasicType
+}
+
 func NewRecall(args Vec) (r Recall) {
   r.args = args
   return r
 }
 
-func (r Recall) Dump(g *G, out *bufio.Writer) (e E) {
+func (_ Recall) Type(g *G) Type {
+  return &g.RecallType
+}
+
+func (_ RecallType) Dump(g *G, val Val, out *bufio.Writer) (e E) {
+  r := val.(Recall)
   out.WriteString("(recall")
 
   for _, a := range r.args {
@@ -26,6 +35,3 @@ func (r Recall) Dump(g *G, out *bufio.Writer) (e E) {
   return nil
 }
 
-func (r Recall) String() string {
-  return "Recall"
-}

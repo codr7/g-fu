@@ -313,7 +313,7 @@ func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func throw_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return nil, g.Throw(args[0])
+  return nil, args[0]
 }
 
 func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -321,10 +321,6 @@ func fail_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func abort_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  if task.try == nil {
-    return nil, g.E("Abort outside of try")
-  }
-  
   return nil, Abort{}
 }
 
@@ -1047,7 +1043,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
-
+  e.AddType(g, &g.EType, "E")
   e.AddType(g, &g.NumType, "Num")
 
   e.AddType(g, &g.SeqType, "Seq")
@@ -1055,6 +1051,7 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
+  e.AddType(g, &g.AbortType, "Abort")
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
@@ -1070,7 +1067,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
+  e.AddType(g, &g.ReadEType, "ReadE")
+  e.AddType(g, &g.RecallType, "Recall")
   e.AddType(g, &g.RestartType, "Restart")
+  e.AddType(g, &g.RetryType, "Retry")
   e.AddType(g, &g.SetterType, "Setter")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")

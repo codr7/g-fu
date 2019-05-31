@@ -54,20 +54,8 @@ func main() {
         if buf.Len() > 0 {
           expr := fmt.Sprintf("(try _ %v)", buf.String())
           v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, expr)
-
-          if e == nil {
-            if s, e := g.String(v); e != nil {
-              log.Fatal(e)
-            } else {
-              fmt.Printf("\r%v\n", s)
-            }
-          } else {
-            if s, e := g.DumpString(e); e != nil {
-              log.Fatal(e)
-            } else {
-              fmt.Printf("\r%v\n", s)
-            }
-          }
+          if e != nil { v = e }
+          fmt.Printf("\n%v\n", g.EString(v))
         }
 
         buf.Reset()
@@ -85,7 +73,7 @@ func main() {
   } else {
     for _, a := range args {
       if _, e := g.Load(&g.MainTask, env, a); e != nil {
-        log.Fatal(e)
+        log.Fatal(g.EString(e))
       }
     }
   }

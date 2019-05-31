@@ -33,6 +33,7 @@ func (_ *CharType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (_ *CharType) Print(g *G, val Val, out *bufio.Writer) {
+func (_ *CharType) Print(g *G, val Val, out *bufio.Writer) E {
   out.WriteRune(rune(val.(Char)))
+  return nil
 }

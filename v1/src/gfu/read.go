@@ -1,6 +1,7 @@
 package gfu
 
 import (
+  "bufio"
   "fmt"
   "io"
   //"log"
@@ -8,6 +9,15 @@ import (
   "strings"
   "unicode"
 )
+
+type ReadE struct {
+  BasicE
+  pos Pos
+}
+
+type ReadEType struct {
+  BasicType
+}
 
 type CharSet string
 
@@ -433,4 +443,31 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   }
 
   return append(out, body), nil
+}
+
+func (e *ReadE) Init(g *G, pos Pos, msg string) *ReadE {
+  e.BasicE.Init(g, msg)
+  e.pos = pos
+  return e
+}
+
+func (_ ReadE) Type(g *G) Type {
+  return &g.ReadEType
+}
+
+func (_ ReadEType) Dump(g *G, val Val, out *bufio.Writer) E {
+  e := val.(*ReadE)
+  p := &e.pos
+
+  fmt.Fprintf(out,
+    "Read error in '%s'; row %v, col %v:\n%v",
+    p.src, p.Row, p.Col, e.msg)
+
+  return nil
+}
+
+func (g *G) ReadE(pos Pos, msg string, args ...interface{}) *ReadE {
+  msg = fmt.Sprintf(msg, args...)
+  e := new(ReadE).Init(g, pos, msg)
+  return e
 }

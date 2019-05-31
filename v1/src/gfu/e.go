@@ -7,7 +7,11 @@ import (
 )
 
 type E interface {
-  Dumper
+  Val
+}
+
+type EType struct {
+  BasicType
 }
 
 type BasicE struct {
@@ -28,58 +32,35 @@ func (e *BasicE) Dump(g *G, out *bufio.Writer) E {
   return nil
 }
 
+func (e *BasicE) Type(g *G) Type {
+  return &g.EType
+}
+
+func (_ *EType) Dump(g *G, val Val, out *bufio.Writer) E {
+  fmt.Fprintf(out, "(fail \"%v\")", val.(*BasicE).msg)
+  return nil
+}
+
+func (_ *EType) Print(g *G, val Val, out *bufio.Writer) E {
+  out.WriteString("Error: ")
+  out.WriteString(val.(*BasicE).msg)
+  return nil
+}
+
 func (g *G) E(msg string, args ...interface{}) *BasicE {
   for i, a := range args {
     switch v := a.(type) {
-    case Dumper:
-      var e E
-
-      if args[i], e = g.DumpString(v); e != nil {
-        args[i] = e
-      }
     case Val:
-      var e E
-
-      if args[i], e = g.String(v); e != nil {
-        args[i] = e
-      }
+      args[i] = g.EString(v)
     }
   }
 
   msg = fmt.Sprintf(msg, args...)
-  e := new(BasicE).Init(g, fmt.Sprintf("Error: %v", msg))
+  e := new(BasicE).Init(g, msg)
 
   if g.Debug {
-    s, _ := g.DumpString(e)
-    panic(s)
+    panic(g.EString(e))
   }
 
-  return e
-}
-
-type ReadE struct {
-  BasicE
-  pos Pos
-}
-
-func (e *ReadE) Init(g *G, pos Pos, msg string) *ReadE {
-  e.BasicE.Init(g, msg)
-  e.pos = pos
-  return e
-}
-
-func (e *ReadE) Dump(g *G, out *bufio.Writer) E {
-  p := &e.pos
-
-  fmt.Fprintf(out,
-    "Read error in '%s'; row %v, col %v:\n%v",
-    p.src, p.Row, p.Col, e.msg)
-
-  return nil
-}
-
-func (g *G) ReadE(pos Pos, msg string, args ...interface{}) *ReadE {
-  msg = fmt.Sprintf(msg, args...)
-  e := new(ReadE).Init(g, pos, msg)
   return e
 }

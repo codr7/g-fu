@@ -33,7 +33,7 @@ type Type interface {
   Iter(*G, Val) (Val, E)
   Len(*G, Val) (Int, E)
   Pop(*G, Val) (Val, Val, E)
-  Print(*G, Val, *bufio.Writer)
+  Print(*G, Val, *bufio.Writer) E
   Push(*G, Val, ...Val) (Val, E)
   Quote(*G, *Task, *Env, Val, *Env) (Val, E)
   SetIndex(*G, Val, Vec, Setter) (Val, E)
@@ -169,6 +169,10 @@ func (_ *BasicType) Is(g *G, lhs, rhs Val) bool {
 }
 
 func (t *BasicType) Isa(parent Type) Type {
+  if parent == t {
+    return t
+  }
+  
   v, ok := t.parents.Load(parent)
 
   if !ok {
@@ -190,8 +194,8 @@ func (t *BasicType) Pop(g *G, val Val) (Val, Val, E) {
   return nil, nil, g.E("Pop not supported: %v", t.id)
 }
 
-func (_ *BasicType) Print(g *G, val Val, out *bufio.Writer) {
-  g.Dump(val, out)
+func (_ *BasicType) Print(g *G, val Val, out *bufio.Writer) E {
+  return g.Dump(val, out)
 }
 
 func (t *BasicType) Push(g *G, val Val, its ...Val) (Val, E) {

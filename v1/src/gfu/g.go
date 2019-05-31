@@ -14,11 +14,13 @@ type G struct {
   MainTask Task
   RootEnv  Env
   
+  AbortType   AbortType
   BinType     BinType
   BinIterType BinIterType
   ByteType    ByteType
   ChanType    ChanType
   CharType    CharType
+  EType       EType
   EnvType     EnvType
   FalseType   FalseType
   FloatType   FloatType
@@ -33,7 +35,10 @@ type G struct {
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
+  ReadEType   ReadEType
+  RecallType  RecallType
   RestartType RestartType
+  RetryType   RetryType
   SetterType  SetterType
   SeqType     SeqType
   SplatType   SplatType

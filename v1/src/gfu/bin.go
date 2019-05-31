@@ -88,8 +88,9 @@ func (_ *BinType) Len(g *G, val Val) (Int, E) {
   return Int(len(val.(Bin))), nil
 }
 
-func (_ *BinType) Print(g *G, val Val, out *bufio.Writer) {
+func (_ *BinType) Print(g *G, val Val, out *bufio.Writer) E {
   out.WriteString(string(val.(Bin)))
+  return nil
 }
 
 func (_ *BinType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {

@@ -65,8 +65,9 @@ func (_ *ByteType) Int(g *G, val Val) (Int, E) {
   return Int(val.(Byte)), nil
 }
 
-func (_ *ByteType) Print(g *G, val Val, out *bufio.Writer) {
+func (_ *ByteType) Print(g *G, val Val, out *bufio.Writer) E {
   out.WriteByte(byte(val.(Byte)))
+  return nil
 }
 
 func (_ *ByteType) Sub(g *G, x Val, y Val) (Val, E) {

@@ -73,8 +73,8 @@ func (g *G) Pop(val Val) (Val, Val, E) {
   return val.Type(g).Pop(g, val)
 }
 
-func (g *G) Print(val Val, out *bufio.Writer) {
-  val.Type(g).Print(g, val, out)
+func (g *G) Print(val Val, out *bufio.Writer) E {
+  return val.Type(g).Print(g, val, out)
 }
 
 func (g *G) Push(val Val, its ...Val) (Val, E) {
