@@ -81,8 +81,30 @@ func (g *G) String(val Val) (string, E) {
   return out.String(), nil
 }
 
+func (g *G) PrintString(val Val) (string, E) {
+  var out strings.Builder
+  w := bufio.NewWriter(&out)
+  
+  if e := g.Print(val, w); e != nil {
+    return "", e
+  }
+
+  w.Flush()
+  return out.String(), nil
+}
+
 func (g *G) EString(val Val) string {
   s, e := g.String(val)
+
+  if e != nil {
+    s, _ = g.String(e)
+  }
+
+  return s
+}
+
+func (g *G) EPrintString(val Val) string {
+  s, e := g.PrintString(val)
 
   if e != nil {
     s, _ = g.String(e)

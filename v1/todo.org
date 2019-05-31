@@ -1,5 +1,3 @@
-* convert testcatch.gf to test
-* add test with retry
 * add try block around (load)
 ** add EFileNotFound
 ** add (use-filename new) restart

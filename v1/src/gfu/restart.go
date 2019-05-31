@@ -23,7 +23,7 @@ type Restart struct {
   try *Try
   id *Sym
   imp *Fun
-  args []Val
+  args Vec
 }
 
 type RestartType struct {

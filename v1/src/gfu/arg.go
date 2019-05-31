@@ -3,6 +3,7 @@ package gfu
 import (
   "bufio"
   //"log"
+  "strings"
 )
 
 type ArgType int
@@ -85,6 +86,20 @@ func (as Args) Dump(g *G, out *bufio.Writer) E {
   return nil
 }
 
+func (as Args) EString(g *G) string {
+  var out strings.Builder
+  w := bufio.NewWriter(&out)
+  
+  if e := as.Dump(g, w); e != nil {
+    s, _ := g.String(e)
+    return s
+    
+  }
+  
+  w.Flush()
+  return out.String()
+}
+
 type ArgList struct {
   items    Args
   min, max int
@@ -124,7 +139,7 @@ func (l *ArgList) Check(g *G, args Vec) E {
   nargs := len(args)
 
   if (l.min != -1 && nargs < l.min) || (l.max != -1 && nargs > l.max) {
-    return g.E("Arg mismatch: %v %v", l.items, args)
+    return g.E("Arg mismatch: %v %v", l.items.EString(g), args)
   }
 
   return nil

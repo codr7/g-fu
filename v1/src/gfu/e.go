@@ -59,7 +59,7 @@ func (g *G) E(msg string, args ...interface{}) *BasicE {
   e := new(BasicE).Init(g, msg)
 
   if g.Debug {
-    panic(g.EString(e))
+    panic(msg)
   }
 
   return e

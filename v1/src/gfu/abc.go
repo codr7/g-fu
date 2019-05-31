@@ -381,13 +381,14 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
   }
 restart:
   ev, ee = args[1:].EvalExpr(g, task, env, args_env)
-
+  var ok bool
+  
   if ee != nil {
-    if _, ok := ee.(Abort); ok {
+    if _, ok = ee.(Abort); ok {
       return nil, ee
     }
 
-    if _, ok := ee.(Retry); ok {
+    if _, ok = ee.(Retry); ok {
       goto restart
     }
 
@@ -399,18 +400,26 @@ restart:
       return nil, ee
     }
 
-    ev, ee = g.Catch(task, env, ee, args_env)
+    ok, ee = g.Catch(task, env, ee, args_env)
 
-    if ev == nil {
+    if !ok {
       ev, ee = g.BreakLoop(task, env, ee, args_env)
     }
 
     if ee != nil {
-      if _, ok := ee.(Abort); ok {
+      if r, ok := ee.(Restart); ok {
+        if r.try == &t {
+          return g.Call(task, env, r.imp, r.args, args_env)
+        }
+        
+        return nil, ee
+      }
+
+      if _, ok = ee.(Abort); ok {
         return nil, ee
       }
       
-      if _, ok := ee.(Retry); ok {
+      if _, ok = ee.(Retry); ok {
         goto restart
       }
     }
@@ -434,27 +443,31 @@ func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     if !ok {
       return nil, g.E("Invalid handler: %v", h.Type(g))
     }
-      
-    as, ok := hv[0].(Vec)
-
-    if !ok {
-      return nil, g.E("Invalid handler args: %v", hv[0].Type(g))
-    }
-
-    tv, e := g.Eval(task, env, as[0], args_env)
-
-    if e != nil {
-      return nil, e
-    }
 
     var t Type
-
-    if tv != &g.NIL {
-      t, ok = tv.(Type)
-    }
-
     var a Arg
-    a.Init(as[1].(*Sym))
+    
+    if hv[0] == &g.NIL {
+      a.Init(g.NewSym(""))
+    } else {
+      as, ok := hv[0].(Vec)
+      
+      if !ok {
+        return nil, g.E("Invalid handler args: %v", hv[0].Type(g))
+      }
+      
+      tv, e := g.Eval(task, env, as[0], args_env)
+
+      if e != nil {
+        return nil, e
+      }
+      
+      if tv != &g.NIL {
+        t, ok = tv.(Type)
+      }
+
+      a.Init(as[1].(*Sym))
+    }
     
     f, e := NewFun(g, env, nil, []Arg{a})
     
