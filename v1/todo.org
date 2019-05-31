@@ -1,5 +1,8 @@
 * convert testcatch.gf to test
 * add test with retry
+* add try block around Load
+** add g.Try(fun) (Val, E)
+*** use in try_imp
 * add (error Foo ((bar _)) ...) to define new Error type
 ** (throw (Foo/new 'bar 42))
 ** (fail Foo 'bar 42)
