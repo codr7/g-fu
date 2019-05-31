@@ -10,13 +10,14 @@ import (
 type Task struct {
   Inbox Chan
 
-  id     *Sym
-  body   Vec
-  mutex  sync.Mutex
-  cond   *sync.Cond
-  try      *Try
-  done   bool
-  result Val
+  id      *Sym
+  body    Vec
+  mutex   sync.Mutex
+  cond    *sync.Cond
+  try     *Try
+  catch_q []Catch
+  done    bool
+  result  Val
 }
 
 type TaskType struct {

@@ -340,6 +340,7 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
   prev := task.try
   var t Try 
   task.try = t.Init(prev)  
+  defer func() { task.try = prev }()
   t.AddRestart(g, g.Sym("abort"), g.abort_fun)
   t.AddRestart(g, g.Sym("retry"), g.retry_fun)
   
@@ -402,19 +403,82 @@ restart:
       return nil, ee
     }
 
-    ev, ee = g.BreakLoop(task, env, ee, args_env)
+    ev, ee = g.Catch(task, env, ee, args_env)
 
-    if _, ok := ee.(Abort); ok {
-      return nil, ee
+    if ev == nil {
+      ev, ee = g.BreakLoop(task, env, ee, args_env)
     }
 
-    if _, ok := ee.(Retry); ok {
-      goto restart
+    if ee != nil {
+      if _, ok := ee.(Abort); ok {
+        return nil, ee
+      }
+      
+      if _, ok := ee.(Retry); ok {
+        goto restart
+      }
     }
   }
   
-  task.try = prev
   return ev, ee
+}
+
+func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+  prev := len(task.catch_q)
+  defer func() { task.catch_q = task.catch_q[:prev] }()
+  handlers, ok := args[0].(Vec)
+
+  if !ok {
+    return nil, g.E("Invalid handlers: %v", args[0].Type(g))
+  }
+
+  for _, h := range handlers {
+    hv, ok := h.(Vec)
+
+    if !ok {
+      return nil, g.E("Invalid handler: %v", h.Type(g))
+    }
+      
+    as, ok := hv[0].(Vec)
+
+    if !ok {
+      return nil, g.E("Invalid handler args: %v", hv[0].Type(g))
+    }
+
+    tv, e := g.Eval(task, env, as[0], args_env)
+
+    if e != nil {
+      return nil, e
+    }
+
+    var t Type
+
+    if tv != &g.NIL {
+      t, ok = tv.(Type)
+    }
+
+    var a Arg
+    a.Init(as[1].(*Sym))
+    
+    f, e := NewFun(g, env, nil, []Arg{a})
+    
+    if e != nil {
+      return nil, e
+    }
+
+    f.body = hv[1:]
+    var c Catch
+    c.Init(t, f)
+    task.catch_q = append(task.catch_q, c)
+  }
+
+  v, e := args[1:].EvalExpr(g, task, env, args_env)
+
+  if e != nil {
+    return nil, e
+  }
+      
+  return v, e
 }
 
 func restart_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -1041,6 +1105,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "throw", throw_imp, A("val"))
   e.AddFun(g, "fail", fail_imp, A("reason"))
   e.AddPrim(g, "try", try_imp, A("restarts"), ASplat("body"))
+  e.AddPrim(g, "catch", catch_imp, A("handlers"), ASplat("body"))
   g.abort_fun, _ = e.AddFun(g, "abort", abort_imp)
   g.retry_fun, _ = e.AddFun(g, "retry", retry_imp)
   e.AddFun(g, "restart", restart_imp, A("id"), ASplat("args"))
