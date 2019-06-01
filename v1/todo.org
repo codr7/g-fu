@@ -1,13 +1,6 @@
 * add try block around (load)
 ** add EFileNotFound
 ** add (use-filename new) restart
-* add (error Foo (vars..) body..)
-** define new type
-** add EType as parent
-** add constructor with key/val-support
-*** (throw (Foo/new 'bar 42))
-** eval body in type env
-* ---
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
