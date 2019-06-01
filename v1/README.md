@@ -440,7 +440,7 @@ baz
 ```
 
 ### Restarts
-Restarts allow handling errors upstream without having to deal with unwinding stacks or manual propagation.
+Restarts allow handling errors upstream without unwinding the call stack or requiring manual propagation.
 
 ```
   (fail "Going down")
@@ -489,7 +489,7 @@ bar
 42
 ```
 
-Shadowing works the same way as for regular bindings.
+Restarts live in a separate namespace, but allow shadowing just like regular bindings.
 
 ```
   (try ((foo () 'bar))
@@ -526,6 +526,28 @@ open not.found: no such file or directory
 Choose 0-3: 2 "test.gf"
 
 42
+```
+
+If you still can't see it, imagine an expensive computation before the `load` that is used after.
+
+```
+(fun fib (n (a 0) (b 1)))
+  (do
+    (say "Expensive computation")
+    (load "not.found")
+    (say "Use result of computation"))      
+  
+Expensive computation
+
+Break: Error: Failed loading file: "not.found"
+open not.found: no such file or directory
+0 abort
+1 retry
+2 use-filename new
+
+Choose 0-3: 2 "test.gf"
+
+Use result of computation
 ```
 
 ### Tasks
