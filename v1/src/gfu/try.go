@@ -16,13 +16,19 @@ func (t *Try) AddRestart(g *G, imp *Fun) E {
   return t.restarts.Let(g, imp.id, t.NewRestart(imp))
 }
 
-func (g *G) Try(task *Task, env, args_env *Env, body func() (Val, E)) (v Val, e E){
+func (g *G) Try(task *Task, env, args_env *Env, body func() (Val, E), restarts...*Fun) (v Val, e E){
   prev := task.try
   var t Try 
   task.try = t.Init(prev)  
   defer func() { task.try = prev }()
   t.AddRestart(g, g.abort_fun)
   t.AddRestart(g, g.retry_fun)
+  
+  for _, rf := range restarts {
+    if e = t.AddRestart(g, rf); e != nil {
+      return nil, e
+    }
+  }
 restart:
   v, e = body()
   var ok bool

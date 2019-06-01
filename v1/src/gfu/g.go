@@ -121,8 +121,6 @@ func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
   var s []byte
 
   g.Try(task, env, args_env, func () (Val, E) {
-    task.try.AddRestart(g, use_filename)
-
     path = filepath.Join(g.load_path, path)    
     var re error
     s, re = ioutil.ReadFile(path)
@@ -132,7 +130,7 @@ func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
     }
 
     return nil, nil
-  })
+  }, use_filename)
   
   var pos Pos
   pos.Init(path)

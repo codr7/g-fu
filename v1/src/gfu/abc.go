@@ -334,103 +334,43 @@ func retry_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E) {
-  prev := task.try
-  var t Try 
-  task.try = t.Init(prev)  
-  defer func() { task.try = prev }()
-  t.AddRestart(g, g.abort_fun)
-  t.AddRestart(g, g.retry_fun)
+  var rfs []*Fun
   
   if args[0] != &g.NIL {
     rs, ok := args[0].(Vec)
-
+    
     if !ok {
       return nil, g.E("Invalid restarts: %v", args[0].Type(g))
     }
     
     for _, r := range rs {
       rv, ok := r.(Vec)
-
+      
       if !ok {
         return nil, g.E("Invalid restart: %v", r)
       }
       
       fargs, e := ParseArgs(g, task, env, ParsePrimArgs(g, rv[1]), args_env)
-
+      
       if e != nil {
         return nil, e
       }
-  
+      
       var id *Sym
       
       if id, ok = rv[0].(*Sym); !ok {
         return nil, g.E("Invalid restart id: %v", rv[0].Type(g))
       }
-
+      
       f := NewFun(g, env, id, fargs...)
       f.body = rv[2:]
-
-      if e := t.AddRestart(g, f); e != nil {
-        return nil, e
-      }
+      rfs = append(rfs, f)
     }
   }
-restart:
-  ev, ee = args[1:].EvalExpr(g, task, env, args_env)
-  var ok bool
-  
-  if ee != nil {
-    if _, ok = ee.(Abort); ok {
-      return nil, ee
-    }
 
-    if _, ok = ee.(Retry); ok {
-      goto restart
-    }
-
-    var rv Val
-    var ce E
-    
-    if rv, ce = g.Catch(task, env, ee, args_env); ce != nil {
-      if _, ok = ce.(Abort); ok {
-        return nil, ee
-      }
-      
-      if _, ok = ce.(Retry); ok {
-        goto restart
-      }
-
-      ee = ce
-    }
-
-    if rv == nil {
-      ev, ee = g.BreakLoop(task, env, ee, args_env)
-    } else {
-      var r Restart
-
-      if r, ok = rv.(Restart); !ok {
-        return nil, g.E("Expected Restart: %v", rv.Type(g))
-      }
-      
-      if r.try == &t {
-        return g.Call(task, env, r.imp, r.args, args_env)
-      } else {
-        ee = r
-      }
-    }
-
-    if ee != nil {
-      if _, ok = ee.(Abort); ok {
-        return nil, ee
-      }
-      
-      if _, ok = ee.(Retry); ok {
-        goto restart
-      }
-    }
-  }
-  
-  return ev, ee
+  return g.Try(task, env, args_env, func() (Val, E) {
+    return args[1:].EvalExpr(g, task, env, args_env)
+  }, rfs...)
 }
 
 func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {

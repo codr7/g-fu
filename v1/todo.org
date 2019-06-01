@@ -1,4 +1,3 @@
-* use Try in try_imp
 * add try block around (LookupVar)
 ** add restarts use-key / use-value
 * move (iter) to SeqType
