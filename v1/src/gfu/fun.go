@@ -102,17 +102,6 @@ func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
   return f.CallArgs(g, task, env, args, args_env)
 }
 
-func (_ *FunType) Clone(g *G, val Val) (Val, E) {
-  f, cf := val.(*Fun), new(Fun)
-  *cf = *f
-  
-  if e := f.env.Clone(g, &cf.env); e != nil {
-    return nil, e
-  }
-  
-  return cf, nil
-}
-
 func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
   f := val.(*Fun)
 

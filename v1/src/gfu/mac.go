@@ -84,17 +84,6 @@ func (_ *MacType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
   return g.Eval(task, args_env, v, args_env)
 }
 
-func (_ *MacType) Clone(g *G, val Val) (Val, E) {
-  m, cm := val.(*Mac), new(Mac)
-  *cm = *m
-  
-  if e := m.env.Clone(g, &cm.env); e != nil {
-    return nil, e
-  }
-  
-  return cm, nil
-}
-
 func (_ *MacType) Dump(g *G, val Val, out *bufio.Writer) E {
   m := val.(*Mac)
 
