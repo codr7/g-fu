@@ -1,9 +1,11 @@
 * add try block around (load)
 ** add EFileNotFound
 ** add (use-filename new) restart
-* add (error Foo ((bar _)) ...) to define new Error type
-** (throw (Foo/new 'bar 42))
-** (fail Foo 'bar 42)
+* add (error Foo (vars..) body..)
+** define new type
+** add EType as parent
+** add constructor with key/val-support
+*** (throw (Foo/new 'bar 42))
 ** eval body in type env
 * ---
 * move (iter) to SeqType
