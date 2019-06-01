@@ -509,6 +509,11 @@ Abort
 
 A more realistic scenario may be triggered by loading a nonexistent file, which includes a restart for using a different filename.
 
+test.gf
+```
+42
+```
+
 ```
 (load "not.found")
 

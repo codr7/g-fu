@@ -1,5 +1,6 @@
 * add try block around (LookupVar)
 ** add restarts use-key / use-value
+** bench
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
