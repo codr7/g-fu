@@ -25,14 +25,7 @@ func NewFun(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
 }
 
 func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
-  if id != nil {
-    f.id = id
-
-    if e := env.Let(g, id, f); e != nil {
-      return nil, e
-    }
-  }
-  
+  f.id = id
   f.arg_list.Init(g, args)
   return f, nil
 }
@@ -136,12 +129,18 @@ func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
 }
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
-  f, e := NewFun(g, env, g.Sym(id), args)
+  ids := g.Sym(id)
+  f, e := NewFun(g, env, ids, args)
   
   if e != nil {
     return nil, e
   }
 
   f.imp = imp
+
+  if e := env.Let(g, ids, f); e != nil {
+    return nil, e
+  }
+
   return f, nil
 }

@@ -45,6 +45,12 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
     }
   }
 
+  if id != nil {
+    if e = env.Let(g, id, f); e != nil {
+      return nil, e
+    }
+  }
+
   return f, nil
 }
 
@@ -337,8 +343,8 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
   var t Try 
   task.try = t.Init(prev)  
   defer func() { task.try = prev }()
-  t.AddRestart(g, g.Sym("abort"), g.abort_fun)
-  t.AddRestart(g, g.Sym("retry"), g.retry_fun)
+  t.AddRestart(g, g.abort_fun)
+  t.AddRestart(g, g.retry_fun)
   
   if args[0] != &g.NIL {
     rs, ok := args[0].(Vec)
@@ -360,21 +366,21 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
         return nil, e
       }
   
-      f, e := NewFun(g, env, nil, fargs)
-
-      if e != nil {
-        return nil, e
-      }
-
       var id *Sym
       
       if id, ok = rv[0].(*Sym); !ok {
         return nil, g.E("Invalid restart id: %v", rv[0].Type(g))
       }
+
+      f, e := NewFun(g, env, id, fargs)
       
+      if e != nil {
+        return nil, e
+      }
+
       f.body = rv[2:]
 
-      if e := t.AddRestart(g, id, f); e != nil {
+      if e := t.AddRestart(g, f); e != nil {
         return nil, e
       }
     }

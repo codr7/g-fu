@@ -21,7 +21,6 @@ type RetryType struct {
 
 type Restart struct {
   try *Try
-  id *Sym
   imp *Fun
   args Vec
 }
@@ -48,15 +47,14 @@ func (_ RetryType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (t *Try) NewRestart(id *Sym, imp *Fun) (r Restart) {
+func (t *Try) NewRestart(imp *Fun) (r Restart) {
   r.try = t
-  r.id = id
   r.imp = imp
   return r
 }
 
 func (r Restart) Dump(g *G, out *bufio.Writer) E {
-  fmt.Fprintf(out, "Restart: %v", r.id)
+  fmt.Fprintf(out, "Restart: %v", g.EString(r.imp))
   return nil
 }
 
@@ -70,7 +68,12 @@ func (_ *RestartType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_e
 }
 
 func (_ *RestartType) Dump(g *G, val Val, out *bufio.Writer) E {
-  fmt.Fprintf(out, "restart-%v", val.(Restart).id)
+  out.WriteString("(restart ")
+  if e := g.Dump(val.(Restart).imp, out); e != nil {
+    return e
+  }
+  
+  out.WriteRune(')')
   return nil
 }
 

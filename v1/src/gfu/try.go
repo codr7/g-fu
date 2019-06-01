@@ -12,6 +12,6 @@ func (t *Try) Init(prev *Try) *Try {
   return t
 }
 
-func (t *Try) AddRestart(g *G, id *Sym, imp *Fun) E {
-  return t.restarts.Let(g, id, t.NewRestart(id, imp))
+func (t *Try) AddRestart(g *G, imp *Fun) E {
+  return t.restarts.Let(g, imp.id, t.NewRestart(imp))
 }
