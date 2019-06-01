@@ -460,7 +460,7 @@ Choose 0-2: 0
 Abort
 ```
 
-`try` may be used to limit the scope and/or add custom restarts.
+`try` may be used to limit the scope and/or add custom restarts. The final value from the restart is returned from the try block except in case of `(retry)`/`(abort)`.
 
 ```
   (try ((foo (bar)
@@ -479,7 +479,7 @@ foo 42
 baz
 ```
 
-`restart` may be used to look up restarts in the call stack.
+`restart` may be used to look up restarts in the current call stack.
 
 ```
   (try ((foo (x) (+ x 35)))
@@ -499,10 +499,10 @@ Shadowing works the same way as for regular bindings.
 baz
 ```
 
-Calling `(abort)` exits unconditionally without entering a break loop.
+`(abort)` exits unconditionally without entering a break loop.
 
 ```
-  (try (abort) (say "Not bloody likely"))
+  (try _ (abort) (say "Not bloody likely"))
 
 Abort
 ```
