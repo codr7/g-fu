@@ -1,21 +1,18 @@
 (test (= (try _ 42) 42))
 
-(test (= (try ((foo (bar) (+ bar 7)))
-           (restart 'foo 35)
-           'baz)
+(test (= (try ((foo (x) (+ x 35)))
+           (call (restart 'foo) 7))
          42))
 
-(test (= (try ((foo (x) x))
+(test (= (try ((foo (x) (+ x 35)))
            (try _
-             (restart 'foo 42)
-             'bar)
-           'baz)
+             (call (restart 'foo) 7)))
          42))
 
 (test (= (try ((foo () 'bar))
            (try ((foo () 'baz))
-             (restart 'foo)))
-         'baz))
+             (call (restart 'foo))))
+         'baz)) 
 
 (test (= (catch ((_ (restart 'done 21)))
            (try ((done (n) (* 2 n)))

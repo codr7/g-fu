@@ -15,21 +15,21 @@ func (c *Catch) Init(etype Type, imp *Fun) *Catch {
   return c
 }
 
-func (g *G) Catch(task *Task, env *Env, val Val, args_env *Env) (bool, E) {
+func (g *G) Catch(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   t := val.Type(g)
   
   for _, c := range task.catch_q {
     if c.etype == nil || g.Isa(t, c.etype) != nil {
-      _, e := g.Call(task, env, c.imp, Vec{val}, args_env)
+      v, e := g.Call(task, env, c.imp, Vec{val}, args_env)
 
-      if e == nil {
-        return true, val
+      if e != nil {
+        return nil, e
       }
-
-      return true, e
+      
+      return v, e
     }
   }
 
-  return false, val
+  return nil, nil
 }
 

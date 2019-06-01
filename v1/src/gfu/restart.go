@@ -64,6 +64,11 @@ func (_ Restart) Type(g *G) Type {
   return &g.RestartType
 }
 
+func (_ *RestartType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
+  r := val.(Restart)
+  return g.Call(task, env, r.imp, append(r.args, args...), args_env)
+}
+
 func (_ *RestartType) Dump(g *G, val Val, out *bufio.Writer) E {
   fmt.Fprintf(out, "restart-%v", val.(Restart).id)
   return nil

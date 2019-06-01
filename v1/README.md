@@ -445,13 +445,13 @@ Restarts allow handling errors upstream without having to deal with unwinding st
 ```
   (fail "Going down")
   
-Error: Going down
+Break: Error: Going down
 0 abort()
 1 retry()
 
 Choose 0-2: 1
 
-Error: Going down
+Break: Error: Going down
 0 abort()
 1 retry()
 
@@ -479,14 +479,12 @@ foo 42
 baz
 ```
 
-`restart` may be used to call restarts directly from user code.
+`restart` may be used to look up restarts in the call stack.
 
 ```
-  (try ((foo (x) x))
+  (try ((foo (x) (+ x 35)))
     (try _
-      (restart 'foo 42)
-      'bar)
-    'baz)
+      (call (restart 'foo) 7)))
 
 42
 ```
@@ -496,7 +494,7 @@ Shadowing works the same way as for regular bindings.
 ```
   (try ((foo () 'bar))
     (try ((foo () 'baz))
-      (restart 'foo)))  
+      (call (restart 'foo))))
   
 baz
 ```

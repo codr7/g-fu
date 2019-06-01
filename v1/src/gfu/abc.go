@@ -392,29 +392,38 @@ restart:
       goto restart
     }
 
-    if r, ok := ee.(Restart); ok {
-      if r.try == &t {
-        return g.Call(task, env, r.imp, r.args, args_env)
+    var rv Val
+    var ce E
+    
+    if rv, ce = g.Catch(task, env, ee, args_env); ce != nil {
+      if _, ok = ce.(Abort); ok {
+        return nil, ee
+      }
+      
+      if _, ok = ce.(Retry); ok {
+        goto restart
       }
 
-      return nil, ee
+      ee = ce
     }
 
-    ok, ee = g.Catch(task, env, ee, args_env)
-
-    if !ok {
+    if rv == nil {
       ev, ee = g.BreakLoop(task, env, ee, args_env)
+    } else {
+      var r Restart
+
+      if r, ok = rv.(Restart); !ok {
+        return nil, g.E("Expected Restart: %v", rv.Type(g))
+      }
+      
+      if r.try == &t {
+        return g.Call(task, env, r.imp, r.args, args_env)
+      } else {
+        ee = r
+      }
     }
 
     if ee != nil {
-      if r, ok := ee.(Restart); ok {
-        if r.try == &t {
-          return g.Call(task, env, r.imp, r.args, args_env)
-        }
-        
-        return nil, ee
-      }
-
       if _, ok = ee.(Abort); ok {
         return nil, ee
       }
@@ -511,7 +520,7 @@ func restart_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
   r := v.(Restart)
   r.args = args[1:]
-  return nil, r
+  return r, nil
 }
 
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
