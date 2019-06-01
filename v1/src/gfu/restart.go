@@ -89,7 +89,12 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
   
   for i, v := range rs {
     fmt.Printf("%v %v", i, v.key)
-    v.Val.(Restart).imp.arg_list.items.Dump(g, stdout)
+    
+    for _, a := range v.Val.(Restart).imp.arg_list.items {
+      stdout.WriteRune(' ')
+      a.Dump(g, stdout)
+    }
+    
     stdout.WriteRune('\n')
     stdout.Flush()
   }
@@ -131,7 +136,6 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
     break
   }
   
-  fmt.Printf("\n")
   r := rs[n].Val.(Restart).imp
   return g.Call(task, env, r, args, args_env)
 }

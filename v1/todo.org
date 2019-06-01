@@ -1,7 +1,6 @@
-* add try block around (load)
-** add EFileNotFound
-** add g.Try(func(), Restart...)
-** add (use-filename new) restart
+* use Try in try_imp
+* add try block around (LookupVar)
+** add restarts use-key / use-value
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib

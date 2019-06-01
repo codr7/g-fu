@@ -20,14 +20,14 @@ type FunType struct {
   BasicType
 }
 
-func NewFun(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
+func NewFun(g *G, env *Env, id *Sym, args...Arg) *Fun {
   return new(Fun).Init(g, env, id, args)
 }
 
-func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) (*Fun, E) {
+func (f *Fun) Init(g *G, env *Env, id *Sym, args []Arg) *Fun {
   f.id = id
   f.arg_list.Init(g, args)
-  return f, nil
+  return f
 }
 
 func (f *Fun) InitEnv(g *G, env *Env) E {
@@ -130,12 +130,7 @@ func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
 
 func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
   ids := g.Sym(id)
-  f, e := NewFun(g, env, ids, args)
-  
-  if e != nil {
-    return nil, e
-  }
-
+  f := NewFun(g, env, ids, args...)
   f.imp = imp
 
   if e := env.Let(g, ids, f); e != nil {

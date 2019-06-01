@@ -76,7 +76,7 @@ func main() {
     }
   } else {
     for _, a := range args {
-      if _, e := g.Load(&g.MainTask, env, a); e != nil {
+      if _, e := g.Load(&g.MainTask, env, env, a); e != nil {
         log.Fatal(g.EPrintString(e))
       }
     }

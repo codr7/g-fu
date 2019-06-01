@@ -27,12 +27,7 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   i++
-  f, e := NewFun(g, env, id, as)
-
-  if e != nil {
-    return nil, e
-  }
-
+  f := NewFun(g, env, id, as...)
   f.body = args[i:]
 
   if e = f.InitEnv(g, env); e != nil {
@@ -372,12 +367,7 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
         return nil, g.E("Invalid restart id: %v", rv[0].Type(g))
       }
 
-      f, e := NewFun(g, env, id, fargs)
-      
-      if e != nil {
-        return nil, e
-      }
-
+      f := NewFun(g, env, id, fargs...)
       f.body = rv[2:]
 
       if e := t.AddRestart(g, f); e != nil {
@@ -484,12 +474,7 @@ func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
       a.Init(as[1].(*Sym))
     }
     
-    f, e := NewFun(g, env, nil, []Arg{a})
-    
-    if e != nil {
-      return nil, e
-    }
-
+    f := NewFun(g, env, nil, a)
     f.body = hv[1:]
     var c Catch
     c.Init(t, f)
@@ -530,7 +515,7 @@ func restart_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func load_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.Load(task, env, string(args[0].(Str)))
+  return g.Load(task, env, env, string(args[0].(Str)))
 }
 
 func dup_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

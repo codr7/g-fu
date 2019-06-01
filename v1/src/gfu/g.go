@@ -105,14 +105,35 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   return out.EvalExpr(g, &g.MainTask, env, env)
 }
 
-func (g *G) Load(task *Task, env *Env, path string) (Val, E) {
-  path = filepath.Join(g.load_path, path)
-  s, re := ioutil.ReadFile(path)
+func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
+  use_filename := NewFun(g, env, g.Sym("use-filename"), A("new"))
+  use_filename.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
+    ps, ok := args[0].(Str)
 
-  if re != nil {
-    return nil, g.E("Failed loading file: %v\n%v", path, re)
+    if !ok {
+      return nil, g.E("Invalid filename: \"%v\"", args[0].Type(g))
+    }
+
+    path = string(ps)
+    return nil, Retry{}
   }
+  
+  var s []byte
 
+  g.Try(task, env, args_env, func () (Val, E) {
+    task.try.AddRestart(g, use_filename)
+
+    path = filepath.Join(g.load_path, path)    
+    var re error
+    s, re = ioutil.ReadFile(path)
+
+    if re != nil {
+      return nil, g.E("Failed loading file: \"%v\"\n%v", path, re)
+    }
+
+    return nil, nil
+  })
+  
   var pos Pos
   pos.Init(path)
   prev_path := g.load_path

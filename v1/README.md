@@ -446,14 +446,14 @@ Restarts allow handling errors upstream without having to deal with unwinding st
   (fail "Going down")
   
 Break: Error: Going down
-0 abort()
-1 retry()
+0 abort
+1 retry
 
 Choose 0-2: 1
 
 Break: Error: Going down
-0 abort()
-1 retry()
+0 abort
+1 retry
 
 Choose 0-2: 0
 
@@ -463,20 +463,20 @@ Abort
 `try` may be used to limit the scope and/or add custom restarts. The final value from the restart is returned from the try block except in case of `(retry)`/`(abort)`.
 
 ```
-  (try ((foo (bar)
-          (say (str "foo " bar))
-          'baz))
+  (try ((foo (x)
+          (say (str "foo " x))
+          'bar))
     (fail (str "Going down")))
 
 Error: Going down
-0 abort()
-1 retry()
-2 foo(bar)
+0 abort
+1 retry
+2 foo x
 
 Choose 0-3: 2 42
 
 foo 42
-baz
+bar
 ```
 
 `restart` may be used to look up restarts in the current call stack.
@@ -505,6 +505,22 @@ baz
   (try _ (abort) (say "Not bloody likely"))
 
 Abort
+```
+
+A more realistic scenario may be triggered by loading a nonexistent file, which includes a restart for using a different filename.
+
+```
+(load "not.found")
+
+Break: Error: Failed loading file: "not.found"
+open not.found: no such file or directory
+0 abort
+1 retry
+2 use-filename new
+
+Choose 0-3: 2 "test.gf"
+
+42
 ```
 
 ### Tasks
