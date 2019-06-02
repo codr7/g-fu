@@ -46,7 +46,7 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, arg
 
   for j, p := range s.parts {
     if v, i, e = env.GetVar(g, p, silent); e != nil {
-      return nil, 0, nil, nil, e
+      return nil, 0, env, nil, e
     }
 
     if (silent && v == nil) || j == max-1 {
@@ -78,19 +78,17 @@ func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *E
     return v.Val, env, args, nil
   }
 
-  if env != nil {
-    val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
+  val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
 
-    if val != nil {
-      return val, env, args, nil
-    }
+  if val != nil {
+    return val, env, args, nil
   }
 
   if !silent {
-    return nil, nil, nil, g.E("Unknown: %v", s)
+    return nil, env, nil, g.E("Unknown: %v", s)
   }
 
-  return nil, nil, nil, nil
+  return nil, env, nil, nil
 }
 
 func (s *Sym) String() string {

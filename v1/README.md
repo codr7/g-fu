@@ -247,7 +247,7 @@ Non-captured bindings may be imported manually.
 ```
 
 #### Setters
-The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update function and any number of keys and typically updates the value for the specified symbol at the specified key with the value of applying the update function to the previous value.
+The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`. The setter is called with an update-function and any number of keys and typically updates the value for the specified symbol at the specified key with the result of applying the update-function to the previous value.
 
 ```
   (let _
@@ -283,7 +283,7 @@ Failed lookups may be trapped by defining `resolve`. The following example imple
 #### Sandboxes
 Environments may be used to isolate the evaluation of untrusted code.
 
-The following example creates a sandbox named `sec` and imports `eval` and the local function `pub`. `use` is likewise imported, but its use restricted within eval.
+The following example creates a sandbox named `sec` and imports `eval` and the local function `pub`. `use` is likewise imported, but restricted within eval.
 
 ```
 (fun pub () (say 'pub))

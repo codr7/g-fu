@@ -1,6 +1,9 @@
-* auto-gensym
-** use resolve in macro env to gensym missing bindings
-** grep/drop new-sym
+* add gensym literals
+** $foo
+** bind to gensym unless bound
+** use id[1:] as prefix
+** return value
+** grep new-sym
 * add try block around (LookupVar)
 ** add restarts use-key / use-value
 ** bench
