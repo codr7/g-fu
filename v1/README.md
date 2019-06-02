@@ -3,7 +3,7 @@
 ### Intro
 [g-fu](https://github.com/codr7/g-fu) is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go.
 
-This document describes the initial release; which implements an extensible, tree-walking interpreter for a full block-structured Lisp-dialect with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first-class environments, user-defined setters, threads, and channels.
+This document describes the initial release; which implements an extensible, tree-walking interpreter for a full block-structured Lisp-dialect with quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first-class environments, user-defined setters, restarts, threads, and channels.
 
 ```
 $ git clone https://github.com/codr7/g-fu.git
@@ -393,6 +393,41 @@ The next example is taken from the [standard library](https://github.com/codr7/g
 (mac @ (f1 fs..)
   '(fun (args..)
      %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))
+```
+
+#### Hygiene
+When creating bindings in macro expansions, there is always a risk of capturing existing bindings.
+
+```
+  (let (foo 1)
+    (mac bar (body..)
+      '(let (foo 2) %body..))
+    (bar (say foo)))
+
+2
+```
+
+Unique symbols may be used to prevent unwanted capture, prefixing any identifier with `$` binds the name to a unique symbol unless already bound.
+
+```
+  $foo
+  
+foo-sym-168
+
+  $foo
+  
+foo-sym-168
+```
+
+Which may be used as follows to avoid capture.
+
+```
+  (let (foo 1)
+    (mac bar (body..)
+      '(let (%$foo 2) %body..))
+    (bar (say foo)))
+
+1
 ```
 
 ### Iterators

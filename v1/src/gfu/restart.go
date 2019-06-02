@@ -113,6 +113,9 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
       continue
     }
 
+    stdout.WriteRune('\n')
+    stdout.Flush()
+    
     out, e = out.EvalVec(g, task, env, args_env)
 
     if e != nil {

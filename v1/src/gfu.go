@@ -56,9 +56,9 @@ func main() {
           v, e := g.EvalString(&g.MainTask, env, gfu.INIT_POS, expr)
           
           if e == nil {
-            fmt.Printf("\n%v\n", g.EString(v))
+            fmt.Printf("%v\n", g.EString(v))
           } else {
-            fmt.Printf("\n%v\n", g.EPrintString(e))
+            fmt.Printf("%v\n", g.EPrintString(e))
           }
         }
 
