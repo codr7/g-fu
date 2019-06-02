@@ -1,3 +1,6 @@
+* auto-gensym
+** use resolve in macro env to gensym missing bindings
+** grep/drop new-sym
 * add try block around (LookupVar)
 ** add restarts use-key / use-value
 ** bench
