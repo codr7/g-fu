@@ -407,7 +407,7 @@ When creating bindings in macro expansions, there is always a risk of capturing 
 2
 ```
 
-Prefixing any identifier with `$` binds the name to a unique symbol unless already bound.
+Prefixing any identifier with `$` binds the name to a unique symbol in the current environment unless already bound.
 
 ```
   $foo
@@ -419,7 +419,7 @@ foo-sym-168
 foo-sym-168
 ```
 
-Unique symbols may be spliced into expansions to avoid capture, which generates the symbol in macro scope.
+Unique symbols may be spliced into expansions to avoid capture.
 
 ```
   (let (foo 1)
