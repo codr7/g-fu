@@ -419,7 +419,7 @@ foo-sym-168
 foo-sym-168
 ```
 
-Which may be used as follows to avoid capture.
+Unique symbols may be spliced into expansions to avoid capture, which generates the symbols in macro scope.
 
 ```
   (let (foo 1)
