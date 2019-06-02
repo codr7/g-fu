@@ -1,5 +1,4 @@
 * gensym lits
-** replace new-sym in readme/doc
 ** add to macro readme
 * add try block around (LookupVar)
 ** add restarts use-key / use-value

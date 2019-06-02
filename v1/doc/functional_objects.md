@@ -65,10 +65,8 @@ From one angle, a closure is essentially a single method object that uses its en
 
 ```
 (mac dispatch (defs..)
-  (let args (new-sym) id (new-sym))
-  
-  '(fun (%args..)
-     (let %id (head %args))
+  '(fun (%$args..)
+     (let %$id (head %$args))
      
      (switch
        %(tr defs ()
@@ -78,12 +76,12 @@ From one angle, a closure is essentially a single method object that uses its en
                     (if (T? did)
                       '(T
                          (call (fun (%(head imp)..) %(tail imp)..)
-                               %args..))
-                      '((= %id '%did)
+                               %$args..))
+                      '((= %$id '%did)
                          (call (fun (%(head imp)..) %(tail imp)..)
-                               (splat (tail %args))))))))..
+                               (splat (tail %$args))))))))..
                             
-       (T (fail (str "Unknown method: " %id))))))
+       (T (fail (str "Unknown method: " %$id))))))
 ```
 
 The following exmple uses `let` to create a new environment containing a slot and `dispatch` to wrap it in a protocol. Calls to non-existing methods may be trapped by declaring a `T` method.

@@ -1,7 +1,7 @@
 ## Raw Closures
 
 ### Intro
-Closures are functions with captured environments. So far so good, it's possible to build mostly anything using [TCO](http://wiki.c2.com/?TailCallOptimization)-gifted closures. [g-fu](https://github.com/codr7/g-fu/tree/master/v1) includes a single dispatch object [system](https://github.com/codr7/g-fu/blob/master/v1/doc/functional_objects.md) based on nothing but closures.
+Closures are functions with captured environments. So far so good, it's possible to build mostly anything using [TCO](http://wiki.c2.com/?TailCallOptimization)-gifted closures. In a previous post, I shared a recipe for a single dispatch object [system](https://github.com/codr7/g-fu/blob/master/v1/doc/functional_objects.md) using mostly closures.
 
 The thing that's been increasingly bugging me is being required to squeeze all interaction with the underlying environment through a function, which is both slow and inconvenient in all but the most trivial cases.
 

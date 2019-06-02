@@ -45,15 +45,13 @@ The most fundamental loop is called `loop`. It supports skipping to the start of
 
 ```
 (mac loop (body..)
-  (let done? (new-sym) result (new-sym))
-  
   '(let _
      (mac break (args..) '(recall T %args..))
      (mac continue () '(recall))
      
-     (call (fun ((%done? F) %result..)
-             (if %done?
-               %result..
+     (call (fun ((%$done? F) %$result..)
+             (if %$done?
+               %$result..
                (do %body.. (recall)))))))
 ```
 ```
@@ -69,12 +67,11 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 ```
 (mac for (args body..)
   (let v? (= (type args) Vec)
-       in (new-sym)
        out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
        
-  '(let (%in (iter %(if v? (pop args) args)))
+  '(let (%$in (iter %(if v? (pop args) args)))
      (loop
-       (let %out (pop %in))
+       (let %out (pop %$in))
        (if (_? %out) (break))
        %body..)))
 ```
