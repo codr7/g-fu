@@ -395,7 +395,7 @@ The next example is taken from the [standard library](https://github.com/codr7/g
      %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))
 ```
 
-#### Hygiene
+#### Capture
 When creating bindings in macro expansions, there is always a risk of capturing existing bindings.
 
 ```
