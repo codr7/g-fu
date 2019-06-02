@@ -21,15 +21,15 @@
 
 (mac and (conds..)
   (fun rec (cs)
-    (let v (new-sym) h (head cs) tcs (tail cs))
-    '(let (%v %h) (if %v %(if tcs (rec tcs) v) %v)))
+    (let h (head cs) tcs (tail cs))
+    '(let (%$v %h) (if %$v %(if tcs (rec tcs) $v) %$v)))
     
   (rec conds))
 
 (mac or (conds..)
   (fun rec (cs)
-    (let v (new-sym) h (head cs) tcs (tail cs))
-    '(let (%v %h) (if %v %v %(if tcs (rec tcs) v))))
+    (let h (head cs) tcs (tail cs))
+    '(let (%$v %h) (if %$v %$v %(if tcs (rec tcs) $v))))
     
   (rec conds))
 

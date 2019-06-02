@@ -26,10 +26,6 @@
 (test (= (+ -42) 42))
 (test (= (+ 35 7) 42))
 
-(test (== 'foo 'foo))
-(test (= ''foo ''foo))
-(test (not (= (new-sym) (new-sym))))
-
 (test (= (len "") 0))
 (test (= (len "foo") 3))
 
@@ -119,13 +115,14 @@
   (test (= (expand 1 '(bar 42)) '(foo 42)))
   (test (= (expand 2 '(bar 42)) 42)))
 
-(load "type.gf")
+(load "bin.gf")
 (load "cond.gf")
 (load "env.gf")
-(load "math.gf")
-(load "seq.gf")
-(load "iter.gf")
-(load "bin.gf")
 (load "fos.gf")
+(load "iter.gf")
+(load "math.gf")
 (load "restart.gf")
+(load "seq.gf")
+(load "sym.gf")
 (load "task.gf")
+(load "type.gf")

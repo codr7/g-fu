@@ -110,14 +110,25 @@ func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
 }
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
-  if v, args_env, _, e = val.(*Sym).Lookup(g, task, env, env, false); e != nil {
-    return nil, e
+  s := val.(*Sym)
+  
+  if v, args_env, _, _ = s.Lookup(g, task, env, env, true); v == nil {
+    sps := s.parts
+    sn := sps[len(sps)-1].name
+    
+    if sn[0] == '$' {
+      v = g.NewSym(sn[1:])
+      args_env.Add(s, v)
+      return v, nil
+    }
+
+    return nil, g.E("Unknown: %v", s)
   }
 
   if p, ok := v.(*Prim); ok && p.arg_list.items == nil {
-    v, e = g.Call(task, env, v, Vec{}, args_env)
+    v, e = g.Call(task, env, v, nil, args_env)
   } else if m, ok := v.(*Mac); ok && m.arg_list.items == nil {
-    v, e = g.Call(task, env, v, Vec{}, args_env)
+    v, e = g.Call(task, env, v, nil, args_env)
   }
 
   return v, e
@@ -133,7 +144,7 @@ func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val,
   if v != nil {
     if m, ok := v.(*Mac); ok {
       if m.arg_list.items == nil {
-        return m.ExpandCall(g, task, env, Vec{})
+        return m.ExpandCall(g, task, env, nil)
       }
     }
   }

@@ -1,13 +1,11 @@
 (mac loop (body..)
-  (let done? (new-sym) result (new-sym))
-  
   '(let _
      (mac break (args..) '(recall T %args..))
      (mac continue () '(recall))
      
-     (call (fun ((%done? F) %result..)
-             (if %done?
-               (if %result (if (= 1 (len %result)) (head %result) %result))
+     (call (fun ((%$done? F) %$result..)
+             (if %$done?
+               (if %$result (if (= 1 (len %$result)) (head %$result) %$result))
                (do %body.. (recall)))))))
 
 (mac while (cond body..)
@@ -17,12 +15,11 @@
 
 (mac for (args body..)
   (let v? (= (type args) Vec)
-       in (new-sym)
        out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
        
-  '(let (%in (iter %(if v? (pop args) args)))
+  '(let (%$in (iter %(if v? (pop args) args)))
      (loop
-       (let %out (pop %in))
+       (let %out (pop %$in))
        (if (_? %out) (break))
        %body..)))
 

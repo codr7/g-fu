@@ -1,9 +1,6 @@
-* add gensym literals
-** $foo
-** bind to gensym unless bound
-** use id[1:] as prefix
-** return value
-** grep new-sym
+* gensym lits
+** replace new-sym in readme/doc
+** add to macro readme
 * add try block around (LookupVar)
 ** add restarts use-key / use-value
 ** bench
