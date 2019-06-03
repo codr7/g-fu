@@ -1,5 +1,3 @@
-* finish sym lookup restarts
-** add use-key/val tests
 * rename ReadE/BasicE
 * add try-block around eval
 * remove (new-sym)

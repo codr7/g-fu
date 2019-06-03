@@ -23,3 +23,8 @@
            (try ((done (n) (* 2 n)))
              (throw 21)))
          42))
+
+(test (= (catch (((EUnknown _)
+                   (restart 'use-val 42)))
+           (try _ not-found))
+         42))

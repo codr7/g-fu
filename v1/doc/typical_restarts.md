@@ -149,9 +149,9 @@ The missing piece of the puzzle is a way to catch errors and invoke restarts pro
 Let's start with a break loop to see what options are available.
 
 ```
-  foo
+  not-found
   
-Break: Error: Unknown: foo
+Break: Error: Unknown: not-found
 0 abort
 1 retry
 2 use-key new
@@ -162,7 +162,7 @@ Error handlers are expected to return a restart curried with any required argume
 
 ```
   (catch (((EUnknown _) (restart 'use-val 42)))
-    foo)
+    (try _ not-found))
 
 42
 ```
