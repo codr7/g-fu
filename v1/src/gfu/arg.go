@@ -44,11 +44,19 @@ func ASplat(id string) (a Arg) {
   return a
 }
 
+func (a Arg) DumpId(out *bufio.Writer) {
+  if a.id == nil {
+    out.WriteString("n/a")
+  } else {
+    out.WriteString(a.id.name)
+  }
+}
+
 func (a Arg) Dump(g *G, out *bufio.Writer) E {
   switch a.arg_type {
   case ARG_OPT:
     out.WriteRune('(')
-    out.WriteString(a.id.name)
+    a.DumpId(out)
 
     if a.opt_val != nil {
       out.WriteRune(' ')
@@ -60,10 +68,10 @@ func (a Arg) Dump(g *G, out *bufio.Writer) E {
 
     out.WriteRune(')')
   case ARG_SPLAT:
-    out.WriteString(a.id.name)
+    a.DumpId(out)
     out.WriteString("..")
   default:
-    out.WriteString(a.id.name)
+    a.DumpId(out)
   }
 
   return nil
@@ -120,7 +128,7 @@ func (l *ArgList) Init(g *G, args Args) *ArgList {
       l.min--
     }
 
-    if a.id == nil {
+    if a.id == nil && len(a.str_id) > 0 {
       l.items[i].id = g.Sym(a.str_id)
     }
   }
@@ -173,6 +181,10 @@ func (l *ArgList) LetVars(g *G, env *Env, args Vec) E {
   nargs := len(args)
 
   for i, a := range l.items {
+    if a.id == nil {
+      continue
+    }
+    
     if a.arg_type == ARG_SPLAT {
       var v Vec
 
@@ -211,7 +223,9 @@ func ParseArgs(g *G, task *Task, env *Env, in Vec, args_env *Env) (Args, E) {
   for _, v := range in {
     var a Arg
 
-    if id, ok := v.(*Sym); ok {
+    if v == &g.NIL {
+      // Skip
+    } else if id, ok := v.(*Sym); ok {
       a.id = id
     } else if vv, ok := v.(Vec); ok {
       if len(vv) < 2 {

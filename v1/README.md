@@ -10,7 +10,7 @@ $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
 $ go build src/gfu.go
 $ rlwrap ./gfu
-g-fu v1.19
+g-fu v1.20
 
 Press Return twice to evaluate.
 
@@ -566,7 +566,6 @@ Choose 0-3: 2 "test.gf"
 If you still can't see the point, imagine an expensive computation before the `load` that is used after.
 
 ```
-(fun fib (n (a 0) (b 1)))
   (do
     (say "Expensive computation")
     (load "not.found")

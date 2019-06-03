@@ -92,7 +92,7 @@ func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *E
     val, _ = env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
     
     if val == nil && !silent {
-      return nil, env, args, g.E("Unknown: %v", s)
+      return nil, env, args, g.EUnknown(s)
     }
   } else {
     val = v.Val
@@ -142,7 +142,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
   v, e = g.Try(task, env, args_env, func () (Val, E) {
     if v, args_env, _, _ = s.Lookup(g, task, env, args_env, true); v == nil {
 
-      return nil, g.E("Unknown: %v", s)
+      return nil, g.EUnknown(s)
     }
 
     return v, nil

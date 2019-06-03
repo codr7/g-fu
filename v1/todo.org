@@ -1,6 +1,6 @@
 * finish sym lookup restarts
 ** add use-key/val tests
-** finish Catching
+* rename ReadE/BasicE
 * add try-block around eval
 * remove (new-sym)
 ** use $foo

@@ -21,6 +21,15 @@ type Var struct {
   Val Val
 }
 
+type EUnknown struct {
+  BasicE
+  id *Sym
+}
+
+type EUnknownType struct {
+  EType
+}
+
 func (e *Env) Add(key *Sym, val Val) bool {
   if i, found := e.Find(key); found == nil {
     e.Insert(i, key).Val = val
@@ -128,7 +137,7 @@ func (e *Env) GetVar(g *G, key *Sym, silent bool) (*Var, int, E) {
   i, found := e.Find(key)
 
   if found == nil && !silent {
-    return nil, 0, g.E("Unknown: %v", key)
+    return nil, 0, g.EUnknown(key)
   }
 
   return found, i, nil
@@ -207,7 +216,7 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, args_env *Env, silent bool) (V
       return nil, nil
     }
 
-    return nil, g.E("Unknown: %v", key)
+    return nil, g.EUnknown(key)
   }
 
   return e.resolve.CallArgs(g, task, e, Vec{key}, args_env)
@@ -350,4 +359,20 @@ func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
   }
 
   return v.Val, nil
+}
+
+func (g *G) EUnknown(id *Sym) *EUnknown {
+  e := new(EUnknown)
+  e.Init(g, fmt.Sprintf("Unknown: %v", id))
+  e.id = id
+  return e
+}
+
+func (_ EUnknown) Type(g *G) Type {
+  return &g.EUnknownType
+}
+
+func (_ *EUnknownType) Dump(g *G, val Val, out *bufio.Writer) E {
+  out.WriteString("Abort")
+  return nil
 }

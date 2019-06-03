@@ -51,6 +51,8 @@ type G struct {
   VecType     VecType
   VecIterType VecIterType
   WriterType  WriterType
+
+  EUnknownType EUnknownType
   
   NIL Nil
   T   True

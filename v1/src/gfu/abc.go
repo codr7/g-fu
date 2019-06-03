@@ -411,7 +411,13 @@ func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
         t, ok = tv.(Type)
       }
 
-      a.Init(as[1].(*Sym))
+      var s *Sym
+      
+      if as[1] != &g.NIL {
+        s = as[1].(*Sym)
+      }
+      
+      a.Init(s)
     }
     
     f := NewFun(g, env, nil, a)
@@ -1035,6 +1041,8 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
   e.AddType(g, &g.WriterType, "Writer")
 
+  e.AddType(g, &g.EUnknownType, "EUnknown", &g.EType)
+  
   e.AddConst(g, "_", &g.NIL)
   e.AddConst(g, "T", &g.T)
   e.AddConst(g, "F", &g.F)
