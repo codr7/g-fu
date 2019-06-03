@@ -1,10 +1,10 @@
-* add try block around sym lookup
+* remove (new-sym)
+** use $foo
+* finish sym lookup restarts
 ** add use-val
-** add test
-** bench
+** add tests
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib
-* move new-sym to Sym/new
 * add switch val-arg
 ** inject into vec-conds if != _

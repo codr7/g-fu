@@ -67,6 +67,19 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, arg
     }
   }
 
+  if v == nil {
+    sps := s.parts
+    s := sps[len(sps)-1]
+    sn := s.name
+
+    if sn[0] == '$' {
+      i, _ = env.Find(s)
+      v = env.Insert(i, s)
+      v.Val = g.NewSym(sn[1:])
+      return v, i, env, args, nil
+    }
+  }
+    
   return v, i, env, args, nil
 }
 
@@ -123,14 +136,6 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
 
   v, e = g.Try(task, env, args_env, func () (Val, E) {
     if v, args_env, _, _ = s.Lookup(g, task, env, args_env, true); v == nil {
-      sps := s.parts
-      sn := sps[len(sps)-1].name
-
-      if sn[0] == '$' {
-        v = g.NewSym(sn[1:])
-        args_env.Add(s, v)
-        return v, nil
-      }
 
       return nil, g.E("Unknown: %v", s)
     }
