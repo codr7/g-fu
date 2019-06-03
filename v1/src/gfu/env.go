@@ -22,12 +22,11 @@ type Var struct {
 }
 
 type EUnknown struct {
-  BasicE
   id *Sym
 }
 
 type EUnknownType struct {
-  EType
+  BasicType
 }
 
 func (e *Env) Add(key *Sym, val Val) bool {
@@ -363,7 +362,6 @@ func (v *Var) Update(g *G, env *Env, f func(Val) (Val, E)) (Val, E) {
 
 func (g *G) EUnknown(id *Sym) *EUnknown {
   e := new(EUnknown)
-  e.Init(g, fmt.Sprintf("Unknown: %v", id))
   e.id = id
   return e
 }
@@ -373,6 +371,6 @@ func (_ EUnknown) Type(g *G) Type {
 }
 
 func (_ *EUnknownType) Dump(g *G, val Val, out *bufio.Writer) E {
-  out.WriteString("Abort")
+  fmt.Fprintf(out, "Error: Unknown: %v", val.(*EUnknown).id)
   return nil
 }

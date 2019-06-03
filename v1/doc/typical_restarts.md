@@ -11,23 +11,6 @@ Restarts allow passing information upstream without having to deal with unwindin
 
 The idea is that code that is expected to fail may provide options for dealing with errors for upstream handlers to choose from. Once a choice has been made, execution typically continues at the level where the error originated.
 
-```
-  (try ((foo (x)
-          (say (str "foo " x))
-          'bar))
-    (fail "Going down"))
-
-Break: Error: Going down
-0 abort
-1 retry
-2 foo x
-
-Choose 0-2: 2 42
-
-foo 42
-bar
-```
-
 ### Setup
 If you feel like coding along, the following shell spell will take you where you need to go.
 
@@ -162,6 +145,18 @@ Use result of computation
 
 ### Catching
 The missing piece of the puzzle is a way to catch errors and invoke restarts programatically, which is where `catch` comes into the picture. Error handlers are expected to return a restart curried with any required arguments or `_` to enter a break loop. The following example catches a symbol lookup error and provides a new value.
+
+```
+  foo
+
+Break: Error: Unknown: foo
+0 abort
+1 retry
+2 use-key new
+3 use-val new
+
+Choose 0-3: 
+```
 
 ```
   (catch (((EUnknown _) (restart 'use-val 42)))

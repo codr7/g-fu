@@ -32,6 +32,10 @@ func (e *BasicE) Dump(g *G, out *bufio.Writer) E {
   return nil
 }
 
+func (e *BasicE) Msg(g *G) string {
+  return e.msg
+}
+
 func (e *BasicE) Type(g *G) Type {
   return &g.EType
 }
