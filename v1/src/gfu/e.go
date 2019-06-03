@@ -14,11 +14,11 @@ type EType struct {
   BasicType
 }
 
-type BasicE struct {
+type EBasic struct {
   msg string
 }
 
-func (e *BasicE) Init(g *G, msg string) *BasicE {
+func (e *EBasic) Init(g *G, msg string) *EBasic {
   if g.Debug {
     panic(msg)
   }
@@ -27,31 +27,31 @@ func (e *BasicE) Init(g *G, msg string) *BasicE {
   return e
 }
 
-func (e *BasicE) Dump(g *G, out *bufio.Writer) E {
+func (e *EBasic) Dump(g *G, out *bufio.Writer) E {
   out.WriteString(e.msg)
   return nil
 }
 
-func (e *BasicE) Msg(g *G) string {
+func (e *EBasic) Msg(g *G) string {
   return e.msg
 }
 
-func (e *BasicE) Type(g *G) Type {
+func (e *EBasic) Type(g *G) Type {
   return &g.EType
 }
 
 func (_ *EType) Dump(g *G, val Val, out *bufio.Writer) E {
-  fmt.Fprintf(out, "(fail \"%v\")", val.(*BasicE).msg)
+  fmt.Fprintf(out, "(fail \"%v\")", val.(*EBasic).msg)
   return nil
 }
 
 func (_ *EType) Print(g *G, val Val, out *bufio.Writer) E {
   out.WriteString("Error: ")
-  out.WriteString(val.(*BasicE).msg)
+  out.WriteString(val.(*EBasic).msg)
   return nil
 }
 
-func (g *G) E(msg string, args ...interface{}) *BasicE {
+func (g *G) E(msg string, args ...interface{}) *EBasic {
   for i, a := range args {
     switch v := a.(type) {
     case Val:
@@ -60,7 +60,7 @@ func (g *G) E(msg string, args ...interface{}) *BasicE {
   }
 
   msg = fmt.Sprintf(msg, args...)
-  e := new(BasicE).Init(g, msg)
+  e := new(EBasic).Init(g, msg)
 
   if g.Debug {
     panic(msg)

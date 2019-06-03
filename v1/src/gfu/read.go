@@ -11,7 +11,7 @@ import (
 )
 
 type ERead struct {
-  BasicE
+  EBasic
   pos Pos
 }
 
@@ -446,7 +446,7 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
 }
 
 func (e *ERead) Init(g *G, pos Pos, msg string) *ERead {
-  e.BasicE.Init(g, msg)
+  e.EBasic.Init(g, msg)
   e.pos = pos
   return e
 }
