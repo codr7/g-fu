@@ -139,6 +139,5 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
     break
   }
   
-  r := rs[n].Val.(Restart).imp
-  return g.Call(task, env, r, args, args_env)
+  return rs[n].Val.(Restart).imp.CallArgs(g, task, env, args, args_env)
 }

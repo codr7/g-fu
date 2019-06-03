@@ -72,23 +72,20 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, arg
 
 func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *Env, []Val, E) {
   var v *Var
+  var val Val
   var args []Val
-  
-  if v, _, env, args, _ = s.LookupVar(g, env, true); v != nil {
-    return v.Val, env, args, nil
+    
+  if v, _, env, args, _ = s.LookupVar(g, env, true); v == nil {
+    val, _ = env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
+    
+    if val == nil && !silent {
+      return nil, env, args, g.E("Unknown: %v", s)
+    }
+  } else {
+    val = v.Val
   }
 
-  val, _ := env.Resolve(g, task, s.parts[len(s.parts)-1], args_env, true)
-
-  if val != nil {
-    return val, env, args, nil
-  }
-
-  if !silent {
-    return nil, env, nil, g.E("Unknown: %v", s)
-  }
-
-  return nil, env, nil, nil
+  return val, env, args, nil
 }
 
 func (s *Sym) String() string {
@@ -111,20 +108,40 @@ func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
 
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
   s := val.(*Sym)
-  
-  if v, args_env, _, _ = s.Lookup(g, task, env, env, true); v == nil {
-    sps := s.parts
-    sn := sps[len(sps)-1].name
-    
-    if sn[0] == '$' {
-      v = g.NewSym(sn[1:])
-      args_env.Add(s, v)
-      return v, nil
-    }
 
-    return nil, g.E("Unknown: %v", s)
+  use_key := NewFun(g, env, g.Sym("use-key"), A("new"))
+  use_key.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
+    k, ok := args[0].(*Sym)
+    
+    if !ok {
+      return nil, g.E("Invalid key: %v", args[0].Type(g))
+    }
+    
+    s = k
+    return nil, Retry{}
   }
 
+  v, e = g.Try(task, env, args_env, func () (Val, E) {
+    if v, args_env, _, _ = s.Lookup(g, task, env, args_env, true); v == nil {
+      sps := s.parts
+      sn := sps[len(sps)-1].name
+
+      if sn[0] == '$' {
+        v = g.NewSym(sn[1:])
+        args_env.Add(s, v)
+        return v, nil
+      }
+
+      return nil, g.E("Unknown: %v", s)
+    }
+
+    return v, nil
+  }, use_key)
+
+  if e != nil {
+    return nil, e
+  }
+  
   if p, ok := v.(*Prim); ok && p.arg_list.items == nil {
     v, e = g.Call(task, env, v, nil, args_env)
   } else if m, ok := v.(*Mac); ok && m.arg_list.items == nil {

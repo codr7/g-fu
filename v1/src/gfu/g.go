@@ -129,7 +129,7 @@ func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
       return nil, g.E("Failed loading file: \"%v\"\n%v", path, re)
     }
 
-    return nil, nil
+    return &g.NIL, nil
   }, use_filename)
   
   var pos Pos

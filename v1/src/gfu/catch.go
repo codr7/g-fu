@@ -20,7 +20,7 @@ func (g *G) Catch(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   
   for _, c := range task.catch_q {
     if c.etype == nil || g.Isa(t, c.etype) != nil {
-      v, e := g.Call(task, env, c.imp, Vec{val}, args_env)
+      v, e := c.imp.CallArgs(g, task, env, Vec{val}, args_env)
 
       if e != nil {
         return nil, e

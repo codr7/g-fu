@@ -67,7 +67,7 @@ restart:
       }
       
       if r.try == &t {
-        return g.Call(task, env, r.imp, r.args, args_env)
+        return r.imp.CallArgs(g, task, env, r.args, args_env)
       } else {
         e = r
       }
