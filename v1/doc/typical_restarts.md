@@ -3,13 +3,13 @@
 ### Intro
 Error handling has become a polarizing issue lately, arguments over merits of exceptions vs. manual propagation look more and more like dynamic vs. static types or Emacs vs. Vim every day. Take one step back and it looks like implicit vs. explicit, relaxed vs. disciplined or CISC vs. RISC. Different flavors of the same lovely ice cream.
 
-The Issue with a capital I when it comes to error handling from my perspective is that the code that knows what to do often is located several stack frames upstream from the crime scene.
+The Issue with a capital I when it comes to error handling from my experience is that the code that knows what to do often is located several stack frames upstream from the crime scene.
 
-Exceptions and manual propagation are simply different ways of passing enough information about the error upstream until it reaches a layer that knows what to do with it. The information is then often passed down again in a separate call to do the right thing at the level where the error originated. I'm sure we can all agree that the process looks a tiny bit more complicated than it needs to be.
+Exceptions and manual propagation are simply different ways of passing enough information about the error upstream until it reaches a layer that knows what to do. The same information is then often passed down again in a separate call to the level where the error originated. I'm sure most would agree that the process feels a tiny bit more complicated than it needs to be.
 
 Restarts allow passing information upstream without having to deal with unwinding stacks or manual propagation. Common Lisp's [condition system](http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html) is the only implementation I am aware of, though it muddies the water somewhat by throwing exceptions into the mix.
 
-The idea is that code that is expected to fail may provide options for dealing with errors for upstream handlers to choose from. Once a choice has been made, execution typically continues at the level where the error originated.
+The idea is that code may provide options for dealing with errors for upstream handlers to choose from. Once a choice has been made, execution typically continues at the level where the error originated.
 
 ### Setup
 If you feel like coding along, the following shell spell will take you where you need to go.
@@ -61,7 +61,7 @@ Choose 0-1:
 ```
 
 ### Trying
-`try` may be used to limit the scope for `retry` and supports defining custom restarts. Restarts may declare any number of arguments. Execution typically continues after the `try` and returns the last value once the restart exits.
+`try` may be used to limit the scope for `retry` and supports defining custom restarts. Restarts may declare any number of arguments. Execution typically continues after the `try`, returning the last value, once the restart exits.
 
 ```
   (try ((foo (x)
