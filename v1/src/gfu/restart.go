@@ -104,7 +104,7 @@ func (g *G) BreakLoop(task *Task, env *Env, cause E, args_env *Env) (Val, E) {
   var args Vec
   
   for {
-    fmt.Printf("\nChoose 0-%v: ", len(rs))
+    fmt.Printf("\nChoose 0-%v: ", len(rs)-1)
     in, _ = stdin.ReadString('\n')
     out, e := g.ReadAll(&INIT_POS, strings.NewReader(in), nil)
 

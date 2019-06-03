@@ -484,13 +484,13 @@ Break: Error: Going down
 0 abort
 1 retry
 
-Choose 0-2: 1
+Choose 0-1: 1
 
 Break: Error: Going down
 0 abort
 1 retry
 
-Choose 0-2: 0
+Choose 0-1: 0
 
 Abort
 ```
@@ -508,7 +508,7 @@ Break: Error: Going down
 1 retry
 2 foo x
 
-Choose 0-3: 2 42
+Choose 0-2: 2 42
 
 foo 42
 bar
@@ -558,7 +558,7 @@ open not.found: no such file or directory
 1 retry
 2 use-filename new
 
-Choose 0-3: 2 "test.gf"
+Choose 0-2: 2 "test.gf"
 
 42
 ```
@@ -579,7 +579,7 @@ open not.found: no such file or directory
 1 retry
 2 use-filename new
 
-Choose 0-3: 2 "test.gf"
+Choose 0-2: 2 "test.gf"
 
 Use result of computation
 ```

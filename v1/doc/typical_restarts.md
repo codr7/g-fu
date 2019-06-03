@@ -3,7 +3,7 @@
 ### Intro
 Error handling has become a polarizing issue lately, arguments over merits of exceptions vs. manual propagation look more and more like dynamic vs. static types or Emacs vs. Vim every day. Take one step back and it looks like implicit vs. explicit, relaxed vs. disciplined or CISC vs. RISC. Different flavors of the same lovely ice cream.
 
-The Issue with a capital I when it comes to error handling from my perspective is that the code that knows what to do is often located several stack frames upstream from code that knows what happened and what options are available.
+The Issue with a capital I when it comes to error handling from my perspective is that the code that knows what to do often is located several stack frames upstream from the crime scene.
 
 Exceptions and manual propagation are simply different ways of passing enough information about the error upstream until it reaches a layer that knows what to do with it. The information is then often passed down again in a separate call to do the right thing at the level where the error originated. I'm sure we can all agree that the process looks a tiny bit more complicated than it needs to be.
 
@@ -22,7 +22,7 @@ Break: Error: Going down
 1 retry
 2 foo x
 
-Choose 0-3: 2 42
+Choose 0-2: 2 42
 
 foo 42
 bar
@@ -54,13 +54,13 @@ Break: 42
 0 abort
 1 retry
 
-Choose 0-2: 1
+Choose 0-1: 1
 
 Break: 42
 0 abort
 1 retry
 
-Choose 0-2: 0
+Choose 0-1: 0
 
 Abort
 ```
@@ -74,11 +74,11 @@ Break: Error: Going down
 0 abort
 1 retry
 
-Choose 0-2:
+Choose 0-1:
 ```
 
 ### Trying
-`try` may be used to limit the scope for `retry` and supports defining additional restarts. Restarts may declare any number of arguments. Execution typically continues after the `try` and returns the last value once the restart exits.
+`try` may be used to limit the scope for `retry` and supports defining custom restarts. Restarts may declare any number of arguments. Execution typically continues after the `try` and returns the last value once the restart exits.
 
 ```
   (try ((foo (x)
@@ -91,7 +91,7 @@ Break: Error: Going down
 1 retry
 2 foo x
 
-Choose 0-3: 2 42
+Choose 0-2: 2 42
 
 foo 42
 bar
@@ -134,7 +134,7 @@ open not.found: no such file or directory
 1 retry
 2 use-filename new
 
-Choose 0-3: 2 "test.gf"
+Choose 0-2: 2 "test.gf"
 
 42
 ```
@@ -155,13 +155,13 @@ open not.found: no such file or directory
 1 retry
 2 use-filename new
 
-Choose 0-3: 2 "test.gf"
+Choose 0-2: 2 "test.gf"
 
 Use result of computation
 ```
 
 ### Catching
-The missing piece of the puzzle is a way to catch errors and invoke restarts programatically, which is where `catch` comes into the picture. Error handlers are expected to return a restart (which may be retrived and curried using `restart`) or `_` to enter a break loop.
+The missing piece of the puzzle is a way to catch errors and invoke restarts programatically, which is where `catch` comes into the picture. Error handlers are expected to return a restart curried with any required arguments or `_` to enter a break loop.
 
 ```
   (catch (((EUnknown _) (restart 'use-val 42)))
