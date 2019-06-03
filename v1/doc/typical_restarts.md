@@ -161,7 +161,7 @@ Use result of computation
 ```
 
 ### Catching
-The missing piece of the puzzle is a way to catch errors and invoke restarts programatically, which is where `catch` comes into the picture. Error handlers are expected to return a restart curried with any required arguments or `_` to enter a break loop.
+The missing piece of the puzzle is a way to catch errors and invoke restarts programatically, which is where `catch` comes into the picture. Error handlers are expected to return a restart curried with any required arguments or `_` to enter a break loop. The following example catches a symbol lookup error and provides a new value.
 
 ```
   (catch (((EUnknown _) (restart 'use-val 42)))
