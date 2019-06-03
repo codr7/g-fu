@@ -134,6 +134,11 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
     return nil, Retry{}
   }
 
+  use_val := NewFun(g, env, g.Sym("use-val"), A("new"))
+  use_val.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
+    return args[0], nil
+  }
+
   v, e = g.Try(task, env, args_env, func () (Val, E) {
     if v, args_env, _, _ = s.Lookup(g, task, env, args_env, true); v == nil {
 
@@ -141,7 +146,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
     }
 
     return v, nil
-  }, use_key)
+  }, use_key, use_val)
 
   if e != nil {
     return nil, e

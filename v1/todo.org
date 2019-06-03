@@ -1,8 +1,9 @@
+* finish sym lookup restarts
+** add use-key/val tests
+** finish Catching
+* add try-block around eval
 * remove (new-sym)
 ** use $foo
-* finish sym lookup restarts
-** add use-val
-** add tests
 * move (iter) to SeqType
 ** update lib/tests
 * move bench/find-key/test to lib

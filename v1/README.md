@@ -501,9 +501,9 @@ Abort
   (try ((foo (x)
           (say (str "foo " x))
           'bar))
-    (fail (str "Going down")))
+    (fail "Going down"))
 
-Error: Going down
+Break: Error: Going down
 0 abort
 1 retry
 2 foo x
@@ -549,7 +549,7 @@ test.gf
 42
 ```
 
-```
+o```
 (load "not.found")
 
 Break: Error: Failed loading file: "not.found"
@@ -563,7 +563,7 @@ Choose 0-3: 2 "test.gf"
 42
 ```
 
-If you still can't see it, imagine an expensive computation before the `load` that is used after.
+If you still can't see the point, imagine an expensive computation before the `load` that is used after.
 
 ```
 (fun fib (n (a 0) (b 1)))
