@@ -1,4 +1,4 @@
-* rename ReadE/BasicE
+* rename BasicE
 * add try-block around eval
 * remove (new-sym)
 ** use $foo

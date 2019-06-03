@@ -35,7 +35,6 @@ type G struct {
   NumType     NumType
   PrimType    PrimType
   QuoteType   QuoteType
-  ReadEType   ReadEType
   RecallType  RecallType
   RestartType RestartType
   RetryType   RetryType
@@ -52,6 +51,7 @@ type G struct {
   VecIterType VecIterType
   WriterType  WriterType
 
+  EReadType    EReadType
   EUnknownType EUnknownType
   
   NIL Nil

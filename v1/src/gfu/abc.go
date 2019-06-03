@@ -1026,7 +1026,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NilType, "Nil")
   e.AddType(g, &g.PrimType, "Prim")
   e.AddType(g, &g.QuoteType, "Quote")
-  e.AddType(g, &g.ReadEType, "ReadE")
   e.AddType(g, &g.RecallType, "Recall")
   e.AddType(g, &g.RestartType, "Restart")
   e.AddType(g, &g.RetryType, "Retry")
@@ -1041,6 +1040,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
   e.AddType(g, &g.WriterType, "Writer")
 
+  e.AddType(g, &g.EReadType, "ERead")
   e.AddType(g, &g.EUnknownType, "EUnknown", &g.EType)
   
   e.AddConst(g, "_", &g.NIL)

@@ -10,12 +10,12 @@ import (
   "unicode"
 )
 
-type ReadE struct {
+type ERead struct {
   BasicE
   pos Pos
 }
 
-type ReadEType struct {
+type EReadType struct {
   BasicType
 }
 
@@ -33,7 +33,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
   }
 
   if e != nil {
-    return 0, g.ReadE(*pos, "Failed reading char: %v", e)
+    return 0, g.ERead(*pos, "Failed reading char: %v", e)
   }
 
   if c == '\n' {
@@ -48,7 +48,7 @@ func (g *G) ReadChar(pos *Pos, in *strings.Reader) (rune, E) {
 
 func (g *G) Unread(pos *Pos, in *strings.Reader, c rune) E {
   if e := in.UnreadRune(); e != nil {
-    return g.ReadE(*pos, "Failed unreading char")
+    return g.ERead(*pos, "Failed unreading char")
   }
 
   if c == '\n' {
@@ -107,7 +107,7 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
     case '(':
       return g.ReadVec(pos, in, out)
     case ')':
-      return nil, g.ReadE(*pos, "Unexpected input: )")
+      return nil, g.ERead(*pos, "Unexpected input: )")
     case '\'':
       return g.ReadQuote(pos, in, out, end)
     case '.':
@@ -124,7 +124,7 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
         }
 
         if !unicode.IsDigit(nc) {
-          return nil, g.ReadE(*pos, "Invalid input: %v", c)
+          return nil, g.ERead(*pos, "Invalid input: %v", c)
         }
 
         if e = g.Unread(pos, in, nc); e != nil {
@@ -184,7 +184,7 @@ func (g *G) Read(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, E) {
         return g.ReadId(pos, in, out, 0)
       }
 
-      return nil, g.ReadE(*pos, "Invalid input: %v", c)
+      return nil, g.ERead(*pos, "Invalid input: %v", c)
     }
   }
 }
@@ -197,7 +197,7 @@ func (g *G) ReadByte(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   n, e := in.Read(v[2:])
   
   if e != nil {
-    return nil, g.ReadE(*pos, "Failed reading byte: %v", e)
+    return nil, g.ERead(*pos, "Failed reading byte: %v", e)
   }
 
   sv := string(v)
@@ -209,7 +209,7 @@ func (g *G) ReadByte(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   b, e := strconv.ParseUint(sv, 0, 8)
 
   if e != nil {
-    return nil, g.ReadE(*pos, "Failed parsing byte: %v", e)
+    return nil, g.ERead(*pos, "Failed parsing byte: %v", e)
   }
 
   pos.Col += 2
@@ -244,7 +244,7 @@ func (g *G) ReadId(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E) 
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+      return nil, g.ERead(*pos, "Failed writing char: %v", we)
     }
   }
 
@@ -294,7 +294,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+      return nil, g.ERead(*pos, "Failed writing char: %v", we)
     }
   }
 
@@ -319,7 +319,7 @@ func (g *G) ReadNum(pos *Pos, in *strings.Reader, out Vec, prefix rune) (Vec, E)
   n, e := strconv.ParseInt(s, 10, 64)
 
   if e != nil {
-    return nil, g.ReadE(*pos, "Invalid Int: %v", s)
+    return nil, g.ERead(*pos, "Invalid Int: %v", s)
   }
 
   return append(out, Int(n)), nil
@@ -334,7 +334,7 @@ func (g *G) ReadQuote(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec, 
   }
 
   if len(vs) == 0 {
-    return nil, g.ReadE(vpos, "Nothing to quote")
+    return nil, g.ERead(vpos, "Nothing to quote")
   }
 
   return append(out, NewQuote(g, vs[0])), nil
@@ -344,7 +344,7 @@ func (g *G) ReadSplat(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   i := len(out)
 
   if i == 0 {
-    return nil, g.ReadE(*pos, "Missing splat value")
+    return nil, g.ERead(*pos, "Missing splat value")
   }
 
   v := out[i-1]
@@ -362,7 +362,7 @@ func (g *G) ReadSplice(pos *Pos, in *strings.Reader, out Vec, end CharSet) (Vec,
   }
 
   if len(vs) == 0 {
-    return nil, g.ReadE(vpos, "Nothing to eval")
+    return nil, g.ERead(vpos, "Nothing to eval")
   }
 
   return append(out, NewSplice(g, vs[0])), nil
@@ -406,7 +406,7 @@ func (g *G) ReadStr(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
     }
 
     if _, we := buf.WriteRune(c); we != nil {
-      return nil, g.ReadE(*pos, "Failed writing char: %v", we)
+      return nil, g.ERead(*pos, "Failed writing char: %v", we)
     }
 
     pc = c
@@ -445,18 +445,18 @@ func (g *G) ReadVec(pos *Pos, in *strings.Reader, out Vec) (Vec, E) {
   return append(out, body), nil
 }
 
-func (e *ReadE) Init(g *G, pos Pos, msg string) *ReadE {
+func (e *ERead) Init(g *G, pos Pos, msg string) *ERead {
   e.BasicE.Init(g, msg)
   e.pos = pos
   return e
 }
 
-func (_ ReadE) Type(g *G) Type {
-  return &g.ReadEType
+func (_ ERead) Type(g *G) Type {
+  return &g.EReadType
 }
 
-func (_ ReadEType) Dump(g *G, val Val, out *bufio.Writer) E {
-  e := val.(*ReadE)
+func (_ EReadType) Dump(g *G, val Val, out *bufio.Writer) E {
+  e := val.(*ERead)
   p := &e.pos
 
   fmt.Fprintf(out,
@@ -466,8 +466,8 @@ func (_ ReadEType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (g *G) ReadE(pos Pos, msg string, args ...interface{}) *ReadE {
+func (g *G) ERead(pos Pos, msg string, args ...interface{}) *ERead {
   msg = fmt.Sprintf(msg, args...)
-  e := new(ReadE).Init(g, pos, msg)
+  e := new(ERead).Init(g, pos, msg)
   return e
 }
