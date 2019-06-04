@@ -1,3 +1,5 @@
+* block pun access to external envs
+** testpun.gf
 * convert lib funs to pun
 * replace read/out with chan Val
 ** add default buffer size

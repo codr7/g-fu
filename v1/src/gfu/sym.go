@@ -83,7 +83,7 @@ func (s *Sym) LookupVar(g *G, env *Env, silent bool) (v *Var, i int, _ *Env, arg
   return v, i, env, args, nil
 }
 
-func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *Env, []Val, E) {
+func (s *Sym) Lookup(g *G, task *Task, env, args_env *Env, silent bool) (Val, *Env, []Val, E) {  
   var v *Var
   var val Val
   var args []Val

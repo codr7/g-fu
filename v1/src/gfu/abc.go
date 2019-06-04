@@ -1009,9 +1009,9 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "do", true, do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", false, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "pun", false, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "mac", false, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "fun", true, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "pun", true, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "mac", true, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
   e.AddType(g, &g.NumType, "Num")
@@ -1067,9 +1067,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "\\\"", Char('"'))
 
   e.AddPrim(g, "call", false, call_imp, A("target"), ASplat("args"))
-  e.AddPrim(g, "let", false, let_imp, ASplat("args"))
+  e.AddPrim(g, "let", true, let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))
-  e.AddPrim(g, "set", false, set_imp, ASplat("args"))
+  e.AddPrim(g, "set", true, set_imp, ASplat("args"))
   e.AddPrim(g, "use", true, use_imp, AOpt("prefix", nil), ASplat("ids"))
   g.EnvType.Env().AddPrim(g, "this", false, env_this_imp)
   e.AddPrim(g, "if", true, if_imp, A("cond"), A("t"), AOpt("f", nil))
@@ -1113,9 +1113,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddPun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
   e.AddPun(g, "iter", iter_imp, A("val"))
-  e.AddPrim(g, "push", false, push_imp, A("out"), ASplat("vals"))
-  e.AddPrim(g, "pop", false, pop_imp, A("in"))
-  e.AddPrim(g, "drop", false, drop_imp, A("in"), AOpt("n", Int(1)))
+  e.AddPrim(g, "push", true, push_imp, A("out"), ASplat("vals"))
+  e.AddPrim(g, "pop", true, pop_imp, A("in"))
+  e.AddPrim(g, "drop", true, drop_imp, A("in"), AOpt("n", Int(1)))
   e.AddPun(g, "len", len_imp, A("in"))
   e.AddPun(g, "#", index_imp, A("source"), ASplat("key"))
   e.AddFun(g, "set-#", set_index_imp, A("set"), A("dest"), ASplat("key"))
@@ -1123,7 +1123,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPun(g, "vec", vec_imp, ASplat("vals"))
   e.AddPun(g, "peek", vec_peek_imp, A("vec"))
   e.AddPun(g, "find-key", find_key_imp, A("in"), A("key"))
-  e.AddPrim(g, "pop-key", false, pop_key_imp, A("in"), A("key"))
+  e.AddPrim(g, "pop-key", true, pop_key_imp, A("in"), A("key"))
   e.AddPun(g, "head", head_imp, A("vec"))
   e.AddPun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
