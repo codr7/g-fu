@@ -1,9 +1,17 @@
 * split inc/push/pop/drop/pop-key
-** add funs to Sym
-** keep puns in root env
+** extract funs to Sym env
+** keep puns in root
+** update calls
 * only allow let/set/use in pun if env == args_env
 * convert lib funs to pun
 * ---
+* replace read/out with chan Val
+** add default buffer size
+** launch reading in separate goroutine
+** close when done
+** eval values 
+** move Splat-parsing to chan consumer
+** keep track of prev value
 * add try-block around eval
 * remove (new-sym)
 ** use $foo

@@ -1014,7 +1014,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "mac", true, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
-  e.AddType(g, &g.EType, "E")
   e.AddType(g, &g.NumType, "Num")
 
   e.AddType(g, &g.SeqType, "Seq")
@@ -1054,6 +1053,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.VecIterType, "VecIter", &g.IterType)
   e.AddType(g, &g.WriterType, "Writer")
 
+  e.AddType(g, &g.EType, "E")
   e.AddType(g, &g.EImpureType, "EImpure")
   e.AddType(g, &g.EReadType, "ERead")
   e.AddType(g, &g.EUnknownType, "EUnknown", &g.EType)
