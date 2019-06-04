@@ -21,6 +21,10 @@ type FunType struct {
   BasicType
 }
 
+type PunType struct {
+  FunType
+}
+
 type EImpure struct {
   call Val
 }
@@ -95,6 +99,10 @@ recall:
 }
 
 func (f *Fun) Type(g *G) Type {
+  if f.pure {
+    return &g.PunType
+  }
+  
   return &g.FunType
 }
 

@@ -34,6 +34,7 @@ type G struct {
   NanosType   NanosType
   NumType     NumType
   PrimType    PrimType
+  PunType     PunType
   QuoteType   QuoteType
   RecallType  RecallType
   RestartType RestartType

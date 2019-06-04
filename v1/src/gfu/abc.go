@@ -1009,9 +1009,9 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "do", true, do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", false, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "pun", false, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "mac", false, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "fun", true, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "pun", true, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "mac", true, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
   e.AddType(g, &g.EType, "E")
@@ -1022,6 +1022,9 @@ func (e *Env) InitAbc(g *G) {
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
+  e.AddType(g, &g.FunType, "Fun")
+  e.AddType(g, &g.PunType, "Pun", &g.FunType)
+
   e.AddType(g, &g.AbortType, "Abort")
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
@@ -1031,7 +1034,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FloatType, "Float", &g.NumType)
-  e.AddType(g, &g.FunType, "Fun")
   e.AddType(g, &g.IntType, "Int", &g.NumType)
   e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
   e.AddType(g, &g.MacType, "Mac")
