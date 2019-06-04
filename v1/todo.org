@@ -2,7 +2,6 @@
 ** extract funs to Sym env
 ** keep puns in root
 ** update calls
-* only allow let/set/use in pun if env == args_env
 * convert lib funs to pun
 * ---
 * replace read/out with chan Val

@@ -1009,9 +1009,9 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 
 func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "do", true, do_imp, ASplat("body"))
-  e.AddPrim(g, "fun", true, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "pun", true, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
-  e.AddPrim(g, "mac", true, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "fun", false, fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "pun", false, pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "mac", false, mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
   e.AddType(g, &g.NumType, "Num")
@@ -1067,9 +1067,9 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "\\\"", Char('"'))
 
   e.AddPrim(g, "call", false, call_imp, A("target"), ASplat("args"))
-  e.AddPrim(g, "let", true, let_imp, ASplat("args"))
+  e.AddPrim(g, "let", false, let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))
-  e.AddPrim(g, "set", true, set_imp, ASplat("args"))
+  e.AddPrim(g, "set", false, set_imp, ASplat("args"))
   e.AddPrim(g, "use", true, use_imp, AOpt("prefix", nil), ASplat("ids"))
   g.EnvType.Env().AddPrim(g, "this", false, env_this_imp)
   e.AddPrim(g, "if", true, if_imp, A("cond"), A("t"), AOpt("f", nil))
