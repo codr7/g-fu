@@ -49,6 +49,17 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   return f, nil
 }
 
+func pun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+  f, e := fun_imp(g, task, env, args, args_env)
+  
+  if e != nil {
+    return nil, e
+  }
+
+  f.(*Fun).pure = true
+  return f, nil
+}
+
 func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   i := 0
   id, ok := args[0].(*Sym)
@@ -999,6 +1010,7 @@ func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "do", do_imp, ASplat("body"))
   e.AddPrim(g, "fun", fun_imp, AOpt("id", nil), A("args"), ASplat("body"))
+  e.AddPrim(g, "pun", pun_imp, AOpt("id", nil), A("args"), ASplat("body"))
   e.AddPrim(g, "mac", mac_imp, AOpt("id", nil), A("args"), ASplat("body"))
 
   e.AddType(g, &g.MetaType, "Meta")
@@ -1006,7 +1018,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NumType, "Num")
 
   e.AddType(g, &g.SeqType, "Seq")
-  g.SeqType.Env().AddFun(g, "join", seq_join_imp, A("in"), A("sep"))
+  g.SeqType.Env().AddPun(g, "join", seq_join_imp, A("in"), A("sep"))
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
 
@@ -1072,54 +1084,54 @@ func (e *Env) InitAbc(g *G) {
   e.AddFun(g, "restart", restart_imp, A("id"), ASplat("args"))
   e.AddFun(g, "load", load_imp, A("path"))
 
-  e.AddFun(g, "dup", dup_imp, A("val"))
-  e.AddFun(g, "clone", clone_imp, A("val"))
-  e.AddFun(g, "type", type_imp, A("val"))
+  e.AddPun(g, "dup", dup_imp, A("val"))
+  e.AddPun(g, "clone", clone_imp, A("val"))
+  e.AddPun(g, "type", type_imp, A("val"))
   e.AddPrim(g, "eval", eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
   e.AddFun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
-  e.AddFun(g, "sym", sym_imp, ASplat("args"))
-  e.AddFun(g, "str", str_imp, ASplat("args"))
+  e.AddPun(g, "sym", sym_imp, ASplat("args"))
+  e.AddPun(g, "str", str_imp, ASplat("args"))
 
-  e.AddFun(g, "bool", bool_imp, A("val"))
-  e.AddFun(g, "float", float_imp, A("val"))
-  e.AddFun(g, "int", int_imp, A("val"))
+  e.AddPun(g, "bool", bool_imp, A("val"))
+  e.AddPun(g, "float", float_imp, A("val"))
+  e.AddPun(g, "int", int_imp, A("val"))
 
-  e.AddFun(g, "=", eq_imp, ASplat("vals"))
-  e.AddFun(g, "==", is_imp, ASplat("vals"))
+  e.AddPun(g, "=", eq_imp, ASplat("vals"))
+  e.AddPun(g, "==", is_imp, ASplat("vals"))
 
-  e.AddFun(g, "<", int_lt_imp, ASplat("vals"))
-  e.AddFun(g, ">", int_gt_imp, ASplat("vals"))
+  e.AddPun(g, "<", int_lt_imp, ASplat("vals"))
+  e.AddPun(g, ">", int_gt_imp, ASplat("vals"))
 
-  e.AddFun(g, "+", add_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "/", div_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "-", sub_imp, A("x"), ASplat("ys"))
-  e.AddFun(g, "*", mul_imp, A("x"), ASplat("ys"))
+  e.AddPun(g, "+", add_imp, A("x"), ASplat("ys"))
+  e.AddPun(g, "/", div_imp, A("x"), ASplat("ys"))
+  e.AddPun(g, "-", sub_imp, A("x"), ASplat("ys"))
+  e.AddPun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
-  e.AddFun(g, "iter", iter_imp, A("val"))
+  e.AddPun(g, "iter", iter_imp, A("val"))
   e.AddPrim(g, "push", push_imp, A("out"), ASplat("vals"))
   e.AddPrim(g, "pop", pop_imp, A("in"))
   e.AddPrim(g, "drop", drop_imp, A("in"), AOpt("n", Int(1)))
-  e.AddFun(g, "len", len_imp, A("in"))
-  e.AddFun(g, "#", index_imp, A("source"), ASplat("key"))
+  e.AddPun(g, "len", len_imp, A("in"))
+  e.AddPun(g, "#", index_imp, A("source"), ASplat("key"))
   e.AddFun(g, "set-#", set_index_imp, A("set"), A("dest"), ASplat("key"))
   
-  e.AddFun(g, "vec", vec_imp, ASplat("vals"))
-  e.AddFun(g, "peek", vec_peek_imp, A("vec"))
-  e.AddFun(g, "find-key", find_key_imp, A("in"), A("key"))
+  e.AddPun(g, "vec", vec_imp, ASplat("vals"))
+  e.AddPun(g, "peek", vec_peek_imp, A("vec"))
+  e.AddPun(g, "find-key", find_key_imp, A("in"), A("key"))
   e.AddPrim(g, "pop-key", pop_key_imp, A("in"), A("key"))
-  e.AddFun(g, "head", head_imp, A("vec"))
-  e.AddFun(g, "tail", tail_imp, A("vec"))
+  e.AddPun(g, "head", head_imp, A("vec"))
+  e.AddPun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
-  e.AddFun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
-  e.AddFun(g, "bin", bin_imp, ASplat("vals"))
+  e.AddPun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
+  e.AddPun(g, "bin", bin_imp, ASplat("vals"))
   
   e.AddPrim(g, "task", task_imp, A("args"), ASplat("body"))
   g.TaskType.Env().AddPrim(g, "this", this_task_imp)
   g.TaskType.Env().AddFun(g, "post", task_post_imp, A("task"), A("val0"), ASplat("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
-  e.AddFun(g, "chan", chan_imp, AOpt("buf", Int(0)))
+  e.AddPun(g, "chan", chan_imp, AOpt("buf", Int(0)))
 }

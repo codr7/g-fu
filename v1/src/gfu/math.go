@@ -49,8 +49,8 @@ func rand_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 }
 
 func (e *Env) InitMath(g *G) {
-  e.AddFun(g, "div", int_div_imp, A("x"), A("y"))
-  e.AddFun(g, "mod", mod_imp, A("x"), A("y"))
+  e.AddPun(g, "div", int_div_imp, A("x"), A("y"))
+  e.AddPun(g, "mod", mod_imp, A("x"), A("y"))
   e.AddFun(g, "rand", rand_imp, AOpt("max", nil))
 
   var pi Float

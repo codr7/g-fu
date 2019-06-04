@@ -162,7 +162,7 @@ func (env *Env) AddConst(g *G, id string, val Val) E {
     return &g.T, nil
   }
 
-  _, e := env.AddFun(g, fmt.Sprintf("%v?", id), imp, A("val")) 
+  _, e := env.AddPun(g, fmt.Sprintf("%v?", id), imp, A("val")) 
   return e
 }
 

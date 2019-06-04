@@ -73,6 +73,7 @@
   (test (= (call (@@ fs..) 20) 42)))
 
 (test (= (call (fun () 42)) 42))
+(test (= (call (fun () 42)) 42))
 (test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))
 (test (= (call (fun (xs..) (+ xs..)) 1 2 3) 6))
 (test (= (let (x 35) (call (fun (y) (+ x y)) 7)) 42))
@@ -119,6 +120,7 @@
 (load "cond.gf")
 (load "env.gf")
 (load "fos.gf")
+(load "fun.gf")
 (load "iter.gf")
 (load "math.gf")
 (load "restart.gf")

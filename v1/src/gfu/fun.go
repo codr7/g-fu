@@ -14,6 +14,7 @@ type Fun struct {
   arg_list ArgList
   body     Vec
   imp      FunImp
+  pure     bool
 }
 
 type FunType struct {
@@ -53,6 +54,15 @@ func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val
     return nil, e
   }
 
+  if f.pure {
+    task.pure++
+    defer func() { task.pure-- }()
+  } else {
+    if task.pure > 0 {
+      return nil, g.E("Only pure calls allowed: %v", f)
+    }
+  }
+  
   if f.imp != nil {
     return f.imp(g, task, env, args)
   }
@@ -137,5 +147,16 @@ func (env *Env) AddFun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
     return nil, e
   }
 
+  return f, nil
+}
+
+func (env *Env) AddPun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
+  f, e := env.AddFun(g, id, imp, args...)
+
+  if e != nil {
+    return nil, e
+  }
+
+  f.pure = true
   return f, nil
 }

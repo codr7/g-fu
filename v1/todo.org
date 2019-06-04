@@ -3,6 +3,7 @@
 ** use $foo
 * move (iter) to SeqType
 ** update lib/tests
+* move (chan) to Chan/new
 * move bench/find-key/test to lib
 * add switch val-arg
 ** inject into vec-conds if != _

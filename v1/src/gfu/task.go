@@ -16,6 +16,7 @@ type Task struct {
   cond    *sync.Cond
   try     *Try
   catch_q []Catch
+  pure    int
   done    bool
   result  Val
 }

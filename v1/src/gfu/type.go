@@ -230,7 +230,7 @@ func (_ *MetaType) Dump(g *G, val Val, out *bufio.Writer) E {
 func (e *Env) AddType(g *G, t Type, id string, parents ...Type) E {
   t.Init(g, g.Sym(id), parents)
 
-  t.Env().AddFun(g, "?",
+  t.Env().AddPun(g, "?",
     func (g *G, task *Task, env *Env, args Vec) (Val, E) {
       return type_check_imp(g, task, env, append(Vec{t}, args...))
     },
