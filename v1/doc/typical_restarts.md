@@ -155,8 +155,9 @@ Let's start with a break loop to see what options are available.
 Break: Error: Unknown: not-found
 0 abort
 1 retry
-2 use-key new
-3 use-val new
+2 use-val new
+
+Choose 0-2: 
 ```
 
 Error handlers are expected to return a restart curried with any required arguments or `_` to enter a break loop.

@@ -122,18 +122,6 @@ func (_ *SymType) Dump(g *G, val Val, out *bufio.Writer) E {
 func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Val, e E) {
   s := val.(*Sym)
 
-  use_key := NewFun(g, env, g.Sym("use-key"), A("new"))
-  use_key.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
-    k, ok := args[0].(*Sym)
-    
-    if !ok {
-      return nil, g.E("Invalid key: %v", args[0].Type(g))
-    }
-    
-    s = k
-    return nil, Retry{}
-  }
-
   use_val := NewFun(g, env, g.Sym("use-val"), A("new"))
   use_val.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
     return args[0], nil
@@ -146,7 +134,7 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
     }
 
     return v, nil
-  }, use_key, use_val)
+  }, use_val)
 
   if e != nil {
     return nil, e
