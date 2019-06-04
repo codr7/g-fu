@@ -19,10 +19,6 @@ type EBasic struct {
 }
 
 func (e *EBasic) Init(g *G, msg string) *EBasic {
-  if g.Debug {
-    panic(msg)
-  }
-
   e.msg = msg
   return e
 }
@@ -61,10 +57,6 @@ func (g *G) E(msg string, args ...interface{}) *EBasic {
 
   msg = fmt.Sprintf(msg, args...)
   e := new(EBasic).Init(g, msg)
-
-  if g.Debug {
-    panic(msg)
-  }
 
   return e
 }

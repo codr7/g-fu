@@ -1,6 +1,6 @@
 (let _
-  (pun foo () 35)
-  (pun bar () (+ (foo) 7))
+  (pun foo() 35)
+  (pun bar() (+ (foo) 7))
   (test (= (bar) 42)))
 
 (let _

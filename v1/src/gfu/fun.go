@@ -107,11 +107,17 @@ func (_ *FunType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *
 
 func (_ *FunType) Dump(g *G, val Val, out *bufio.Writer) E {
   f := val.(*Fun)
+  
+  out.WriteRune('(')
 
-  if id := f.id; id == nil {
-    out.WriteString("(fun")
+  if f.pure {
+    out.WriteString("pun")
   } else {
-    fmt.Fprintf(out, "(fun %v", f.id)
+    out.WriteString("fun")
+  }
+
+  if id := f.id; id != nil {
+    fmt.Fprintf(out, " %v", f.id)
   }
 
   nargs := len(f.arg_list.items)

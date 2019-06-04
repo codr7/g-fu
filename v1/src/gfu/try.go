@@ -58,6 +58,10 @@ restart:
     }
 
     if rv == nil {
+      if g.Debug {
+        panic(g.EString(e))
+      }
+
       v, e = g.BreakLoop(task, env, e, args_env)
     } else {
       var r Restart
