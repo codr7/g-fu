@@ -12,3 +12,9 @@
   (test (= (catch (((EImpure _) (restart 'ignore)))
              (try ((ignore () 42)) (foo)))
            42)))
+
+(let _
+  (env foo (x ()))
+  (pun bar() foo/x)
+  (push (bar) 42)
+  (test (= foo/x ())))

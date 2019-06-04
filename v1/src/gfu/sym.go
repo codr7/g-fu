@@ -146,6 +146,10 @@ func (_ *SymType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (v Va
     v, e = g.Call(task, env, v, nil, args_env)
   }
 
+  if task.pure > 0 && args_env != env {
+    v, e = g.Clone(v)
+  }
+  
   return v, e
 }
 

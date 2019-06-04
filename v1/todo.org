@@ -1,6 +1,8 @@
-* convert lib funs to puns
-* block external env access from puns
+* fix pun external env access
 ** testpun.gf
+** block external let/set_imp
+** block external env Updates
+* convert lib funs to puns
 * replace read/out with chan Val
 ** add default buffer size
 ** launch reading in separate goroutine
