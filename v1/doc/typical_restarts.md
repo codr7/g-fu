@@ -1,4 +1,5 @@
 ## Typical Restarts
+#### The third way of handling errors
 
 ### Intro
 Error handling has become a polarizing issue lately, arguments over merits of exceptions vs. manual propagation look more and more like dynamic vs. static types or Emacs vs. Vim every day. Take one step back and it looks like implicit vs. explicit, relaxed vs. disciplined or CISC vs. RISC. Different flavors of the same lovely ice cream.
