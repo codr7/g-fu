@@ -222,7 +222,7 @@ Since binding environments is a very common thing to do, `env` is provided as a 
 
 ```
 (env foo (bar 42)
-  (fun baz () (set bar 7)))
+  (fun baz() (set bar 7)))
 ```
 ```
   foo/bar
@@ -251,7 +251,7 @@ The `set`-protocol may be hooked into by binding `set-x` for any identifier `x`.
 
 ```
   (let _
-    (fun set-foo (f k..)
+    (fun set-foo(f k..)
       (say k)
       (f 35))
       
@@ -265,8 +265,8 @@ bar baz
 Failed lookups may be trapped by defining `resolve`. The following example implements a basic proxy that forwards all lookups to the specified delegate. Since we're parameterizing the proxy, a function environment is used.
 
 ```
-(fun proxy (d)
-  (fun resolve (key)
+(fun proxy(d)
+  (fun resolve(key)
     (d/val key))
 
   Env/this)
@@ -286,8 +286,8 @@ Environments may be used to isolate the evaluation of untrusted code.
 The following example creates a sandbox named `sec` and imports `eval` and the local function `pub`. `use` is likewise imported, but restricted within eval.
 
 ```
-(fun pub () (say 'pub))
-(fun priv () (say 'priv))
+(fun pub() (say 'pub))
+(fun priv() (say 'priv))
 
 (env sec _
   (use _ eval pub))
@@ -322,11 +322,11 @@ Functions are created using `fun`; which accepts an optional name to bind in the
 
 ```
   (let _
-    (fun say-hello (x) (say "Hello " x))
+    (fun say-hello(x) (say "Hello " x))
     (dump say-hello)
     (say-hello "World"))
 
-(fun say-hello (x) (say "Hello " x))
+(fun say-hello(x) (say "Hello " x))
 Hello World
 ```
 
@@ -334,7 +334,7 @@ Arguments may be defined as optional by specifying default values.
 
 ```
   (let _
-    (fun say-hello ((x "World")) (say "Hello " x))
+    (fun say-hello((x "World")) (say "Hello " x))
     (say-hello))
 
 Hello World
@@ -344,7 +344,7 @@ Arguments suffixed with `..` consume any number of remaining values.
 
 ```
   (let _
-    (fun say-hello (xs..) (say "Hello " xs))
+    (fun say-hello(xs..) (say "Hello " xs))
     (say-hello 'Moe 'Larry 'Curly))
 
 Hello Moe Larry Curly
@@ -354,7 +354,7 @@ The following example implements a simple counter as a closure.
 
 ```
   (let (i 0
-        c (fun ((d 1)) (inc i d)))
+        c (fun((d 1)) (inc i d)))
     (say (c 1))
     (say (c 2)))
 
@@ -369,7 +369,7 @@ The following example defines a macro called `foo` that expands to its argument.
 
 ```
   (let _
-    (mac foo (x) x)
+    (mac foo(x) x)
     (foo 42))
 
 42
@@ -379,7 +379,7 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 
 ```
   (let _
-    (mac call (x args..) '(%x %args..))
+    (mac call(x args..) '(%x %args..))
     (dump (expand 1 '(call + 35 7)))
     (call + 35 7))
 
@@ -390,9 +390,9 @@ Raising the bar one notch, the `call`-macro below expands into code calling the 
 The next example is taken from the [standard library](https://github.com/codr7/g-fu/blob/master/v1/lib/abc.gf) and expands recursively to a nested series of calls using the previous result as the first argument.
 
 ```
-(mac @ (f1 fs..)
-  '(fun (args..)
-     %(tr fs '(call %f1 args..) (fun (acc x) '(call %x %acc)))))
+(mac @(f1 fs..)
+  '(fun(args..)
+     %(tr fs '(call %f1 args..) (fun(acc x) '(call %x %acc)))))
 ```
 
 #### Capture
@@ -400,7 +400,7 @@ When creating bindings in macro expansions, there is always a risk of capturing 
 
 ```
   (let (foo 1)
-    (mac bar (body..)
+    (mac bar(body..)
       '(let (foo 2) %body..))
     (bar (say foo)))
 
@@ -423,7 +423,7 @@ Unique symbols may be spliced into expansions to avoid capture.
 
 ```
   (let (foo 1)
-    (mac bar (body..)
+    (mac bar(body..)
       '(let (%$foo 2) %body..))
     (bar (say foo)))
 

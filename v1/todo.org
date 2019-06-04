@@ -1,5 +1,6 @@
 * add Pun type
 ** cond return from Type
+* convert lib funs to pun
 * add try-block around eval
 * remove (new-sym)
 ** use $foo
