@@ -1,9 +1,4 @@
-* split inc/push/pop/drop/pop-key
-** extract funs to Sym env
-** keep puns in root
-** update calls
 * convert lib funs to pun
-* ---
 * replace read/out with chan Val
 ** add default buffer size
 ** launch reading in separate goroutine
