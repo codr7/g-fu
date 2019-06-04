@@ -66,33 +66,33 @@
 
 (test (= (do 1 2 3) 3))
 
-(test (= (call (@ (fun (x) (+ x 1)) (fun (x) (* x 2))) 20) 42))
+(test (= (call (@ (fun(x) (+ x 1)) (fun(x) (* x 2))) 20) 42))
 
-(let (fs (vec (fun (x) (+ x 1))
-              (fun (x) (* x 2))))
+(let (fs (vec (fun(x) (+ x 1))
+              (fun(x) (* x 2))))
   (test (= (call (@@ fs..) 20) 42)))
 
-(test (= (call (fun () 42)) 42))
-(test (= (call (fun () 42)) 42))
-(test (= (call (fun (xs..) xs) 1 2 3) (vec 1 2 3)))
-(test (= (call (fun (xs..) (+ xs..)) 1 2 3) 6))
-(test (= (let (x 35) (call (fun (y) (+ x y)) 7)) 42))
+(test (= (call (fun() 42)) 42))
+(test (= (call (fun() 42)) 42))
+(test (= (call (fun(xs..) xs) 1 2 3) (vec 1 2 3)))
+(test (= (call (fun(xs..) (+ xs..)) 1 2 3) 6))
+(test (= (let (x 35) (call (fun(y) (+ x y)) 7)) 42))
 
 (let _
-  (fun foo ((x 42)) x)
+  (fun foo((x 42)) x)
   (test (= (foo) 42))
   (test (= (foo 7) 7)))
 
 (let _
-  (mac foo () ''bar)
+  (mac foo() ''bar)
   (test (= (foo) 'bar)))
 
 (let (foo 42)
-  (mac bar () 'foo)
+  (mac bar() 'foo)
   (test (= (bar) 42)))
 
 (let _
-  (mac foo (x) '(+ %x 7))
+  (mac foo(x) '(+ %x 7))
   (test (= (foo 35) 42)))
 
 (let (foo 42)
@@ -107,12 +107,12 @@
 (test (= (expand -1 '(foo 42)) '(foo 42)))
 
 (let _
-  (mac foo (x) x)
+  (mac foo(x) x)
   (test (= (expand -1 '(foo 42)) 42)))
 
 (let _
-  (mac foo (x) x)
-  (mac bar (x) '(foo %x))
+  (mac foo(x) x)
+  (mac bar(x) '(foo %x))
   (test (= (expand 1 '(bar 42)) '(foo 42)))
   (test (= (expand 2 '(bar 42)) 42)))
 
