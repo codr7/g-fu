@@ -6,5 +6,14 @@
 (let _
   (pun foo() (say "Not allowed"))
 
-  (catch ((_ (restart 'ignore)))
-    (try ((ignore () 42)) (foo))))
+  (test (= (catch ((_ (restart 'ignore)))
+             (try ((ignore () 42)) (foo)))
+           42)))
+
+(let _
+  (pun foo() (fun bar()))
+
+  (test (= (catch (((EImpure _) (restart 'ignore)))
+             (try ((ignore() 42))
+               (foo)
+               (fail "Not reached"))))))

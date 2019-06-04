@@ -10,6 +10,7 @@ type PrimImp func(*G, *Task, *Env, Vec, *Env) (Val, E)
 type Prim struct {
   id       *Sym
   arg_list ArgList
+  pure     bool
   imp      PrimImp
 }
 
@@ -17,10 +18,11 @@ type PrimType struct {
   BasicType
 }
 
-func NewPrim(g *G, id *Sym, imp PrimImp, args []Arg) *Prim {
+func NewPrim(g *G, id *Sym, pure bool, imp PrimImp, args []Arg) *Prim {
   p := new(Prim)
   p.id = id
   p.arg_list.Init(g, args)
+  p.pure = pure
   p.imp = imp
   return p
 }
@@ -38,6 +40,10 @@ func (_ *PrimType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env 
 
   if e := p.arg_list.Check(g, args); e != nil {
     return nil, e
+  }
+
+  if !p.pure && task.pure > 0 {
+    return nil, g.EImpure(p)
   }
 
   return p.imp(g, task, env, p.arg_list.Fill(g, args), args_env)
@@ -70,9 +76,9 @@ func (_ *PrimType) Dump(g *G, val Val, out *bufio.Writer) E {
   return nil
 }
 
-func (env *Env) AddPrim(g *G, id string, imp PrimImp, args ...Arg) E {
+func (env *Env) AddPrim(g *G, id string, pure bool, imp PrimImp, args ...Arg) E {
   s := g.Sym(id)
-  return env.Let(g, s, NewPrim(g, s, imp, args))
+  return env.Let(g, s, NewPrim(g, s, pure, imp, args))
 }
 
 func ParsePrimArgs(g *G, args Val) Vec {

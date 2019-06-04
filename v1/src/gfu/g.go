@@ -51,6 +51,7 @@ type G struct {
   VecIterType VecIterType
   WriterType  WriterType
 
+  EImpureType  EImpureType
   EReadType    EReadType
   EUnknownType EUnknownType
   

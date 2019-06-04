@@ -21,6 +21,14 @@ type FunType struct {
   BasicType
 }
 
+type EImpure struct {
+  call Val
+}
+
+type EImpureType struct {
+  BasicType
+}
+
 func NewFun(g *G, env *Env, id *Sym, args...Arg) *Fun {
   return new(Fun).Init(g, env, id, args)
 }
@@ -59,7 +67,7 @@ func (f *Fun) CallArgs(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val
     defer func() { task.pure-- }()
   } else {
     if task.pure > 0 {
-      return nil, g.E("Only pure calls allowed: %v", f)
+      return nil, g.EImpure(f)
     }
   }
   
@@ -165,4 +173,19 @@ func (env *Env) AddPun(g *G, id string, imp FunImp, args ...Arg) (*Fun, E) {
 
   f.pure = true
   return f, nil
+}
+
+func (g *G) EImpure(call Val) *EImpure {
+  e := new(EImpure)
+  e.call = call
+  return e
+}
+
+func (_ EImpure) Type(g *G) Type {
+  return &g.EImpureType
+}
+
+func (_ *EImpureType) Dump(g *G, val Val, out *bufio.Writer) E {
+  fmt.Fprintf(out, "Error: Impure: %v", g.EString(val.(*EImpure).call))
+  return nil
 }

@@ -1,5 +1,8 @@
 * add Pun type
 ** cond return from Type
+* limit pun prim calls
+** only allow let/set/use if env == args_env
+** only allow inc/push/pop/drop/pop-key if called with value
 * convert lib funs to pun
 * add try-block around eval
 * remove (new-sym)
