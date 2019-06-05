@@ -549,7 +549,7 @@ test.gf
 42
 ```
 
-o```
+```
 (load "not.found")
 
 Break: Error: Failed loading file: "not.found"
