@@ -4,7 +4,7 @@
 (fun tr (in acc fn)
   (fun rec (in acc fn)
     (let v (pop in))
-    (if (_? v) acc (rec in (fn acc v) fn)))
+    (if (_? v) acc (recall in (fn acc v) fn)))
 
   (rec (in/iter) acc fn))
 
