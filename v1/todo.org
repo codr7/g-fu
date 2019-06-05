@@ -1,3 +1,5 @@
+* convert tr to pun
+* profile demo/fire.gf
 * add switch val-arg
 ** inject into vec-conds if != _
 * move (chan) to Chan/new
