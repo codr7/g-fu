@@ -91,7 +91,7 @@ func (t *BasicType) Init(g *G, id *Sym, parents []Type) E {
     t.add_parent(p, p)
   }
 
-  return t.env.Use(g, &g.RootEnv, "do", "fun", "mac")
+  return t.env.Use(g, &g.RootEnv, "do", "fun", "mac", "pun")
 }
 
 func (t *BasicType) ArgList(g *G, _ Val) (*ArgList, E) {
