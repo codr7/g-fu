@@ -1,11 +1,3 @@
-* try convert tr to pun
-** lib/tests
-* replace read/out with chan Val
-** add default buffer size
-** launch reading in separate goroutine
-** close when done
-** eval values 
-** move Splat-parsing to chan consumer
 * add try-block around eval
 * remove (new-sym)
 ** use $foo
