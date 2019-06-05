@@ -6,7 +6,7 @@
     (let v (pop in))
     (if (_? v) acc (rec in (fn acc v) fn)))
 
-  (rec (iter in) acc fn))
+  (rec (in/iter) acc fn))
 
 (mac @ (f1 fs..)
   '(fun (args..)

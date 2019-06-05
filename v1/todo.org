@@ -1,6 +1,5 @@
-* move (iter) to SeqType
-** update lib/tests
-* move (chan) to Chan/new
-* move bench/find-key/test to lib
 * add switch val-arg
 ** inject into vec-conds if != _
+* move (chan) to Chan/new
+* move new-bin to Bin/new
+* move bench/find-key/test to lib

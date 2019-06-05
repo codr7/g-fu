@@ -17,7 +17,7 @@
   (let v? (= (type args) Vec)
        out (if (and v? (> (len args) 1)) (pop args) $out))
        
-  '(let (%$in (iter %(if v? (pop args) args)))
+  '(let (%$in (Seq/iter %(if v? (pop args) args)))
      (loop
        (let %out (pop %$in))
        (if (_? %out) (break))
@@ -45,13 +45,13 @@
 
 (fun tcat ((rf _))
   (tr-fun rf (acc val)
-    (if (Seq/? val)
+    (if (Vec/? val)
       (tr val acc rf)
       (rf acc val))))
 
 (fun tflat ((rf _))
   (tr-fun rf (acc val)
-    (if (Seq/? val)
+    (if (Vec/? val)
       (tr val acc (tflat rf))
       (rf acc val))))
 

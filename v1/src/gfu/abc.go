@@ -1013,6 +1013,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.NumType, "Num")
 
   e.AddType(g, &g.SeqType, "Seq")
+  g.SeqType.Env().AddPun(g, "iter", iter_imp, A("val"))
   g.SeqType.Env().AddPun(g, "join", seq_join_imp, A("in"), A("sep"))
 
   e.AddType(g, &g.IterType, "Iter", &g.SeqType)
@@ -1029,7 +1030,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
   e.AddType(g, &g.FloatType, "Float", &g.NumType)
-  e.AddType(g, &g.IntType, "Int", &g.NumType)
+  e.AddType(g, &g.IntType, "Int", &g.NumType, &g.SeqType)
   e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
   e.AddType(g, &g.MacType, "Mac")
   e.AddType(g, &g.NilType, "Nil")
@@ -1041,7 +1042,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.SetterType, "Setter")
   e.AddType(g, &g.SpliceType, "Splice")
   e.AddType(g, &g.SplatType, "Splat")
-  e.AddType(g, &g.StrType, "Str")
+  e.AddType(g, &g.StrType, "Str", &g.SeqType)
   e.AddType(g, &g.SymType, "Sym")
   e.AddType(g, &g.TaskType, "Task")
   e.AddType(g, &g.TrueType, "True")
@@ -1107,7 +1108,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPun(g, "-", sub_imp, A("x"), ASplat("ys"))
   e.AddPun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
-  e.AddPun(g, "iter", iter_imp, A("val"))
   e.AddPrim(g, "push", true, push_imp, A("out"), ASplat("vals"))
   e.AddPrim(g, "pop", true, pop_imp, A("in"))
   e.AddPrim(g, "drop", true, drop_imp, A("in"), AOpt("n", Int(1)))
