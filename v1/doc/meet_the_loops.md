@@ -67,7 +67,7 @@ The `for`-loop accepts any iterable and an optional variable name, and runs one 
 ```
 (mac for (args body..)
   (let v? (= (type args) Vec)
-       out (if (and v? (> (len args) 1)) (pop args) (new-sym)))
+       out (if (and v? (> (len args) 1)) (pop args) $out))
        
   '(let (%$in (iter %(if v? (pop args) args)))
      (loop

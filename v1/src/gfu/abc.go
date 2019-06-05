@@ -506,10 +506,6 @@ func recall_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, NewRecall(args)
 }
 
-func new_sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.NewSym(string(args[0].(Str))), nil
-}
-
 func sym_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   var out strings.Builder
   w := bufio.NewWriter(&out)
@@ -1093,7 +1089,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "eval", true, eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
   e.AddPun(g, "recall", recall_imp, ASplat("args"))
-  e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
   e.AddPun(g, "sym", sym_imp, ASplat("args"))
   e.AddPun(g, "str", str_imp, ASplat("args"))
 

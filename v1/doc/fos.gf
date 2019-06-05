@@ -1,10 +1,8 @@
 (load "../lib/all.gf")
 
 (mac dispatch (defs..)
-  (let args (new-sym) id (new-sym))
-  
-  '(fun (%args..)
-     (let %id (head %args))
+  '(fun (%$args..)
+     (let %$id (head %$args))
      
      (switch
        %(tr defs ()
@@ -14,12 +12,12 @@
                     (if (T? did)
                       '(T
                          (call (fun (%(head imp)..) %(tail imp)..)
-                               %args..))
-                      '((= %id '%did)
+                               %$args..))
+                      '((= %$id '%did)
                          (call (fun (%(head imp)..) %(tail imp)..)
-                               (splat (tail %args))))))))..
+                               (splat (tail %$args))))))))..
                                
-       (T (fail (str "Unknown method: " %id))))))
+       (T (fail (str "Unknown method: " %$id))))))
 
 (mac let-this (vars body..)
   '(let (this _ %vars..)

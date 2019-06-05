@@ -172,7 +172,13 @@ func (_ *SymType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (v Val,
 }
 
 func (_ *SymType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  return dst.Extend(g, src, clone, val.(*Sym).parts[0])
+  s := val.(*Sym).parts[0]
+
+  if s.name[0] == '$' {
+    return nil
+  }
+  
+  return dst.Extend(g, src, clone, s)
 }
 
 func (g *G) NewSym(prefix string) *Sym {

@@ -1,6 +1,3 @@
-* add try-block around eval
-* remove (new-sym)
-** use $foo
 * move (iter) to SeqType
 ** update lib/tests
 * move (chan) to Chan/new
