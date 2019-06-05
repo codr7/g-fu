@@ -1092,7 +1092,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPun(g, "type", type_imp, A("val"))
   e.AddPrim(g, "eval", true, eval_imp, A("expr"))
   e.AddFun(g, "expand", expand_imp, A("n"), A("expr"))
-  e.AddFun(g, "recall", recall_imp, ASplat("args"))
+  e.AddPun(g, "recall", recall_imp, ASplat("args"))
   e.AddFun(g, "new-sym", new_sym_imp, AOpt("prefix", Str("")))
   e.AddPun(g, "sym", sym_imp, ASplat("args"))
   e.AddPun(g, "str", str_imp, ASplat("args"))

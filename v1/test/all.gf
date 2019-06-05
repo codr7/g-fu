@@ -119,7 +119,6 @@
 (load "bin.gf")
 (load "cond.gf")
 (load "env.gf")
-(load "fos.gf")
 (load "fun.gf")
 (load "iter.gf")
 (load "math.gf")

@@ -16,7 +16,7 @@
   (fun (args..)
     (tr fs (f1 args..) (fun (acc x) (x acc)))))
   
-(fun not (val)
+(pun not (val)
   (if val F T))
 
 (mac and (conds..)
@@ -42,4 +42,4 @@
 (fun max (vals..)
   (tr (tail vals) (head vals) (fun (acc v) (if (> v acc) v acc))))
 
-(fun splat (args) args..)
+(pun splat (args) args..)

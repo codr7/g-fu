@@ -1,4 +1,5 @@
-* convert lib funs to puns
+* try convert tr to pun
+** lib/tests
 * replace read/out with chan Val
 ** add default buffer size
 ** launch reading in separate goroutine
