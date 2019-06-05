@@ -1066,7 +1066,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddConst(g, "\\s", Char(' '))
   e.AddConst(g, "\\\"", Char('"'))
 
-  e.AddPrim(g, "call", false, call_imp, A("target"), ASplat("args"))
+  e.AddPrim(g, "call", true, call_imp, A("target"), ASplat("args"))
   e.AddPrim(g, "let", true, let_imp, ASplat("args"))
   e.AddFun(g, "val", val_imp, A("key"))
   e.AddPrim(g, "set", true, set_imp, ASplat("args"))

@@ -20,14 +20,14 @@
   (if val F T))
 
 (mac and (conds..)
-  (fun rec (cs)
+  (pun rec (cs)
     (let h (head cs) tcs (tail cs))
     '(let (%$v %h) (if %$v %(if tcs (rec tcs) $v) %$v)))
     
   (rec conds))
 
 (mac or (conds..)
-  (fun rec (cs)
+  (pun rec (cs)
     (let h (head cs) tcs (tail cs))
     '(let (%$v %h) (if %$v %$v %(if tcs (rec tcs) $v))))
     
@@ -37,9 +37,9 @@
   '(inc %val %(- d)))
 
 (fun min (vals..)
-  (tr (tail vals) (head vals) (fun (acc v) (if (< v acc) v acc))))
+  (tr (tail vals) (head vals) (pun (acc v) (if (< v acc) v acc))))
 
 (fun max (vals..)
-  (tr (tail vals) (head vals) (fun (acc v) (if (> v acc) v acc))))
+  (tr (tail vals) (head vals) (pun (acc v) (if (> v acc) v acc))))
 
 (pun splat (args) args..)
