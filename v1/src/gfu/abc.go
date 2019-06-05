@@ -1073,7 +1073,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "use", true, use_imp, AOpt("prefix", nil), ASplat("ids"))
   g.EnvType.Env().AddPrim(g, "this", false, env_this_imp)
   e.AddPrim(g, "if", true, if_imp, A("cond"), A("t"), AOpt("f", nil))
-  e.AddPrim(g, "inc", false, inc_imp, A("var"), AOpt("delta", Int(1)))
+  e.AddPrim(g, "inc", true, inc_imp, A("var"), AOpt("delta", Int(1)))
   e.AddPrim(g, "test", true, test_imp, ASplat("cases"))
   e.AddPrim(g, "bench", true, bench_imp, A("nreps"), ASplat("body"))
 

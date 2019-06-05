@@ -1,7 +1,6 @@
 * fix pun external env access
-** testpun.gf
 ** block external let/set_imp
-** block external env Updates
+*** testpun.gf
 * convert lib funs to puns
 * replace read/out with chan Val
 ** add default buffer size
@@ -9,7 +8,6 @@
 ** close when done
 ** eval values 
 ** move Splat-parsing to chan consumer
-** keep track of prev value
 * add try-block around eval
 * remove (new-sym)
 ** use $foo

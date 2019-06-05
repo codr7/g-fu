@@ -267,7 +267,7 @@ func (e *Env) Type(g *G) Type {
   return &g.EnvType
 }
 
-func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Val, E) {
+func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Val, E) { 
   switch k := key.(type) {
   case *Sym:
     var vp *Var
@@ -277,6 +277,10 @@ func (env *Env) Update(g *G, task *Task, key Val, set Setter, args_env *Env) (Va
       return nil, e
     }
 
+    if task.pure > 0 && args_env != env {
+      return nil, g.EImpure(key)
+    }
+ 
     return vp.Update(g, env, set)
   case Vec:
     return env.SetPlace(g, task, k, set, args_env)
