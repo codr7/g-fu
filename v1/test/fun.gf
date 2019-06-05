@@ -26,3 +26,19 @@
   (test (= (catch (((EImpure _) (restart 'ignore)))
              (try ((ignore () 'ok)) (bar)))
            'ok)))
+
+(let _
+  (env foo _ (use _ let))
+  (pun bar() (foo/let x 42))
+
+  (test (= (catch (((EImpure _) (restart 'ignore)))
+             (try ((ignore () 'ok)) (bar)))
+           'ok)))
+
+(let _
+  (env foo (x 42) (use _ set))
+  (pun bar() (foo/set x 7))
+
+  (test (= (catch (((EImpure _) (restart 'ignore)))
+             (try ((ignore () 'ok)) (bar)))
+           'ok)))

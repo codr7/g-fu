@@ -1,6 +1,3 @@
-* fix pun external env access
-** block external let/set_imp
-*** testpun.gf
 * convert lib funs to puns
 * replace read/out with chan Val
 ** add default buffer size

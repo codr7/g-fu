@@ -64,6 +64,7 @@ type G struct {
   consts sync.Map
   nsyms uint64
 
+  let_sym,
   nil_sym,
   nop_sym,
   resolve_sym,
@@ -80,6 +81,7 @@ func NewG() (*G, E) {
 }
 
 func (g *G) Init() (*G, E) {
+  g.let_sym = g.Sym("let")
   g.nil_sym = g.Sym("_")
   g.nop_sym = g.Sym("__")
   g.resolve_sym = g.Sym("resolve")

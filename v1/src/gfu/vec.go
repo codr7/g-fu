@@ -224,6 +224,13 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val,
     if target, ce, args, e = id.Lookup(g, task, env, args_env, false); e != nil {
       return nil, e
     }
+
+    ps := id.parts
+    p := ps[len(ps)-1]
+    
+    if task.pure > 0 && args_env != env && (p == g.let_sym || p == g.set_sym) {
+      return nil, g.EImpure(id)
+    }
   }
 
   arg_list, e := g.ArgList(target)
