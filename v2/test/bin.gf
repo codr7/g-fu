@@ -1,0 +1,15 @@
+(test (= (int 0xff) 255))
+(test (= (inc 0xfe) 0xff))
+
+(let (b (Bin/new 1))
+  (test (= (len b) 1))
+  (test (= (# b 0) 0x00))
+  (set (# b 0) 0xfe)
+  (test (= (# b 0) 0xfe))
+  (test (= (inc (# b 0)) 0xff))
+  (test (= (# b 0) 0xff)))
+
+(let (b (bin 0x10 0x20 0x30)
+      n 0x00)
+  (for (b v) (inc n v))
+  (test (= n 0x60)))
