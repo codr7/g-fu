@@ -1,5 +1,3 @@
-* copy -R v2
-** empty doc/
 * add switch val-arg
 ** inject into vec-conds if != _
 * move find-key to lib
