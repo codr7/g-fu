@@ -1,6 +1,14 @@
 * add ops
+** finish IfOp
 ** add g.Compile(task, env, args_env, val, out Ops) (Ops, E)
-** add out Ops to prim imp
+** add Ops out to prim imp
+*** rewrite if/let prims
+*** deactivate remaining
+** add -compile flag
+*** print ops & exit
+** add env op
+*** eval body in fresh env
+*** emit for scoped let
 * add switch val-arg
 ** inject into vec-conds if != _
 * move find-key to lib
