@@ -1,22 +1,22 @@
 package gfu
 
 import (
-  "bufio"
-  //"log"
+	"bufio"
+	//"log"
 )
 
 type True struct {
 }
 
 type TrueType struct {
-  BasicType
+	BasicType
 }
 
 func (_ *True) Type(g *G) Type {
-  return &g.TrueType
+	return &g.TrueType
 }
 
 func (_ *TrueType) Dump(g *G, val Val, out *bufio.Writer) E {
-  out.WriteRune('T')
-  return nil
+	out.WriteRune('T')
+	return nil
 }

@@ -1,39 +1,39 @@
 package gfu
 
 import (
-  "bufio"
+	"bufio"
 )
 
 type Char rune
 
 type CharType struct {
-  BasicType
+	BasicType
 }
 
 func (_ Char) Type(g *G) Type {
-  return &g.CharType
+	return &g.CharType
 }
 
 func (_ *CharType) Dump(g *G, val Val, out *bufio.Writer) E {
-  c := rune(val.(Char))
-  
-  switch c {
-  case '"':
-    out.WriteString("\\\"")
-  case ' ':
-    out.WriteString("\\s")
-  case '\x1b':
-    out.WriteString("\\e")
-  case '\n':
-    out.WriteString("\\n")
-  default:
-    out.WriteRune(c)
-  }
-  
-  return nil
+	c := rune(val.(Char))
+
+	switch c {
+	case '"':
+		out.WriteString("\\\"")
+	case ' ':
+		out.WriteString("\\s")
+	case '\x1b':
+		out.WriteString("\\e")
+	case '\n':
+		out.WriteString("\\n")
+	default:
+		out.WriteRune(c)
+	}
+
+	return nil
 }
 
 func (_ *CharType) Print(g *G, val Val, out *bufio.Writer) E {
-  out.WriteRune(rune(val.(Char)))
-  return nil
+	out.WriteRune(rune(val.(Char)))
+	return nil
 }

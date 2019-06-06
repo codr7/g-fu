@@ -1,35 +1,34 @@
 package gfu
 
 import (
-  //"log"
+//"log"
 )
 
 type Catch struct {
-  etype Type
-  imp *Fun
+	etype Type
+	imp   *Fun
 }
 
 func (c *Catch) Init(etype Type, imp *Fun) *Catch {
-  c.etype = etype
-  c.imp = imp
-  return c
+	c.etype = etype
+	c.imp = imp
+	return c
 }
 
 func (g *G) Catch(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
-  t := val.Type(g)
-  
-  for _, c := range task.catch_q {
-    if c.etype == nil || g.Isa(t, c.etype) != nil {
-      v, e := c.imp.CallArgs(g, task, env, Vec{val}, args_env)
+	t := val.Type(g)
 
-      if e != nil {
-        return nil, e
-      }
-      
-      return v, e
-    }
-  }
+	for _, c := range task.catch_q {
+		if c.etype == nil || g.Isa(t, c.etype) != nil {
+			v, e := c.imp.CallArgs(g, task, env, Vec{val}, args_env)
 
-  return nil, nil
+			if e != nil {
+				return nil, e
+			}
+
+			return v, e
+		}
+	}
+
+	return nil, nil
 }
-
