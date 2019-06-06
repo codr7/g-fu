@@ -2,7 +2,7 @@
 (load "../lib/all.gf")
 
 (env fire (width 50 height 25 max-y (- height 1)
-           buf (new-bin (* width height))
+           buf (Bin/new (* width height))
            out stdout
            max-fade 50
            avg-frames 0 avg-time .0)

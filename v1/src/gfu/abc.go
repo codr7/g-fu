@@ -899,8 +899,14 @@ func reverse_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].(Vec).Reverse(), nil
 }
 
-func new_bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return NewBin(int(args[0].(Int))), nil
+func bin_new_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  s, ok := args[0].(Int)
+
+  if !ok {
+    return nil, g.E("Expected Int: %v", args[0].Type(g))
+  }
+
+  return NewBin(int(s)), nil
 }
 
 func bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -1028,8 +1034,11 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.PunType, "Pun", &g.FunType)
 
   e.AddType(g, &g.AbortType, "Abort")
+
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
+  g.BinType.Env().AddFun(g, "new", bin_new_imp, AOpt("len", Int(0)))
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
+  
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
 
   e.AddType(g, &g.ChanType, "Chan")
@@ -1132,7 +1141,6 @@ func (e *Env) InitAbc(g *G) {
   e.AddPun(g, "tail", tail_imp, A("vec"))
   e.AddFun(g, "reverse", reverse_imp, A("vec"))
 
-  e.AddPun(g, "new-bin", new_bin_imp, AOpt("len", Int(0)))
   e.AddPun(g, "bin", bin_imp, ASplat("vals"))
   
   e.AddPrim(g, "task", false, task_imp, A("args"), ASplat("body"))

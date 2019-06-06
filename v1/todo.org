@@ -1,7 +1,6 @@
-* move new-bin to Bin/new
-* go fmt
 * Up version
 ** g.Version() [3]byte
+* go fmt
 * copy -R v2
 ** empty doc/
 * add switch val-arg
