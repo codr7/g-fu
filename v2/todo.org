@@ -1,4 +1,6 @@
 * add ops
+** add g.Compile(task, env, args_env, val, out Ops) (Ops, E)
+** add out Ops to prim imp
 * add switch val-arg
 ** inject into vec-conds if != _
 * move find-key to lib
