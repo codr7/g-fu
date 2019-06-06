@@ -2,7 +2,6 @@ package gfu
 
 import (
   "bufio"
-  "fmt"
 )
 
 type Op interface {
@@ -16,7 +15,11 @@ type Ops []Op
 
 func (ops Ops) Dump(g *G, out *bufio.Writer, depth int) (e E) {
   for _, op := range ops {
-    fmt.Fprintf(out, "%*v\n", op.OpId(g), depth*2)
+    for i := 0; i < depth; i++ {
+      out.WriteString("  ")
+    }
+
+    out.WriteString(op.OpId(g).name)
     
     if e = op.DumpArgs(g, out, depth+1); e != nil {
       return e

@@ -129,7 +129,7 @@ func (g *G) EvalString(task *Task, env *Env, pos Pos, s string) (Val, E) {
   return out.EvalExpr(g, &g.MainTask, env, env)
 }
 
-func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
+func (g *G) Load(task *Task, env, args_env *Env, path string, eval bool) (v Val, e E) {
   use_filename := NewFun(g, env, g.Sym("use-filename"), A("new"))
   use_filename.imp = func(g *G, task *Task, env *Env, args Vec) (Val, E) {
     ps, ok := args[0].(Str)
@@ -142,12 +142,12 @@ func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
     return nil, Retry{}
   }
 
-  var s []byte
+  var bs []byte
 
   g.Try(task, env, args_env, func() (Val, E) {
     path = filepath.Join(g.load_path, path)
     var re error
-    s, re = ioutil.ReadFile(path)
+    bs, re = ioutil.ReadFile(path)
 
     if re != nil {
       return nil, g.E("Failed loading file: \"%v\"\n%v", path, re)
@@ -159,10 +159,18 @@ func (g *G) Load(task *Task, env, args_env *Env, path string) (Val, E) {
   var pos Pos
   pos.Init(path)
   prev_path := g.load_path
+  defer func() { g.load_path = prev_path }()
   g.load_path = filepath.Dir(path)
-  v, e := g.EvalString(task, env, pos, string(s))
-  g.load_path = prev_path
-  return v, e
+
+  if v, e = g.ReadAll(&pos, strings.NewReader(string(bs)), nil); e != nil {
+    return nil, e
+  }
+
+  if !eval {
+    return v, nil
+  }
+  
+  return v.(Vec).EvalExpr(g, &g.MainTask, env, env)
 }
 
 func (env *Env) AddConst(g *G, id string, val Val) E {
