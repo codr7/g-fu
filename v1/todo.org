@@ -1,5 +1,10 @@
-* add switch val-arg
-** inject into vec-conds if != _
 * move (chan) to Chan/new
 * move new-bin to Bin/new
+* go fmt
+* Up version
+** g.Version() [3]byte
+* copy -R v2
+** empty doc/
+* add switch val-arg
+** inject into vec-conds if != _
 * move find-key to lib
