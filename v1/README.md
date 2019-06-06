@@ -613,7 +613,7 @@ The defining environment is cloned.
 Channels are optionally buffered thread-safe pipes. `chan` may be used to create new channels, and `push`/`pop` to transfer values. `len` returns the current number of buffered values.
 
 ```
-  (let (c (chan 1))
+  (let (c (Chan/new 1))
     (push c 42)
     (say (len c))
     (say (pop c)))

@@ -1,4 +1,4 @@
-(let (c (chan 1))
+(let (c (Chan/new 1))
   (push c 42)
   
   (test (= (len c) 1))

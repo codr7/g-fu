@@ -1,4 +1,3 @@
-* move (chan) to Chan/new
 * move new-bin to Bin/new
 * go fmt
 * Up version

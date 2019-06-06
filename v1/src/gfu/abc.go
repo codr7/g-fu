@@ -999,8 +999,14 @@ func task_wait_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return out, nil
 }
 
-func chan_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return NewChan(args[0].(Int)), nil
+func chan_new_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+  bs, ok := args[0].(Int)
+  
+  if !ok {
+    return nil, g.E("Expected Int: %v", args[0].Type(g))
+  }
+  
+  return NewChan(bs), nil
 }
 
 func (e *Env) InitAbc(g *G) {
@@ -1025,7 +1031,10 @@ func (e *Env) InitAbc(g *G) {
   e.AddType(g, &g.BinType, "Bin", &g.SeqType)
   e.AddType(g, &g.BinIterType, "BinIter", &g.SeqType)
   e.AddType(g, &g.ByteType, "Byte", &g.NumType)
+
   e.AddType(g, &g.ChanType, "Chan")
+  g.ChanType.Env().AddFun(g, "new", chan_new_imp, AOpt("buf", Int(0)))
+
   e.AddType(g, &g.CharType, "Char")
   e.AddType(g, &g.EnvType, "Env")
   e.AddType(g, &g.FalseType, "False")
@@ -1131,5 +1140,4 @@ func (e *Env) InitAbc(g *G) {
   g.TaskType.Env().AddFun(g, "post", task_post_imp, A("task"), A("val0"), ASplat("vals"))
   e.AddFun(g, "fetch", task_fetch_imp)
   e.AddFun(g, "wait", task_wait_imp, ASplat("tasks"))
-  e.AddPun(g, "chan", chan_imp, AOpt("buf", Int(0)))
 }
