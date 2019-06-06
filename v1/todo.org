@@ -1,5 +1,3 @@
-* Up version
-** g.Version() [3]byte
 * go fmt
 * copy -R v2
 ** empty doc/

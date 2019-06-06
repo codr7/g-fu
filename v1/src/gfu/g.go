@@ -90,6 +90,24 @@ func (g *G) Init() (*G, E) {
   return g, nil
 }
 
+func (g *G) Version() [3]byte {
+  return [3]byte{1, 21, 0}
+}
+
+func (g *G) VersionStr() string {
+  var s strings.Builder
+
+  for i, v := range g.Version() {
+    if i > 0 {
+      s.WriteRune('.')
+    }
+    
+    fmt.Fprintf(&s, "%v", v)
+  }
+
+  return s.String()
+}
+
 func (g *G) NewEnv() *Env {
   var env Env
   g.RootEnv.Dup(&env)
