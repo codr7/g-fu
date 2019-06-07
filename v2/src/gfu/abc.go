@@ -2,17 +2,17 @@ package gfu
 
 import (
   "bufio"
-  "fmt"
   //"log"
   "strings"
-  "time"
 )
 
-func do_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  return args.EvalExpr(g, task, env, args_env)
+func do_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+  //TODO return args.EvalExpr(g, task, env, args_env)
+  return out, nil
 }
 
-func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func fun_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/*TODO
   i := 0
   id, ok := args[0].(*Sym)
 
@@ -47,9 +47,13 @@ func fun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return f, nil
+*/
+
+  return out, nil
 }
 
-func pun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func pun_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   f, e := fun_imp(g, task, env, args, args_env)
 
   if e != nil {
@@ -58,9 +62,13 @@ func pun_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 
   f.(*Fun).pure = true
   return f, nil
+*/
+
+  return out, nil
 }
 
-func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func mac_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   i := 0
   id, ok := args[0].(*Sym)
 
@@ -94,9 +102,13 @@ func mac_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return m, nil
+*/
+
+  return out, nil
 }
 
-func call_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func call_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   t, e := g.Eval(task, args_env, args[0], args_env)
 
   if e != nil {
@@ -104,9 +116,13 @@ func call_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return g.Call(task, env, t, args[1:], env)
+*/
+
+  return out, nil
 }
 
-func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
+func let_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   if len(args) == 0 {
     return &g.NIL, nil
   }
@@ -120,7 +136,8 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
   }
 
   var le *Env
-
+  var e E
+  
   if is_scope {
     le = new(Env)
 
@@ -168,6 +185,9 @@ func let_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
   }
 
   return rv, nil
+*/
+
+  return out, nil
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
@@ -181,7 +201,8 @@ func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
   return v, nil
 }
 
-func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
+func set_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   for i := 0; i+1 < len(args); i += 2 {
     var k Val
     k, v = args[i], args[i+1]
@@ -196,9 +217,13 @@ func set_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (v Val, e E) {
   }
 
   return v, nil
+*/
+
+  return out, nil
 }
 
-func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func use_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   prefix := args[0]
   var ss []string
 
@@ -215,13 +240,19 @@ func use_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return &g.NIL, nil
+*/
+
+  return out, nil
 }
 
-func env_this_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  return env, nil
+func env_this_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+  //TODO return env, nil
+  
+  return out, nil
 }
 
-func if_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func if_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   c, e := g.Eval(task, env, args[0], args_env)
 
   if e != nil {
@@ -243,9 +274,13 @@ func if_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return &g.NIL, nil
+*/
+
+  return out, nil
 }
 
-func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func inc_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+  /*
   d, e := g.Eval(task, args_env, args[1], args_env)
 
   if e != nil {
@@ -266,9 +301,13 @@ func inc_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return g.Add(p, d)
+*/
+
+  return out, nil
 }
 
-func test_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func test_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   for _, in := range args {
     v, e := g.Eval(task, env, in, args_env)
 
@@ -288,9 +327,13 @@ func test_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return &g.NIL, nil
+*/
+
+  return out, nil
 }
 
-func bench_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func bench_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   as := ParsePrimArgs(g, args[0])
 
   if as == nil {
@@ -319,6 +362,9 @@ func bench_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return Int(time.Now().Sub(t).Nanoseconds() / 1000000), nil
+*/
+
+  return out, nil
 }
 
 func debug_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -346,7 +392,8 @@ func retry_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return nil, Retry{}
 }
 
-func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E) {
+func try_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   var rfs []*Fun
 
   if args[0] != &g.NIL {
@@ -384,9 +431,13 @@ func try_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (ev Val, ee E)
   return g.Try(task, env, args_env, func() (Val, E) {
     return args[1:].EvalExpr(g, task, env, args_env)
   }, rfs...)
+*/
+
+  return out, nil
 }
 
-func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func catch_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   prev := len(task.catch_q)
   defer func() { task.catch_q = task.catch_q[:prev] }()
   handlers, ok := args[0].(Vec)
@@ -447,6 +498,9 @@ func catch_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return v, e
+*/
+
+  return out, nil
 }
 
 func restart_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -490,7 +544,8 @@ func type_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return args[0].Type(g), nil
 }
 
-func eval_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func eval_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   var e E
   v := args[0]
 
@@ -499,6 +554,9 @@ func eval_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return g.Eval(task, env, v, args_env)
+*/
+
+  return out, nil
 }
 
 func expand_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
@@ -687,7 +745,8 @@ func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Iter(args[0])
 }
 
-func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func push_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   place := args[0]
   vs, e := args[1:].EvalVec(g, task, args_env, args_env)
 
@@ -707,9 +766,13 @@ func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return g.Push(place, vs...)
+*/
+
+  return out, nil
 }
 
-func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func pop_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   var it, rest Val
   place := args[0]
   var e E
@@ -736,9 +799,13 @@ func pop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return NewSplat(g, Vec{it, rest}), nil
+*/
+
+  return out, nil
 }
 
-func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func drop_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   place := args[0]
   var e E
 
@@ -754,6 +821,9 @@ func drop_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return g.Drop(place, args[1].(Int))
+*/
+
+  return out, nil
 }
 
 func len_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -823,7 +893,8 @@ func find_key_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return &g.NIL, nil
 }
 
-func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func pop_key_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   in, k := args[0], args[1]
   var e E
 
@@ -860,6 +931,9 @@ func pop_key_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return NewSplat(g, Vec{v, out}), nil
+*/
+
+  return out, nil
 }
 
 func head_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -928,7 +1002,8 @@ func bin_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return b, nil
 }
 
-func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
+func task_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
   id, ok := args[0].(*Sym)
   i := 0
 
@@ -970,10 +1045,14 @@ func task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
   }
 
   return t, nil
+*/
+
+  return out, nil
 }
 
-func this_task_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
-  return task, nil
+func this_task_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+  //TODO return task, nil
+  return out, nil
 }
 
 func task_post_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {

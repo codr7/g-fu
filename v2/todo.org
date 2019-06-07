@@ -6,6 +6,7 @@
 ** add env op
 *** eval body in fresh env
 *** emit for scoped let
+* --
 * add switch val-arg
 ** inject into vec-conds if != _
 * move find-key to lib
