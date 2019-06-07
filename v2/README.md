@@ -3,6 +3,9 @@
 ### Intro
 [g-fu](https://github.com/codr7/g-fu) is a pragmatic [Lisp](https://xkcd.com/297/) developed and embedded in Go with support for block-structured programming, quasi-quotation and macros, lambdas, optimized tail-recursion, opt-/varargs, first-class environments, user-defined setters, restarts, preemptive green threads, and channels.
 
+### Status
+Version 2 is very much a work in progress, I strongly recommend focusing on [v1](https://github.com/codr7/g-fu/tree/master/v1) until the dust settles a bit.
+
 ```
 $ git clone https://github.com/codr7/g-fu.git
 $ cd g-fu/v1
