@@ -1,11 +1,10 @@
 * add ops
-** testcompile.gf
-** add Ops out to prim imp
-*** rewrite if/let prims
-*** deactivate remaining
 ** add env op
 *** eval body in fresh env
-*** emit for scoped let
+** rewrite let prim
+*** use env/let ops
+** rewrite if prim
+** testcompile.gf
 * --
 * add switch val-arg
 ** inject into vec-conds if != _

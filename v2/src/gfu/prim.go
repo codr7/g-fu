@@ -27,6 +27,10 @@ func NewPrim(g *G, id *Sym, pure bool, imp PrimImp, args []Arg) *Prim {
   return p
 }
 
+func (p *Prim) Call(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+  return p.imp(g, task, env, args_env, args, out) 
+}
+
 func (_ *Prim) Type(g *G) Type {
   return &g.PrimType
 }

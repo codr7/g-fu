@@ -136,6 +136,59 @@ func (_ *VecType) Bool(g *G, val Val) (bool, E) {
   return val.(Vec).Len() > 0, nil
 }
 
+func (_ *VecType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, out Ops) (Ops, E) {
+  v := val.(Vec)
+
+  if len(v) == 0 {
+    return append(out, NewLitOp(Vec(nil))), nil
+  }
+
+  target := v[0]
+  var id *Sym
+  var ok bool
+  
+  if id, ok = target.(*Sym); ok {
+  } else {
+    return nil, g.E("Invalid call target: %v", target.Type(g))
+  }
+
+  if id == g.nop_sym {
+    return append(out, NewLitOp(&g.NIL)), nil
+  }
+  
+  var call_env *Env
+  var args Vec
+  var e E
+  
+  if target, call_env, args, e = id.Lookup(g, task, env, args_env, false); e != nil {
+    return nil, e
+  }
+
+  switch t := target.(type) {
+  case *Prim:
+    min_args := t.arg_list.min
+    max_args := min_args - len(v) + 1
+    
+    if max_args > 0 {
+      n := len(args)
+      
+      if n < max_args {
+        args = append(args, v[1:]...)
+      } else {
+        args = append(args[n-max_args:], v[1:]...)
+      }
+    } else {
+      args = v[1:]
+    }
+
+    return t.Call(g, task, call_env, env, args, out)
+  default:
+    break
+  }
+  
+  return append(out, NewLitOp(val)), nil
+}
+
 func (_ *VecType) Clone(g *G, val Val) (Val, E) {
   v := val.(Vec)
   dst := make(Vec, len(v))
@@ -231,6 +284,8 @@ func (_ *VecType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val,
     if task.pure > 0 && len(ps) > 1 && (p == g.let_sym || p == g.set_sym) {
       return nil, g.EImpure(id)
     }
+  } else {
+    return nil, g.E("Invalid call target: %v", target.Type(g))
   }
 
   arg_list, e := g.ArgList(target)
