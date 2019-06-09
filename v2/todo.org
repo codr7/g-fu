@@ -6,16 +6,18 @@
 ** rewrite if prim
 ** testcompile.gf
 * --
+* add sync.Pool for Env vars in G
+** https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2dde3024e277
 * add switch val-arg
 ** inject into vec-conds if != _
 * add universal negation
-** Any/negate
+** Any/not
 ** !done? => !(done?)
 ** (!pop in) => !(pop in)
-*** call from g.Negate(val)
-*** add NewNegateOp(body...Op)
+*** call from g.Not(val)
+*** add NewNotOp(body...Op)
 *** handle ! in *Sym
-**** emit negate around id
+**** emit NotOp around id
 *** handle ! in Vec
-**** emit negate around vec compile
+**** emit NotOp around vec compile
 * move find-key to lib
