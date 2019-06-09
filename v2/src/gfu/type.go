@@ -1,259 +1,259 @@
 package gfu
 
 import (
-  "bufio"
-  "fmt"
-  //"log"
-  "sync"
+	"bufio"
+	"fmt"
+	//"log"
+	"sync"
 )
 
 type Type interface {
-  fmt.Stringer
-  Val
+	fmt.Stringer
+	Val
 
-  Init(*G, *Sym, []Type) E
+	Init(*G, *Sym, []Type) E
 
-  ArgList(*G, Val) (*ArgList, E)
-  Bool(*G, Val) (bool, E)
-  Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
-  Clone(*G, Val) (Val, E)
-  Compile(*G, *Task, *Env, *Env, Val, Ops) (Ops, E)
-  Drop(*G, Val, Int) (Val, E)
-  Dump(*G, Val, *bufio.Writer) E
-  Dup(*G, Val) (Val, E)
-  EachParent(func(Type))
-  Env() *Env
-  Eq(*G, Val, Val) (bool, E)
-  Eval(*G, *Task, *Env, Val, *Env) (Val, E)
-  Expand(*G, *Task, *Env, Val, Int) (Val, E)
-  Extenv(*G, *Env, *Env, Val, bool) E
-  Id() *Sym
-  Index(*G, Val, Vec) (Val, E)
-  Is(*G, Val, Val) bool
-  Isa(Type) Type
-  Iter(*G, Val) (Val, E)
-  Len(*G, Val) (Int, E)
-  Pop(*G, Val) (Val, Val, E)
-  Print(*G, Val, *bufio.Writer) E
-  Push(*G, Val, ...Val) (Val, E)
-  Quote(*G, *Task, *Env, Val, *Env) (Val, E)
-  SetIndex(*G, *Task, *Env, Val, Vec, Setter) (Val, Val, E)
-  Splat(*G, Val, Vec) (Vec, E)
+	ArgList(*G, Val) (*ArgList, E)
+	Bool(*G, Val) (bool, E)
+	Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
+	Clone(*G, Val) (Val, E)
+	Compile(*G, *Task, *Env, *Env, Val, Ops) (Ops, E)
+	Drop(*G, Val, Int) (Val, E)
+	Dump(*G, Val, *bufio.Writer) E
+	Dup(*G, Val) (Val, E)
+	EachParent(func(Type))
+	Env() *Env
+	Eq(*G, Val, Val) (bool, E)
+	Eval(*G, *Task, *Env, Val, *Env) (Val, E)
+	Expand(*G, *Task, *Env, Val, Int) (Val, E)
+	Extenv(*G, *Env, *Env, Val, bool) E
+	Id() *Sym
+	Index(*G, Val, Vec) (Val, E)
+	Is(*G, Val, Val) bool
+	Isa(Type) Type
+	Iter(*G, Val) (Val, E)
+	Len(*G, Val) (Int, E)
+	Pop(*G, Val) (Val, Val, E)
+	Print(*G, Val, *bufio.Writer) E
+	Push(*G, Val, ...Val) (Val, E)
+	Quote(*G, *Task, *Env, Val, *Env) (Val, E)
+	SetIndex(*G, *Task, *Env, Val, Vec, Setter) (Val, Val, E)
+	Splat(*G, Val, Vec) (Vec, E)
 }
 
 type BasicType struct {
-  id      *Sym
-  parents sync.Map
-  env     Env
+	id      *Sym
+	parents sync.Map
+	env     Env
 }
 
 type MetaType struct {
-  BasicType
+	BasicType
 }
 
 func (t *BasicType) add_parent(key, val Type) {
-  key.EachParent(func(k Type) {
-    t.add_parent(k, val)
-  })
+	key.EachParent(func(k Type) {
+		t.add_parent(k, val)
+	})
 
-  for _, v := range key.Env().vars {
-    if i, found := t.env.Find(v.key); found == nil {
-      t.env.InsertVar(i, v)
-    } else {
-      t.env.vars[i] = v
-    }
-  }
+	for _, v := range key.Env().vars {
+		if i, found := t.env.Find(v.key); found == nil {
+			t.env.InsertVar(i, v)
+		} else {
+			t.env.vars[i] = v
+		}
+	}
 
-  t.parents.LoadOrStore(key, val)
+	t.parents.LoadOrStore(key, val)
 }
 
 func type_check_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  pt, ok := args[0].(Type)
+	pt, ok := args[0].(Type)
 
-  if !ok {
-    return nil, g.E("Expected Type: %v", args[0].Type(g))
-  }
+	if !ok {
+		return nil, g.E("Expected Type: %v", args[0].Type(g))
+	}
 
-  for _, a := range args[1:] {
-    pt = g.Isa(a, pt)
-  }
+	for _, a := range args[1:] {
+		pt = g.Isa(a, pt)
+	}
 
-  if pt == nil {
-    return &g.NIL, nil
-  }
+	if pt == nil {
+		return &g.NIL, nil
+	}
 
-  return pt, nil
+	return pt, nil
 }
 
 func (t *BasicType) Init(g *G, id *Sym, parents []Type) E {
-  t.id = id
+	t.id = id
 
-  for _, p := range parents {
-    t.add_parent(p, p)
-  }
+	for _, p := range parents {
+		t.add_parent(p, p)
+	}
 
-  return t.env.Use(g, &g.RootEnv, "do", "fun", "mac", "pun")
+	return t.env.Use(g, &g.RootEnv, "do", "fun", "mac", "pun")
 }
 
 func (t *BasicType) ArgList(g *G, _ Val) (*ArgList, E) {
-  return nil, g.E("ArgList not supported: %v", t.id)
+	return nil, g.E("ArgList not supported: %v", t.id)
 }
 
 func (_ *BasicType) Bool(g *G, val Val) (bool, E) {
-  return true, nil
+	return true, nil
 }
 
 func (t *BasicType) Call(g *G, task *Task, env *Env, val Val, args Vec, args_env *Env) (Val, E) {
-  return nil, g.E("Call not supported: %v", t.id)
+	return nil, g.E("Call not supported: %v", t.id)
 }
 
 func (_ *BasicType) Clone(g *G, val Val) (Val, E) {
-  return g.Dup(val)
+	return g.Dup(val)
 }
 
 func (_ *BasicType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, out Ops) (Ops, E) {
-  return append(out, NewLitOp(val)), nil
+	return append(out, NewLitOp(val)), nil
 }
 
 func (_ *BasicType) Drop(g *G, val Val, n Int) (out Val, e E) {
-  for i := Int(0); i < n; i++ {
-    if _, out, e = g.Pop(val); e != nil {
-      return nil, e
-    }
-  }
+	for i := Int(0); i < n; i++ {
+		if _, out, e = g.Pop(val); e != nil {
+			return nil, e
+		}
+	}
 
-  return out, nil
+	return out, nil
 }
 
 func (t *BasicType) Dump(g *G, val Val, out *bufio.Writer) E {
-  fmt.Fprintf(out, "%v", val)
-  return nil
+	fmt.Fprintf(out, "%v", val)
+	return nil
 }
 
 func (_ *BasicType) Dup(g *G, val Val) (Val, E) {
-  return val, nil
+	return val, nil
 }
 
 func (t *BasicType) EachParent(f func(Type)) {
-  t.parents.Range(func(key, _ interface{}) bool {
-    f(key.(Type))
-    return true
-  })
+	t.parents.Range(func(key, _ interface{}) bool {
+		f(key.(Type))
+		return true
+	})
 }
 
 func (t *BasicType) Env() *Env {
-  return &t.env
+	return &t.env
 }
 
 func (_ *BasicType) Eq(g *G, lhs, rhs Val) (bool, E) {
-  return g.Is(lhs, rhs), nil
+	return g.Is(lhs, rhs), nil
 }
 
 func (_ *BasicType) Eval(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
-  return val, nil
+	return val, nil
 }
 
 func (_ *BasicType) Expand(g *G, task *Task, env *Env, val Val, depth Int) (Val, E) {
-  return val, nil
+	return val, nil
 }
 
 func (_ *BasicType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
-  return nil
+	return nil
 }
 
 func (t *BasicType) Id() *Sym {
-  return t.id
+	return t.id
 }
 
 func (t *BasicType) Index(g *G, val Val, key Vec) (Val, E) {
-  return nil, g.E("Index not supported: %v", t.id)
+	return nil, g.E("Index not supported: %v", t.id)
 }
 
 func (_ *BasicType) Is(g *G, lhs, rhs Val) bool {
-  return lhs == rhs
+	return lhs == rhs
 }
 
 func (t *BasicType) Isa(parent Type) Type {
-  if parent == t {
-    return t
-  }
+	if parent == t {
+		return t
+	}
 
-  v, ok := t.parents.Load(parent)
+	v, ok := t.parents.Load(parent)
 
-  if !ok {
-    return nil
-  }
+	if !ok {
+		return nil
+	}
 
-  return v.(Type)
+	return v.(Type)
 }
 
 func (t *BasicType) Iter(g *G, val Val) (Val, E) {
-  return nil, g.E("Iter not supported: %v", t.id)
+	return nil, g.E("Iter not supported: %v", t.id)
 }
 
 func (t *BasicType) Len(g *G, val Val) (Int, E) {
-  return -1, g.E("Len not supported: %v", t.id)
+	return -1, g.E("Len not supported: %v", t.id)
 }
 
 func (t *BasicType) Pop(g *G, val Val) (Val, Val, E) {
-  return nil, nil, g.E("Pop not supported: %v", t.id)
+	return nil, nil, g.E("Pop not supported: %v", t.id)
 }
 
 func (_ *BasicType) Print(g *G, val Val, out *bufio.Writer) E {
-  return g.Dump(val, out)
+	return g.Dump(val, out)
 }
 
 func (t *BasicType) Push(g *G, val Val, its ...Val) (Val, E) {
-  return nil, g.E("Push not supported: %v", t.id)
+	return nil, g.E("Push not supported: %v", t.id)
 }
 
 func (_ *BasicType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val, E) {
-  return val, nil
+	return val, nil
 }
 
 func (t *BasicType) SetIndex(g *G, task *Task, env *Env, val Val, key Vec, set Setter) (Val, Val, E) {
-  return nil, nil, g.E("SetIndex not supported: %v", t.id)
+	return nil, nil, g.E("SetIndex not supported: %v", t.id)
 }
 
 func (_ *BasicType) Splat(g *G, val Val, out Vec) (Vec, E) {
-  return append(out, val), nil
+	return append(out, val), nil
 }
 
 func (t *BasicType) String() string {
-  return t.id.name
+	return t.id.name
 }
 
 func (_ *BasicType) Type(g *G) Type {
-  return &g.MetaType
+	return &g.MetaType
 }
 
 func (_ *MetaType) Dump(g *G, val Val, out *bufio.Writer) E {
-  out.WriteString(val.(Type).Id().name)
-  return nil
+	out.WriteString(val.(Type).Id().name)
+	return nil
 }
 
 func (e *Env) AddType(g *G, t Type, id string, parents ...Type) E {
-  t.Init(g, g.Sym(id), parents)
+	t.Init(g, g.Sym(id), parents)
 
-  t.Env().AddPun(g, "?",
-    func(g *G, task *Task, env *Env, args Vec) (Val, E) {
-      return type_check_imp(g, task, env, append(Vec{t}, args...))
-    },
-    A("val0"), ASplat("vals"))
+	t.Env().AddPun(g, "?",
+		func(g *G, task *Task, env *Env, args Vec) (Val, E) {
+			return type_check_imp(g, task, env, append(Vec{t}, args...))
+		},
+		A("val0"), ASplat("vals"))
 
-  return e.Let(g, t.Id(), t)
+	return e.Let(g, t.Id(), t)
 }
 
 func (g *G) Isa(val Val, parent Type) Type {
-  vt := val.Type(g)
+	vt := val.Type(g)
 
-  if vt == &g.MetaType {
-    vt = val.(Type)
-  }
+	if vt == &g.MetaType {
+		vt = val.(Type)
+	}
 
-  if vt == parent {
-    return vt
-  }
+	if vt == parent {
+		return vt
+	}
 
-  return vt.Isa(parent)
+	return vt.Isa(parent)
 }
