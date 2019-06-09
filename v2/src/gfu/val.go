@@ -89,8 +89,8 @@ func (g *G) Quote(task *Task, env *Env, val Val, args_env *Env) (Val, E) {
   return val.Type(g).Quote(g, task, env, val, args_env)
 }
 
-func (g *G) SetIndex(val Val, key Vec, set Setter) (Val, E) {
-  return val.Type(g).SetIndex(g, val, key, set)
+func (g *G) SetIndex(task *Task, env *Env, val Val, key Vec, set Setter) (Val, Val, E) {
+  return val.Type(g).SetIndex(g, task, env, val, key, set)
 }
 
 func (g *G) Splat(val Val, out Vec) (Vec, E) {

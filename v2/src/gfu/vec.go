@@ -364,9 +364,11 @@ func (_ *VecType) Extenv(g *G, src, dst *Env, val Val, clone bool) E {
   v := val.(Vec)
 
   if len(v) > 1 && v[0] == g.set_sym {
-    if k, ok := v[1].(Vec); ok {
-      if e := g.Extenv(src, dst, g.Sym("set-%v", k[0]), clone); e != nil {
-        return e
+    for i := 1; i < len(v)-1; i += 2 { 
+      if k, ok := v[i].(Vec); ok {
+        if e := g.Extenv(src, dst, g.Sym("set-%v", k[0]), clone); e != nil {
+          return e
+        }
       }
     }
   }
@@ -450,6 +452,30 @@ func (_ *VecType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (Val
   }
 
   return out, nil
+}
+
+func (_ *VecType) SetIndex(g *G, task *Task, env *Env, in Val, key Vec, set Setter) (val Val, _ Val, e E) {
+  if len(key) > 1 {
+    return nil, nil, g.E("Invalid index: %v", key.Type(g))
+  }
+
+  v := in.(Vec)
+  i, ok := key[0].(Int)
+
+  if !ok {
+    return nil, nil, g.E("Invalid index: %v", key[0].Type(g))
+  }
+
+  if i := int(i); i < 0 || i > len(v) {
+    return nil, nil, g.E("Index out of bounds: %v", i)
+  }
+
+  if val, e = set(v[i]); e != nil {
+    return nil, nil, e
+  }
+
+  v[i] = val
+  return val, v, nil
 }
 
 func (_ *VecType) Splat(g *G, val Val, out Vec) (Vec, E) {

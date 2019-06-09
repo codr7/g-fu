@@ -1,7 +1,4 @@
-* commit bench/bubbles
 * copy bubbles commit to v2
-* http://www.rosettacode.org/wiki/Sorting_algorithms/Bubble_sort
-* --
 * add switch val-arg
 ** inject into vec-conds if != _
 * move find-key to lib

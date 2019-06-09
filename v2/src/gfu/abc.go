@@ -869,8 +869,19 @@ func index_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
   return g.Index(args[0], args[1:])
 }
 
-func set_index_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
-  return g.SetIndex(args[1], args[2:], args[0].(Setter))
+func set_index_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
+/* TODO
+  var set_args Vec
+  
+  if set_args, e = args[2:].EvalVec(g, task, env, args_env); e != nil {
+    return nil, e
+  }
+
+  v, _, e = g.SetIndex(task, env, args[1], set_args, args[0].(Setter))
+  return v, e
+*/
+
+  return out, nil
 }
 
 func vec_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
@@ -1213,7 +1224,7 @@ func (e *Env) InitAbc(g *G) {
   e.AddPrim(g, "drop", true, drop_imp, A("in"), AOpt("n", Int(1)))
   e.AddPun(g, "len", len_imp, A("in"))
   e.AddPun(g, "#", index_imp, A("source"), ASplat("key"))
-  e.AddFun(g, "set-#", set_index_imp, A("set"), A("dest"), ASplat("key"))
+  e.AddPrim(g, "set-#", false, set_index_imp, A("set"), A("dest"), ASplat("key"))
 
   e.AddPun(g, "vec", vec_imp, ASplat("vals"))
   e.AddPun(g, "peek", vec_peek_imp, A("vec"))

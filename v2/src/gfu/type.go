@@ -37,7 +37,7 @@ type Type interface {
   Print(*G, Val, *bufio.Writer) E
   Push(*G, Val, ...Val) (Val, E)
   Quote(*G, *Task, *Env, Val, *Env) (Val, E)
-  SetIndex(*G, Val, Vec, Setter) (Val, E)
+  SetIndex(*G, *Task, *Env, Val, Vec, Setter) (Val, Val, E)
   Splat(*G, Val, Vec) (Vec, E)
 }
 
@@ -211,8 +211,8 @@ func (_ *BasicType) Quote(g *G, task *Task, env *Env, val Val, args_env *Env) (V
   return val, nil
 }
 
-func (t *BasicType) SetIndex(g *G, val Val, key Vec, set Setter) (Val, E) {
-  return nil, g.E("SetIndex not supported: %v", t.id)
+func (t *BasicType) SetIndex(g *G, task *Task, env *Env, val Val, key Vec, set Setter) (Val, Val, E) {
+  return nil, nil, g.E("SetIndex not supported: %v", t.id)
 }
 
 func (_ *BasicType) Splat(g *G, val Val, out Vec) (Vec, E) {

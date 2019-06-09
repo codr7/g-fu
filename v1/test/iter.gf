@@ -54,3 +54,18 @@
 
 (let (v '(1 2 3))
   (test (= (v/map inc) '(2 3 4))))
+
+(let _
+(fun bubbles (vs)
+  (let done? F n (len vs))
+  
+  (while (not done?)
+    (set done? T n (- n 1))
+    
+    (for (n i)
+      (let x (# vs i) j (+ i 1) y (# vs j))
+      (if (> x y) (set done? F (# vs i) y (# vs j) x))))
+
+  vs)
+
+(test (= (bubbles '(3 1 2)) '(1 2 3))))
