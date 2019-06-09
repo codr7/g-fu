@@ -8,4 +8,14 @@
 * --
 * add switch val-arg
 ** inject into vec-conds if != _
+* add universal negation
+** Any/negate
+** !done? => !(done?)
+** (!pop in) => !(pop in)
+*** call from g.Negate(val)
+*** add NewNegateOp(body...Op)
+*** handle ! in *Sym
+**** emit negate around id
+*** handle ! in Vec
+**** emit negate around vec compile
 * move find-key to lib
