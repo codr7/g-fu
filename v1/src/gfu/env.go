@@ -221,7 +221,7 @@ func (e *Env) Resolve(g *G, task *Task, key *Sym, args_env *Env, silent bool) (V
   return e.resolve.CallArgs(g, task, e, Vec{key}, args_env)
 }
 
-func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
+func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {  
   switch k := key.(type) {
   case *Sym:
     v, _, _, _, e := k.LookupVar(g, env, false)
@@ -244,20 +244,19 @@ func (env *Env) Set(g *G, task *Task, key Val, val Val, args_env *Env) E {
   return nil
 }
 
-func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (v Val, e E) {
+func (env *Env) SetPlace(g *G, task *Task, key Vec, set Setter, args_env *Env) (val Val, e E) {
   if s, ok := key[0].(*Sym); ok {
-    var f Val
     s = g.Sym("set-%v", s)
-
-    if f, e = env.Get(g, task, s, args_env, false); e != nil {
+    
+    if val, e = env.Get(g, task, s, args_env, false); e != nil {
       return nil, e
     }
 
-    if v, e = g.Call(task, env, f, append(Vec{set}, key[1:]...), args_env); e != nil {
+    if val, e = g.Call(task, env, val, append(Vec{set}, key[1:]...), args_env); e != nil {
       return nil, e
     }
 
-    return v, nil
+    return val, nil
   }
 
   return nil, g.E("Invalid set key: %v", key)

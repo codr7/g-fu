@@ -1,12 +1,6 @@
-* fix build/bubbles.gf
-** figure out why set-# is undefined when `done? F` comes first in set call
-** fix vec set
-*** change Setter to return two vals
-*** use second to update v.Val in Env.SetPlace
-*** testset.gf
-** copy changes to v2
-** http://www.rosettacode.org/wiki/Sorting_algorithms/Bubble_sort
-** add bench
+* commit bench/bubbles
+* copy bubbles commit to v2
+* http://www.rosettacode.org/wiki/Sorting_algorithms/Bubble_sort
 * --
 * add switch val-arg
 ** inject into vec-conds if != _
