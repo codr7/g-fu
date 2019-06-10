@@ -105,6 +105,10 @@ func main() {
 				}
 
 				w.Flush()
+
+				if _, e = ops.Eval(g, &g.MainTask, env, env); e != nil {
+					log.Fatal(g.EPrintString(e))
+				}
 			}
 		}
 	}

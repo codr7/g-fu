@@ -33,6 +33,7 @@ type G struct {
 	NilType     NilType
 	NanosType   NanosType
 	NumType     NumType
+	OpsType     OpsType
 	PrimType    PrimType
 	PunType     PunType
 	QuoteType   QuoteType

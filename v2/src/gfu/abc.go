@@ -121,73 +121,48 @@ func call_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) 
 	return out, nil
 }
 
-func let_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (Ops, E) {
-	/* TODO
-	   if len(args) == 0 {
-	     return &g.NIL, nil
-	   }
+func let_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (_ Ops, e E) {
+	if len(args) == 0 {
+		return out, nil
+	}
+	
+	op := NewLetOp(args)
+	bsf := args[0]
+	bs, is_scope := bsf.(Vec)
+	
+	if bsf == &g.NIL {
+		bs = nil
+		is_scope = true
+	}
 
-	   bsf := args[0]
-	   bs, is_scope := bsf.(Vec)
+	if is_scope {
+		if op.body, e = g.Compile(task, env, args_env, args[1:], nil); e != nil {
+			return nil, e
+		}
+	} else {
+		bs = args
+	}
+	
+	for i := 0; i+1 < len(bs); i += 2 {
+		kf, vf := bs[i], bs[i+1]
+		
+		if _, ok := kf.(*Sym); !ok {
+			return nil, g.E("Invalid let key: %v", kf)
+		}
+		
+		k := kf.(*Sym)
+		var v Ops
 
-	   if bsf == &g.NIL {
-	     bs = nil
-	     is_scope = true
-	   }
-
-	   var le *Env
-	   var e E
-
-	   if is_scope {
-	     le = new(Env)
-
-	     if e = g.Extenv(env, le, args, false); e != nil {
-	       return nil, e
-	     }
-	   } else {
-	     bs = args
-	     le = env
-	   }
-
-	   if e = g.Extenv(args_env, le, args, false); e != nil {
-	     return nil, e
-	   }
-
-	   v = &g.NIL
-
-	   for i := 0; i+1 < len(bs); i += 2 {
-	     kf, vf := bs[i], bs[i+1]
-
-	     if _, ok := kf.(*Sym); !ok {
-	       return nil, g.E("Invalid let key: %v", kf)
-	     }
-
-	     k := kf.(*Sym)
-	     v, e = g.Eval(task, le, vf, args_env)
-
-	     if e != nil {
-	       return nil, e
-	     }
-
-	     if e = le.Let(g, k, v); e != nil {
-	       return nil, e
-	     }
-	   }
-
-	   if !is_scope {
-	     return v, nil
-	   }
-
-	   rv, e := args[1:].EvalExpr(g, task, le, args_env)
-
-	   if e != nil {
-	     return nil, e
-	   }
-
-	   return rv, nil
-	*/
-
-	return out, nil
+		if v, e = g.Compile(task, env, args_env, vf, nil); e != nil {
+			return nil, e
+		}
+		
+		if e = op.env.Let(g, k, v); e != nil {
+			return nil, e
+		}
+	}
+	
+	return append(out, op), nil
 }
 
 func val_imp(g *G, task *Task, env *Env, args Vec) (v Val, e E) {
@@ -1145,6 +1120,7 @@ func (e *Env) InitAbc(g *G) {
 	e.AddType(g, &g.IntIterType, "IntIter", &g.IterType)
 	e.AddType(g, &g.MacType, "Mac")
 	e.AddType(g, &g.NilType, "Nil")
+	e.AddType(g, &g.OpsType, "Ops")
 	e.AddType(g, &g.PrimType, "Prim")
 	e.AddType(g, &g.QuoteType, "Quote")
 	e.AddType(g, &g.RecallType, "Recall")

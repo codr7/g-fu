@@ -1,11 +1,13 @@
 * add ops
-** add env op
-*** eval body in fresh env
-** rewrite let prim
-*** use env/let ops
+** convert val prim
+*** ValOp(key *Sym)
+** add FuncallOp
+*** lookup symbols in env in Vec compile
+*** gen FuncallOp if *Fun
 ** rewrite if prim
 ** testcompile.gf
 * --
+* change Extenv to extract symbols at compile time
 * add sync.Pool for Env vars in G
 ** https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2dde3024e277
 * add switch val-arg
