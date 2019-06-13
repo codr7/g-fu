@@ -89,17 +89,16 @@ func main() {
 
 			if *compile {
 				var ops gfu.Ops
-
-				for _, v := range v.(gfu.Vec) {
-					if ops, e = g.Compile(&g.MainTask, env, env, v, ops); e != nil {
-						log.Fatal(g.EPrintString(e))
-						break
-					}
+				quote_depth := 0
+				
+				if ops, e = v.(gfu.Vec).Compile(g, &g.MainTask, env, env, &quote_depth, ops); e != nil {
+					log.Fatal(g.EPrintString(e))
+					break
 				}
 
 				w := bufio.NewWriter(os.Stdout)
 
-				if e = ops.Dump(g, w, 0); e != nil {
+				if e = ops.Dump(g, 0, w); e != nil {
 					log.Fatal(g.EPrintString(e))
 					break
 				}

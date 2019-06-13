@@ -136,7 +136,9 @@ func let_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (_ Ops, e 
 	}
 
 	if is_scope {
-		if op.body, e = g.Compile(task, env, args_env, args[1:], nil); e != nil {
+		quote_depth := 0
+		
+		if op.body, e = args[1:].Compile(g, task, env, args_env, &quote_depth, nil); e != nil {
 			return nil, e
 		}
 	} else {
@@ -152,8 +154,9 @@ func let_imp(g *G, task *Task, env, args_env *Env, args Vec, out Ops) (_ Ops, e 
 		
 		k := kf.(*Sym)
 		var v Ops
+		quote_depth := 0
 
-		if v, e = g.Compile(task, env, args_env, vf, nil); e != nil {
+		if v, e = g.Compile(task, env, args_env, vf, &quote_depth, nil); e != nil {
 			return nil, e
 		}
 		

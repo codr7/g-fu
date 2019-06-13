@@ -22,6 +22,13 @@ func (_ Quote) Type(g *G) Type {
 	return &g.QuoteType
 }
 
+func (_ *QuoteType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, quote_depth *int, out Ops) (_ Ops, e E) {
+	*quote_depth++
+	out, e = g.Compile(task, env, args_env, val.(Quote).val, quote_depth, out)
+	*quote_depth--
+	return out, e
+}
+
 func (_ *QuoteType) Dump(g *G, val Val, out *bufio.Writer) E {
 	out.WriteRune('\'')
 	return g.Dump(val.(Quote).val, out)

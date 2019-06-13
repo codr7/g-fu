@@ -25,8 +25,8 @@ func (g *G) Clone(val Val) (Val, E) {
 	return val.Type(g).Clone(g, val)
 }
 
-func (g *G) Compile(task *Task, env, args_env *Env, val Val, out Ops) (Ops, E) {
-	return val.Type(g).Compile(g, task, env, args_env, val, out)
+func (g *G) Compile(task *Task, env, args_env *Env, val Val, quote_depth *int, out Ops) (Ops, E) {
+	return val.Type(g).Compile(g, task, env, args_env, val, quote_depth, out)
 }
 
 func (g *G) Drop(val Val, n Int) (out Val, e E) {

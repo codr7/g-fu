@@ -1,11 +1,25 @@
-* add ops
-** convert val prim
-*** ValOp(key *Sym)
-** add FuncallOp
-*** lookup symbols in env in Vec compile
-*** gen FuncallOp if *Fun
-** rewrite if prim
-** testcompile.gf
+* add ValOp
+** use Lookup
+** add Sym Compile
+*** compile to lit if quoted
+** otherwise val
+** commit
+* compile let body with separate envs
+* rewrite mac prim
+** bind id in env unless _
+** test macro
+* rewrite if prim
+** compile branches using separate envs
+*** add env.Unify(rhs)
+*** add UndefType/g.UNDEF
+**** struct Undef { valType Type }
+**** return valType from Type, UndefType if nil
+**** throw error on Eval
+**** add Type/BasicType.Undef(valType Type) Undef
+* add FuncallOp
+* add BenchOp
+* fib_rec
+* testcompile.gf
 * --
 * change Extenv to extract symbols at compile time
 * add sync.Pool for Env vars in G

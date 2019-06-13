@@ -17,7 +17,7 @@ type Type interface {
 	Bool(*G, Val) (bool, E)
 	Call(*G, *Task, *Env, Val, Vec, *Env) (Val, E)
 	Clone(*G, Val) (Val, E)
-	Compile(*G, *Task, *Env, *Env, Val, Ops) (Ops, E)
+	Compile(*G, *Task, *Env, *Env, Val, *int, Ops) (Ops, E)
 	Drop(*G, Val, Int) (Val, E)
 	Dump(*G, Val, *bufio.Writer) E
 	Dup(*G, Val) (Val, E)
@@ -111,7 +111,7 @@ func (_ *BasicType) Clone(g *G, val Val) (Val, E) {
 	return g.Dup(val)
 }
 
-func (_ *BasicType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, out Ops) (Ops, E) {
+func (_ *BasicType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, quote_depth *int, out Ops) (Ops, E) {
 	return append(out, NewLitOp(val)), nil
 }
 

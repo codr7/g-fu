@@ -20,6 +20,16 @@ type VecIterType struct {
 	BasicIterType
 }
 
+func (v Vec) Compile(g *G, task *Task, env, args_env *Env, quote_depth *int, out Ops) (_ Ops, e E) {
+	for _, v := range v {
+		if out, e = g.Compile(&g.MainTask, env, env, v, quote_depth, out); e != nil {
+			return nil, e
+		}
+	}
+	
+	return out, e
+}
+
 func (v Vec) Delete(i int) Vec {
 	return append(v[:i], v[i+1:]...)
 }
@@ -136,13 +146,23 @@ func (_ *VecType) Bool(g *G, val Val) (bool, E) {
 	return val.(Vec).Len() > 0, nil
 }
 
-func (_ *VecType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, out Ops) (Ops, E) {
+func (_ *VecType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, quote_depth *int, out Ops) (_ Ops, e E) {
 	v := val.(Vec)
 
 	if len(v) == 0 {
 		return append(out, NewLitOp(Vec(nil))), nil
 	}
 
+	if *quote_depth > 0 {
+		op := NewVecOp(len(v))
+		out = append(out, op)
+		if op.items, e = v.Compile(g, task, env, args_env, quote_depth, op.items); e != nil {
+			return nil, e
+		}
+
+		return out, nil
+	}
+	
 	target := v[0]
 	var id *Sym
 	var ok bool
@@ -158,7 +178,6 @@ func (_ *VecType) Compile(g *G, task *Task, env *Env, args_env *Env, val Val, ou
 
 	var call_env *Env
 	var args Vec
-	var e E
 
 	if target, call_env, args, e = id.Lookup(g, task, env, args_env, false); e != nil {
 		return nil, e
