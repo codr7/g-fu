@@ -8,3 +8,7 @@
 ** only pull more values when acc is empty
 ** grep calls and splat to vec where needed
 ** bench
+* add TransOp in v2
+* transformers.md
+* add set-val to root env
+** (set (val 'foo) 42)
