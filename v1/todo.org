@@ -1,9 +1,10 @@
-* change (tr) rf signature to (in acc v..)
+* change (tr) rf signature to (acc in v..)
 ** pop first val in tr
 *** return acc if nil
 ** add (tpush) that drops in-arg
 ** add (tgroup n)
-*** collect and forward vec
+*** collect (use recall) and forward vec
 * rewrite (tr) as Go Iter/Fun
+** only pull more values when acc is empty
 ** grep calls and splat to vec where needed
 ** bench
