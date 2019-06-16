@@ -1,4 +1,4 @@
-* change (tr) rf signature to (acc in v..)
+* change (tr) rf signature to (in acc v..)
 ** pop first val in tr
 *** return acc if nil
 ** add (tpush) that drops in-arg
@@ -8,7 +8,8 @@
 ** only pull more values when acc is empty
 ** grep calls and splat to vec where needed
 ** bench
-* add TransOp in v2
 * transformers.md
+* ---
+* add TransOp in v2
 * add set-val to root env
 ** (set (val 'foo) 42)
