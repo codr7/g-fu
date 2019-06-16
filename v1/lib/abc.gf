@@ -2,11 +2,11 @@
   '(let %id (let %vars %body.. Env/this)))
 
 (fun tr (in acc fn)
-  (fun rec (in acc fn)
+  (fun rec (in acc)
     (let v (pop in))
-    (if (_? v) acc (recall in (fn acc v) fn)))
+    (if (_? v) acc (recall in (fn acc v))))
 
-  (rec (in/iter) acc fn))
+  (rec (in/iter) acc))
 
 (mac @ (f1 fs..)
   '(fun (args..)
