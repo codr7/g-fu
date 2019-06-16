@@ -686,6 +686,37 @@ func iter_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
 	return g.Iter(args[0])
 }
 
+func tr_imp(g *G, task *Task, env *Env, args Vec) (Val, E) {
+	in, e := g.Iter(args[0])
+
+	if e != nil {
+		return nil, e
+	}
+
+	acc := args[1]
+	fns := args[2:]
+	
+	for {
+		v, _, e := g.Pop(in)
+		
+		if e != nil {
+			return nil, e
+		}
+		
+		if v == &g.NIL {
+			break
+		}
+
+		for _, fn := range fns {
+			if acc, e = g.Call(task, env, fn, Vec{acc, v}, env); e != nil {
+				return nil, e
+			}
+		}
+	}
+	
+	return acc, nil
+}
+
 func push_imp(g *G, task *Task, env *Env, args Vec, args_env *Env) (Val, E) {
 	place := args[0]
 	vs, e := args[1:].EvalVec(g, task, args_env, args_env)
@@ -1135,6 +1166,7 @@ func (e *Env) InitAbc(g *G) {
 	e.AddPun(g, "-", sub_imp, A("x"), ASplat("ys"))
 	e.AddPun(g, "*", mul_imp, A("x"), ASplat("ys"))
 
+	e.AddFun(g, "tr", tr_imp, A("in"), A("acc"), ASplat("fns"))
 	e.AddPrim(g, "push", true, push_imp, A("out"), ASplat("vals"))
 	e.AddPrim(g, "pop", true, pop_imp, A("in"))
 	e.AddPrim(g, "drop", true, drop_imp, A("in"), AOpt("n", Int(1)))
