@@ -670,3 +670,8 @@ Showing top 10 nodes out of 79
 
 ### License
 MIT
+
+### support
+Please consider a donation if you would like to support the project, every contribution helps.
+
+<a href="https://liberapay.com/codr7/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
