@@ -669,7 +669,7 @@ Showing top 10 nodes out of 79
 ```
 
 ### License
-MIT
+[MIT](https://github.com/codr7/g-fu/blob/master/LICENSE.txt)
 
 ### support
 Please consider a donation if you would like to support the project, every contribution helps.
